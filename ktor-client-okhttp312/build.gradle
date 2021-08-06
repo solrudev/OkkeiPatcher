@@ -9,7 +9,7 @@ java {
 }
 
 dependencies {
-    implementation "io.ktor:ktor-client-core-jvm:1.6.2"
+    implementation "io.ktor:ktor-client-core-jvm:$ktor_version"
     implementation "com.squareup.okio:okio:$okio_version"
     api("com.squareup.okhttp3:okhttp") {
         version { strictly "3.12.13" }
