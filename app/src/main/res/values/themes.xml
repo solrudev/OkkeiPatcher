@@ -1,0 +1,84 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+	<!-- Base application theme. -->
+	<style name="Theme.OkkeiPatcher" parent="Theme.MaterialComponents">
+		<!-- Primary brand color. -->
+		<item name="colorPrimary">@color/colorPrimary</item>
+		<item name="colorPrimaryDark">@color/colorPrimary</item>
+		<item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+		<item name="colorOnPrimary">@color/colorOnPrimary</item>
+		<!-- Secondary brand color. -->
+		<item name="colorSecondary">@color/colorPrimary</item>
+		<item name="colorSecondaryVariant">@color/colorPrimaryVariant</item>
+		<item name="colorOnSecondary">@color/colorOnPrimary</item>
+		<!-- Status bar color. -->
+		<item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
+		<!-- Customize your theme here. -->
+		<item name="colorOnSurface">@color/colorPrimary</item>
+		<item name="android:colorBackground">@color/background_material_dark</item>
+		<item name="actionBarTheme">@style/ThemeOverlay.App.ActionBar</item>
+		<item name="materialButtonStyle">@style/Widget.App.Button</item>
+		<item name="alertDialogTheme">@style/AlertDialogTheme</item>
+		<item name="snackbarStyle">@style/Widget.App.Snackbar</item>
+		<item name="snackbarTextViewStyle">@style/Widget.App.Snackbar.TextView</item>
+		<item name="toolbarStyle">@style/Widget.App.Toolbar</item>
+		<item name="checkboxStyle">@style/Widget.App.CheckBox</item>
+	</style>
+
+	<style name="Theme.OkkeiPatcher.NoActionBar">
+		<item name="windowActionBar">false</item>
+		<item name="windowNoTitle">true</item>
+	</style>
+
+	<style name="ThemeOverlay.App.ActionBar" parent="ThemeOverlay.MaterialComponents.ActionBar">
+		<item name="android:textColorPrimary">@color/white</item>
+	</style>
+
+	<style name="Widget.App.Button" parent="Widget.MaterialComponents.Button">
+		<item name="backgroundTint">@color/btn_bg_color_selector</item>
+		<item name="android:textColor">@color/btn_text_color_selector</item>
+	</style>
+
+	<style name="AlertDialogTheme" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
+		<item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
+		<item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
+	</style>
+
+	<style name="NegativeButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+		<item name="android:textColor">@color/colorPrimaryVariant</item>
+	</style>
+
+	<style name="PositiveButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+		<item name="android:textColor">@color/colorPrimaryVariant</item>
+	</style>
+
+	<style name="Widget.App.Snackbar" parent="Widget.MaterialComponents.Snackbar">
+		<item name="materialThemeOverlay">@style/ThemeOverlay.App.Snackbar</item>
+	</style>
+
+	<style name="ThemeOverlay.App.Snackbar" parent="">
+		<item name="colorPrimary">@color/colorPrimaryVariant</item>
+		<item name="colorOnSurface">@color/material_grey_800</item>
+	</style>
+
+	<style name="Widget.App.Snackbar.TextView" parent="Widget.MaterialComponents.Snackbar.TextView">
+		<item name="android:textColor">@android:color/white</item>
+	</style>
+
+	<style name="Widget.App.Toolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
+		<item name="materialThemeOverlay">@style/ThemeOverlay.App.Toolbar</item>
+	</style>
+
+	<style name="ThemeOverlay.App.Toolbar" parent="">
+		<item name="colorPrimary">@color/colorPrimary</item>
+		<item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+		<item name="colorOnPrimary">@color/colorOnPrimary</item>
+	</style>
+
+	<style name="Widget.App.CheckBox" parent="Widget.MaterialComponents.CompoundButton.CheckBox">
+		<item name="materialThemeOverlay">@style/ThemeOverlay.App.CheckBox</item>
+	</style>
+
+	<style name="ThemeOverlay.App.CheckBox" parent="">
+		<item name="colorOnSurface">@color/colorOnPrimary</item>
+	</style>
+</resources>
