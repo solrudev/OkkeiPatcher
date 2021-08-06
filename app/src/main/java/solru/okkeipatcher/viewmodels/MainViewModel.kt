@@ -79,9 +79,7 @@ class MainViewModel @Inject constructor(
 		Preferences.set(AppKey.process_save_data_enabled.name, processSaveDataEnabled)
 	}
 
-	private fun isPatched(): Boolean {
-		return Preferences.get(AppKey.is_patched.name, false)
-	}
+	private fun isPatched() = Preferences.get(AppKey.is_patched.name, false)
 
 	var isRunning = false
 

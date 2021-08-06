@@ -41,12 +41,12 @@ class MainActivity : AppCompatActivity() {
 
 		lifecycle.addObserver(_viewModel)
 
-		val perms =
-			arrayOf(
-				Manifest.permission.READ_EXTERNAL_STORAGE,
-				Manifest.permission.WRITE_EXTERNAL_STORAGE
-			)
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+			val perms =
+				arrayOf(
+					Manifest.permission.READ_EXTERNAL_STORAGE,
+					Manifest.permission.WRITE_EXTERNAL_STORAGE
+				)
 			requestPermissions(perms, 0)
 		}
 	}
@@ -93,12 +93,6 @@ class MainActivity : AppCompatActivity() {
 	}
 
 	fun onClearDataClick() {
-		try {
-			val packageName = "com.mages.chaoschild_jp"
-			Log.i(this::class.java.name, PackageManager.isPackageInstalled(packageName).toString())
-			Log.i(this::class.java.name, PackageManager.getPackagePublicSourceDir(packageName))
-		} catch (_: Throwable) {
-		}
 	}
 
 	fun onProcessSaveDataClick(view: View) {

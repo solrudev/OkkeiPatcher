@@ -31,8 +31,8 @@ class TLSSocketFactory : SSLSocketFactory() {
 			TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
 		trustManagerFactory.init(null as KeyStore?)
 		val trustManagers = trustManagerFactory.trustManagers
-		check(!(trustManagers.size != 1 || trustManagers[0] !is X509TrustManager)) {
-			("Unexpected default trust managers: ${Arrays.toString(trustManagers)}")
+		check(trustManagers.size == 1 && trustManagers[0] is X509TrustManager) {
+			"Unexpected default trust managers: ${Arrays.toString(trustManagers)}"
 		}
 		this.trustManagers = trustManagers
 	}
