@@ -76,6 +76,7 @@ object PackageInstaller : ProgressProvider {
 
 	private lateinit var capturedContinuation: CancellableContinuation<Boolean>
 	private val contract = PreLollipopInstallPackageContract()
+	private var shouldContinue = true
 
 	private val progressMutable = MutableSharedFlow<ProgressData>(
 		extraBufferCapacity = 1,
@@ -220,6 +221,7 @@ object PackageInstaller : ProgressProvider {
 		}
 
 	private fun onCancellation() {
+		shouldContinue = true
 		isInstalling = false
 		val notificationManager =
 			MainApplication.context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -261,7 +263,7 @@ object PackageInstaller : ProgressProvider {
 
 	class InstallResultReceiverActivity : AppCompatActivity() {
 
-		private var restarted = false
+		private var onRestartCalled = false
 
 		private val installLauncher = registerForActivityResult(contract) {
 			finishInstallation(it)
@@ -270,16 +272,20 @@ object PackageInstaller : ProgressProvider {
 		override fun onCreate(savedInstanceState: Bundle?) {
 			super.onCreate(savedInstanceState)
 			turnScreenOnWhenLocked()
-			sessionCommitContinuation?.resume(Unit)
+			if (shouldContinue && !isRestarted(savedInstanceState)) {
+				shouldContinue = false
+				sessionCommitContinuation?.resume(Unit)
+			}
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				onRestartCalled = false
 				finish()
 				return
 			}
 			lifecycleScope.launchWhenResumed {
 				installFinishedCallback.collect { finish() }
 			}
-			if (savedInstanceState != null && savedInstanceState.getBoolean(KEY_RECREATED) || restarted) {
-				restarted = false
+			if (isRestarted(savedInstanceState)) {
+				onRestartCalled = false
 				return
 			}
 			val apkUri = intent.extras?.getParcelable<Uri>(REGISTRY_KEY)
@@ -288,7 +294,7 @@ object PackageInstaller : ProgressProvider {
 
 		override fun onRestart() {
 			super.onRestart()
-			restarted = true
+			onRestartCalled = true
 		}
 
 		override fun onSaveInstanceState(outState: Bundle) {
@@ -298,8 +304,12 @@ object PackageInstaller : ProgressProvider {
 
 		override fun onDestroy() {
 			super.onDestroy()
+			shouldContinue = false
 			clearTurnScreenOnSettings()
 		}
+
+		private fun isRestarted(savedInstanceState: Bundle?) =
+			savedInstanceState?.getBoolean(KEY_RECREATED) == true || onRestartCalled
 
 		companion object {
 			private const val KEY_RECREATED = "RECREATED"
