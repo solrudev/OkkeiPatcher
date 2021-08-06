@@ -193,8 +193,8 @@ abstract class Apk(
 
 	protected suspend inline fun sign() {
 		statusMutable.emit(R.string.status_signing_apk)
-		progressMutable.makeIndeterminate()
 		extractSigningKey()
+		progressMutable.makeIndeterminate()
 		commonFileInstances.signedApk.deleteIfExists()
 		commonFileInstances.signedApk.create()
 		commonFileInstances.tempApk.createInputStream().use { tempApk ->
