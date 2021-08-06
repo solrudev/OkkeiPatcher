@@ -50,6 +50,7 @@ class MainViewModel @Inject constructor(
 	private val _patchEnabled = MutableLiveData(!isPatched())
 	private val _restoreEnabled = MutableLiveData(isPatched())
 	private val _clearDataEnabled = MutableLiveData(true)
+	private val _errorMessage = MutableLiveData<Message>()
 
 	val patchText: LiveData<Int> get() = _patchText
 	val restoreText: LiveData<Int> get() = _restoreText
@@ -60,6 +61,7 @@ class MainViewModel @Inject constructor(
 	val patchEnabled: LiveData<Boolean> get() = _patchEnabled
 	val restoreEnabled: LiveData<Boolean> get() = _restoreEnabled
 	val clearDataEnabled: LiveData<Boolean> get() = _clearDataEnabled
+	val errorMessage: LiveData<Message> get() = _errorMessage
 
 	var processSaveDataEnabled = Preferences.get(
 		AppKey.process_save_data_enabled.name,
@@ -71,14 +73,7 @@ class MainViewModel @Inject constructor(
 			onProcessSaveDataEnabledChanged()
 		}
 
-	private val _commonMessage = MutableLiveData<Message>()
-	private val _errorMessage = MutableLiveData<Message>()
-
-	val message: LiveData<Message> get() = _commonMessage
-	val errorMessage: LiveData<Message> get() = _errorMessage
-
 	private val collectScope = CoroutineScope(Dispatchers.Main.immediate)
-	private lateinit var lastService: AppService
 
 	private fun onProcessSaveDataEnabledChanged() {
 		Preferences.set(AppKey.process_save_data_enabled.name, processSaveDataEnabled)
@@ -112,33 +107,6 @@ class MainViewModel @Inject constructor(
 				collectScope.collectWorkInfo(PatchWorker.WORK_NAME)
 			}
 	}
-
-//	private lateinit var _currentJob: Job
-//
-//	fun patch() {
-//		isRunning = true
-//		_patchText.value = R.string.abort
-//		collectScope.collectProgress(PackageInstaller.progress)
-//		_currentJob = viewModelScope.launch {
-//			try {
-////				val installResult = PackageInstaller.installPackage(File(commonFileInstances.signedApk.fullPath))
-////				Log.i(this@MainViewModel::class.qualifiedName, "Install result: $installResult")
-//				delay(1000)
-//				val uninstallResult = PackageUninstaller.uninstallPackage("com.higurashi.answerarcs_ps2rm")
-//				Log.i(this@MainViewModel::class.qualifiedName, "Uninstall result: $uninstallResult")
-//			} catch (e: Throwable) {
-//				if (e !is CancellationException) {
-//					debugUtil.writeBugReport(e)
-//					Log.e(this@MainViewModel::class.qualifiedName, e.message, e)
-//				}
-//			} finally {
-//				isRunning = false
-//				_patchText.value = R.string.patch
-//				_progress.value = 0
-//				_progressIndeterminate.value = false
-//			}
-//		}
-//	}
 
 	@DelicateCoroutinesApi
 	@ExperimentalCoroutinesApi
@@ -225,7 +193,6 @@ class MainViewModel @Inject constructor(
 
 	fun cancel() {
 		WorkManager.getInstance(MainApplication.context).cancelAllWork()
-//		_currentJob.cancel()
 		isRunning = false
 		_patchText.value = R.string.patch
 		_restoreText.value = R.string.restore
