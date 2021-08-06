@@ -120,7 +120,11 @@ object PackageInstaller : ProgressProvider {
 	suspend fun installPackage(apkFile: File): Boolean {
 		val capturedCoroutineContext = coroutineContext
 		return suspendCancellableCoroutine { continuation ->
-			continuation.invokeOnCancellation { onCancellation() }
+			var session: PackageInstaller.Session? = null
+			continuation.invokeOnCancellation {
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) abandonSession(session)
+				onCancellation()
+			}
 			capturedContinuation = continuation
 			if (isInstalling) {
 				continuation.resumeWithException(
@@ -145,7 +149,7 @@ object PackageInstaller : ProgressProvider {
 						sessionParams.setInstallReason(PackageManager.INSTALL_REASON_USER)
 					}
 					val sessionId = packageInstaller.createSession(sessionParams)
-					val session = packageInstaller.openSession(sessionId)
+					session = packageInstaller.openSession(sessionId)
 					val observer = @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 					object : PackageInstaller.SessionCallback() {
 						override fun onCreated(sessionId: Int) {}
@@ -164,7 +168,7 @@ object PackageInstaller : ProgressProvider {
 						withContext(Dispatchers.Main) {
 							packageInstaller.registerSessionCallback(observer)
 						}
-						copyApkToSession(apkFile, session)
+						copyApkToSession(apkFile, session!!)
 						val intent = Intent(
 							MainApplication.context,
 							InstallationEventsReceiver::class.java
@@ -180,9 +184,9 @@ object PackageInstaller : ProgressProvider {
 						val statusReceiver = pendingIntent.intentSender
 						displayNotification()
 						waitForUserAction()
-						session.commit(statusReceiver)
+						session!!.commit(statusReceiver)
 					} catch (e: Throwable) {
-						session.abandon()
+						abandonSession(session)
 						observer.onFinished(sessionId, false)
 						LocalBroadcastManager.getInstance(MainApplication.context)
 							.unregisterReceiver(installationEventsReceiver)
@@ -193,7 +197,7 @@ object PackageInstaller : ProgressProvider {
 						isInstalling = false
 						continuation.resumeWithException(e)
 					} finally {
-						session.close()
+						session?.close()
 					}
 				}
 			}
@@ -219,6 +223,14 @@ object PackageInstaller : ProgressProvider {
 			ioService.copy(apkStream, sessionStream, apkFile.length(), progressFlow)
 			progressJob.cancel()
 		}
+
+	@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+	private fun abandonSession(session: PackageInstaller.Session?) {
+		try {
+			session?.abandon()
+		} catch (_: Throwable) {
+		}
+	}
 
 	private fun onCancellation() {
 		shouldContinue = true
