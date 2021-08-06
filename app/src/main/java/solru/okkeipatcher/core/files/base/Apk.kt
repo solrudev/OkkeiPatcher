@@ -119,15 +119,6 @@ abstract class Apk(
 		progressJob.cancel()
 	}
 
-	protected suspend inline fun installPatchedIfVerifiedAndBackupExists() = tryWrapper {
-		progressMutable.reset()
-		statusMutable.emit(R.string.status_comparing_apk)
-		if (verifyBackupIntegrity() && commonFileInstances.signedApk.verify()) {
-			installPatched()
-			return
-		}
-	}
-
 	protected suspend inline fun installPatched() {
 		if (!commonFileInstances.signedApk.exists) {
 			throwErrorMessage(R.string.error_apk_not_found_patch)

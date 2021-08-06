@@ -21,6 +21,7 @@ import solru.okkeipatcher.model.manifest.OkkeiManifest
 import solru.okkeipatcher.pm.PackageManager
 import solru.okkeipatcher.utils.Preferences
 import solru.okkeipatcher.utils.extensions.emit
+import solru.okkeipatcher.utils.extensions.reset
 import java.io.File
 import javax.inject.Inject
 
@@ -34,7 +35,14 @@ class ApkEnglish @Inject constructor(
 	override val progress = merge(super.progress, fileInstances.scripts.progress)
 
 	override suspend fun patch(manifest: OkkeiManifest) {
-		installPatchedIfVerifiedAndBackupExists()
+		tryWrapper {
+			progressMutable.reset()
+			statusMutable.emit(R.string.status_comparing_apk)
+			if (verifyBackupIntegrity() && commonFileInstances.signedApk.verify()) {
+				installPatched()
+				return
+			}
+		}
 		var extractedScriptsDirectory: File? = null
 		tryWrapper(onFinally = {
 			deleteTempZipFiles(OkkeiStorage.external)
