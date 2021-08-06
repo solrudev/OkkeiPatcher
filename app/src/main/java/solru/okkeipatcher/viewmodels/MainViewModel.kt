@@ -85,8 +85,6 @@ class MainViewModel @Inject constructor(
 
 	var isRunning = false
 
-	@DelicateCoroutinesApi
-	@ExperimentalCoroutinesApi
 	override fun onResume(owner: LifecycleOwner) {
 		WorkManager.getInstance(MainApplication.context)
 			.getWorkInfosForUniqueWork(PatchWorker.WORK_NAME)
@@ -108,8 +106,6 @@ class MainViewModel @Inject constructor(
 			}
 	}
 
-	@DelicateCoroutinesApi
-	@ExperimentalCoroutinesApi
 	fun patch() {
 		isRunning = true
 		_patchText.value = R.string.abort

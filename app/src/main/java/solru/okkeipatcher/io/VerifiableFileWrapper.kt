@@ -1,6 +1,5 @@
 package solru.okkeipatcher.io
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -50,7 +49,6 @@ abstract class VerifiableFileWrapper(
 		return md5 == md5ToCompare
 	}
 
-	@ExperimentalCoroutinesApi
 	protected suspend fun compareByFile(file: FileWrapper): Boolean {
 		var md5 = String.empty
 		var md5ToCompare = String.empty

@@ -25,6 +25,11 @@ allprojects {
         mavenCentral()
         jcenter()
     }
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+        kotlinOptions {
+            freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
+        }
+    }
 }
 
 task clean(type: Delete) {

@@ -2,9 +2,12 @@ package solru.okkeipatcher.core.files.base
 
 import android.content.res.AssetManager
 import com.aefyr.pseudoapksigner.PseudoApkSigner
-import kotlinx.coroutines.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.launch
 import net.lingala.zip4j.ZipFile
 import net.lingala.zip4j.progress.ProgressMonitor
 import solru.okkeipatcher.MainApplication
@@ -51,7 +54,7 @@ abstract class Apk(
 	protected val privateKeyFile = File(OkkeiStorage.private, "testkey.pk8")
 	protected val rsaTemplateFile = File(OkkeiStorage.private, "testkey.past")
 
-	@ExperimentalCoroutinesApi
+	@OptIn(ExperimentalCoroutinesApi::class)
 	override val progress = merge(
 		commonFileInstances.backupApk.progress,
 		commonFileInstances.tempApk.progress,
@@ -89,7 +92,6 @@ abstract class Apk(
 			)
 		}
 
-	@DelicateCoroutinesApi
 	override suspend fun restore() = tryWrapper {
 		progressMutable.reset()
 		if (!commonFileInstances.backupApk.exists) {
@@ -117,7 +119,6 @@ abstract class Apk(
 		progressJob.cancel()
 	}
 
-	@DelicateCoroutinesApi
 	protected suspend inline fun installPatchedIfVerifiedAndBackupExists() = tryWrapper {
 		progressMutable.reset()
 		statusMutable.emit(R.string.status_comparing_apk)
@@ -127,7 +128,6 @@ abstract class Apk(
 		}
 	}
 
-	@DelicateCoroutinesApi
 	protected suspend inline fun installPatched() {
 		if (!commonFileInstances.signedApk.exists) {
 			throwErrorMessage(R.string.error_apk_not_found_patch)
@@ -150,7 +150,6 @@ abstract class Apk(
 		commonFileInstances.signedApk.deleteIfExists()
 	}
 
-	@DelicateCoroutinesApi
 	protected suspend inline fun uninstall() {
 		statusMutable.emit(R.string.status_uninstalling)
 		progressMutable.makeIndeterminate()

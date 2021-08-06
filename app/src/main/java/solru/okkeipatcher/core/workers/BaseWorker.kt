@@ -40,8 +40,6 @@ abstract class BaseWorker(
 	private val simpleNotificationBuilder =
 		createNotificationBuilder(progressNotification = false)
 
-	@DelicateCoroutinesApi
-	@ExperimentalCoroutinesApi
 	final override suspend fun doWork() = coroutineScope {
 		try {
 			deserializeInputData()

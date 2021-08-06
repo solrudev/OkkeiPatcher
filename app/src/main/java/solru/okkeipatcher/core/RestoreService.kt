@@ -17,8 +17,7 @@ import javax.inject.Singleton
 @Singleton
 class RestoreService @Inject constructor(var strategy: GameFileStrategy) : AppServiceBase() {
 
-	@DelicateCoroutinesApi
-	@ExperimentalCoroutinesApi
+	@OptIn(DelicateCoroutinesApi::class, ExperimentalCoroutinesApi::class)
 	override val progress = merge(
 		strategy.apk.progress,
 		strategy.obb.progress,
@@ -26,8 +25,7 @@ class RestoreService @Inject constructor(var strategy: GameFileStrategy) : AppSe
 		progressMutable
 	).shareIn(GlobalScope, SharingStarted.Lazily, replay = 1)
 
-	@DelicateCoroutinesApi
-	@ExperimentalCoroutinesApi
+	@OptIn(DelicateCoroutinesApi::class, ExperimentalCoroutinesApi::class)
 	override val status = merge(
 		strategy.apk.status,
 		strategy.obb.status,
@@ -35,7 +33,7 @@ class RestoreService @Inject constructor(var strategy: GameFileStrategy) : AppSe
 		statusMutable
 	).stateIn(GlobalScope, SharingStarted.Lazily, R.string.empty)
 
-	@ExperimentalCoroutinesApi
+	@OptIn(ExperimentalCoroutinesApi::class)
 	override val message =
 		merge(strategy.apk.message, strategy.obb.message, strategy.saveData.message, messageMutable)
 

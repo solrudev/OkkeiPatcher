@@ -1,6 +1,5 @@
 package solru.okkeipatcher.core.files.impl.english
 
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.merge
@@ -31,10 +30,9 @@ class ApkEnglish @Inject constructor(
 	ioService: IoService
 ) : Apk(commonFileInstances, ioService) {
 
-	@ExperimentalCoroutinesApi
+	@OptIn(ExperimentalCoroutinesApi::class)
 	override val progress = merge(super.progress, fileInstances.scripts.progress)
 
-	@DelicateCoroutinesApi
 	override suspend fun patch(manifest: OkkeiManifest) {
 		installPatchedIfVerifiedAndBackupExists()
 		var extractedScriptsDirectory: File? = null

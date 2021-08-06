@@ -14,7 +14,7 @@ import javax.inject.Inject
 class SaveDataGeneric @Inject constructor(private val commonFileInstances: CommonFileInstances) :
 	AppServiceBase(), SaveData {
 
-	@ExperimentalCoroutinesApi
+	@OptIn(ExperimentalCoroutinesApi::class)
 	override val progress = merge(
 		commonFileInstances.backupSaveData.progress,
 		commonFileInstances.originalSaveData.progress,

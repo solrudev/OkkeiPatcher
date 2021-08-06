@@ -22,8 +22,7 @@ import javax.inject.Singleton
 @Singleton
 class PatchService @Inject constructor(var strategy: GameFileStrategy) : AppServiceBase() {
 
-	@DelicateCoroutinesApi
-	@ExperimentalCoroutinesApi
+	@OptIn(DelicateCoroutinesApi::class, ExperimentalCoroutinesApi::class)
 	override val progress = merge(
 		strategy.apk.progress,
 		strategy.obb.progress,
@@ -31,8 +30,7 @@ class PatchService @Inject constructor(var strategy: GameFileStrategy) : AppServ
 		progressMutable
 	).shareIn(GlobalScope, SharingStarted.Lazily, replay = 1)
 
-	@DelicateCoroutinesApi
-	@ExperimentalCoroutinesApi
+	@OptIn(DelicateCoroutinesApi::class, ExperimentalCoroutinesApi::class)
 	override val status = merge(
 		strategy.apk.status,
 		strategy.obb.status,
@@ -40,7 +38,7 @@ class PatchService @Inject constructor(var strategy: GameFileStrategy) : AppServ
 		statusMutable
 	).stateIn(GlobalScope, SharingStarted.Lazily, R.string.empty)
 
-	@ExperimentalCoroutinesApi
+	@OptIn(ExperimentalCoroutinesApi::class)
 	override val message =
 		merge(strategy.apk.message, strategy.obb.message, strategy.saveData.message, messageMutable)
 

@@ -15,7 +15,7 @@ abstract class Obb(protected val commonFileInstances: CommonFileInstances) : App
 	override val backupExists: Boolean
 		get() = commonFileInstances.backupObb.exists
 
-	@ExperimentalCoroutinesApi
+	@OptIn(ExperimentalCoroutinesApi::class)
 	override val progress = merge(
 		commonFileInstances.backupObb.progress,
 		commonFileInstances.obbToBackup.progress,

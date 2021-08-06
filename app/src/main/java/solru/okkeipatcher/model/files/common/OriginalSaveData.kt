@@ -1,7 +1,6 @@
 package solru.okkeipatcher.model.files.common
 
 import android.os.Environment
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import solru.okkeipatcher.io.JavaFile
 import solru.okkeipatcher.io.SafFile
 import solru.okkeipatcher.io.VerifiableFileWrapper
@@ -12,7 +11,6 @@ import java.io.File
 open class OriginalSaveData constructor(implementation: FileWrapper, ioService: IoService) :
 	VerifiableFileWrapper(implementation, ioService) {
 
-	@ExperimentalCoroutinesApi
 	override suspend fun verify() = exists && compareByFile(BackupSaveData(ioService))
 
 	@Suppress("DEPRECATION")

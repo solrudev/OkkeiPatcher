@@ -14,8 +14,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import solru.okkeipatcher.R
 import solru.okkeipatcher.databinding.ActivityMainBinding
 import solru.okkeipatcher.pm.PackageManager
@@ -29,7 +27,6 @@ class MainActivity : AppCompatActivity() {
 	private var _backPressed = false
 	private var _lastBackPressedTimestamp: Long = 0
 
-	@ExperimentalCoroutinesApi
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
@@ -84,8 +81,6 @@ class MainActivity : AppCompatActivity() {
 		}
 	}
 
-	@DelicateCoroutinesApi
-	@ExperimentalCoroutinesApi
 	fun onPatchClick() {
 		if (!_viewModel.isRunning) {
 			_viewModel.patch()
