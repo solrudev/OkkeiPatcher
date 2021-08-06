@@ -1,0 +1,17 @@
+plugins {
+    id "java-library"
+    id "kotlin"
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+dependencies {
+    implementation "io.ktor:ktor-client-core-jvm:1.6.2"
+    implementation "com.squareup.okio:okio:2.10.0"
+    implementation("com.squareup.okhttp3:okhttp") {
+        version { strictly "3.12.13" }
+    }
+}
