@@ -35,6 +35,8 @@ class HttpDownloaderImpl @Inject constructor(private val ioDispatcher: Coroutine
 		HttpClient(OkHttp312) {
 			engine {
 				config {
+					val tlsSocketFactory = TLSSocketFactory()
+					sslSocketFactory(tlsSocketFactory, tlsSocketFactory.trustManager)
 					followRedirects(true)
 					followSslRedirects(true)
 					readTimeout(0, TimeUnit.SECONDS)
