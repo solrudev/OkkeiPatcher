@@ -13,7 +13,7 @@ class RestoreWorker @AssistedInject constructor(
 	private val restoreService: RestoreService
 ) : BaseWorker(context, workerParameters, R.string.notification_title_restore, restoreService) {
 
-	override suspend fun startService() {
+	override suspend fun doServiceWork() {
 		restoreService.restore()
 	}
 

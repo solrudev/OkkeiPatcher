@@ -27,7 +27,10 @@ abstract class BaseWorker(
 ) : CoroutineWorker(context, workerParameters) {
 
 	protected lateinit var manifest: OkkeiManifest
+		private set
+
 	protected lateinit var config: AppServiceConfig
+		private set
 
 	private val notificationManager =
 		context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -39,6 +42,8 @@ abstract class BaseWorker(
 
 	private val simpleNotificationBuilder =
 		createNotificationBuilder(progressNotification = false)
+
+	abstract suspend fun doServiceWork()
 
 	final override suspend fun doWork() = coroutineScope {
 		try {
@@ -52,18 +57,19 @@ abstract class BaseWorker(
 				collectProgress()
 				collectStatus()
 				collectMessages()
-				startService()
+				doServiceWork()
+				cancel()
 			}
 		} catch (e: Throwable) {
 			notificationManager.cancelAll()
 			// TODO propagate error to view
-			Log.e(this@BaseWorker::class.qualifiedName, "", e)
-			return@coroutineScope Result.failure(workDataOf(KEY_FAILURE_CAUSE to e.message))
+			if (e !is CancellationException) {
+				Log.e(this@BaseWorker::class.qualifiedName, "", e)
+				return@coroutineScope Result.failure(workDataOf(KEY_FAILURE_CAUSE to e.message))
+			}
 		}
 		return@coroutineScope Result.success()
 	}
-
-	abstract suspend fun startService()
 
 	private fun deserializeInputData() {
 		val manifestString =

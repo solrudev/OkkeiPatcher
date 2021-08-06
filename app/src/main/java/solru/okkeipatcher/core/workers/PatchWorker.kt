@@ -15,7 +15,7 @@ class PatchWorker @AssistedInject constructor(
 	private val patchService: PatchService
 ) : BaseWorker(context, workerParameters, R.string.notification_title_patch, patchService) {
 
-	override suspend fun startService() {
+	override suspend fun doServiceWork() {
 		patchService.patch(manifest, config)
 	}
 
