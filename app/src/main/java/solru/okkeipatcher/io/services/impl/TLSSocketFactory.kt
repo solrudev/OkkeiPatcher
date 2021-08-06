@@ -12,6 +12,9 @@ import javax.net.ssl.*
 
 class TLSSocketFactory : SSLSocketFactory() {
 
+	val trustManager: X509TrustManager
+		get() = trustManagers[0] as X509TrustManager
+
 	private val delegate: SSLSocketFactory
 	private lateinit var trustManagers: Array<TrustManager>
 
@@ -34,28 +37,20 @@ class TLSSocketFactory : SSLSocketFactory() {
 		this.trustManagers = trustManagers
 	}
 
-	override fun getDefaultCipherSuites(): Array<String> {
-		return delegate.defaultCipherSuites
-	}
+	override fun getDefaultCipherSuites(): Array<String> = delegate.defaultCipherSuites
 
-	override fun getSupportedCipherSuites(): Array<String> {
-		return delegate.supportedCipherSuites
-	}
+	override fun getSupportedCipherSuites(): Array<String> = delegate.supportedCipherSuites
 
 	@Throws(IOException::class)
-	override fun createSocket(): Socket {
-		return enableTLSOnSocket(delegate.createSocket())
-	}
+	override fun createSocket() = enableTLSOnSocket(delegate.createSocket())
 
 	@Throws(IOException::class)
-	override fun createSocket(s: Socket, host: String, port: Int, autoClose: Boolean): Socket {
-		return enableTLSOnSocket(delegate.createSocket(s, host, port, autoClose))
-	}
+	override fun createSocket(s: Socket, host: String, port: Int, autoClose: Boolean) =
+		enableTLSOnSocket(delegate.createSocket(s, host, port, autoClose))
 
 	@Throws(IOException::class, UnknownHostException::class)
-	override fun createSocket(host: String, port: Int): Socket {
-		return enableTLSOnSocket(delegate.createSocket(host, port))
-	}
+	override fun createSocket(host: String, port: Int) =
+		enableTLSOnSocket(delegate.createSocket(host, port))
 
 	@Throws(IOException::class, UnknownHostException::class)
 	override fun createSocket(
@@ -63,14 +58,11 @@ class TLSSocketFactory : SSLSocketFactory() {
 		port: Int,
 		localHost: InetAddress,
 		localPort: Int
-	): Socket {
-		return enableTLSOnSocket(delegate.createSocket(host, port, localHost, localPort))
-	}
+	) = enableTLSOnSocket(delegate.createSocket(host, port, localHost, localPort))
 
 	@Throws(IOException::class)
-	override fun createSocket(host: InetAddress, port: Int): Socket {
-		return enableTLSOnSocket(delegate.createSocket(host, port))
-	}
+	override fun createSocket(host: InetAddress, port: Int) =
+		enableTLSOnSocket(delegate.createSocket(host, port))
 
 	@Throws(IOException::class)
 	override fun createSocket(
@@ -78,9 +70,7 @@ class TLSSocketFactory : SSLSocketFactory() {
 		port: Int,
 		localAddress: InetAddress,
 		localPort: Int
-	): Socket {
-		return enableTLSOnSocket(delegate.createSocket(address, port, localAddress, localPort))
-	}
+	) = enableTLSOnSocket(delegate.createSocket(address, port, localAddress, localPort))
 
 	private fun enableTLSOnSocket(socket: Socket): Socket {
 		if (socket is SSLSocket) {
@@ -88,7 +78,4 @@ class TLSSocketFactory : SSLSocketFactory() {
 		}
 		return socket
 	}
-
-	val trustManager: X509TrustManager
-		get() = trustManagers[0] as X509TrustManager
 }
