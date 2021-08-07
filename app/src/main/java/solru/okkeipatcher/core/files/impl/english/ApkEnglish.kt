@@ -103,7 +103,7 @@ class ApkEnglish @Inject constructor(
 					scriptsProgressMonitor.workCompleted.toInt(),
 					scriptsProgressMonitor.totalWork.toInt()
 				)
-				delay(10)
+				delay(30)
 			}
 		}
 		return extractedScriptsDirectory
@@ -123,7 +123,7 @@ class ApkEnglish @Inject constructor(
 				apkProgressMonitor.workCompleted.toInt(),
 				progressMax
 			)
-			delay(15)
+			delay(30)
 		}
 		apkZip.addFiles(scriptsList, parameters)
 		while (apkProgressMonitor.state == ProgressMonitor.State.BUSY) {
@@ -131,7 +131,7 @@ class ApkEnglish @Inject constructor(
 				apkProgressMonitor.workCompleted.toInt() + apkSize,
 				progressMax
 			)
-			delay(15)
+			delay(30)
 		}
 		scriptsDirectory.deleteRecursively()
 	}
