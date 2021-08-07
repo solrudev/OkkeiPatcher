@@ -30,7 +30,6 @@ class AppUpdateRepository @Inject constructor(private val ioService: IoService) 
 			statusMutable.emit(R.string.status_comparing_apk)
 			val updateHash = ioService.computeHash(appUpdateFile, progressMutable)
 			if (updateHash != manifest.okkeiPatcher.hash) {
-				if (appUpdateFile.exists()) appUpdateFile.delete()
 				throwErrorMessage(R.string.error_update_app_corrupted)
 			}
 		}

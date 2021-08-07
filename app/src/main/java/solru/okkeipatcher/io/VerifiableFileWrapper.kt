@@ -13,8 +13,7 @@ import solru.okkeipatcher.utils.extensions.isEmptyOrBlank
 abstract class VerifiableFileWrapper(
 	private val fileImplementation: FileWrapper,
 	ioService: IoService
-) :
-	FileWrapper(fileImplementation.fullPath, fileImplementation.fileName, ioService), Verifiable {
+) : FileWrapper(fileImplementation.fullPath, fileImplementation.fileName, ioService), Verifiable {
 
 	override val exists: Boolean
 		get() = fileImplementation.exists
@@ -22,18 +21,9 @@ abstract class VerifiableFileWrapper(
 	override val length: Long
 		get() = fileImplementation.length
 
-	override fun create() {
-		fileImplementation.create()
-	}
-
-	override fun deleteIfExists() {
-		fileImplementation.deleteIfExists()
-	}
-
-	override fun renameTo(fileName: String) {
-		fileImplementation.renameTo(fileName)
-	}
-
+	override fun create() = fileImplementation.create()
+	override fun deleteIfExists() = fileImplementation.deleteIfExists()
+	override fun renameTo(fileName: String) = fileImplementation.renameTo(fileName)
 	override fun createInputStream() = fileImplementation.createInputStream()
 	override fun createOutputStream() = fileImplementation.createOutputStream()
 

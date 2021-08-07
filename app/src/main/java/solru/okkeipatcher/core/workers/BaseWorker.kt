@@ -22,7 +22,7 @@ import solru.okkeipatcher.utils.extensions.empty
 abstract class BaseWorker(
 	context: Context,
 	workerParameters: WorkerParameters,
-	titleId: Int,
+	notificationTitleId: Int,
 	private val service: AppService
 ) : CoroutineWorker(context, workerParameters) {
 
@@ -38,7 +38,7 @@ abstract class BaseWorker(
 	private val channelId = applicationContext.getString(R.string.notification_channel_id)
 
 	private val progressNotificationBuilder =
-		createNotificationBuilder(titleId, progressNotification = true)
+		createNotificationBuilder(notificationTitleId, progressNotification = true)
 
 	private val simpleNotificationBuilder =
 		createNotificationBuilder(progressNotification = false)

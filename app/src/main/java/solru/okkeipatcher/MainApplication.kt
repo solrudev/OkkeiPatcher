@@ -71,8 +71,8 @@ class MainApplication : Application(), Configuration.Provider {
 		important: Boolean
 	) {
 		val channelIdString = getString(channelId)
-		val channelName = applicationContext.getString(nameId)
-		val channelDescription = applicationContext.getString(descriptionId)
+		val channelName = getString(nameId)
+		val channelDescription = getString(descriptionId)
 		val importance = NotificationManager.IMPORTANCE_HIGH
 		val channel = NotificationChannel(channelIdString, channelName, importance).apply {
 			description = channelDescription
