@@ -2,37 +2,37 @@ package solru.okkeipatcher.di
 
 import dagger.Binds
 import dagger.Module
+import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import solru.okkeipatcher.io.services.base.*
 import solru.okkeipatcher.io.services.impl.*
-import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
 @Module
 interface IoBindModule {
 
 	@Binds
-	@Singleton
+	@Reusable
 	fun bindIoService(ioServiceImpl: IoServiceImpl): IoService
 
 	@Binds
-	@Singleton
+	@Reusable
 	fun bindHttpDownloader(httpDownloaderImpl: HttpDownloaderImpl): HttpDownloader
 
 	@Binds
-	@Singleton
+	@Reusable
 	fun bindHashGenerator(sha256Generator: Sha256Generator): HashGenerator
 
 	@Binds
-	@Singleton
+	@Reusable
 	fun bindStreamCopier(streamCopierImpl: StreamCopierImpl): StreamCopier
 
 	@Binds
-	@Singleton
+	@Reusable
 	fun bindTextReader(textReaderImpl: TextReaderImpl): TextReader
 
 	@Binds
-	@Singleton
+	@Reusable
 	fun bindTextWriter(textWriterImpl: TextWriterImpl): TextWriter
 }
