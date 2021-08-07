@@ -45,22 +45,6 @@ android {
             signingConfig signingConfigs.getByName("release")
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
         }
-        releaseNoMinify {
-            minifyEnabled false
-            multiDexEnabled true
-            signingConfig signingConfigs.getByName("release")
-            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
-        }
-        releaseMinifiedNoObfuscation {
-            postprocessing {
-                removeUnusedCode true
-                removeUnusedResources true
-                obfuscate false
-                optimizeCode true
-                proguardFiles = ["proguard-rules.pro"]
-            }
-            signingConfig signingConfigs.getByName("release")
-        }
     }
 
     aaptOptions {
