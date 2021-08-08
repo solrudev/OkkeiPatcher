@@ -12,7 +12,6 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import solru.okkeipatcher.R
 import solru.okkeipatcher.core.base.AppService
-import solru.okkeipatcher.model.dto.ProgressData
 import solru.okkeipatcher.ui.activities.MainActivity
 import solru.okkeipatcher.utils.extensions.empty
 
@@ -42,7 +41,7 @@ abstract class BaseWorker(
 		try {
 			setForeground(createForegroundInfo())
 			coroutineScope {
-				collectProgress()
+				observeService()
 				doServiceWork()
 				cancel()
 			}
@@ -104,51 +103,45 @@ abstract class BaseWorker(
 		}.build()
 	}
 
-	private fun CoroutineScope.collectProgress() = launch {
-		var progressData = ProgressData()
-		var status = R.string.empty
+	private fun CoroutineScope.observeService() = launch {
 		launch {
-			service.progress.conflate().collect {
-				val notification =
-					progressNotificationBuilder.setProgress(it.max, it.progress, it.isIndeterminate)
-						.build()
-				notificationManager.notify(PROGRESS_NOTIFICATION_ID, notification)
-				delay(1000)
-			}
-		}
-		launch {
-			service.progress.collect {
-				progressData = it
-				setProgress(
-					workDataOf(
-						KEY_PROGRESS to it.progress,
-						KEY_PROGRESS_MAX to it.max,
-						KEY_PROGRESS_INDETERMINATE to it.isIndeterminate,
-						KEY_STATUS to status
+			combine(
+				service.progress,
+				service.status
+			) { progressData, status -> progressData to status }
+				.conflate()
+				.collect {
+					setProgress(
+						workDataOf(
+							KEY_PROGRESS to it.first.progress,
+							KEY_PROGRESS_MAX to it.first.max,
+							KEY_IS_PROGRESS_INDETERMINATE to it.first.isIndeterminate,
+							KEY_STATUS to it.second
+						)
 					)
-				)
-			}
+				}
 		}
 		launch {
-			service.status.conflate().collect {
-				val statusString = applicationContext.getString(it)
-				val notification = progressNotificationBuilder.setContentText(statusString).build()
-				notificationManager.notify(PROGRESS_NOTIFICATION_ID, notification)
-				delay(500)
-			}
+			service.progress.conflate()
+				.collect {
+					val notification = progressNotificationBuilder.setProgress(
+						it.max,
+						it.progress,
+						it.isIndeterminate
+					).build()
+					notificationManager.notify(PROGRESS_NOTIFICATION_ID, notification)
+					delay(1000)
+				}
 		}
 		launch {
-			service.status.collect {
-				status = it
-				setProgress(
-					workDataOf(
-						KEY_PROGRESS to progressData.progress,
-						KEY_PROGRESS_MAX to progressData.max,
-						KEY_PROGRESS_INDETERMINATE to progressData.isIndeterminate,
-						KEY_STATUS to it
-					)
-				)
-			}
+			service.status.conflate()
+				.collect {
+					val statusString = applicationContext.getString(it)
+					val notification =
+						progressNotificationBuilder.setContentText(statusString).build()
+					notificationManager.notify(PROGRESS_NOTIFICATION_ID, notification)
+					delay(500)
+				}
 		}
 		launch {
 			service.message.collect {
@@ -162,7 +155,7 @@ abstract class BaseWorker(
 	companion object {
 		const val KEY_PROGRESS = "PROGRESS"
 		const val KEY_PROGRESS_MAX = "PROGRESS_MAX"
-		const val KEY_PROGRESS_INDETERMINATE = "PROGRESS_INDETERMINATE"
+		const val KEY_IS_PROGRESS_INDETERMINATE = "IS_PROGRESS_INDETERMINATE"
 		const val KEY_STATUS = "STATUS"
 		const val KEY_FAILURE_CAUSE = "WORKER_FAILURE_CAUSE"
 

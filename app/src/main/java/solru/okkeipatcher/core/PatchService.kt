@@ -6,7 +6,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.shareIn
-import kotlinx.coroutines.flow.stateIn
 import solru.okkeipatcher.R
 import solru.okkeipatcher.core.base.AppServiceBase
 import solru.okkeipatcher.core.base.GameFileStrategy
@@ -26,7 +25,7 @@ class PatchService @Inject constructor(private val strategy: GameFileStrategy) :
 		strategy.obb.progress,
 		strategy.saveData.progress,
 		progressMutable
-	).shareIn(GlobalScope, SharingStarted.Lazily, replay = 1)
+	).shareIn(GlobalScope, SharingStarted.Eagerly, replay = 1)
 
 	@OptIn(DelicateCoroutinesApi::class, ExperimentalCoroutinesApi::class)
 	override val status = merge(
@@ -34,7 +33,7 @@ class PatchService @Inject constructor(private val strategy: GameFileStrategy) :
 		strategy.obb.status,
 		strategy.saveData.status,
 		statusMutable
-	).stateIn(GlobalScope, SharingStarted.Lazily, R.string.empty)
+	).shareIn(GlobalScope, SharingStarted.Eagerly, replay = 1)
 
 	@OptIn(ExperimentalCoroutinesApi::class)
 	override val message =

@@ -31,7 +31,7 @@ class MainViewModel @Inject constructor(
 	private val _status = MutableLiveData(R.string.empty)
 	private val _progress = MutableLiveData(0)
 	private val _progressMax = MutableLiveData(100)
-	private val _progressIndeterminate = MutableLiveData(false)
+	private val _isProgressIndeterminate = MutableLiveData(false)
 	private val _isPatchEnabled = MutableLiveData(!isPatched())
 	private val _isRestoreEnabled = MutableLiveData(isPatched())
 	private val _isClearDataEnabled = MutableLiveData(true)
@@ -42,7 +42,7 @@ class MainViewModel @Inject constructor(
 	val status: LiveData<Int> get() = _status
 	val progress: LiveData<Int> get() = _progress
 	val progressMax: LiveData<Int> get() = _progressMax
-	val progressIndeterminate: LiveData<Boolean> get() = _progressIndeterminate
+	val isProgressIndeterminate: LiveData<Boolean> get() = _isProgressIndeterminate
 	val isPatchEnabled: LiveData<Boolean> get() = _isPatchEnabled
 	val isRestoreEnabled: LiveData<Boolean> get() = _isRestoreEnabled
 	val isClearDataEnabled: LiveData<Boolean> get() = _isClearDataEnabled
@@ -58,82 +58,91 @@ class MainViewModel @Inject constructor(
 			onProcessSaveDataEnabledChanged()
 		}
 
-	private val collectScope = CoroutineScope(Dispatchers.Main.immediate)
-
 	var isRunning = false
 		private set
 
-	fun patch() = startUniqueWork(PatchWorker::class.java, PatchWorker.WORK_NAME)
-	fun restore() = startUniqueWork(RestoreWorker::class.java, RestoreWorker.WORK_NAME)
+	private val workObservingScope = CoroutineScope(Dispatchers.Main.immediate)
+
+	fun patch() = startUniqueWork<PatchWorker>(PatchWorker.WORK_NAME)
+	fun restore() = startUniqueWork<RestoreWorker>(RestoreWorker.WORK_NAME)
 	fun cancel() = WorkManager.getInstance(MainApplication.context).cancelAllWork()
 
-	private fun startUniqueWork(workerClass: Class<out ListenableWorker>, workName: String) {
-		viewModelScope.launch {
-			val workRequest = OneTimeWorkRequest.from(workerClass)
-			WorkManager.getInstance(MainApplication.context).enqueueUniqueWork(
-				workName,
-				ExistingWorkPolicy.KEEP,
-				workRequest
-			)
-			collectWorkInfo(workName)
-		}
+	private inline fun <reified T : ListenableWorker> startUniqueWork(workName: String) {
+		val workRequest = OneTimeWorkRequestBuilder<T>()
+			.addTag(workName)
+			.build()
+		WorkManager.getInstance(MainApplication.context).enqueueUniqueWork(
+			workName,
+			ExistingWorkPolicy.KEEP,
+			workRequest
+		)
+		workObservingScope.observeWork(workRequest.id)
 	}
 
-	private fun CoroutineScope.collectWorkInfo(workName: String): Job {
-		val workInfoFlow = WorkManager.getInstance(MainApplication.context)
-			.getWorkInfosForUniqueWorkLiveData(workName)
+	@Suppress("NON_EXHAUSTIVE_WHEN")
+	private fun CoroutineScope.observeWork(workId: UUID) = launch {
+		var isWorkStarted = false
+		WorkManager.getInstance(MainApplication.context)
+			.getWorkInfoByIdLiveData(workId)
 			.asFlow()
-		return launch {
-			workInfoFlow.collect {
-				it.firstOrNull()?.let { workInfo ->
-					if (workInfo.state.isFinished) {
-						workInfo.outputData
-						isRunning = false
-						_patchText.value = R.string.patch
-						_restoreText.value = R.string.restore
-						_isPatchEnabled.value = !isPatched()
-						_isRestoreEnabled.value = isPatched()
-						_isClearDataEnabled.value = true
-						_progress.value = 0
-						_progressMax.value = 100
-						_progressIndeterminate.value = false
-						when (workInfo.state) {
-							WorkInfo.State.FAILED, WorkInfo.State.CANCELLED -> _status.value =
-								R.string.status_aborted
-							WorkInfo.State.SUCCEEDED -> when (workName) {
-								PatchWorker.WORK_NAME -> R.string.status_patch_success
-								RestoreWorker.WORK_NAME -> R.string.status_restore_success
-							}
+			.collect {
+				if (it == null) return@collect
+				with(it.progress) {
+					_status.value = getInt(BaseWorker.KEY_STATUS, R.string.empty)
+					_progress.value = getInt(BaseWorker.KEY_PROGRESS, 0)
+					_progressMax.value = getInt(BaseWorker.KEY_PROGRESS_MAX, 100)
+					_isProgressIndeterminate.value =
+						getBoolean(BaseWorker.KEY_IS_PROGRESS_INDETERMINATE, false)
+				}
+				if (it.state.isFinished) {
+					resetState()
+					isWorkStarted = false
+					when (it.state) {
+						WorkInfo.State.FAILED, WorkInfo.State.CANCELLED ->
+							_status.value = R.string.status_aborted
+						WorkInfo.State.SUCCEEDED -> when (it.tags.firstOrNull()) {
+							PatchWorker.WORK_NAME ->
+								_status.value = R.string.status_patch_success
+							RestoreWorker.WORK_NAME ->
+								_status.value = R.string.status_restore_success
 						}
-						WorkManager.getInstance(MainApplication.context).pruneWork()
-						collectScope.coroutineContext[Job]?.cancelChildren()
-						return@let
 					}
+					WorkManager.getInstance(MainApplication.context).pruneWork()
+					workObservingScope.coroutineContext[Job]?.cancelChildren()
+					return@collect
+				}
+				if (!isRunning) {
 					isRunning = true
-					when (workName) {
+				}
+				if (!isWorkStarted) {
+					isWorkStarted = true
+					when (it.tags.firstOrNull()) {
 						PatchWorker.WORK_NAME -> _patchText.value = R.string.abort
 						RestoreWorker.WORK_NAME -> _restoreText.value = R.string.abort
 					}
 					_isClearDataEnabled.value = false
-					with(workInfo.progress) {
-						_progress.value = getInt(BaseWorker.KEY_PROGRESS, 0)
-						_progressMax.value = getInt(BaseWorker.KEY_PROGRESS_MAX, 100)
-						_progressIndeterminate.value =
-							getBoolean(BaseWorker.KEY_PROGRESS_INDETERMINATE, false)
-						_status.value = getInt(BaseWorker.KEY_STATUS, R.string.empty)
-					}
 				}
 			}
-		}
 	}
 
-	private fun observeRunningWorker(workName: String) {
+	private fun resetState() {
+		isRunning = false
+		_patchText.value = R.string.patch
+		_restoreText.value = R.string.restore
+		_isPatchEnabled.value = !isPatched()
+		_isRestoreEnabled.value = isPatched()
+		_isClearDataEnabled.value = true
+		_progress.value = 0
+		_progressMax.value = 100
+		_isProgressIndeterminate.value = false
+	}
+
+	private fun observeRunningWork(workName: String) =
 		WorkManager.getInstance(MainApplication.context)
 			.getWorkInfosForUniqueWork(workName)
 			.get()
 			.firstOrNull()
-			?.let { collectScope.collectWorkInfo(workName) }
-	}
+			?.let { workObservingScope.observeWork(it.id) }
 
 	private fun isPatched() = Preferences.get(AppKey.is_patched.name, false)
 
@@ -142,15 +151,15 @@ class MainViewModel @Inject constructor(
 	}
 
 	override fun onResume(owner: LifecycleOwner) {
-		observeRunningWorker(PatchWorker.WORK_NAME)
-		observeRunningWorker(RestoreWorker.WORK_NAME)
+		observeRunningWork(PatchWorker.WORK_NAME)
+		observeRunningWork(RestoreWorker.WORK_NAME)
 	}
 
 	override fun onStop(owner: LifecycleOwner) {
-		collectScope.coroutineContext[Job]?.cancelChildren()
+		workObservingScope.coroutineContext[Job]?.cancelChildren()
 	}
 
 	override fun onCleared() {
-		collectScope.cancel()
+		workObservingScope.cancel()
 	}
 }

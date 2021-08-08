@@ -102,8 +102,8 @@ abstract class AppServiceBase : ProgressProviderBase(), AppService {
 	Guarantees setting status to aborted on exception and resetting progress before returning.
 	 */
 	protected suspend inline fun <T> tryWrapper(
-		onCatch: (Throwable) -> Unit = { },
-		onFinally: () -> Unit = { },
+		onCatch: (Throwable) -> Unit = {},
+		onFinally: () -> Unit = {},
 		block: () -> T
 	): T {
 		try {
