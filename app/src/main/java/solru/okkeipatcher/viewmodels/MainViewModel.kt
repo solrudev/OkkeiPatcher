@@ -1,21 +1,19 @@
 package solru.okkeipatcher.viewmodels
 
 import android.os.Build
-import android.util.Log
 import androidx.lifecycle.*
 import androidx.work.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import solru.okkeipatcher.MainApplication
 import solru.okkeipatcher.R
 import solru.okkeipatcher.core.*
 import solru.okkeipatcher.core.base.PatchInfoStrategy
+import solru.okkeipatcher.core.workers.BaseWorker
 import solru.okkeipatcher.core.workers.PatchWorker
+import solru.okkeipatcher.core.workers.RestoreWorker
 import solru.okkeipatcher.model.dto.Message
-import solru.okkeipatcher.model.dto.ProgressData
-import solru.okkeipatcher.utils.DebugUtil
 import solru.okkeipatcher.utils.Preferences
 import java.util.*
 import javax.inject.Inject
@@ -25,10 +23,7 @@ import javax.inject.Provider
 class MainViewModel @Inject constructor(
 	private val manifestRepository: ManifestRepository,
 	private val appUpdateRepository: AppUpdateRepository,
-	private val patchServiceProvider: Provider<PatchService>,
-	private val restoreServiceProvider: Provider<RestoreService>,
-	private val patchInfoStrategyProvider: Provider<PatchInfoStrategy>,
-	private val debugUtil: DebugUtil
+	private val patchInfoStrategyProvider: Provider<PatchInfoStrategy>
 ) : ViewModel(), DefaultLifecycleObserver {
 
 	private val _patchText = MutableLiveData(R.string.patch)
@@ -65,112 +60,90 @@ class MainViewModel @Inject constructor(
 
 	private val collectScope = CoroutineScope(Dispatchers.Main.immediate)
 
-	private fun onProcessSaveDataEnabledChanged() {
-		Preferences.set(AppKey.process_save_data_enabled.name, isProcessSaveDataEnabled)
-	}
-
-	private fun isPatched() = Preferences.get(AppKey.is_patched.name, false)
-
 	var isRunning = false
+		private set
 
-	override fun onResume(owner: LifecycleOwner) {
-		WorkManager.getInstance(MainApplication.context)
-			.getWorkInfosForUniqueWork(PatchWorker.WORK_NAME)
-			.get()
-			.firstOrNull()
-			.let {
-				if (it == null) return
-				collectScope.collectProgress(patchServiceProvider.get().progress)
-				collectScope.collectStatus(patchServiceProvider.get().status)
-				collectScope.collectMessages(patchServiceProvider.get().message)
-				if (it.state.isFinished) {
-					isRunning = false
-					_patchText.value = R.string.patch
-					return
-				}
-				isRunning = true
-				_patchText.value = R.string.abort
-				collectScope.collectWorkInfo(PatchWorker.WORK_NAME)
-			}
-	}
+	fun patch() = startUniqueWork(PatchWorker::class.java, PatchWorker.WORK_NAME)
+	fun restore() = startUniqueWork(RestoreWorker::class.java, RestoreWorker.WORK_NAME)
+	fun cancel() = WorkManager.getInstance(MainApplication.context).cancelAllWork()
 
-	fun patch() {
-		isRunning = true
-		_patchText.value = R.string.abort
-		collectScope.collectProgress(patchServiceProvider.get().progress)
-		collectScope.collectStatus(patchServiceProvider.get().status)
-		collectScope.collectMessages(patchServiceProvider.get().message)
+	private fun startUniqueWork(workerClass: Class<out ListenableWorker>, workName: String) {
 		viewModelScope.launch {
-			try {
-				val patchWorkRequest = OneTimeWorkRequest.from(PatchWorker::class.java)
-				WorkManager.getInstance(MainApplication.context).enqueueUniqueWork(
-					PatchWorker.WORK_NAME,
-					ExistingWorkPolicy.KEEP,
-					patchWorkRequest
-				)
-				collectWorkInfo(PatchWorker.WORK_NAME)
-			} catch (e: Throwable) {
-				if (e !is CancellationException) {
-					debugUtil.writeBugReport(e)
-					Log.e(this@MainViewModel::class.qualifiedName, e.message, e)
-				}
-			}
-		}
-	}
-
-	private fun CoroutineScope.collectProgress(flow: Flow<ProgressData>) = launch {
-		flow.collect {
-			_progress.value = it.progress
-			_progressMax.value = it.max
-			_progressIndeterminate.value = it.isIndeterminate
-		}
-	}
-
-	private fun CoroutineScope.collectStatus(flow: Flow<Int>) = launch {
-		flow.collect {
-			_status.value = it
-		}
-	}
-
-	private fun CoroutineScope.collectMessages(flow: Flow<Message>) = launch {
-		flow.collect {
-			Log.i(
-				this@MainViewModel::class.qualifiedName,
-				MainApplication.context.getString(it.messageId)
+			val workRequest = OneTimeWorkRequest.from(workerClass)
+			WorkManager.getInstance(MainApplication.context).enqueueUniqueWork(
+				workName,
+				ExistingWorkPolicy.KEEP,
+				workRequest
 			)
+			collectWorkInfo(workName)
 		}
 	}
 
 	private fun CoroutineScope.collectWorkInfo(workName: String): Job {
-		val liveData = WorkManager.getInstance(MainApplication.context)
+		val workInfoFlow = WorkManager.getInstance(MainApplication.context)
 			.getWorkInfosForUniqueWorkLiveData(workName)
 			.asFlow()
 		return launch {
-			liveData.collect {
+			workInfoFlow.collect {
 				it.firstOrNull()?.let { workInfo ->
 					if (workInfo.state.isFinished) {
+						workInfo.outputData
 						isRunning = false
 						_patchText.value = R.string.patch
 						_restoreText.value = R.string.restore
+						_isPatchEnabled.value = !isPatched()
+						_isRestoreEnabled.value = isPatched()
+						_isClearDataEnabled.value = true
 						_progress.value = 0
+						_progressMax.value = 100
 						_progressIndeterminate.value = false
+						when (workInfo.state) {
+							WorkInfo.State.FAILED, WorkInfo.State.CANCELLED -> _status.value =
+								R.string.status_aborted
+							WorkInfo.State.SUCCEEDED -> when (workName) {
+								PatchWorker.WORK_NAME -> R.string.status_patch_success
+								RestoreWorker.WORK_NAME -> R.string.status_restore_success
+							}
+						}
 						WorkManager.getInstance(MainApplication.context).pruneWork()
 						collectScope.coroutineContext[Job]?.cancelChildren()
+						return@let
+					}
+					isRunning = true
+					when (workName) {
+						PatchWorker.WORK_NAME -> _patchText.value = R.string.abort
+						RestoreWorker.WORK_NAME -> _restoreText.value = R.string.abort
+					}
+					_isClearDataEnabled.value = false
+					with(workInfo.progress) {
+						_progress.value = getInt(BaseWorker.KEY_PROGRESS, 0)
+						_progressMax.value = getInt(BaseWorker.KEY_PROGRESS_MAX, 100)
+						_progressIndeterminate.value =
+							getBoolean(BaseWorker.KEY_PROGRESS_INDETERMINATE, false)
+						_status.value = getInt(BaseWorker.KEY_STATUS, R.string.empty)
 					}
 				}
 			}
 		}
 	}
 
-	fun cancel() {
-		WorkManager.getInstance(MainApplication.context).cancelAllWork()
-		isRunning = false
-		_patchText.value = R.string.patch
-		_restoreText.value = R.string.restore
-		_status.value = R.string.status_aborted
-		_progress.value = 0
-		_progressIndeterminate.value = false
-		collectScope.coroutineContext[Job]?.cancelChildren()
+	private fun observeRunningWorker(workName: String) {
+		WorkManager.getInstance(MainApplication.context)
+			.getWorkInfosForUniqueWork(workName)
+			.get()
+			.firstOrNull()
+			?.let { collectScope.collectWorkInfo(workName) }
+	}
+
+	private fun isPatched() = Preferences.get(AppKey.is_patched.name, false)
+
+	private fun onProcessSaveDataEnabledChanged() {
+		Preferences.set(AppKey.process_save_data_enabled.name, isProcessSaveDataEnabled)
+	}
+
+	override fun onResume(owner: LifecycleOwner) {
+		observeRunningWorker(PatchWorker.WORK_NAME)
+		observeRunningWorker(RestoreWorker.WORK_NAME)
 	}
 
 	override fun onStop(owner: LifecycleOwner) {

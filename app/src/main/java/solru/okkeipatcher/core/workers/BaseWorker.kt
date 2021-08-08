@@ -12,6 +12,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import solru.okkeipatcher.R
 import solru.okkeipatcher.core.base.AppService
+import solru.okkeipatcher.model.dto.ProgressData
 import solru.okkeipatcher.ui.activities.MainActivity
 import solru.okkeipatcher.utils.extensions.empty
 
@@ -42,8 +43,6 @@ abstract class BaseWorker(
 			setForeground(createForegroundInfo())
 			coroutineScope {
 				collectProgress()
-				collectStatus()
-				collectMessages()
 				doServiceWork()
 				cancel()
 			}
@@ -106,33 +105,65 @@ abstract class BaseWorker(
 	}
 
 	private fun CoroutineScope.collectProgress() = launch {
-		service.progress.conflate().collect {
-			val notification =
-				progressNotificationBuilder.setProgress(it.max, it.progress, it.isIndeterminate)
-					.build()
-			notificationManager.notify(PROGRESS_NOTIFICATION_ID, notification)
-			delay(1000)
+		var progressData = ProgressData()
+		var status = R.string.empty
+		launch {
+			service.progress.conflate().collect {
+				val notification =
+					progressNotificationBuilder.setProgress(it.max, it.progress, it.isIndeterminate)
+						.build()
+				notificationManager.notify(PROGRESS_NOTIFICATION_ID, notification)
+				delay(1000)
+			}
 		}
-	}
-
-	private fun CoroutineScope.collectStatus() = launch {
-		service.status.conflate().collect {
-			val status = applicationContext.getString(it)
-			val notification = progressNotificationBuilder.setContentText(status).build()
-			notificationManager.notify(PROGRESS_NOTIFICATION_ID, notification)
-			delay(500)
+		launch {
+			service.progress.collect {
+				progressData = it
+				setProgress(
+					workDataOf(
+						KEY_PROGRESS to it.progress,
+						KEY_PROGRESS_MAX to it.max,
+						KEY_PROGRESS_INDETERMINATE to it.isIndeterminate,
+						KEY_STATUS to status
+					)
+				)
+			}
 		}
-	}
-
-	private fun CoroutineScope.collectMessages() = launch {
-		service.message.collect {
-			++MESSAGE_NOTIFICATION_ID
-			val notification = createMessageNotification(it.titleId, it.messageId)
-			notificationManager.notify(MESSAGE_NOTIFICATION_ID, notification)
+		launch {
+			service.status.conflate().collect {
+				val statusString = applicationContext.getString(it)
+				val notification = progressNotificationBuilder.setContentText(statusString).build()
+				notificationManager.notify(PROGRESS_NOTIFICATION_ID, notification)
+				delay(500)
+			}
+		}
+		launch {
+			service.status.collect {
+				status = it
+				setProgress(
+					workDataOf(
+						KEY_PROGRESS to progressData.progress,
+						KEY_PROGRESS_MAX to progressData.max,
+						KEY_PROGRESS_INDETERMINATE to progressData.isIndeterminate,
+						KEY_STATUS to it
+					)
+				)
+			}
+		}
+		launch {
+			service.message.collect {
+				++MESSAGE_NOTIFICATION_ID
+				val notification = createMessageNotification(it.titleId, it.messageId)
+				notificationManager.notify(MESSAGE_NOTIFICATION_ID, notification)
+			}
 		}
 	}
 
 	companion object {
+		const val KEY_PROGRESS = "PROGRESS"
+		const val KEY_PROGRESS_MAX = "PROGRESS_MAX"
+		const val KEY_PROGRESS_INDETERMINATE = "PROGRESS_INDETERMINATE"
+		const val KEY_STATUS = "STATUS"
 		const val KEY_FAILURE_CAUSE = "WORKER_FAILURE_CAUSE"
 
 		@JvmStatic

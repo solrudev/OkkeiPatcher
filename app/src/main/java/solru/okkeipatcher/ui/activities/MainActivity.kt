@@ -89,6 +89,11 @@ class MainActivity : AppCompatActivity() {
 	}
 
 	fun onRestoreClick() {
+		if (!_viewModel.isRunning) {
+			_viewModel.restore()
+			return
+		}
+		_viewModel.cancel()
 	}
 
 	fun onClearDataClick() {
