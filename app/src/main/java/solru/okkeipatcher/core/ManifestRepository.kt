@@ -5,16 +5,15 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString
 import solru.okkeipatcher.R
 import solru.okkeipatcher.core.base.AppServiceBase
-import solru.okkeipatcher.core.base.ManifestStrategy
 import solru.okkeipatcher.io.services.base.IoService
 import solru.okkeipatcher.io.utils.extensions.copyFile
 import solru.okkeipatcher.io.utils.extensions.readAllText
-import solru.okkeipatcher.model.dto.patchupdates.PatchUpdates
 import solru.okkeipatcher.model.manifest.OkkeiManifest
 import solru.okkeipatcher.utils.extensions.makeIndeterminate
 import solru.okkeipatcher.utils.extensions.reset
 import java.io.File
 import javax.inject.Inject
+import javax.inject.Singleton
 
 private const val MANIFEST_URL =
 	"https://raw.githubusercontent.com/ForrrmerBlack/okkei-patcher/master/Manifest.json"
@@ -22,27 +21,16 @@ private const val MANIFEST_URL =
 private const val MANIFEST_FILE_NAME = "Manifest.json"
 private const val MANIFEST_BACKUP_FILE_NAME = "ManifestBackup.json"
 
-class ManifestRepository @Inject constructor(
-	var strategy: ManifestStrategy,
-	private val ioService: IoService
-) : AppServiceBase() {
+@Singleton
+class ManifestRepository @Inject constructor(private val ioService: IoService) : AppServiceBase() {
+
+	val isManifestLoaded: Boolean
+		get() = ::manifest.isInitialized && ::manifestJsonString.isInitialized
 
 	private val manifestFile = File(OkkeiStorage.private, MANIFEST_FILE_NAME)
 	private val manifestBackupFile = File(OkkeiStorage.private, MANIFEST_BACKUP_FILE_NAME)
 	private lateinit var manifest: OkkeiManifest
 	private lateinit var manifestJsonString: String
-
-	val isManifestLoaded: Boolean
-		get() = ::manifest.isInitialized && ::manifestJsonString.isInitialized
-
-	val patchUpdates: PatchUpdates
-		get() = strategy.patchUpdates(manifest)
-
-	val patchSizeInMb: Double
-		get() = strategy.patchSizeInMb(manifest)
-
-	val appUpdateSizeInMb: Double
-		get() = "%.2f".format(manifest.okkeiPatcher.size / 1_048_576.0).toDouble()
 
 	suspend fun getManifest(): OkkeiManifest {
 		if (isManifestLoaded) {

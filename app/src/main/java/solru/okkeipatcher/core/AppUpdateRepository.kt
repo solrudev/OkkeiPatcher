@@ -8,9 +8,11 @@ import solru.okkeipatcher.model.manifest.OkkeiManifest
 import solru.okkeipatcher.pm.PackageManager
 import java.io.File
 import javax.inject.Inject
+import javax.inject.Singleton
 
 private const val APP_UPDATE_FILE_NAME = "OkkeiPatcher.apk"
 
+@Singleton
 class AppUpdateRepository @Inject constructor(private val ioService: IoService) : AppServiceBase() {
 
 	private val appUpdateFile = File(OkkeiStorage.private, APP_UPDATE_FILE_NAME)
@@ -18,6 +20,9 @@ class AppUpdateRepository @Inject constructor(private val ioService: IoService) 
 
 	fun isAppUpdateAvailable(manifest: OkkeiManifest) =
 		manifest.okkeiPatcher.version > PackageManager.versionCode
+
+	fun appUpdateSizeInMb(manifest: OkkeiManifest) =
+		"%.2f".format(manifest.okkeiPatcher.size / 1_048_576.0).toDouble()
 
 	suspend fun getAppUpdate(manifest: OkkeiManifest): File {
 		if (isAppUpdateDownloaded) {

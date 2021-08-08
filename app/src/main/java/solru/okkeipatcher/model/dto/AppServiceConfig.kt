@@ -1,10 +1,9 @@
 package solru.okkeipatcher.model.dto
 
-import kotlinx.serialization.Serializable
 import solru.okkeipatcher.model.dto.patchupdates.PatchUpdates
+import solru.okkeipatcher.model.dto.patchupdates.PatchUpdatesDefault
 
-@Serializable
 data class AppServiceConfig(
 	val processSaveData: Boolean,
-	val patchUpdates: PatchUpdates
+	val patchUpdates: PatchUpdates = PatchUpdatesDefault()
 )

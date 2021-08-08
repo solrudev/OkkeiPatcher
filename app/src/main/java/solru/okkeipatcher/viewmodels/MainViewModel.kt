@@ -8,24 +8,15 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
-import kotlinx.serialization.encodeToString
 import solru.okkeipatcher.MainApplication
 import solru.okkeipatcher.R
 import solru.okkeipatcher.core.*
-import solru.okkeipatcher.core.base.AppService
-import solru.okkeipatcher.core.base.GameFileStrategy
-import solru.okkeipatcher.core.base.ManifestStrategy
-import solru.okkeipatcher.core.workers.BaseWorker
+import solru.okkeipatcher.core.base.PatchInfoStrategy
 import solru.okkeipatcher.core.workers.PatchWorker
-import solru.okkeipatcher.model.dto.AppServiceConfig
 import solru.okkeipatcher.model.dto.Message
 import solru.okkeipatcher.model.dto.ProgressData
-import solru.okkeipatcher.model.files.common.CommonFileInstances
-import solru.okkeipatcher.pm.PackageInstaller
-import solru.okkeipatcher.pm.PackageUninstaller
 import solru.okkeipatcher.utils.DebugUtil
 import solru.okkeipatcher.utils.Preferences
-import java.io.File
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Provider
@@ -36,8 +27,7 @@ class MainViewModel @Inject constructor(
 	private val appUpdateRepository: AppUpdateRepository,
 	private val patchServiceProvider: Provider<PatchService>,
 	private val restoreServiceProvider: Provider<RestoreService>,
-	private val gameFileStrategyProvider: Provider<GameFileStrategy>,
-	private val manifestStrategyProvider: Provider<ManifestStrategy>,
+	private val patchInfoStrategyProvider: Provider<PatchInfoStrategy>,
 	private val debugUtil: DebugUtil
 ) : ViewModel(), DefaultLifecycleObserver {
 
@@ -47,9 +37,9 @@ class MainViewModel @Inject constructor(
 	private val _progress = MutableLiveData(0)
 	private val _progressMax = MutableLiveData(100)
 	private val _progressIndeterminate = MutableLiveData(false)
-	private val _patchEnabled = MutableLiveData(!isPatched())
-	private val _restoreEnabled = MutableLiveData(isPatched())
-	private val _clearDataEnabled = MutableLiveData(true)
+	private val _isPatchEnabled = MutableLiveData(!isPatched())
+	private val _isRestoreEnabled = MutableLiveData(isPatched())
+	private val _isClearDataEnabled = MutableLiveData(true)
 	private val _errorMessage = MutableLiveData<Message>()
 
 	val patchText: LiveData<Int> get() = _patchText
@@ -58,12 +48,12 @@ class MainViewModel @Inject constructor(
 	val progress: LiveData<Int> get() = _progress
 	val progressMax: LiveData<Int> get() = _progressMax
 	val progressIndeterminate: LiveData<Boolean> get() = _progressIndeterminate
-	val patchEnabled: LiveData<Boolean> get() = _patchEnabled
-	val restoreEnabled: LiveData<Boolean> get() = _restoreEnabled
-	val clearDataEnabled: LiveData<Boolean> get() = _clearDataEnabled
+	val isPatchEnabled: LiveData<Boolean> get() = _isPatchEnabled
+	val isRestoreEnabled: LiveData<Boolean> get() = _isRestoreEnabled
+	val isClearDataEnabled: LiveData<Boolean> get() = _isClearDataEnabled
 	val errorMessage: LiveData<Message> get() = _errorMessage
 
-	var processSaveDataEnabled = Preferences.get(
+	var isProcessSaveDataEnabled = Preferences.get(
 		AppKey.process_save_data_enabled.name,
 		Build.VERSION.SDK_INT < Build.VERSION_CODES.R
 	)
@@ -76,7 +66,7 @@ class MainViewModel @Inject constructor(
 	private val collectScope = CoroutineScope(Dispatchers.Main.immediate)
 
 	private fun onProcessSaveDataEnabledChanged() {
-		Preferences.set(AppKey.process_save_data_enabled.name, processSaveDataEnabled)
+		Preferences.set(AppKey.process_save_data_enabled.name, isProcessSaveDataEnabled)
 	}
 
 	private fun isPatched() = Preferences.get(AppKey.is_patched.name, false)
@@ -112,17 +102,7 @@ class MainViewModel @Inject constructor(
 		collectScope.collectMessages(patchServiceProvider.get().message)
 		viewModelScope.launch {
 			try {
-				val manifest = manifestRepository.getManifestJsonString()
-				val config = createServiceConfig()
-				val configString = JsonSerializer.encodeToString(config)
-				val patchWorkRequest = OneTimeWorkRequestBuilder<PatchWorker>()
-					.setInputData(
-						workDataOf(
-							BaseWorker.KEY_MANIFEST to manifest,
-							BaseWorker.KEY_CONFIG to configString
-						)
-					)
-					.build()
+				val patchWorkRequest = OneTimeWorkRequest.from(PatchWorker::class.java)
 				WorkManager.getInstance(MainApplication.context).enqueueUniqueWork(
 					PatchWorker.WORK_NAME,
 					ExistingWorkPolicy.KEEP,
@@ -137,9 +117,6 @@ class MainViewModel @Inject constructor(
 			}
 		}
 	}
-
-	private fun createServiceConfig() =
-		AppServiceConfig(processSaveDataEnabled, manifestRepository.patchUpdates)
 
 	private fun CoroutineScope.collectProgress(flow: Flow<ProgressData>) = launch {
 		flow.collect {

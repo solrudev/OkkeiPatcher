@@ -10,12 +10,12 @@ import kotlinx.coroutines.flow.stateIn
 import solru.okkeipatcher.R
 import solru.okkeipatcher.core.base.AppServiceBase
 import solru.okkeipatcher.core.base.GameFileStrategy
+import solru.okkeipatcher.model.dto.AppServiceConfig
 import solru.okkeipatcher.utils.Preferences
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class RestoreService @Inject constructor(var strategy: GameFileStrategy) : AppServiceBase() {
+class RestoreService @Inject constructor(private val strategy: GameFileStrategy) :
+	AppServiceBase() {
 
 	@OptIn(DelicateCoroutinesApi::class, ExperimentalCoroutinesApi::class)
 	override val progress = merge(
@@ -40,16 +40,21 @@ class RestoreService @Inject constructor(var strategy: GameFileStrategy) : AppSe
 	private val isBackupAvailable: Boolean
 		get() = strategy.apk.backupExists && strategy.obb.backupExists
 
-	suspend fun restore() = tryWrapper(onCatch = { strategy.saveData.clearTempFiles() }) {
-		isRunning = true
-		assertCanRestore()
-		strategy.saveData.backup()
-		strategy.apk.restore()
-		strategy.obb.restore()
-		strategy.saveData.restore()
-		Preferences.set(AppKey.is_patched.name, false)
-		statusMutable.emit(R.string.status_restore_success)
-	}
+	suspend fun restore(config: AppServiceConfig) =
+		tryWrapper(onCatch = { strategy.saveData.clearTempFiles() }) {
+			isRunning = true
+			assertCanRestore()
+			if (config.processSaveData) {
+				strategy.saveData.backup()
+			}
+			strategy.apk.restore()
+			strategy.obb.restore()
+			if (config.processSaveData) {
+				strategy.saveData.restore()
+			}
+			Preferences.set(AppKey.is_patched.name, false)
+			statusMutable.emit(R.string.status_restore_success)
+		}
 
 	private fun assertCanRestore() {
 		val isPatched = Preferences.get(AppKey.is_patched.name, false)

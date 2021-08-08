@@ -10,14 +10,12 @@ import androidx.core.app.NotificationCompat
 import androidx.work.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.serialization.decodeFromString
 import solru.okkeipatcher.R
-import solru.okkeipatcher.core.JsonSerializer
 import solru.okkeipatcher.core.base.AppService
-import solru.okkeipatcher.model.dto.AppServiceConfig
-import solru.okkeipatcher.model.manifest.OkkeiManifest
 import solru.okkeipatcher.ui.activities.MainActivity
 import solru.okkeipatcher.utils.extensions.empty
+
+private const val PROGRESS_NOTIFICATION_ID = 813047
 
 abstract class BaseWorker(
 	context: Context,
@@ -25,12 +23,6 @@ abstract class BaseWorker(
 	notificationTitleId: Int,
 	private val service: AppService
 ) : CoroutineWorker(context, workerParameters) {
-
-	protected lateinit var manifest: OkkeiManifest
-		private set
-
-	protected lateinit var config: AppServiceConfig
-		private set
 
 	private val notificationManager =
 		context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -46,11 +38,6 @@ abstract class BaseWorker(
 	abstract suspend fun doServiceWork()
 
 	final override suspend fun doWork() = coroutineScope {
-		try {
-			deserializeInputData()
-		} catch (e: Exception) {
-			return@coroutineScope Result.failure(workDataOf(KEY_FAILURE_CAUSE to e.message))
-		}
 		try {
 			setForeground(createForegroundInfo())
 			coroutineScope {
@@ -69,22 +56,6 @@ abstract class BaseWorker(
 			}
 		}
 		return@coroutineScope Result.success()
-	}
-
-	private fun deserializeInputData() {
-		val manifestString =
-			inputData.getString(KEY_MANIFEST) ?: throw Exception("No manifest supplied")
-		val configString = inputData.getString(KEY_CONFIG) ?: throw Exception("No config supplied")
-		try {
-			manifest = JsonSerializer.decodeFromString(manifestString)
-		} catch (e: Throwable) {
-			throw Exception("Invalid manifest", e)
-		}
-		try {
-			config = JsonSerializer.decodeFromString(configString)
-		} catch (e: Throwable) {
-			throw Exception("Invalid config", e)
-		}
 	}
 
 	private fun createForegroundInfo(): ForegroundInfo {
@@ -162,10 +133,7 @@ abstract class BaseWorker(
 	}
 
 	companion object {
-		const val KEY_MANIFEST = "WORKER_MANIFEST"
-		const val KEY_CONFIG = "WORKER_CONFIG"
 		const val KEY_FAILURE_CAUSE = "WORKER_FAILURE_CAUSE"
-		const val PROGRESS_NOTIFICATION_ID = 813047
 
 		@JvmStatic
 		private var MESSAGE_NOTIFICATION_ID = 49725

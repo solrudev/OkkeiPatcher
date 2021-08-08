@@ -1,7 +1,7 @@
 package solru.okkeipatcher.core.impl.english
 
 import solru.okkeipatcher.core.AppKey
-import solru.okkeipatcher.core.base.ManifestStrategy
+import solru.okkeipatcher.core.base.PatchInfoStrategy
 import solru.okkeipatcher.model.Language
 import solru.okkeipatcher.model.dto.patchupdates.PatchUpdates
 import solru.okkeipatcher.model.dto.patchupdates.PatchUpdatesEnglish
@@ -9,7 +9,7 @@ import solru.okkeipatcher.model.manifest.OkkeiManifest
 import solru.okkeipatcher.utils.Preferences
 import kotlin.math.round
 
-class ManifestStrategyEnglish : ManifestStrategy {
+class PatchInfoStrategyEnglish : PatchInfoStrategy {
 
 	override fun patchUpdates(manifest: OkkeiManifest): PatchUpdates {
 		return PatchUpdatesEnglish(

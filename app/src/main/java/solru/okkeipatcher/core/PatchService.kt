@@ -17,10 +17,8 @@ import solru.okkeipatcher.model.manifest.OkkeiManifest
 import solru.okkeipatcher.pm.PackageManager
 import solru.okkeipatcher.utils.Preferences
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class PatchService @Inject constructor(var strategy: GameFileStrategy) : AppServiceBase() {
+class PatchService @Inject constructor(private val strategy: GameFileStrategy) : AppServiceBase() {
 
 	@OptIn(DelicateCoroutinesApi::class, ExperimentalCoroutinesApi::class)
 	override val progress = merge(
