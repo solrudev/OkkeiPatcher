@@ -172,7 +172,7 @@ abstract class Apk(
 				apkProgressMonitor.workCompleted.toInt(),
 				apkProgressMonitor.totalWork.toInt()
 			)
-			delay(40)
+			delay(30)
 		}
 	}
 
