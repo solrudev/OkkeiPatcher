@@ -75,6 +75,10 @@ abstract class Apk(
 		}
 	}
 
+	override fun deleteBackup() {
+		commonFileInstances.backupApk.deleteIfExists()
+	}
+
 	override suspend fun backup() =
 		tryWrapper(onCatch = { commonFileInstances.backupApk.deleteIfExists() }) {
 			progressMutable.reset()

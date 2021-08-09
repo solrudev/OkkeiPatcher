@@ -51,6 +51,8 @@ class RestoreService @Inject constructor(private val strategy: GameFileStrategy)
 			if (config.processSaveData) {
 				strategy.saveData.restore()
 			}
+			strategy.apk.deleteBackup()
+			strategy.obb.deleteBackup()
 			Preferences.set(AppKey.is_patched.name, false)
 			statusMutable.emit(R.string.status_restore_success)
 		}

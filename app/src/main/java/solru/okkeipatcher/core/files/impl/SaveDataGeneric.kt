@@ -25,6 +25,10 @@ class SaveDataGeneric @Inject constructor(private val commonFileInstances: Commo
 	override val backupExists: Boolean
 		get() = commonFileInstances.backupSaveData.exists
 
+	override fun deleteBackup() {
+		commonFileInstances.backupSaveData.deleteIfExists()
+	}
+
 	override suspend fun backup() = tryWrapper(onCatch = { clearTempFiles() }) {
 		progressMutable.reset()
 		if (commonFileInstances.originalSaveData.exists) {

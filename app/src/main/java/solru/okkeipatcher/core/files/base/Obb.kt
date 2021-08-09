@@ -23,6 +23,10 @@ abstract class Obb(protected val commonFileInstances: CommonFileInstances) : App
 		progressMutable
 	)
 
+	override fun deleteBackup() {
+		commonFileInstances.backupObb.deleteIfExists()
+	}
+
 	override suspend fun backup() {
 		tryWrapper {
 			progressMutable.reset()
