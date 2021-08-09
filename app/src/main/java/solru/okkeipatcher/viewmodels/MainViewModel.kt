@@ -68,9 +68,7 @@ class MainViewModel @Inject constructor(
 	fun cancel() = WorkManager.getInstance(MainApplication.context).cancelAllWork()
 
 	private inline fun <reified T : ListenableWorker> startUniqueWork(workName: String) {
-		val workRequest = OneTimeWorkRequestBuilder<T>()
-			.addTag(workName)
-			.build()
+		val workRequest = OneTimeWorkRequest.from(T::class.java)
 		WorkManager.getInstance(MainApplication.context).enqueueUniqueWork(
 			workName,
 			ExistingWorkPolicy.KEEP,
@@ -101,9 +99,9 @@ class MainViewModel @Inject constructor(
 						WorkInfo.State.FAILED, WorkInfo.State.CANCELLED ->
 							_status.value = R.string.status_aborted
 						WorkInfo.State.SUCCEEDED -> when (it.tags.firstOrNull()) {
-							PatchWorker.WORK_NAME ->
+							PatchWorker::class.java.name ->
 								_status.value = R.string.status_patch_success
-							RestoreWorker.WORK_NAME ->
+							RestoreWorker::class.java.name ->
 								_status.value = R.string.status_restore_success
 						}
 					}
@@ -117,8 +115,8 @@ class MainViewModel @Inject constructor(
 				if (!isWorkStarted) {
 					isWorkStarted = true
 					when (it.tags.firstOrNull()) {
-						PatchWorker.WORK_NAME -> _patchText.value = R.string.abort
-						RestoreWorker.WORK_NAME -> _restoreText.value = R.string.abort
+						PatchWorker::class.java.name -> _patchText.value = R.string.abort
+						RestoreWorker::class.java.name -> _restoreText.value = R.string.abort
 					}
 					_isClearDataEnabled.value = false
 				}
