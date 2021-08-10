@@ -37,7 +37,7 @@ abstract class BaseWorker(
 
 	abstract suspend fun doServiceWork()
 
-	final override suspend fun doWork() = coroutineScope {
+	final override suspend fun doWork(): Result {
 		try {
 			setForeground(createForegroundInfo())
 			coroutineScope {
@@ -50,10 +50,10 @@ abstract class BaseWorker(
 			// TODO propagate error to view
 			if (e !is CancellationException) {
 				Log.e(this@BaseWorker::class.qualifiedName, "", e)
-				return@coroutineScope Result.failure(workDataOf(KEY_FAILURE_CAUSE to e.message))
+				return Result.failure(workDataOf(KEY_FAILURE_CAUSE to e.message))
 			}
 		}
-		return@coroutineScope Result.success()
+		return Result.success()
 	}
 
 	private fun createForegroundInfo(): ForegroundInfo {

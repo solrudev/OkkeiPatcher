@@ -29,6 +29,6 @@ class RestoreWorker @AssistedInject constructor(
 	}
 
 	companion object {
-		const val WORK_NAME = "OKKEIPATCHER_RESTORE_WORK"
+		const val WORK_NAME = "OkkeiPatcher_RESTORE_WORK"
 	}
 }

@@ -61,6 +61,13 @@ object PackageInstaller : ProgressProvider {
 	var isInstalling = false
 		private set
 
+	private val progressMutable = MutableSharedFlow<ProgressData>(
+		extraBufferCapacity = 1,
+		onBufferOverflow = BufferOverflow.DROP_OLDEST
+	)
+
+	override val progress: Flow<ProgressData> = progressMutable.asSharedFlow()
+
 	@JvmStatic
 	private var NOTIFICATION_ID = 18475
 
@@ -77,13 +84,6 @@ object PackageInstaller : ProgressProvider {
 	private lateinit var capturedContinuation: CancellableContinuation<Boolean>
 	private val contract = PreLollipopInstallPackageContract()
 	private var shouldContinue = true
-
-	private val progressMutable = MutableSharedFlow<ProgressData>(
-		extraBufferCapacity = 1,
-		onBufferOverflow = BufferOverflow.DROP_OLDEST
-	)
-
-	override val progress: Flow<ProgressData> = progressMutable.asSharedFlow()
 
 	private val installFinishedCallback = MutableSharedFlow<Unit>(
 		extraBufferCapacity = 1,

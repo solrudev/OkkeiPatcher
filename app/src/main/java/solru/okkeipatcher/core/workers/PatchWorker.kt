@@ -35,6 +35,6 @@ class PatchWorker @AssistedInject constructor(
 	}
 
 	companion object {
-		const val WORK_NAME = "OKKEIPATCHER_PATCH_WORK"
+		const val WORK_NAME = "OkkeiPatcher_PATCH_WORK"
 	}
 }
