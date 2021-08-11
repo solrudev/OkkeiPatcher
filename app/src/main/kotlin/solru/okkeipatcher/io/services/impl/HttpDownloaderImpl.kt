@@ -72,7 +72,7 @@ class HttpDownloaderImpl @Inject constructor(private val ioDispatcher: Coroutine
 						val bytes = packet.readBytes()
 						sink.write(bytes)
 						transferredBytes += bytes.size
-						if ((transferredBytes % BUFFER_LENGTH).toInt() == 0 || packet.isEmpty) {
+						if (transferredBytes % BUFFER_LENGTH == 0L || packet.isEmpty) {
 							++currentProgress
 						}
 						if (currentProgress % progressRatio == 0) {

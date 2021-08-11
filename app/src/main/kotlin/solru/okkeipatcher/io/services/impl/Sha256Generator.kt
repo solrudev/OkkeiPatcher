@@ -29,12 +29,12 @@ class Sha256Generator @Inject constructor(private val ioDispatcher: CoroutineDis
 	) = withContext(ioDispatcher) {
 		progress.reset()
 		val progressRatio = calculateProgressRatio(size, BUFFER_LENGTH)
-		sha256(blackholeSink()).use { hashingSink ->
-			inputStream.source().buffer().use sourceUse@{ source ->
+		sha256(blackholeSink()).use sha256@{ hashingSink ->
+			inputStream.source().buffer().use { source ->
 				val progressMax =
 					ceil(size.toDouble() / (BUFFER_LENGTH * progressRatio)).toInt()
 				var currentProgress = 0
-				Buffer().use bufferUse@{ buffer ->
+				Buffer().use { buffer ->
 					while (source.read(buffer, BUFFER_LENGTH) > 0) {
 						ensureActive()
 						hashingSink.write(buffer, buffer.size)
@@ -43,7 +43,7 @@ class Sha256Generator @Inject constructor(private val ioDispatcher: CoroutineDis
 							progress.emit(currentProgress / progressRatio, progressMax)
 						}
 					}
-					return@use hashingSink.hash.hex()
+					return@sha256 hashingSink.hash.hex()
 				}
 			}
 		}
