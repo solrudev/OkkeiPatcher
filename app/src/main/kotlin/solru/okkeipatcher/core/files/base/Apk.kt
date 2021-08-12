@@ -2,12 +2,9 @@ package solru.okkeipatcher.core.files.base
 
 import android.content.res.AssetManager
 import com.aefyr.pseudoapksigner.PseudoApkSigner
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.merge
-import kotlinx.coroutines.launch
 import net.lingala.zip4j.ZipFile
 import net.lingala.zip4j.progress.ProgressMonitor
 import solru.okkeipatcher.MainApplication
@@ -32,7 +29,8 @@ import java.io.FileOutputStream
 
 abstract class Apk(
 	protected val commonFileInstances: CommonFileInstances,
-	protected val ioService: IoService
+	protected val ioService: IoService,
+	protected val ioDispatcher: CoroutineDispatcher
 ) : AppServiceBase(), PatchableGameFile {
 
 	override val backupExists: Boolean
@@ -165,14 +163,16 @@ abstract class Apk(
 
 	protected suspend inline fun removeSignature(apkZip: ZipFile) {
 		statusMutable.emit(R.string.status_removing_signature)
-		val apkProgressMonitor = apkZip.progressMonitor
-		apkZip.removeFile("META-INF/")
-		while (apkProgressMonitor.state == ProgressMonitor.State.BUSY) {
-			progressMutable.emit(
-				apkProgressMonitor.workCompleted.toInt(),
-				apkProgressMonitor.totalWork.toInt()
-			)
-			delay(30)
+		withContext(ioDispatcher) {
+			val apkProgressMonitor = apkZip.progressMonitor
+			apkZip.removeFile("META-INF/")
+			while (apkProgressMonitor.state == ProgressMonitor.State.BUSY) {
+				progressMutable.emit(
+					apkProgressMonitor.workCompleted.toInt(),
+					apkProgressMonitor.totalWork.toInt()
+				)
+				delay(30)
+			}
 		}
 	}
 
