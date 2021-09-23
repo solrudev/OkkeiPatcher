@@ -71,15 +71,17 @@ object PackageInstaller : ProgressProvider {
 	@JvmStatic
 	private var NOTIFICATION_ID = 18475
 
-	private val ioDispatcher = EntryPointAccessors.fromApplication(
-		MainApplication.context,
-		PackageInstallerEntryPoint::class.java
-	).getIoDispatcher()
+	private val ioDispatcher
+		get() = EntryPointAccessors.fromApplication(
+			MainApplication.context,
+			PackageInstallerEntryPoint::class.java
+		).getIoDispatcher()
 
-	private val ioService = EntryPointAccessors.fromApplication(
-		MainApplication.context,
-		PackageInstallerEntryPoint::class.java
-	).getIoService()
+	private val ioService
+		get() = EntryPointAccessors.fromApplication(
+			MainApplication.context,
+			PackageInstallerEntryPoint::class.java
+		).getIoService()
 
 	private lateinit var capturedContinuation: CancellableContinuation<Boolean>
 	private val contract = PreLollipopInstallPackageContract()
