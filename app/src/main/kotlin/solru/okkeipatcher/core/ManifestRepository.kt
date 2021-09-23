@@ -68,6 +68,7 @@ class ManifestRepository @Inject constructor(private val ioService: IoService) :
 		return manifestJsonString
 	}
 
+	@OptIn(kotlinx.serialization.ExperimentalSerializationApi::class)
 	private suspend inline fun downloadManifest(): Boolean {
 		backupManifest()
 		ioService.downloadAndWrapException(MANIFEST_URL, manifestFile)
@@ -88,6 +89,7 @@ class ManifestRepository @Inject constructor(private val ioService: IoService) :
 		}
 	}
 
+	@OptIn(kotlinx.serialization.ExperimentalSerializationApi::class)
 	private suspend inline fun restoreManifestBackup(): Boolean {
 		if (!manifestBackupFile.exists()) return false
 		return try {
