@@ -17,12 +17,12 @@ import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-private const val REGISTRY_KEY = "OkkeiPatcher_PackageUninstaller"
+private const val PACKAGE_NAME_KEY = "PACKAGE_UNINSTALLER_PACKAGE_NAME"
 private const val REQUEST_CODE = 4127
 
 object PackageUninstaller {
 
-	var isUninstalling = false
+	var hasActiveSession = false
 		private set
 
 	@JvmStatic
@@ -34,16 +34,16 @@ object PackageUninstaller {
 	suspend fun uninstallPackage(packageName: String) =
 		suspendCancellableCoroutine<Boolean> { continuation ->
 			continuation.invokeOnCancellation { onCancellation() }
-			if (isUninstalling) {
+			if (hasActiveSession) {
 				continuation.resumeWithException(
 					IllegalStateException("Can't uninstall while another uninstall session is active")
 				)
 			}
-			isUninstalling = true
+			hasActiveSession = true
 			capturedContinuation = continuation
 			val activityIntent =
 				Intent(MainApplication.context, UninstallResultReceiverActivity::class.java).apply {
-					putExtra(REGISTRY_KEY, packageName)
+					putExtra(PACKAGE_NAME_KEY, packageName)
 				}
 			val fullScreenIntent = PendingIntent.getActivity(
 				MainApplication.context,
@@ -60,7 +60,7 @@ object PackageUninstaller {
 		}
 
 	private fun onCancellation() {
-		isUninstalling = false
+		hasActiveSession = false
 		val notificationManager =
 			MainApplication.context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 		notificationManager.cancel(NOTIFICATION_ID)
@@ -83,7 +83,7 @@ object PackageUninstaller {
 				onRestartCalled = false
 				return
 			}
-			val packageName = intent.extras?.getString(REGISTRY_KEY)
+			val packageName = intent.extras?.getString(PACKAGE_NAME_KEY)
 			uninstallLauncher.launch(packageName)
 		}
 

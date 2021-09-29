@@ -44,10 +44,11 @@ import kotlin.coroutines.coroutineContext
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-private const val REGISTRY_KEY = "OkkeiPatcher_PackageInstaller"
+private const val APK_URI_KEY = "PACKAGE_INSTALLER_APK_URI"
+private const val REQUEST_CODE = 6541
+
 private const val ACTION_INSTALLATION_STATUS_NOTIFICATION =
 	"okkeipatcher.INSTALLATION_STATUS_NOTIFICATION"
-private const val REQUEST_CODE = 6541
 
 object PackageInstaller : ProgressProvider {
 
@@ -58,7 +59,7 @@ object PackageInstaller : ProgressProvider {
 		fun getIoService(): IoService
 	}
 
-	var isInstalling = false
+	var hasActiveSession = false
 		private set
 
 	private val progressMutable = MutableSharedFlow<ProgressData>(
@@ -128,12 +129,12 @@ object PackageInstaller : ProgressProvider {
 				onCancellation()
 			}
 			capturedContinuation = continuation
-			if (isInstalling) {
+			if (hasActiveSession) {
 				continuation.resumeWithException(
 					IllegalStateException("Can't install while another install session is active")
 				)
 			}
-			isInstalling = true
+			hasActiveSession = true
 			CoroutineScope(capturedCoroutineContext + ioDispatcher).launch {
 				if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
 					progressMutable.makeIndeterminate()
@@ -196,7 +197,7 @@ object PackageInstaller : ProgressProvider {
 							progressMutable.reset()
 							installFinishedCallback.emit(Unit)
 						}
-						isInstalling = false
+						hasActiveSession = false
 						continuation.resumeWithException(e)
 					} finally {
 						session?.close()
@@ -236,7 +237,7 @@ object PackageInstaller : ProgressProvider {
 
 	private fun onCancellation() {
 		shouldContinue = true
-		isInstalling = false
+		hasActiveSession = false
 		val notificationManager =
 			MainApplication.context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 		notificationManager.cancel(NOTIFICATION_ID)
@@ -252,7 +253,7 @@ object PackageInstaller : ProgressProvider {
 	private fun displayNotification(apkUri: Uri? = null) {
 		val activityIntent =
 			Intent(MainApplication.context, InstallResultReceiverActivity::class.java).apply {
-				if (apkUri != null) putExtra(REGISTRY_KEY, apkUri)
+				if (apkUri != null) putExtra(APK_URI_KEY, apkUri)
 			}
 		val fullScreenIntent = PendingIntent.getActivity(
 			MainApplication.context,
@@ -302,7 +303,7 @@ object PackageInstaller : ProgressProvider {
 				onRestartCalled = false
 				return
 			}
-			val apkUri = intent.extras?.getParcelable<Uri>(REGISTRY_KEY)
+			val apkUri = intent.extras?.getParcelable<Uri>(APK_URI_KEY)
 			installLauncher.launch(apkUri)
 		}
 
