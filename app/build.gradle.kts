@@ -93,7 +93,7 @@ dependencies {
 	val coroutinesVersion = "1.5.2-native-mt"
 	val workManagerVersion = "2.6.0"
 
-	kapt("androidx.databinding:databinding-compiler:7.0.2")
+	kapt("androidx.databinding:databinding-compiler:7.0.3")
 	kapt("com.google.dagger:hilt-compiler:$hiltVersion")
 	kapt("androidx.hilt:hilt-compiler:1.0.0")
 
@@ -102,7 +102,7 @@ dependencies {
 	implementation("androidx.activity:activity-ktx:1.3.1")
 	implementation("androidx.appcompat:appcompat:1.3.1")
 	implementation("com.google.android.material:material:1.4.0")
-	implementation("androidx.constraintlayout:constraintlayout:2.1.0")
+	implementation("androidx.constraintlayout:constraintlayout:2.1.1")
 	implementation("androidx.preference:preference-ktx:1.1.1")
 	implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
 	implementation("androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion")
