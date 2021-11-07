@@ -20,23 +20,22 @@ class MainApplication : Application(), Configuration.Provider {
 	@Inject
 	lateinit var workerFactory: HiltWorkerFactory
 
-	private lateinit var notificationManager: NotificationManager
-
 	override fun onCreate() {
 		super.onCreate()
 		instance = this
-		notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 		setIsPatchedPreferenceIfNotSet()
 		setCheckBoxStatePreferenceIfNotSet()
 		setLanguagePreferenceIfNotSet()
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			createNotificationChannel(
+			val notificationManager =
+				getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+			notificationManager.createNotificationChannel(
 				R.string.notification_channel_pm_id,
 				R.string.notification_channel_pm_name,
 				R.string.notification_channel_pm_description,
 				important = true
 			)
-			createNotificationChannel(
+			notificationManager.createNotificationChannel(
 				R.string.notification_channel_id,
 				R.string.notification_channel_name,
 				R.string.notification_channel_description,
@@ -64,7 +63,7 @@ class MainApplication : Application(), Configuration.Provider {
 	}
 
 	@RequiresApi(Build.VERSION_CODES.O)
-	private fun createNotificationChannel(
+	private fun NotificationManager.createNotificationChannel(
 		channelId: Int,
 		nameId: Int,
 		descriptionId: Int,
@@ -78,7 +77,7 @@ class MainApplication : Application(), Configuration.Provider {
 			description = channelDescription
 			if (!important) setSound(null, null)
 		}
-		notificationManager.createNotificationChannel(channel)
+		createNotificationChannel(channel)
 	}
 
 	override fun getWorkManagerConfiguration() =
