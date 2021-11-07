@@ -98,8 +98,8 @@ dependencies {
 	kapt("androidx.hilt:hilt-compiler:1.0.0")
 
 	implementation("com.google.dagger:hilt-android:$hiltVersion")
-	implementation("androidx.core:core-ktx:1.6.0")
-	implementation("androidx.activity:activity-ktx:1.3.1")
+	implementation("androidx.core:core-ktx:1.7.0")
+	implementation("androidx.activity:activity-ktx:1.4.0")
 	implementation("androidx.appcompat:appcompat:1.3.1")
 	implementation("com.google.android.material:material:1.4.0")
 	implementation("androidx.constraintlayout:constraintlayout:2.1.1")
@@ -112,7 +112,6 @@ dependencies {
 	implementation("androidx.hilt:hilt-work:1.0.0")
 	implementation("androidx.work:work-runtime:$workManagerVersion")
 	implementation("androidx.work:work-runtime-ktx:$workManagerVersion")
-//    implementation("androidx.multidex:multidex:2.0.1")
 	implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
@@ -122,6 +121,8 @@ dependencies {
 	implementation("com.github.aefyr:pseudoapksigner:1.6")
 	implementation("com.anggrayudi:storage:0.13.0")
 	implementation("net.lingala.zip4j:zip4j:2.9.0")
+
+	debugImplementation("androidx.multidex:multidex:2.0.1")
 
 	testImplementation("junit:junit:4.13.2")
 	androidTestImplementation("androidx.test.ext:junit:1.1.3")
