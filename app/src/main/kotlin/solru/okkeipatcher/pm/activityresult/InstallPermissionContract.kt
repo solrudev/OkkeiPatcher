@@ -13,7 +13,7 @@ import solru.okkeipatcher.pm.PackageManager
 @RequiresApi(Build.VERSION_CODES.O)
 class InstallPermissionContract : ActivityResultContract<Unit, Boolean>() {
 
-	override fun createIntent(context: Context, input: Unit?) = Intent(
+	override fun createIntent(context: Context, input: Unit) = Intent(
 		Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
 		Uri.parse("package:${PackageManager.packageName}")
 	)
