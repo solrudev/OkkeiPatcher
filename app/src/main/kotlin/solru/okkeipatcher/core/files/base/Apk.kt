@@ -1,9 +1,14 @@
 package solru.okkeipatcher.core.files.base
 
 import android.content.res.AssetManager
+import android.net.Uri
 import com.aefyr.pseudoapksigner.PseudoApkSigner
+import io.github.solrudev.simpleinstaller.PackageInstaller
+import io.github.solrudev.simpleinstaller.PackageUninstaller
+import io.github.solrudev.simpleinstaller.data.InstallResult
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import net.lingala.zip4j.ZipFile
 import net.lingala.zip4j.progress.ProgressMonitor
@@ -14,12 +19,12 @@ import solru.okkeipatcher.core.base.AppServiceBase
 import solru.okkeipatcher.io.JavaFile
 import solru.okkeipatcher.io.base.FileWrapper
 import solru.okkeipatcher.io.services.base.IoService
+import solru.okkeipatcher.model.dto.ProgressData
 import solru.okkeipatcher.model.files.common.CommonFileHashKey
 import solru.okkeipatcher.model.files.common.CommonFileInstances
 import solru.okkeipatcher.model.manifest.OkkeiManifest
-import solru.okkeipatcher.pm.PackageInstaller
-import solru.okkeipatcher.pm.PackageManager
-import solru.okkeipatcher.pm.PackageUninstaller
+import solru.okkeipatcher.utils.getPackagePublicSourceDir
+import solru.okkeipatcher.utils.isPackageInstalled
 import solru.okkeipatcher.utils.Preferences
 import solru.okkeipatcher.utils.extensions.emit
 import solru.okkeipatcher.utils.extensions.makeIndeterminate
@@ -40,13 +45,7 @@ abstract class Apk(
 		private set
 
 	protected val originalApk by lazy {
-		JavaFile(
-			File(
-				PackageManager.getPackagePublicSourceDir(
-					PACKAGE_NAME
-				)
-			), ioService
-		)
+		JavaFile(File(getPackagePublicSourceDir(PACKAGE_NAME)), ioService)
 	}
 
 	protected val privateKeyFile = File(OkkeiStorage.private, "testkey.pk8")
@@ -57,7 +56,7 @@ abstract class Apk(
 		commonFileInstances.backupApk.progress,
 		commonFileInstances.tempApk.progress,
 		commonFileInstances.signedApk.progress,
-		PackageInstaller.progress,
+		PackageInstaller.progress.map { ProgressData(it.progress, it.max, it.isIndeterminate) },
 		progressMutable
 	)
 
@@ -80,7 +79,7 @@ abstract class Apk(
 	override suspend fun backup() =
 		tryWrapper(onCatch = { commonFileInstances.backupApk.deleteIfExists() }) {
 			progressMutable.reset()
-			if (!PackageManager.isPackageInstalled(PACKAGE_NAME)) {
+			if (!isPackageInstalled(PACKAGE_NAME)) {
 				throwErrorMessage(R.string.error_game_not_found)
 			}
 			statusMutable.emit(R.string.status_comparing_apk)
@@ -104,7 +103,7 @@ abstract class Apk(
 			throwErrorMessage(R.string.error_not_trustworthy_apk_restore)
 		}
 		statusMutable.emit(R.string.empty)
-		if (PackageManager.isPackageInstalled(PACKAGE_NAME)) {
+		if (isPackageInstalled(PACKAGE_NAME)) {
 			uninstall()
 		}
 		installBackup()
@@ -136,8 +135,8 @@ abstract class Apk(
 		progressMutable.makeIndeterminate()
 		statusMutable.emit(R.string.status_installing)
 		val installResult =
-			PackageInstaller.installPackage(File(commonFileInstances.signedApk.fullPath))
-		if (!installResult) {
+			PackageInstaller.installPackage(Uri.fromFile(File(commonFileInstances.signedApk.fullPath)))
+		if (installResult is InstallResult.Failure) {
 			throwErrorMessage(R.string.error_install)
 		}
 		commonFileInstances.signedApk.deleteIfExists()
@@ -155,8 +154,8 @@ abstract class Apk(
 	private suspend inline fun installBackup() {
 		statusMutable.emit(R.string.status_installing)
 		val installResult =
-			PackageInstaller.installPackage(File(commonFileInstances.backupApk.fullPath))
-		if (!installResult) {
+			PackageInstaller.installPackage(Uri.fromFile(File(commonFileInstances.backupApk.fullPath)))
+		if (installResult is InstallResult.Failure) {
 			throwErrorMessage(R.string.error_install)
 		}
 	}

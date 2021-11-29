@@ -5,7 +5,7 @@ import solru.okkeipatcher.core.base.AppServiceBase
 import solru.okkeipatcher.io.services.base.IoService
 import solru.okkeipatcher.io.utils.extensions.computeHash
 import solru.okkeipatcher.model.manifest.OkkeiManifest
-import solru.okkeipatcher.pm.PackageManager
+import solru.okkeipatcher.utils.appVersionCode
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -19,7 +19,7 @@ class AppUpdateRepository @Inject constructor(private val ioService: IoService) 
 	private var isAppUpdateDownloaded = false
 
 	fun isAppUpdateAvailable(manifest: OkkeiManifest) =
-		manifest.okkeiPatcher.version > PackageManager.versionCode
+		manifest.okkeiPatcher.version > appVersionCode
 
 	fun appUpdateSizeInMb(manifest: OkkeiManifest) =
 		"%.2f".format(manifest.okkeiPatcher.size / 1_048_576.0).toDouble()

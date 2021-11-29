@@ -3,7 +3,6 @@
 	<string name="dialog_ok" translatable="false">OK</string>
 	<string name="empty" translatable="false" />
 	<string name="notification_channel_id" translatable="false">OkkeiPatcher_NotificationChannel</string>
-	<string name="notification_channel_pm_id" translatable="false">OkkeiPatcher_NotificationChannel_PM</string>
 	<string name="okkei" translatable="false">Okkei</string>
 	<string name="abort">Abort</string>
 	<string name="action_settings">Settings</string>
@@ -42,16 +41,10 @@
 	<string name="notice_exception">Send \"bugreport.log\" file located in /sdcard/Android/data/%1$s/files/ directory to the creator of this application.</string>
 	<string name="notification_channel_description">Display current status and progress</string>
 	<string name="notification_channel_name">Status and progress</string>
-	<string name="notification_channel_pm_description">Turning this off breaks Okkei Patcher functionality</string>
-	<string name="notification_channel_pm_name">Install and uninstall</string>
 	<string name="notification_title_patch">Patching…</string>
 	<string name="notification_title_restore">Restoring…</string>
 	<string name="patch">Patch</string>
-	<string name="prompt_install">Please confirm installation.</string>
-	<string name="prompt_install_title">Installation</string>
 	<string name="prompt_manifest">For proper work Okkei Patcher needs an internet connection to download data about patch and updates. Before you proceed by clicking OK ensure that you have stable internet connection.</string>
-	<string name="prompt_uninstall">Please confirm uninstallation.</string>
-	<string name="prompt_uninstall_title">Uninstallation</string>
 	<string name="prompt_update_app_install">You will now be prompted to install updated Okkei Patcher. Please confirm the installation. Note that after that Okkei Patcher will be closed and you\'ll have to relaunch it manually.</string>
 	<string name="prompt_update_app_available">A new version of Okkei Patcher is available!\nCurrent version: %1$s\nDownload size: %2$s MB\nChangelog:\n%3$s</string>
 	<string name="prompt_update_patch_available">Patch update is available! Click PATCH button to download and apply the update.\nDownload size: %1$s MB</string>

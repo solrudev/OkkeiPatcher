@@ -12,11 +12,7 @@
 	<uses-permission
 		android:name="android.permission.WRITE_EXTERNAL_STORAGE"
 		tools:ignore="ScopedStorage" />
-	<uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
-	<uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-	<uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
-	<uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
 
 	<application
 		android:name=".MainApplication"
@@ -39,30 +35,11 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity
-			android:name=".pm.PackageUninstaller$UninstallResultReceiverActivity"
-			android:exported="false"
-			android:launchMode="singleTask"
-			android:showForAllUsers="true"
-			android:showOnLockScreen="true"
-			android:showWhenLocked="true"
-			tools:ignore="UnusedAttribute" />
-		<activity
-			android:name=".pm.PackageInstaller$InstallResultReceiverActivity"
-			android:exported="false"
-			android:launchMode="singleTask"
-			android:showForAllUsers="true"
-			android:showOnLockScreen="true"
-			android:showWhenLocked="true"
-			tools:ignore="UnusedAttribute" />
 
 		<provider
 			android:name="androidx.startup.InitializationProvider"
 			android:authorities="${applicationId}.androidx-startup"
 			tools:node="remove" />
-		<receiver
-			android:name=".pm.InstallationEventsReceiver"
-			android:exported="false" />
 	</application>
 
 </manifest>

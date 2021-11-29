@@ -9,6 +9,7 @@ import androidx.annotation.RequiresApi
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import dagger.hilt.android.HiltAndroidApp
+import io.github.solrudev.simpleinstaller.SimpleInstaller
 import solru.okkeipatcher.core.AppKey
 import solru.okkeipatcher.model.Language
 import solru.okkeipatcher.utils.Preferences
@@ -23,18 +24,13 @@ class MainApplication : Application(), Configuration.Provider {
 	override fun onCreate() {
 		super.onCreate()
 		instance = this
+		SimpleInstaller.initialize(this, R.mipmap.ic_launcher_foreground)
 		setIsPatchedPreferenceIfNotSet()
 		setCheckBoxStatePreferenceIfNotSet()
 		setLanguagePreferenceIfNotSet()
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			val notificationManager =
 				getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-			notificationManager.createNotificationChannel(
-				R.string.notification_channel_pm_id,
-				R.string.notification_channel_pm_name,
-				R.string.notification_channel_pm_description,
-				important = true
-			)
 			notificationManager.createNotificationChannel(
 				R.string.notification_channel_id,
 				R.string.notification_channel_name,

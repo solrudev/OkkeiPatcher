@@ -36,16 +36,10 @@
 	<string name="notice_exception">Отправьте файл \"bugreport.log\" из директории /sdcard/Android/data/%1$s/files/ разработчику приложения.</string>
 	<string name="notification_channel_description">Отображать текущий статус и прогресс</string>
 	<string name="notification_channel_name">Статус и прогресс</string>
-	<string name="notification_channel_pm_description">При отключении нарушает функциональность Okkei Patcher</string>
-	<string name="notification_channel_pm_name">Установка и деинсталляция</string>
 	<string name="notification_title_patch">Патчинг…</string>
 	<string name="notification_title_restore">Восстановление…</string>
 	<string name="patch">Патч</string>
-	<string name="prompt_install">Пожалуйста, подтвердите установку.</string>
-	<string name="prompt_install_title">Установка</string>
 	<string name="prompt_manifest">Для работы Okkei Patcher необходимо подключение к сети, чтобы загрузить данные о патче и обновлениях. Прежде чем продолжить, нажав на кнопку OK, убедитесь, что у Вас есть стабильное интернет-соединение.</string>
-	<string name="prompt_uninstall">Пожалуйста, подтвердите деинсталляцию.</string>
-	<string name="prompt_uninstall_title">Деинсталляция</string>
 	<string name="prompt_update_app_install">Сейчас последует запрос на установку обновления Okkei Patcher. Пожалуйста, подтвердите установку. Обратите внимание, что после установки Okkei Patcher будет закрыт, и Вам придётся перезапустить его вручную.</string>
 	<string name="prompt_update_app_available">Доступна новая версия Okkei Patcher!\nТекущая версия: %1$s\nРазмер обновления: %2$s МБ\nСписок изменений:\n%3$s</string>
 	<string name="prompt_update_patch_available">Доступно обновление патча! Нажмите кнопку ПАТЧ, чтобы загрузить и применить обновление.\nРазмер файлов для загрузки: %1$s МБ</string>

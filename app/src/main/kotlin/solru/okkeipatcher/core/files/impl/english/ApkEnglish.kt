@@ -20,7 +20,7 @@ import solru.okkeipatcher.model.files.common.CommonFileInstances
 import solru.okkeipatcher.model.files.english.FileHashKey
 import solru.okkeipatcher.model.files.english.FileInstancesEnglish
 import solru.okkeipatcher.model.manifest.OkkeiManifest
-import solru.okkeipatcher.pm.PackageManager
+import solru.okkeipatcher.utils.isPackageInstalled
 import solru.okkeipatcher.utils.Preferences
 import solru.okkeipatcher.utils.extensions.emit
 import solru.okkeipatcher.utils.extensions.reset
@@ -52,7 +52,7 @@ class ApkEnglish @Inject constructor(
 			extractedScriptsDirectory?.let { if (it.exists()) it.deleteRecursively() }
 			commonFileInstances.tempApk.deleteIfExists()
 		}) {
-			if (!PackageManager.isPackageInstalled(PACKAGE_NAME)) {
+			if (!isPackageInstalled(PACKAGE_NAME)) {
 				throwErrorMessage(R.string.error_game_not_found)
 			}
 			copyOriginalApkTo(commonFileInstances.tempApk)

@@ -15,7 +15,7 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import solru.okkeipatcher.R
 import solru.okkeipatcher.databinding.ActivityMainBinding
-import solru.okkeipatcher.pm.PackageManager
+import solru.okkeipatcher.utils.appVersionString
 import solru.okkeipatcher.viewmodels.MainViewModel
 
 @AndroidEntryPoint
@@ -110,7 +110,7 @@ class MainActivity : AppCompatActivity() {
 	fun onInfoButtonClick(view: View) {
 		Snackbar.make(
 			view,
-			getString(R.string.info_version, PackageManager.versionString),
+			getString(R.string.info_version, appVersionString),
 			Snackbar.LENGTH_LONG
 		).setAction("Action", null).show()
 	}

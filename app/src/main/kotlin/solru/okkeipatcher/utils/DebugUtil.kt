@@ -3,7 +3,6 @@ package solru.okkeipatcher.utils
 import android.os.Build
 import solru.okkeipatcher.core.OkkeiStorage
 import solru.okkeipatcher.io.services.base.IoService
-import solru.okkeipatcher.pm.PackageManager
 import solru.okkeipatcher.utils.extensions.empty
 import solru.okkeipatcher.utils.extensions.trimIndents
 import java.io.File
@@ -37,8 +36,8 @@ class DebugUtil @Inject constructor(private val ioService: IoService) {
 	fun getBugReportText(e: Throwable): String =
 		"""Okkei Patcher
            ----------------------------------
-           Version code: ${PackageManager.versionCode}
-           Version name: ${PackageManager.versionString}
+           Version code: $appVersionCode
+           Version name: $appVersionString
            ----------------------------------
            
            Device info
