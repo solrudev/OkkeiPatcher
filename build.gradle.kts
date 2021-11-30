@@ -4,7 +4,7 @@ buildscript {
 	val kotlinVersion: String by extra("1.6.0")
 	val hiltVersion: String by extra("2.38.1")
 	val ktorVersion: String by extra("1.6.3")
-	val okioVersion: String by extra("2.10.0")
+	val okioVersion: String by extra("3.0.0")
 
 	repositories {
 		google()

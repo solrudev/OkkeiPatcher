@@ -25,7 +25,7 @@ android {
 	defaultConfig {
 		applicationId = packageName
 		minSdk = 19
-		targetSdk = 30
+		targetSdk = 31
 		versionCode = 42
 		versionName = "2.0"
 		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -89,8 +89,8 @@ android {
 }
 
 dependencies {
-	val lifecycleVersion = "2.3.1"
-	val coroutinesVersion = "1.5.2-native-mt"
+	val lifecycleVersion = "2.4.0"
+	val coroutinesVersion = "1.5.2"
 	val workManagerVersion = "2.6.0"
 
 	kapt("androidx.databinding:databinding-compiler:7.0.3")
