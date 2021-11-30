@@ -13,7 +13,7 @@ import io.ktor.util.*
  * with the the associated configuration [OkHttpConfig].
  */
 public object OkHttp312 : HttpClientEngineFactory<OkHttpConfig> {
-    @InternalAPI
+    @OptIn(InternalAPI::class)
     override fun create(block: OkHttpConfig.() -> Unit): HttpClientEngine =
         OkHttpEngine(OkHttpConfig().apply(block))
 }

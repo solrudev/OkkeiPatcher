@@ -58,8 +58,7 @@ internal class OkHttpWebsocketSession(
         require(negotiatedExtensions.isEmpty()) { "Extensions are not supported." }
     }
 
-    @InternalAPI
-    @OptIn(ObsoleteCoroutinesApi::class)
+    @OptIn(ObsoleteCoroutinesApi::class, InternalAPI::class)
     override val outgoing: SendChannel<Frame> = actor {
         val websocket: WebSocket = webSocketFactory.newWebSocket(engineRequest, self.await())
         var closeReason = DEFAULT_CLOSE_REASON_ERROR
@@ -108,7 +107,7 @@ internal class OkHttpWebsocketSession(
         _incoming.sendBlocking(Frame.Text(true, text.toByteArray()))
     }
 
-    @InternalAPI
+    @OptIn(InternalAPI::class)
     override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
         super.onClosed(webSocket, code, reason)
 
@@ -121,7 +120,7 @@ internal class OkHttpWebsocketSession(
         )
     }
 
-    @InternalAPI
+    @OptIn(InternalAPI::class)
     override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
         super.onClosing(webSocket, code, reason)
 
@@ -133,7 +132,7 @@ internal class OkHttpWebsocketSession(
         _incoming.close()
     }
 
-    @InternalAPI
+    @OptIn(InternalAPI::class)
     override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
         super.onFailure(webSocket, t, response)
 
