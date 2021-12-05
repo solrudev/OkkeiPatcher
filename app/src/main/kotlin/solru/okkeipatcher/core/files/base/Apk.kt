@@ -135,7 +135,7 @@ abstract class Apk(
 		progressMutable.makeIndeterminate()
 		statusMutable.emit(R.string.status_installing)
 		val installResult =
-			PackageInstaller.installPackage(Uri.fromFile(File(commonFileInstances.signedApk.fullPath)))
+			PackageInstaller.installPackage(File(commonFileInstances.signedApk.fullPath))
 		if (installResult is InstallResult.Failure) {
 			throwErrorMessage(R.string.error_install)
 		}
@@ -154,7 +154,7 @@ abstract class Apk(
 	private suspend inline fun installBackup() {
 		statusMutable.emit(R.string.status_installing)
 		val installResult =
-			PackageInstaller.installPackage(Uri.fromFile(File(commonFileInstances.backupApk.fullPath)))
+			PackageInstaller.installPackage(File(commonFileInstances.backupApk.fullPath))
 		if (installResult is InstallResult.Failure) {
 			throwErrorMessage(R.string.error_install)
 		}

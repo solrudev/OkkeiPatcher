@@ -121,7 +121,7 @@ dependencies {
 	implementation("com.github.aefyr:pseudoapksigner:1.6")
 	implementation("com.anggrayudi:storage:0.13.0")
 	implementation("net.lingala.zip4j:zip4j:2.9.0")
-	implementation("io.github.solrudev:simpleinstaller:1.0.1")
+	implementation("io.github.solrudev:simpleinstaller:1.1.0")
 
 	debugImplementation("androidx.multidex:multidex:2.0.1")
 
