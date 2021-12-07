@@ -13,8 +13,8 @@ import solru.okkeipatcher.core.files.base.Apk
 import solru.okkeipatcher.model.dto.AppServiceConfig
 import solru.okkeipatcher.model.dto.patchupdates.PatchUpdates
 import solru.okkeipatcher.model.manifest.OkkeiManifest
-import solru.okkeipatcher.utils.isPackageInstalled
 import solru.okkeipatcher.utils.Preferences
+import solru.okkeipatcher.utils.isPackageInstalled
 import javax.inject.Inject
 
 class PatchService @Inject constructor(private val strategy: GameFileStrategy) : AppServiceBase() {

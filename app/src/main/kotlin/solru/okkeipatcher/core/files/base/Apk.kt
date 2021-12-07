@@ -1,7 +1,6 @@
 package solru.okkeipatcher.core.files.base
 
 import android.content.res.AssetManager
-import android.net.Uri
 import com.aefyr.pseudoapksigner.PseudoApkSigner
 import io.github.solrudev.simpleinstaller.PackageInstaller
 import io.github.solrudev.simpleinstaller.PackageUninstaller
@@ -23,12 +22,12 @@ import solru.okkeipatcher.model.dto.ProgressData
 import solru.okkeipatcher.model.files.common.CommonFileHashKey
 import solru.okkeipatcher.model.files.common.CommonFileInstances
 import solru.okkeipatcher.model.manifest.OkkeiManifest
-import solru.okkeipatcher.utils.getPackagePublicSourceDir
-import solru.okkeipatcher.utils.isPackageInstalled
 import solru.okkeipatcher.utils.Preferences
 import solru.okkeipatcher.utils.extensions.emit
 import solru.okkeipatcher.utils.extensions.makeIndeterminate
 import solru.okkeipatcher.utils.extensions.reset
+import solru.okkeipatcher.utils.getPackagePublicSourceDir
+import solru.okkeipatcher.utils.isPackageInstalled
 import java.io.File
 import java.io.FileOutputStream
 

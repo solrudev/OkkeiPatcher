@@ -20,10 +20,10 @@ import solru.okkeipatcher.model.files.common.CommonFileInstances
 import solru.okkeipatcher.model.files.english.FileHashKey
 import solru.okkeipatcher.model.files.english.FileInstancesEnglish
 import solru.okkeipatcher.model.manifest.OkkeiManifest
-import solru.okkeipatcher.utils.isPackageInstalled
 import solru.okkeipatcher.utils.Preferences
 import solru.okkeipatcher.utils.extensions.emit
 import solru.okkeipatcher.utils.extensions.reset
+import solru.okkeipatcher.utils.isPackageInstalled
 import java.io.File
 import javax.inject.Inject
 
