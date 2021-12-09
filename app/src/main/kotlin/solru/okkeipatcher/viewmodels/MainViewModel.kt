@@ -103,6 +103,7 @@ class MainViewModel @Inject constructor(
 							RestoreWorker::class.java.name ->
 								_status.value = R.string.status_restore_success
 						}
+						else -> {} // isFinished == true
 					}
 					WorkManager.getInstance(MainApplication.context).pruneWork()
 					workObservingScope.coroutineContext[Job]?.cancelChildren()
