@@ -5,6 +5,8 @@ import androidx.lifecycle.*
 import androidx.work.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import solru.okkeipatcher.MainApplication
 import solru.okkeipatcher.R
@@ -13,7 +15,6 @@ import solru.okkeipatcher.core.base.PatchInfoStrategy
 import solru.okkeipatcher.core.workers.BaseWorker
 import solru.okkeipatcher.core.workers.PatchWorker
 import solru.okkeipatcher.core.workers.RestoreWorker
-import solru.okkeipatcher.model.dto.Message
 import solru.okkeipatcher.utils.Preferences
 import java.util.*
 import javax.inject.Inject
@@ -26,27 +27,25 @@ class MainViewModel @Inject constructor(
 	private val patchInfoStrategyProvider: Provider<PatchInfoStrategy>
 ) : ViewModel(), DefaultLifecycleObserver {
 
-	private val _patchText = MutableLiveData(R.string.patch)
-	private val _restoreText = MutableLiveData(R.string.restore)
-	private val _status = MutableLiveData(R.string.empty)
-	private val _progress = MutableLiveData(0)
-	private val _progressMax = MutableLiveData(100)
-	private val _isProgressIndeterminate = MutableLiveData(false)
-	private val _isPatchEnabled = MutableLiveData(!isPatched())
-	private val _isRestoreEnabled = MutableLiveData(isPatched())
-	private val _isClearDataEnabled = MutableLiveData(true)
-	private val _errorMessage = MutableLiveData<Message>()
+	private val _patchText = MutableStateFlow(R.string.patch)
+	private val _restoreText = MutableStateFlow(R.string.restore)
+	private val _status = MutableStateFlow(R.string.empty)
+	private val _progress = MutableStateFlow(0)
+	private val _progressMax = MutableStateFlow(100)
+	private val _isProgressIndeterminate = MutableStateFlow(false)
+	private val _isPatchEnabled = MutableStateFlow(!isPatched())
+	private val _isRestoreEnabled = MutableStateFlow(isPatched())
+	private val _isClearDataEnabled = MutableStateFlow(true)
 
-	val patchText: LiveData<Int> get() = _patchText
-	val restoreText: LiveData<Int> get() = _restoreText
-	val status: LiveData<Int> get() = _status
-	val progress: LiveData<Int> get() = _progress
-	val progressMax: LiveData<Int> get() = _progressMax
-	val isProgressIndeterminate: LiveData<Boolean> get() = _isProgressIndeterminate
-	val isPatchEnabled: LiveData<Boolean> get() = _isPatchEnabled
-	val isRestoreEnabled: LiveData<Boolean> get() = _isRestoreEnabled
-	val isClearDataEnabled: LiveData<Boolean> get() = _isClearDataEnabled
-	val errorMessage: LiveData<Message> get() = _errorMessage
+	val patchText = _patchText.asStateFlow()
+	val restoreText = _restoreText.asStateFlow()
+	val status = _status.asStateFlow()
+	val progress = _progress.asStateFlow()
+	val progressMax = _progressMax.asStateFlow()
+	val isProgressIndeterminate = _isProgressIndeterminate.asStateFlow()
+	val isPatchEnabled = _isPatchEnabled.asStateFlow()
+	val isRestoreEnabled = _isRestoreEnabled.asStateFlow()
+	val isClearDataEnabled = _isClearDataEnabled.asStateFlow()
 
 	var isProcessSaveDataEnabled = Preferences.get(
 		AppKey.process_save_data_enabled.name,
