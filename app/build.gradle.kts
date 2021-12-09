@@ -89,32 +89,18 @@ android {
 }
 
 dependencies {
-	val lifecycleVersion = "2.4.0"
-	val coroutinesVersion = "1.5.2"
-	val workManagerVersion = "2.6.0"
-
 	kapt("androidx.databinding:databinding-compiler:7.0.3")
 	kapt("com.google.dagger:hilt-compiler:$hiltVersion")
 	kapt("androidx.hilt:hilt-compiler:1.0.0")
 
 	implementation("com.google.dagger:hilt-android:$hiltVersion")
-	implementation("androidx.core:core-ktx:1.7.0")
-	implementation("androidx.activity:activity-ktx:1.4.0")
-	implementation("androidx.appcompat:appcompat:1.4.0")
 	implementation("com.google.android.material:material:1.4.0")
-	implementation("androidx.constraintlayout:constraintlayout:2.1.2")
 	implementation("androidx.preference:preference-ktx:1.1.1")
-	implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
-	implementation("androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion")
-	implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
+	implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.4.0")
 	implementation("androidx.fragment:fragment-ktx:1.4.0")
-	implementation("androidx.documentfile:documentfile:1.0.1")
 	implementation("androidx.hilt:hilt-work:1.0.0")
-	implementation("androidx.work:work-runtime:$workManagerVersion")
-	implementation("androidx.work:work-runtime-ktx:$workManagerVersion")
+	implementation("androidx.work:work-runtime-ktx:2.7.1")
 	implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
-	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
-	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
 	implementation(project(":ktor-client-okhttp312"))
 	implementation("io.ktor:ktor-client-core-jvm:$ktorVersion")
 	implementation("com.squareup.okio:okio:$okioVersion")
