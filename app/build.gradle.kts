@@ -89,7 +89,7 @@ android {
 }
 
 dependencies {
-	kapt("androidx.databinding:databinding-compiler:7.0.3")
+	kapt("androidx.databinding:databinding-compiler:7.0.4")
 	kapt("com.google.dagger:hilt-compiler:$hiltVersion")
 	kapt("androidx.hilt:hilt-compiler:1.0.0")
 
@@ -107,7 +107,7 @@ dependencies {
 	implementation("com.github.aefyr:pseudoapksigner:1.6")
 	implementation("com.anggrayudi:storage:0.13.0")
 	implementation("net.lingala.zip4j:zip4j:2.9.0")
-	implementation("io.github.solrudev:simpleinstaller:1.1.1")
+	implementation("io.github.solrudev:simpleinstaller:1.2.1")
 
 	debugImplementation("androidx.multidex:multidex:2.0.1")
 
