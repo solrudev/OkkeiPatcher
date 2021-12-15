@@ -5,6 +5,7 @@ import solru.okkeipatcher.core.files.base.Obb
 import solru.okkeipatcher.core.impl.english.FileVersionKey
 import solru.okkeipatcher.core.impl.english.PatchFile
 import solru.okkeipatcher.model.Language
+import solru.okkeipatcher.model.LocalizedString
 import solru.okkeipatcher.model.files.common.CommonFileHashKey
 import solru.okkeipatcher.model.files.common.CommonFileInstances
 import solru.okkeipatcher.model.manifest.OkkeiManifest
@@ -16,28 +17,28 @@ class ObbEnglish @Inject constructor(commonFileInstances: CommonFileInstances) :
 	Obb(commonFileInstances) {
 
 	override suspend fun patch(manifest: OkkeiManifest) {
-		progressMutable.reset()
-		statusMutable.emit(R.string.status_comparing_obb)
+		progressProvider.mutableProgress.reset()
+		statusMutable.emit(LocalizedString.resource(R.string.status_comparing_obb))
 		if (commonFileInstances.obbToPatch.verify()) return
 		downloadObb(manifest)
 	}
 
 	override suspend fun update(manifest: OkkeiManifest) {
-		progressMutable.reset()
-		commonFileInstances.obbToPatch.deleteIfExists()
+		progressProvider.mutableProgress.reset()
+		commonFileInstances.obbToPatch.delete()
 		downloadObb(manifest)
 	}
 
 	private suspend inline fun downloadObb(manifest: OkkeiManifest) {
 		try {
-			statusMutable.emit(R.string.status_downloading_obb)
+			statusMutable.emit(LocalizedString.resource(R.string.status_downloading_obb))
 			commonFileInstances.obbToPatch.downloadAndWrapException(
 				manifest.patches[Language.English]?.get(
 					PatchFile.Obb.name
 				)?.url!!
 			)
-			statusMutable.emit(R.string.status_writing_obb_hash)
-			val obbHash = commonFileInstances.obbToPatch.computeMd5()
+			statusMutable.emit(LocalizedString.resource(R.string.status_writing_obb_hash))
+			val obbHash = commonFileInstances.obbToPatch.computeHash()
 			if (obbHash != manifest.patches[Language.English]?.get(PatchFile.Obb.name)?.hash) {
 				throwErrorMessage(R.string.error_hash_obb_mismatch)
 			}
@@ -47,7 +48,7 @@ class ObbEnglish @Inject constructor(commonFileInstances: CommonFileInstances) :
 				manifest.patches[Language.English]?.get(PatchFile.Obb.name)?.version!!
 			)
 		} catch (e: Throwable) {
-			commonFileInstances.obbToPatch.deleteIfExists()
+			commonFileInstances.obbToPatch.delete()
 			throw e
 		}
 	}

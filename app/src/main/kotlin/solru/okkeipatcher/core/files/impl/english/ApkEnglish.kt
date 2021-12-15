@@ -16,6 +16,7 @@ import solru.okkeipatcher.core.impl.english.PatchFile
 import solru.okkeipatcher.io.services.base.IoService
 import solru.okkeipatcher.io.utils.deleteTempZipFiles
 import solru.okkeipatcher.model.Language
+import solru.okkeipatcher.model.LocalizedString
 import solru.okkeipatcher.model.files.common.CommonFileInstances
 import solru.okkeipatcher.model.files.english.FileHashKey
 import solru.okkeipatcher.model.files.english.FileInstancesEnglish
@@ -39,8 +40,8 @@ class ApkEnglish @Inject constructor(
 
 	override suspend fun patch(manifest: OkkeiManifest) {
 		tryWrapper {
-			progressMutable.reset()
-			statusMutable.emit(R.string.status_comparing_apk)
+			progressProvider.mutableProgress.reset()
+			statusMutable.emit(LocalizedString.resource(R.string.status_comparing_apk))
 			if (verifyBackupIntegrity() && commonFileInstances.signedApk.verify()) {
 				installPatched()
 				return
@@ -50,16 +51,16 @@ class ApkEnglish @Inject constructor(
 		tryWrapper(onFinally = {
 			deleteTempZipFiles(OkkeiStorage.external)
 			extractedScriptsDirectory?.let { if (it.exists()) it.deleteRecursively() }
-			commonFileInstances.tempApk.deleteIfExists()
+			commonFileInstances.tempApk.delete()
 		}) {
 			if (!isPackageInstalled(PACKAGE_NAME)) {
 				throwErrorMessage(R.string.error_game_not_found)
 			}
 			copyOriginalApkTo(commonFileInstances.tempApk)
 			downloadScripts(manifest)
-			statusMutable.emit(R.string.status_extracting_scripts)
+			statusMutable.emit(LocalizedString.resource(R.string.status_extracting_scripts))
 			extractedScriptsDirectory = extractScripts()
-			statusMutable.emit(R.string.status_replacing_scripts)
+			statusMutable.emit(LocalizedString.resource(R.string.status_replacing_scripts))
 			val apkZip =
 				ZipFile(commonFileInstances.tempApk.fullPath).apply { isRunInThread = true }
 			apkZip.use {
@@ -72,22 +73,22 @@ class ApkEnglish @Inject constructor(
 	}
 
 	private suspend inline fun downloadScripts(manifest: OkkeiManifest) {
-		statusMutable.emit(R.string.status_comparing_scripts)
+		statusMutable.emit(LocalizedString.resource(R.string.status_comparing_scripts))
 		if (fileInstances.scripts.verify()) {
 			return
 		}
-		statusMutable.emit(R.string.status_downloading_scripts)
+		statusMutable.emit(LocalizedString.resource(R.string.status_downloading_scripts))
 		fileInstances.scripts.downloadAndWrapException(
 			manifest.patches[Language.English]?.get(
 				PatchFile.Scripts.name
 			)?.url!!
 		)
-		statusMutable.emit(R.string.status_comparing_scripts)
-		val scriptsHash = fileInstances.scripts.computeMd5()
+		statusMutable.emit(LocalizedString.resource(R.string.status_comparing_scripts))
+		val scriptsHash = fileInstances.scripts.computeHash()
 		if (scriptsHash != manifest.patches[Language.English]?.get(PatchFile.Scripts.name)?.hash) {
 			throwErrorMessage(R.string.error_hash_scripts_mismatch)
 		}
-		statusMutable.emit(R.string.status_writing_scripts_hash)
+		statusMutable.emit(LocalizedString.resource(R.string.status_writing_scripts_hash))
 		Preferences.set(FileHashKey.scripts_hash.name, scriptsHash)
 		manifest.patches[Language.English]?.get(PatchFile.Scripts.name)?.version?.let {
 			Preferences.set(FileVersionKey.scripts_version.name, it)
@@ -102,7 +103,7 @@ class ApkEnglish @Inject constructor(
 			val scriptsProgressMonitor = zipFile.progressMonitor
 			zipFile.extractAll(extractedScriptsDirectory.absolutePath)
 			while (scriptsProgressMonitor.state == ProgressMonitor.State.BUSY) {
-				progressMutable.emit(
+				progressProvider.mutableProgress.emit(
 					scriptsProgressMonitor.workCompleted.toInt(),
 					scriptsProgressMonitor.totalWork.toInt()
 				)
@@ -123,7 +124,7 @@ class ApkEnglish @Inject constructor(
 			val apkScriptsList = scriptsList.map { "${parameters.rootFolderNameInZip}${it.name}" }
 			apkZip.removeFiles(apkScriptsList)
 			while (apkProgressMonitor.state == ProgressMonitor.State.BUSY) {
-				progressMutable.emit(
+				progressProvider.mutableProgress.emit(
 					apkProgressMonitor.workCompleted.toInt(),
 					progressMax
 				)
@@ -131,7 +132,7 @@ class ApkEnglish @Inject constructor(
 			}
 			apkZip.addFiles(scriptsList, parameters)
 			while (apkProgressMonitor.state == ProgressMonitor.State.BUSY) {
-				progressMutable.emit(
+				progressProvider.mutableProgress.emit(
 					apkProgressMonitor.workCompleted.toInt() + apkSize,
 					progressMax
 				)

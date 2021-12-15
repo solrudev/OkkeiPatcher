@@ -9,7 +9,9 @@ import kotlinx.coroutines.flow.shareIn
 import solru.okkeipatcher.R
 import solru.okkeipatcher.core.base.AppServiceBase
 import solru.okkeipatcher.core.base.GameFileStrategy
+import solru.okkeipatcher.core.base.ProgressProviderImpl
 import solru.okkeipatcher.core.files.base.Apk
+import solru.okkeipatcher.model.LocalizedString
 import solru.okkeipatcher.model.dto.AppServiceConfig
 import solru.okkeipatcher.model.dto.patchupdates.PatchUpdates
 import solru.okkeipatcher.model.manifest.OkkeiManifest
@@ -17,14 +19,15 @@ import solru.okkeipatcher.utils.Preferences
 import solru.okkeipatcher.utils.isPackageInstalled
 import javax.inject.Inject
 
-class PatchService @Inject constructor(private val strategy: GameFileStrategy) : AppServiceBase() {
+class PatchService @Inject constructor(private val strategy: GameFileStrategy) :
+	AppServiceBase(ProgressProviderImpl()) {
 
 	@OptIn(DelicateCoroutinesApi::class, ExperimentalCoroutinesApi::class)
 	override val progress = merge(
 		strategy.apk.progress,
 		strategy.obb.progress,
 		strategy.saveData.progress,
-		progressMutable
+		progressProvider.mutableProgress
 	).shareIn(GlobalScope, SharingStarted.Eagerly, replay = 1)
 
 	@OptIn(DelicateCoroutinesApi::class, ExperimentalCoroutinesApi::class)
@@ -48,7 +51,7 @@ class PatchService @Inject constructor(private val strategy: GameFileStrategy) :
 			} else {
 				freshPatch(manifest, config)
 			}
-			statusMutable.emit(R.string.status_patch_success)
+			statusMutable.emit(LocalizedString.resource(R.string.status_patch_success))
 		}
 
 	private suspend inline fun freshPatch(manifest: OkkeiManifest, config: AppServiceConfig) {

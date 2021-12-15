@@ -1,17 +1,18 @@
 package solru.okkeipatcher.model.files.english
 
 import solru.okkeipatcher.core.OkkeiStorage
+import solru.okkeipatcher.core.base.ProgressProviderImpl
 import solru.okkeipatcher.io.JavaFile
-import solru.okkeipatcher.io.VerifiableFileWrapper
+import solru.okkeipatcher.io.VerifiableFile
 import solru.okkeipatcher.io.services.base.IoService
 import java.io.File
 
 class Scripts(ioService: IoService) :
-	VerifiableFileWrapper(
+	VerifiableFile(
 		JavaFile(
 			File(OkkeiStorage.external.absolutePath, "scripts.zip"),
 			ioService
-		), ioService
+		), ProgressProviderImpl()
 	) {
 	override suspend fun verify() =
 		exists && compareBySharedPreferences(FileHashKey.scripts_hash.name)

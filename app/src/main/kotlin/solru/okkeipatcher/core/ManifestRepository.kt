@@ -5,9 +5,11 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString
 import solru.okkeipatcher.R
 import solru.okkeipatcher.core.base.AppServiceBase
+import solru.okkeipatcher.core.base.ProgressProviderImpl
 import solru.okkeipatcher.io.services.base.IoService
 import solru.okkeipatcher.io.utils.extensions.copyFile
 import solru.okkeipatcher.io.utils.extensions.readAllText
+import solru.okkeipatcher.model.LocalizedString
 import solru.okkeipatcher.model.manifest.OkkeiManifest
 import solru.okkeipatcher.utils.extensions.makeIndeterminate
 import solru.okkeipatcher.utils.extensions.reset
@@ -22,7 +24,8 @@ private const val MANIFEST_FILE_NAME = "Manifest.json"
 private const val MANIFEST_BACKUP_FILE_NAME = "ManifestBackup.json"
 
 @Singleton
-class ManifestRepository @Inject constructor(private val ioService: IoService) : AppServiceBase() {
+class ManifestRepository @Inject constructor(private val ioService: IoService) :
+	AppServiceBase(ProgressProviderImpl()) {
 
 	val isManifestLoaded: Boolean
 		get() = ::manifest.isInitialized && ::manifestJsonString.isInitialized
@@ -38,8 +41,8 @@ class ManifestRepository @Inject constructor(private val ioService: IoService) :
 		}
 		try {
 			isRunning = true
-			progressMutable.reset()
-			statusMutable.emit(R.string.status_manifest_downloading)
+			progressProvider.mutableProgress.reset()
+			statusMutable.emit(LocalizedString.resource(R.string.status_manifest_downloading))
 			val manifestDownloaded = downloadManifest()
 			if (!manifestDownloaded) throwFatalErrorMessage(R.string.error_manifest_corrupted)
 		} catch (e: Throwable) {
@@ -48,7 +51,7 @@ class ManifestRepository @Inject constructor(private val ioService: IoService) :
 				if (!restoreManifestBackup()) {
 					e.throwFatalErrorMessage(R.string.error_manifest_download_failed)
 				}
-				statusMutable.emit(R.string.status_manifest_backup_used)
+				statusMutable.emit(LocalizedString.resource(R.string.status_manifest_backup_used))
 			}
 			return manifest
 		} finally {
@@ -56,7 +59,7 @@ class ManifestRepository @Inject constructor(private val ioService: IoService) :
 				finishTask()
 			}
 		}
-		statusMutable.emit(R.string.status_manifest_download_completed)
+		statusMutable.emit(LocalizedString.resource(R.string.status_manifest_download_completed))
 		return manifest
 	}
 
@@ -74,7 +77,7 @@ class ManifestRepository @Inject constructor(private val ioService: IoService) :
 		ioService.downloadAndWrapException(MANIFEST_URL, manifestFile)
 		return try {
 			val jsonString = ioService.readAllText(manifestFile)
-			progressMutable.makeIndeterminate()
+			progressProvider.mutableProgress.makeIndeterminate()
 			manifest = JsonSerializer.decodeFromString(jsonString)
 			manifestJsonString = jsonString
 			true
@@ -85,7 +88,7 @@ class ManifestRepository @Inject constructor(private val ioService: IoService) :
 
 	private suspend inline fun backupManifest() {
 		if (manifestFile.exists()) {
-			ioService.copyFile(manifestFile, manifestBackupFile, progressMutable)
+			ioService.copyFile(manifestFile, manifestBackupFile, progressProvider.mutableProgress)
 		}
 	}
 
@@ -95,7 +98,7 @@ class ManifestRepository @Inject constructor(private val ioService: IoService) :
 		return try {
 			val jsonString = ioService.readAllText(manifestBackupFile)
 			manifest = JsonSerializer.decodeFromString(jsonString)
-			ioService.copyFile(manifestBackupFile, manifestFile, progressMutable)
+			ioService.copyFile(manifestBackupFile, manifestFile, progressProvider.mutableProgress)
 			manifestJsonString = jsonString
 			true
 		} catch (e: Throwable) {

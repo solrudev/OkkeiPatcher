@@ -9,19 +9,21 @@ import kotlinx.coroutines.flow.shareIn
 import solru.okkeipatcher.R
 import solru.okkeipatcher.core.base.AppServiceBase
 import solru.okkeipatcher.core.base.GameFileStrategy
+import solru.okkeipatcher.core.base.ProgressProviderImpl
+import solru.okkeipatcher.model.LocalizedString
 import solru.okkeipatcher.model.dto.AppServiceConfig
 import solru.okkeipatcher.utils.Preferences
 import javax.inject.Inject
 
 class RestoreService @Inject constructor(private val strategy: GameFileStrategy) :
-	AppServiceBase() {
+	AppServiceBase(ProgressProviderImpl()) {
 
 	@OptIn(DelicateCoroutinesApi::class, ExperimentalCoroutinesApi::class)
 	override val progress = merge(
 		strategy.apk.progress,
 		strategy.obb.progress,
 		strategy.saveData.progress,
-		progressMutable
+		progressProvider.mutableProgress
 	).shareIn(GlobalScope, SharingStarted.Eagerly, replay = 1)
 
 	@OptIn(DelicateCoroutinesApi::class, ExperimentalCoroutinesApi::class)
@@ -54,7 +56,7 @@ class RestoreService @Inject constructor(private val strategy: GameFileStrategy)
 			strategy.apk.deleteBackup()
 			strategy.obb.deleteBackup()
 			Preferences.set(AppKey.is_patched.name, false)
-			statusMutable.emit(R.string.status_restore_success)
+			statusMutable.emit(LocalizedString.resource(R.string.status_restore_success))
 		}
 
 	private fun assertCanRestore() {

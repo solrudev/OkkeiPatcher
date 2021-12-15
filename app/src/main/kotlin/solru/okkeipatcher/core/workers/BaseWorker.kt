@@ -14,6 +14,7 @@ import solru.okkeipatcher.R
 import solru.okkeipatcher.core.base.AppService
 import solru.okkeipatcher.ui.activities.MainActivity
 import solru.okkeipatcher.utils.extensions.empty
+import solru.okkeipatcher.utils.extensions.putSerializable
 
 private const val PROGRESS_NOTIFICATION_ID = 813047
 
@@ -72,7 +73,7 @@ abstract class BaseWorker(
 			applicationContext,
 			MESSAGE_NOTIFICATION_ID,
 			activityIntent,
-			PendingIntent.FLAG_UPDATE_CURRENT
+			PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
 		)
 		return NotificationCompat.Builder(applicationContext, channelId).apply {
 			setContentTitle(title)
@@ -112,12 +113,10 @@ abstract class BaseWorker(
 				.conflate()
 				.collect {
 					setProgress(
-						workDataOf(
-							KEY_PROGRESS to it.first.progress,
-							KEY_PROGRESS_MAX to it.first.max,
-							KEY_IS_PROGRESS_INDETERMINATE to it.first.isIndeterminate,
-							KEY_STATUS to it.second
-						)
+						Data.Builder()
+							.putSerializable(KEY_PROGRESS_DATA, it.first)
+							.putSerializable(KEY_STATUS, it.second)
+							.build()
 					)
 				}
 		}
@@ -136,7 +135,7 @@ abstract class BaseWorker(
 		launch {
 			service.status.conflate()
 				.collect {
-					val statusString = applicationContext.getString(it)
+					val statusString = it.resolve(applicationContext)
 					val notification =
 						progressNotificationBuilder.setContentText(statusString).build()
 					notificationManager.notify(PROGRESS_NOTIFICATION_ID, notification)
@@ -153,9 +152,7 @@ abstract class BaseWorker(
 	}
 
 	companion object {
-		const val KEY_PROGRESS = "PROGRESS"
-		const val KEY_PROGRESS_MAX = "PROGRESS_MAX"
-		const val KEY_IS_PROGRESS_INDETERMINATE = "IS_PROGRESS_INDETERMINATE"
+		const val KEY_PROGRESS_DATA = "PROGRESS_DATA"
 		const val KEY_STATUS = "STATUS"
 		const val KEY_FAILURE_CAUSE = "WORKER_FAILURE_CAUSE"
 

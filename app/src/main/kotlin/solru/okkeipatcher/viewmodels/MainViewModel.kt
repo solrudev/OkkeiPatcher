@@ -15,7 +15,10 @@ import solru.okkeipatcher.core.base.PatchInfoStrategy
 import solru.okkeipatcher.core.workers.BaseWorker
 import solru.okkeipatcher.core.workers.PatchWorker
 import solru.okkeipatcher.core.workers.RestoreWorker
+import solru.okkeipatcher.model.LocalizedString
+import solru.okkeipatcher.model.dto.ProgressData
 import solru.okkeipatcher.utils.Preferences
+import solru.okkeipatcher.utils.extensions.getSerializable
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Provider
@@ -27,12 +30,10 @@ class MainViewModel @Inject constructor(
 	private val patchInfoStrategyProvider: Provider<PatchInfoStrategy>
 ) : ViewModel(), DefaultLifecycleObserver {
 
-	private val _patchText = MutableStateFlow(R.string.patch)
-	private val _restoreText = MutableStateFlow(R.string.restore)
-	private val _status = MutableStateFlow(R.string.empty)
-	private val _progress = MutableStateFlow(0)
-	private val _progressMax = MutableStateFlow(100)
-	private val _isProgressIndeterminate = MutableStateFlow(false)
+	private val _patchText = MutableStateFlow<LocalizedString>(LocalizedString.resource(R.string.patch))
+	private val _restoreText = MutableStateFlow<LocalizedString>(LocalizedString.resource(R.string.restore))
+	private val _status = MutableStateFlow<LocalizedString>(LocalizedString.empty())
+	private val _progressData = MutableStateFlow(ProgressData())
 	private val _isPatchEnabled = MutableStateFlow(!isPatched())
 	private val _isRestoreEnabled = MutableStateFlow(isPatched())
 	private val _isClearDataEnabled = MutableStateFlow(true)
@@ -40,9 +41,7 @@ class MainViewModel @Inject constructor(
 	val patchText = _patchText.asStateFlow()
 	val restoreText = _restoreText.asStateFlow()
 	val status = _status.asStateFlow()
-	val progress = _progress.asStateFlow()
-	val progressMax = _progressMax.asStateFlow()
-	val isProgressIndeterminate = _isProgressIndeterminate.asStateFlow()
+	val progressData = _progressData.asStateFlow()
 	val isPatchEnabled = _isPatchEnabled.asStateFlow()
 	val isRestoreEnabled = _isRestoreEnabled.asStateFlow()
 	val isClearDataEnabled = _isClearDataEnabled.asStateFlow()
@@ -85,23 +84,20 @@ class MainViewModel @Inject constructor(
 			.collect {
 				if (it == null) return@collect
 				with(it.progress) {
-					_status.value = getInt(BaseWorker.KEY_STATUS, R.string.empty)
-					_progress.value = getInt(BaseWorker.KEY_PROGRESS, 0)
-					_progressMax.value = getInt(BaseWorker.KEY_PROGRESS_MAX, 100)
-					_isProgressIndeterminate.value =
-						getBoolean(BaseWorker.KEY_IS_PROGRESS_INDETERMINATE, false)
+					_status.value = getSerializable(BaseWorker.KEY_STATUS) ?: LocalizedString.empty()
+					_progressData.value = getSerializable(BaseWorker.KEY_PROGRESS_DATA) ?: ProgressData()
 				}
 				if (it.state.isFinished) {
 					resetState()
 					isWorkStarted = false
 					when (it.state) {
 						WorkInfo.State.FAILED, WorkInfo.State.CANCELLED ->
-							_status.value = R.string.status_aborted
+							_status.value = LocalizedString.resource(R.string.status_aborted)
 						WorkInfo.State.SUCCEEDED -> when (it.tags.firstOrNull()) {
 							PatchWorker::class.java.name ->
-								_status.value = R.string.status_patch_success
+								_status.value = LocalizedString.resource(R.string.status_patch_success)
 							RestoreWorker::class.java.name ->
-								_status.value = R.string.status_restore_success
+								_status.value = LocalizedString.resource(R.string.status_restore_success)
 						}
 						else -> {} // isFinished == true
 					}
@@ -115,8 +111,8 @@ class MainViewModel @Inject constructor(
 				if (!isWorkStarted) {
 					isWorkStarted = true
 					when (it.tags.firstOrNull()) {
-						PatchWorker::class.java.name -> _patchText.value = R.string.abort
-						RestoreWorker::class.java.name -> _restoreText.value = R.string.abort
+						PatchWorker::class.java.name -> _patchText.value = LocalizedString.resource(R.string.abort)
+						RestoreWorker::class.java.name -> _restoreText.value = LocalizedString.resource(R.string.abort)
 					}
 					_isClearDataEnabled.value = false
 				}
@@ -125,14 +121,12 @@ class MainViewModel @Inject constructor(
 
 	private fun resetState() {
 		isRunning = false
-		_patchText.value = R.string.patch
-		_restoreText.value = R.string.restore
+		_patchText.value = LocalizedString.resource(R.string.patch)
+		_restoreText.value = LocalizedString.resource(R.string.restore)
 		_isPatchEnabled.value = !isPatched()
 		_isRestoreEnabled.value = isPatched()
 		_isClearDataEnabled.value = true
-		_progress.value = 0
-		_progressMax.value = 100
-		_isProgressIndeterminate.value = false
+		_progressData.value = ProgressData()
 	}
 
 	private fun observeRunningWork(workName: String) =

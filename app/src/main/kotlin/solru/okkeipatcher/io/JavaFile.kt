@@ -1,14 +1,20 @@
 package solru.okkeipatcher.io
 
-import solru.okkeipatcher.io.base.FileWrapper
+import solru.okkeipatcher.core.base.ProgressProviderImpl
+import solru.okkeipatcher.io.base.BaseFile
 import solru.okkeipatcher.io.services.base.IoService
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
 
-open class JavaFile(private val file: File, ioService: IoService) :
-	FileWrapper(file.absolutePath, file.name, ioService) {
+class JavaFile(private val file: File, ioService: IoService) : BaseFile(ioService, ProgressProviderImpl()) {
+
+	override val name: String
+		get() = file.name
+
+	override val fullPath: String
+		get() = file.absolutePath
 
 	override val exists: Boolean
 		get() = file.exists()
@@ -21,17 +27,16 @@ open class JavaFile(private val file: File, ioService: IoService) :
 		file.createNewFile()
 	}
 
-	override fun deleteIfExists() {
+	override fun delete() {
 		if (exists && !file.delete()) {
-			throw IOException("Could not delete file ${file.absolutePath}")
+			throw IOException("Could not delete file $fullPath")
 		}
 	}
 
 	override fun renameTo(fileName: String) {
 		if (!file.renameTo(File(file.parent, fileName))) {
-			throw IOException("Could not rename file ${file.absolutePath}")
+			throw IOException("Could not rename file $fullPath")
 		}
-		this.fileName = fileName
 	}
 
 	override fun createInputStream() = FileInputStream(file)

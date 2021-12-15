@@ -9,35 +9,36 @@ import kotlinx.coroutines.withContext
 import solru.okkeipatcher.R
 import solru.okkeipatcher.exceptions.OkkeiException
 import solru.okkeipatcher.exceptions.io.HttpStatusCodeException
-import solru.okkeipatcher.io.base.FileWrapper
 import solru.okkeipatcher.io.services.base.IoService
 import solru.okkeipatcher.io.utils.extensions.download
+import solru.okkeipatcher.model.LocalizedString
 import solru.okkeipatcher.model.dto.Message
 import solru.okkeipatcher.utils.extensions.empty
 import solru.okkeipatcher.utils.extensions.reset
 import java.io.File
 
-abstract class AppServiceBase : ProgressProviderBase(), AppService {
+abstract class AppServiceBase(protected val progressProvider: ProgressProviderImpl) :
+	ProgressProvider by progressProvider, AppService {
 
 	var isRunning = false
 		protected set
 
-	protected val statusMutable = MutableSharedFlow<Int>()
+	protected val statusMutable = MutableSharedFlow<LocalizedString>()
 
 	protected val messageMutable = MutableSharedFlow<Message>(
 		extraBufferCapacity = 1,
 		onBufferOverflow = BufferOverflow.DROP_OLDEST
 	)
 
-	override val status: Flow<Int> = statusMutable.asSharedFlow()
+	override val status: Flow<LocalizedString> = statusMutable.asSharedFlow()
 	override val message: Flow<Message> = messageMutable.asSharedFlow()
 
 	protected suspend inline fun setStatusToAborted() {
-		statusMutable.emit(R.string.status_aborted)
+		statusMutable.emit(LocalizedString.resource(R.string.status_aborted))
 	}
 
-	protected suspend inline fun finishTask() {
-		progressMutable.reset()
+	protected suspend fun finishTask() {
+		progressProvider.mutableProgress.reset()
 		isRunning = false
 	}
 
@@ -78,11 +79,11 @@ abstract class AppServiceBase : ProgressProviderBase(), AppService {
 		error: String = String.empty
 	): Nothing = throwFatalErrorMessage(message, error, this)
 
-	protected suspend inline fun FileWrapper.downloadAndWrapException(url: String) =
-		wrapDownloadException { downloadFromUrl(url) }
+	protected suspend inline fun solru.okkeipatcher.io.base.File.downloadAndWrapException(url: String) =
+		wrapDownloadException { downloadFrom(url) }
 
-	protected suspend inline fun IoService.downloadAndWrapException(url: String, outputFile: File) =
-		wrapDownloadException { download(url, outputFile, progressMutable) }
+	protected suspend fun IoService.downloadAndWrapException(url: String, outputFile: File) =
+		wrapDownloadException { download(url, outputFile, progressProvider.mutableProgress) }
 
 	@Suppress("RedundantSuspendModifier")
 	protected suspend inline fun wrapDownloadException(block: () -> Unit) {
@@ -99,7 +100,7 @@ abstract class AppServiceBase : ProgressProviderBase(), AppService {
 	}
 
 	/**
-	Guarantees setting status to aborted on exception and resetting progress before returning.
+	 * Guarantees setting status to aborted on exception and resetting progress before returning.
 	 */
 	protected suspend inline fun <T> tryWrapper(
 		onCatch: (Throwable) -> Unit = {},

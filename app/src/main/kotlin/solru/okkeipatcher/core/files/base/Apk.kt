@@ -6,7 +6,7 @@ import io.github.solrudev.simpleinstaller.PackageInstaller
 import io.github.solrudev.simpleinstaller.PackageUninstaller
 import io.github.solrudev.simpleinstaller.data.InstallResult
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import net.lingala.zip4j.ZipFile
@@ -15,9 +15,10 @@ import solru.okkeipatcher.MainApplication
 import solru.okkeipatcher.R
 import solru.okkeipatcher.core.OkkeiStorage
 import solru.okkeipatcher.core.base.AppServiceBase
+import solru.okkeipatcher.core.base.ProgressProviderImpl
 import solru.okkeipatcher.io.JavaFile
-import solru.okkeipatcher.io.base.FileWrapper
 import solru.okkeipatcher.io.services.base.IoService
+import solru.okkeipatcher.model.LocalizedString
 import solru.okkeipatcher.model.dto.ProgressData
 import solru.okkeipatcher.model.files.common.CommonFileHashKey
 import solru.okkeipatcher.model.files.common.CommonFileInstances
@@ -35,7 +36,7 @@ abstract class Apk(
 	protected val commonFileInstances: CommonFileInstances,
 	protected val ioService: IoService,
 	protected val ioDispatcher: CoroutineDispatcher
-) : AppServiceBase(), PatchableGameFile {
+) : AppServiceBase(ProgressProviderImpl()), PatchableGameFile {
 
 	override val backupExists: Boolean
 		get() = commonFileInstances.backupApk.exists
@@ -56,15 +57,15 @@ abstract class Apk(
 		commonFileInstances.tempApk.progress,
 		commonFileInstances.signedApk.progress,
 		PackageInstaller.progress.map { ProgressData(it.progress, it.max, it.isIndeterminate) },
-		progressMutable
+		progressProvider.mutableProgress
 	)
 
 	override suspend fun update(manifest: OkkeiManifest) {
 		try {
 			isUpdating = true
-			progressMutable.reset()
-			commonFileInstances.tempApk.deleteIfExists()
-			commonFileInstances.signedApk.deleteIfExists()
+			progressProvider.mutableProgress.reset()
+			commonFileInstances.tempApk.delete()
+			commonFileInstances.signedApk.delete()
 			patch(manifest)
 		} finally {
 			isUpdating = false
@@ -72,36 +73,36 @@ abstract class Apk(
 	}
 
 	override fun deleteBackup() {
-		commonFileInstances.backupApk.deleteIfExists()
+		commonFileInstances.backupApk.delete()
 	}
 
 	override suspend fun backup() =
-		tryWrapper(onCatch = { commonFileInstances.backupApk.deleteIfExists() }) {
-			progressMutable.reset()
+		tryWrapper(onCatch = { commonFileInstances.backupApk.delete() }) {
+			progressProvider.mutableProgress.reset()
 			if (!isPackageInstalled(PACKAGE_NAME)) {
 				throwErrorMessage(R.string.error_game_not_found)
 			}
-			statusMutable.emit(R.string.status_comparing_apk)
+			statusMutable.emit(LocalizedString.resource(R.string.status_comparing_apk))
 			if (verifyBackupIntegrity()) return
-			statusMutable.emit(R.string.status_backing_up_apk)
+			statusMutable.emit(LocalizedString.resource(R.string.status_backing_up_apk))
 			copyOriginalApkTo(commonFileInstances.backupApk)
-			statusMutable.emit(R.string.status_writing_apk_hash)
+			statusMutable.emit(LocalizedString.resource(R.string.status_writing_apk_hash))
 			Preferences.set(
 				CommonFileHashKey.backup_apk_hash.name,
-				commonFileInstances.backupApk.computeMd5()
+				commonFileInstances.backupApk.computeHash()
 			)
 		}
 
 	override suspend fun restore() = tryWrapper {
-		progressMutable.reset()
+		progressProvider.mutableProgress.reset()
 		if (!commonFileInstances.backupApk.exists) {
 			throwErrorMessage(R.string.error_apk_not_found_restore)
 		}
-		statusMutable.emit(R.string.status_comparing_apk)
+		statusMutable.emit(LocalizedString.resource(R.string.status_comparing_apk))
 		if (!commonFileInstances.backupApk.verify()) {
 			throwErrorMessage(R.string.error_not_trustworthy_apk_restore)
 		}
-		statusMutable.emit(R.string.empty)
+		statusMutable.emit(LocalizedString.resource(R.string.empty))
 		if (isPackageInstalled(PACKAGE_NAME)) {
 			uninstall()
 		}
@@ -110,10 +111,10 @@ abstract class Apk(
 
 	override suspend fun verifyBackupIntegrity() = commonFileInstances.backupApk.verify()
 
-	protected suspend inline fun copyOriginalApkTo(destinationFile: FileWrapper) = coroutineScope {
-		statusMutable.emit(R.string.status_copying_apk)
+	protected suspend inline fun copyOriginalApkTo(destinationFile: solru.okkeipatcher.io.base.File) = coroutineScope {
+		statusMutable.emit(LocalizedString.resource(R.string.status_copying_apk))
 		val progressJob = launch {
-			originalApk.progress.collect { progressMutable.emit(it) }
+			progressProvider.mutableProgress.emitAll(originalApk.progress)
 		}
 		originalApk.copyTo(destinationFile)
 		progressJob.cancel()
@@ -123,27 +124,27 @@ abstract class Apk(
 		if (!commonFileInstances.signedApk.exists) {
 			throwErrorMessage(R.string.error_apk_not_found_patch)
 		}
-		statusMutable.emit(R.string.status_comparing_apk)
+		statusMutable.emit(LocalizedString.resource(R.string.status_comparing_apk))
 		if (!commonFileInstances.signedApk.verify()) {
-			commonFileInstances.signedApk.deleteIfExists()
+			commonFileInstances.signedApk.delete()
 			throwErrorMessage(R.string.error_not_trustworthy_apk_patch)
 		}
 		if (!isUpdating) {
 			uninstall()
 		}
-		progressMutable.makeIndeterminate()
-		statusMutable.emit(R.string.status_installing)
+		progressProvider.mutableProgress.makeIndeterminate()
+		statusMutable.emit(LocalizedString.resource(R.string.status_installing))
 		val installResult =
 			PackageInstaller.installPackage(File(commonFileInstances.signedApk.fullPath))
 		if (installResult is InstallResult.Failure) {
 			throwErrorMessage(R.string.error_install)
 		}
-		commonFileInstances.signedApk.deleteIfExists()
+		commonFileInstances.signedApk.delete()
 	}
 
 	protected suspend inline fun uninstall() {
-		statusMutable.emit(R.string.status_uninstalling)
-		progressMutable.makeIndeterminate()
+		statusMutable.emit(LocalizedString.resource(R.string.status_uninstalling))
+		progressProvider.mutableProgress.makeIndeterminate()
 		val uninstallResult = PackageUninstaller.uninstallPackage(PACKAGE_NAME)
 		if (!uninstallResult) {
 			throwErrorMessage(R.string.error_uninstall)
@@ -151,7 +152,7 @@ abstract class Apk(
 	}
 
 	private suspend inline fun installBackup() {
-		statusMutable.emit(R.string.status_installing)
+		statusMutable.emit(LocalizedString.resource(R.string.status_installing))
 		val installResult =
 			PackageInstaller.installPackage(File(commonFileInstances.backupApk.fullPath))
 		if (installResult is InstallResult.Failure) {
@@ -160,12 +161,12 @@ abstract class Apk(
 	}
 
 	protected suspend inline fun removeSignature(apkZip: ZipFile) {
-		statusMutable.emit(R.string.status_removing_signature)
+		statusMutable.emit(LocalizedString.resource(R.string.status_removing_signature))
 		withContext(ioDispatcher) {
 			val apkProgressMonitor = apkZip.progressMonitor
 			apkZip.removeFile("META-INF/")
 			while (apkProgressMonitor.state == ProgressMonitor.State.BUSY) {
-				progressMutable.emit(
+				progressProvider.mutableProgress.emit(
 					apkProgressMonitor.workCompleted.toInt(),
 					apkProgressMonitor.totalWork.toInt()
 				)
@@ -185,22 +186,22 @@ abstract class Apk(
 	}
 
 	protected suspend inline fun sign() {
-		statusMutable.emit(R.string.status_signing_apk)
+		statusMutable.emit(LocalizedString.resource(R.string.status_signing_apk))
 		extractSigningKey()
-		progressMutable.makeIndeterminate()
-		commonFileInstances.signedApk.deleteIfExists()
+		progressProvider.mutableProgress.makeIndeterminate()
+		commonFileInstances.signedApk.delete()
 		commonFileInstances.signedApk.create()
 		commonFileInstances.tempApk.createInputStream().use { tempApk ->
 			commonFileInstances.signedApk.createOutputStream().use { signedApk ->
 				PseudoApkSigner(rsaTemplateFile, privateKeyFile).sign(tempApk, signedApk)
 			}
 		}
-		statusMutable.emit(R.string.status_writing_patched_apk_hash)
+		statusMutable.emit(LocalizedString.resource(R.string.status_writing_patched_apk_hash))
 		Preferences.set(
 			CommonFileHashKey.signed_apk_hash.name,
-			commonFileInstances.signedApk.computeMd5()
+			commonFileInstances.signedApk.computeHash()
 		)
-		commonFileInstances.tempApk.deleteIfExists()
+		commonFileInstances.tempApk.delete()
 	}
 
 	protected suspend inline fun AssetManager.copyAssetToFile(assetName: String, file: File) {
@@ -211,7 +212,7 @@ abstract class Apk(
 						inputStream,
 						outputStream,
 						fileDescriptor.length,
-						progressMutable
+						progressProvider.mutableProgress
 					)
 				}
 			}

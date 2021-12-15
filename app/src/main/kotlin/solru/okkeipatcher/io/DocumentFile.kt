@@ -6,19 +6,26 @@ import com.anggrayudi.storage.file.makeFile
 import com.anggrayudi.storage.file.openInputStream
 import com.anggrayudi.storage.file.openOutputStream
 import solru.okkeipatcher.MainApplication
-import solru.okkeipatcher.io.base.FileWrapper
+import solru.okkeipatcher.core.base.ProgressProviderImpl
+import solru.okkeipatcher.io.base.BaseFile
 import solru.okkeipatcher.io.services.base.IoService
 import java.io.IOException
 
-open class SafFile(fullPath: String, fileName: String, ioService: IoService) :
-	FileWrapper(fullPath, fileName, ioService) {
+class DocumentFile(private val path: String, name: String, ioService: IoService) :
+	BaseFile(ioService, ProgressProviderImpl()) {
 
 	private val documentFile: DocumentFile? by lazy {
 		DocumentFileCompat.fromFullPath(
 			MainApplication.context,
-			fullPath
+			"$path/$name"
 		)
 	}
+
+	override val fullPath: String
+		get() = "$path/$name"
+
+	override val name: String
+		get() = documentFile!!.name!!
 
 	override val exists: Boolean
 		get() = documentFile!!.exists()
@@ -27,21 +34,19 @@ open class SafFile(fullPath: String, fileName: String, ioService: IoService) :
 		get() = documentFile!!.length()
 
 	override fun create() {
-		DocumentFileCompat.mkdirs(MainApplication.context, fullPath)!!
-			.makeFile(MainApplication.context, fileName)
+		DocumentFileCompat.mkdirs(MainApplication.context, path)!!.makeFile(MainApplication.context, name)
 	}
 
-	override fun deleteIfExists() {
+	override fun delete() {
 		if (exists && !documentFile!!.delete()) {
-			throw IOException("Could not delete file $fullPath")
+			throw IOException("Could not delete file $path/$name")
 		}
 	}
 
 	override fun renameTo(fileName: String) {
 		if (!documentFile!!.renameTo(fileName)) {
-			throw IOException("Could not rename file $fullPath")
+			throw IOException("Could not rename file $path/$name")
 		}
-		this.fileName = fileName
 	}
 
 	override fun createInputStream() =

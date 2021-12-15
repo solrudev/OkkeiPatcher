@@ -6,12 +6,12 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import solru.okkeipatcher.model.dto.ProgressData
 
-open class ProgressProviderBase : ProgressProvider {
+open class ProgressProviderImpl : ProgressProvider {
 
-	protected val progressMutable = MutableSharedFlow<ProgressData>(
+	val mutableProgress = MutableSharedFlow<ProgressData>(
 		extraBufferCapacity = 1,
 		onBufferOverflow = BufferOverflow.DROP_OLDEST
 	)
 
-	override val progress: Flow<ProgressData> = progressMutable.asSharedFlow()
+	override val progress: Flow<ProgressData> = mutableProgress.asSharedFlow()
 }
