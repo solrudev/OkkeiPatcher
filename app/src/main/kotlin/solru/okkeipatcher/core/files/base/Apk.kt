@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import net.lingala.zip4j.ZipFile
 import net.lingala.zip4j.progress.ProgressMonitor
-import solru.okkeipatcher.MainApplication
+import solru.okkeipatcher.OkkeiApplication
 import solru.okkeipatcher.R
 import solru.okkeipatcher.core.OkkeiStorage
 import solru.okkeipatcher.core.base.AppServiceBase
@@ -176,7 +176,7 @@ abstract class Apk(
 	}
 
 	protected suspend inline fun extractSigningKey() {
-		val assets = MainApplication.context.assets
+		val assets = OkkeiApplication.context.assets
 		if (!privateKeyFile.exists()) {
 			assets.copyAssetToFile("testkey.pk8", privateKeyFile)
 		}

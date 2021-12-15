@@ -8,7 +8,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
-import solru.okkeipatcher.MainApplication
+import solru.okkeipatcher.OkkeiApplication
 import solru.okkeipatcher.R
 import solru.okkeipatcher.core.*
 import solru.okkeipatcher.core.base.PatchInfoStrategy
@@ -63,11 +63,11 @@ class MainViewModel @Inject constructor(
 
 	fun patch() = startUniqueWork<PatchWorker>(PatchWorker.WORK_NAME)
 	fun restore() = startUniqueWork<RestoreWorker>(RestoreWorker.WORK_NAME)
-	fun cancel() = WorkManager.getInstance(MainApplication.context).cancelAllWork()
+	fun cancel() = WorkManager.getInstance(OkkeiApplication.context).cancelAllWork()
 
 	private inline fun <reified T : ListenableWorker> startUniqueWork(workName: String) {
 		val workRequest = OneTimeWorkRequest.from(T::class.java)
-		WorkManager.getInstance(MainApplication.context).enqueueUniqueWork(
+		WorkManager.getInstance(OkkeiApplication.context).enqueueUniqueWork(
 			workName,
 			ExistingWorkPolicy.KEEP,
 			workRequest
@@ -78,7 +78,7 @@ class MainViewModel @Inject constructor(
 	@Suppress("NON_EXHAUSTIVE_WHEN")
 	private fun CoroutineScope.observeWork(workId: UUID) = launch {
 		var isWorkStarted = false
-		WorkManager.getInstance(MainApplication.context)
+		WorkManager.getInstance(OkkeiApplication.context)
 			.getWorkInfoByIdLiveData(workId)
 			.asFlow()
 			.collect {
@@ -101,7 +101,7 @@ class MainViewModel @Inject constructor(
 						}
 						else -> {} // isFinished == true
 					}
-					WorkManager.getInstance(MainApplication.context).pruneWork()
+					WorkManager.getInstance(OkkeiApplication.context).pruneWork()
 					workObservingScope.coroutineContext[Job]?.cancelChildren()
 					return@collect
 				}
@@ -130,7 +130,7 @@ class MainViewModel @Inject constructor(
 	}
 
 	private fun observeRunningWork(workName: String) =
-		WorkManager.getInstance(MainApplication.context)
+		WorkManager.getInstance(OkkeiApplication.context)
 			.getWorkInfosForUniqueWork(workName)
 			.get()
 			.firstOrNull()

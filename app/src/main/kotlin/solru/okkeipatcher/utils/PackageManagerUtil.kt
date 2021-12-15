@@ -2,32 +2,32 @@ package solru.okkeipatcher.utils
 
 import android.content.pm.PackageManager
 import android.os.Build
-import solru.okkeipatcher.MainApplication
+import solru.okkeipatcher.OkkeiApplication
 
 @Suppress("DEPRECATION")
 val appVersionCode: Int
-	get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) MainApplication.context.packageManager.getPackageInfo(
-		MainApplication.context.packageName,
+	get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) OkkeiApplication.context.packageManager.getPackageInfo(
+		OkkeiApplication.context.packageName,
 		0
-	).longVersionCode.toInt() else MainApplication.context.packageManager.getPackageInfo(
-		MainApplication.context.packageName,
+	).longVersionCode.toInt() else OkkeiApplication.context.packageManager.getPackageInfo(
+		OkkeiApplication.context.packageName,
 		0
 	).versionCode
 
 val appVersionString: String
 	get() {
-		val pm = MainApplication.context.packageManager
-		val packageName = MainApplication.context.packageName
+		val pm = OkkeiApplication.context.packageManager
+		val packageName = OkkeiApplication.context.packageName
 		val info = pm.getPackageInfo(packageName, PackageManager.GET_META_DATA)
 		return info.versionName
 	}
 
-val appPackageName: String get() = MainApplication.context.packageName
+val appPackageName: String get() = OkkeiApplication.context.packageName
 
 fun isPackageInstalled(packageName: String?): Boolean {
 	if (packageName == null) return false
 	return try {
-		MainApplication.context.packageManager.getPackageInfo(
+		OkkeiApplication.context.packageManager.getPackageInfo(
 			packageName,
 			PackageManager.GET_ACTIVITIES
 		)
@@ -38,7 +38,7 @@ fun isPackageInstalled(packageName: String?): Boolean {
 }
 
 fun getPackagePublicSourceDir(packageName: String): String =
-	MainApplication.context.packageManager
+	OkkeiApplication.context.packageManager
 		.getPackageInfo(packageName, 0)
 		.applicationInfo
 		.publicSourceDir

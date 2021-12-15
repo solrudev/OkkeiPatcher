@@ -3,7 +3,7 @@ package solru.okkeipatcher.utils
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
-import solru.okkeipatcher.MainApplication
+import solru.okkeipatcher.OkkeiApplication
 
 object Preferences {
 
@@ -11,7 +11,7 @@ object Preferences {
 
 	private val sharedPreferences: SharedPreferences
 		get() = PreferenceManager.getDefaultSharedPreferences(
-			MainApplication.context
+			OkkeiApplication.context
 		)
 
 	val all: Map<String, *> get() = sharedPreferences.all

@@ -15,7 +15,7 @@
 	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
 	<application
-		android:name=".MainApplication"
+		android:name=".OkkeiApplication"
 		android:allowBackup="false"
 		android:hasFragileUserData="true"
 		android:icon="@mipmap/ic_launcher"

@@ -5,7 +5,7 @@ import com.anggrayudi.storage.file.DocumentFileCompat
 import com.anggrayudi.storage.file.makeFile
 import com.anggrayudi.storage.file.openInputStream
 import com.anggrayudi.storage.file.openOutputStream
-import solru.okkeipatcher.MainApplication
+import solru.okkeipatcher.OkkeiApplication
 import solru.okkeipatcher.core.base.ProgressProviderImpl
 import solru.okkeipatcher.io.base.BaseFile
 import solru.okkeipatcher.io.services.base.IoService
@@ -16,7 +16,7 @@ class DocumentFile(private val path: String, name: String, ioService: IoService)
 
 	private val documentFile: DocumentFile? by lazy {
 		DocumentFileCompat.fromFullPath(
-			MainApplication.context,
+			OkkeiApplication.context,
 			"$path/$name"
 		)
 	}
@@ -34,7 +34,7 @@ class DocumentFile(private val path: String, name: String, ioService: IoService)
 		get() = documentFile!!.length()
 
 	override fun create() {
-		DocumentFileCompat.mkdirs(MainApplication.context, path)!!.makeFile(MainApplication.context, name)
+		DocumentFileCompat.mkdirs(OkkeiApplication.context, path)!!.makeFile(OkkeiApplication.context, name)
 	}
 
 	override fun delete() {
@@ -50,8 +50,8 @@ class DocumentFile(private val path: String, name: String, ioService: IoService)
 	}
 
 	override fun createInputStream() =
-		documentFile!!.openInputStream(MainApplication.context)!!
+		documentFile!!.openInputStream(OkkeiApplication.context)!!
 
 	override fun createOutputStream() =
-		documentFile!!.openOutputStream(MainApplication.context)!!
+		documentFile!!.openOutputStream(OkkeiApplication.context)!!
 }

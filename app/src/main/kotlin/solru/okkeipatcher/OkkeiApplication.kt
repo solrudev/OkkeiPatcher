@@ -16,7 +16,7 @@ import solru.okkeipatcher.utils.Preferences
 import javax.inject.Inject
 
 @HiltAndroidApp
-class MainApplication : Application(), Configuration.Provider {
+class OkkeiApplication : Application(), Configuration.Provider {
 
 	@Inject
 	lateinit var workerFactory: HiltWorkerFactory
@@ -82,7 +82,7 @@ class MainApplication : Application(), Configuration.Provider {
 			.build()
 
 	companion object {
-		private lateinit var instance: MainApplication
+		private lateinit var instance: OkkeiApplication
 		val context: Context get() = instance.applicationContext
 	}
 }
