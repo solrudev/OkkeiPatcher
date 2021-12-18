@@ -20,8 +20,7 @@
 	<string name="error_game_not_found">CHAOS;CHILD was not found on this device.</string>
 	<string name="error_hash_obb_mismatch">Downloaded OBB is corrupted. Please try restarting patch process.</string>
 	<string name="error_hash_scripts_mismatch">Downloaded scripts are corrupted. Please try restarting patch process.</string>
-	<string name="error_http_file_access">Failed to access a file to download. Contact the creator of this application.\nError description: %1$s</string>
-	<string name="error_http_file_download">An error occurred while downloading file. Check your internet connection and try again.</string>
+	<string name="error_http_file_download">An error occurred while downloading file.</string>
 	<string name="error_install">An error occurred while installing APK. Please try again.</string>
 	<string name="error_manifest_corrupted">Manifest is corrupted. Okkei Patcher can\'t proceed. Please try to restart Okkei Patcher.</string>
 	<string name="error_manifest_download_failed">Manifest download failed. Okkei Patcher can\'t proceed. Please restart Okkei Patcher.</string>

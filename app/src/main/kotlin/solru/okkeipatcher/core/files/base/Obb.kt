@@ -3,67 +3,69 @@ package solru.okkeipatcher.core.files.base
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.merge
 import solru.okkeipatcher.R
-import solru.okkeipatcher.core.base.AppServiceBase
-import solru.okkeipatcher.core.base.ProgressProviderImpl
+import solru.okkeipatcher.core.base.ObservableServiceImpl
+import solru.okkeipatcher.exceptions.OkkeiException
 import solru.okkeipatcher.model.LocalizedString
 import solru.okkeipatcher.model.files.common.CommonFileHashKey
-import solru.okkeipatcher.model.files.common.CommonFileInstances
+import solru.okkeipatcher.model.files.common.CommonFiles
 import solru.okkeipatcher.utils.Preferences
 import solru.okkeipatcher.utils.extensions.reset
 
-abstract class Obb(protected val commonFileInstances: CommonFileInstances) : AppServiceBase(ProgressProviderImpl()),
-	PatchableGameFile {
+abstract class Obb(protected val commonFiles: CommonFiles) : ObservableServiceImpl(), PatchableGameFile {
 
 	override val backupExists: Boolean
-		get() = commonFileInstances.backupObb.exists
+		get() = commonFiles.backupObb.exists
 
 	@OptIn(ExperimentalCoroutinesApi::class)
 	override val progress = merge(
-		commonFileInstances.backupObb.progress,
-		commonFileInstances.obbToBackup.progress,
-		commonFileInstances.obbToPatch.progress,
+		commonFiles.backupObb.progress,
+		commonFiles.obbToBackup.progress,
+		commonFiles.obbToPatch.progress,
 		progressProvider.mutableProgress
 	)
 
 	override fun deleteBackup() {
-		commonFileInstances.backupObb.delete()
+		commonFiles.backupObb.delete()
 	}
 
 	override suspend fun backup() {
-		tryWrapper {
-			progressProvider.mutableProgress.reset()
-			if (!commonFileInstances.obbToBackup.exists) {
-				throwErrorMessage(R.string.error_obb_not_found)
-			}
-			statusMutable.emit(LocalizedString.resource(R.string.status_comparing_obb))
-			if (verifyBackupIntegrity()) return
+		progressProvider.mutableProgress.reset()
+		if (!commonFiles.obbToBackup.exists) {
+			throw OkkeiException(LocalizedString.resource(R.string.error_obb_not_found))
 		}
-		tryWrapper(onCatch = { commonFileInstances.backupObb.delete() }) {
+		mutableStatus.emit(LocalizedString.resource(R.string.status_comparing_obb))
+		if (verifyBackupIntegrity()) return
+		try {
 			progressProvider.mutableProgress.reset()
-			if (!commonFileInstances.obbToBackup.exists) {
-				throwErrorMessage(R.string.error_obb_not_found)
+			if (!commonFiles.obbToBackup.exists) {
+				throw OkkeiException(LocalizedString.resource(R.string.error_obb_not_found))
 			}
-			statusMutable.emit(LocalizedString.resource(R.string.status_comparing_obb))
+			mutableStatus.emit(LocalizedString.resource(R.string.status_comparing_obb))
 			if (verifyBackupIntegrity()) return
-			statusMutable.emit(LocalizedString.resource(R.string.status_backing_up_obb))
-			commonFileInstances.obbToBackup.copyTo(commonFileInstances.backupObb)
-			statusMutable.emit(LocalizedString.resource(R.string.status_writing_obb_hash))
+			mutableStatus.emit(LocalizedString.resource(R.string.status_backing_up_obb))
+			commonFiles.obbToBackup.copyTo(commonFiles.backupObb)
+			mutableStatus.emit(LocalizedString.resource(R.string.status_writing_obb_hash))
 			Preferences.set(
 				CommonFileHashKey.backup_obb_hash.name,
-				commonFileInstances.backupObb.computeHash()
+				commonFiles.backupObb.computeHash()
 			)
+		} catch (e: Throwable) {
+			commonFiles.backupObb.delete()
+			throw e
 		}
 	}
 
-	override suspend fun restore() =
-		tryWrapper(onCatch = { commonFileInstances.obbToBackup.delete() }) {
-			progressProvider.mutableProgress.reset()
-			if (!commonFileInstances.backupObb.exists) {
-				throwErrorMessage(R.string.error_obb_not_found)
-			}
-			statusMutable.emit(LocalizedString.resource(R.string.status_restoring_obb))
-			commonFileInstances.backupObb.copyTo(commonFileInstances.obbToBackup)
+	override suspend fun restore() = try {
+		progressProvider.mutableProgress.reset()
+		if (!commonFiles.backupObb.exists) {
+			throw OkkeiException(LocalizedString.resource(R.string.error_obb_not_found))
 		}
+		mutableStatus.emit(LocalizedString.resource(R.string.status_restoring_obb))
+		commonFiles.backupObb.copyTo(commonFiles.obbToBackup)
+	} catch (e: Throwable) {
+		commonFiles.obbToBackup.delete()
+		throw e
+	}
 
-	override suspend fun verifyBackupIntegrity() = commonFileInstances.backupObb.verify()
+	override suspend fun verifyBackupIntegrity() = commonFiles.backupObb.verify()
 }

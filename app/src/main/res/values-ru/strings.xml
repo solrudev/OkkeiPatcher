@@ -15,8 +15,7 @@
 	<string name="error_game_not_found">CHAOS;CHILD не найден на этом устройстве.</string>
 	<string name="error_hash_obb_mismatch">Загруженный OBB повреждён. Пожалуйста, попробуйте перезапустить процесс патча.</string>
 	<string name="error_hash_scripts_mismatch">Загруженные скрипты повреждены. Пожалуйста, попробуйте перезапустить процесс патча.</string>
-	<string name="error_http_file_access">Не удалось получить доступ к файлу для загрузки. Свяжитесь с разработчиком приложения.\nОписание ошибки: %1$s</string>
-	<string name="error_http_file_download">Во время загрузки файла произошла ошибка. Проверьте Ваше интернет-соединение и попробуйте заново.</string>
+	<string name="error_http_file_download">Во время загрузки файла произошла ошибка.</string>
 	<string name="error_install">Произошла ошибка при установке APK. Пожалуйста, попробуйте заново.</string>
 	<string name="error_manifest_corrupted">Манифест повреждён. Okkei Patcher не может продолжить работу. Пожалуйста, попробуйте перезапустить Okkei Patcher.</string>
 	<string name="error_manifest_download_failed">Не удалось загрузить манифест. Okkei Patcher не может продолжить работу. Пожалуйста, перезапустите Okkei Patcher.</string>

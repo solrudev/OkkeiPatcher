@@ -4,10 +4,12 @@ import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString
 import solru.okkeipatcher.R
-import solru.okkeipatcher.core.base.AppServiceBase
-import solru.okkeipatcher.core.base.ProgressProviderImpl
+import solru.okkeipatcher.core.base.ObservableServiceImpl
+import solru.okkeipatcher.exceptions.OkkeiException
+import solru.okkeipatcher.exceptions.OkkeiFatalException
 import solru.okkeipatcher.io.services.base.IoService
 import solru.okkeipatcher.io.utils.extensions.copyFile
+import solru.okkeipatcher.io.utils.extensions.download
 import solru.okkeipatcher.io.utils.extensions.readAllText
 import solru.okkeipatcher.model.LocalizedString
 import solru.okkeipatcher.model.manifest.OkkeiManifest
@@ -24,8 +26,7 @@ private const val MANIFEST_FILE_NAME = "Manifest.json"
 private const val MANIFEST_BACKUP_FILE_NAME = "ManifestBackup.json"
 
 @Singleton
-class ManifestRepository @Inject constructor(private val ioService: IoService) :
-	AppServiceBase(ProgressProviderImpl()) {
+class ManifestRepository @Inject constructor(private val ioService: IoService) : ObservableServiceImpl() {
 
 	val isManifestLoaded: Boolean
 		get() = ::manifest.isInitialized && ::manifestJsonString.isInitialized
@@ -40,26 +41,25 @@ class ManifestRepository @Inject constructor(private val ioService: IoService) :
 			return manifest
 		}
 		try {
-			isRunning = true
 			progressProvider.mutableProgress.reset()
-			statusMutable.emit(LocalizedString.resource(R.string.status_manifest_downloading))
+			mutableStatus.emit(LocalizedString.resource(R.string.status_manifest_downloading))
 			val manifestDownloaded = downloadManifest()
-			if (!manifestDownloaded) throwFatalErrorMessage(R.string.error_manifest_corrupted)
+			if (!manifestDownloaded) {
+				throw OkkeiFatalException(LocalizedString.resource(R.string.error_manifest_corrupted), null)
+			}
 		} catch (e: Throwable) {
 			if (manifestFile.exists()) manifestFile.delete()
 			withContext(NonCancellable) {
 				if (!restoreManifestBackup()) {
-					e.throwFatalErrorMessage(R.string.error_manifest_download_failed)
+					throw OkkeiFatalException(LocalizedString.resource(R.string.error_manifest_download_failed), e)
 				}
-				statusMutable.emit(LocalizedString.resource(R.string.status_manifest_backup_used))
+				mutableStatus.emit(LocalizedString.resource(R.string.status_manifest_backup_used))
 			}
 			return manifest
 		} finally {
-			withContext(NonCancellable) {
-				finishTask()
-			}
+			withContext(NonCancellable) { progressProvider.mutableProgress.reset() }
 		}
-		statusMutable.emit(LocalizedString.resource(R.string.status_manifest_download_completed))
+		mutableStatus.emit(LocalizedString.resource(R.string.status_manifest_download_completed))
 		return manifest
 	}
 
@@ -74,7 +74,13 @@ class ManifestRepository @Inject constructor(private val ioService: IoService) :
 	@OptIn(kotlinx.serialization.ExperimentalSerializationApi::class)
 	private suspend inline fun downloadManifest(): Boolean {
 		backupManifest()
-		ioService.downloadAndWrapException(MANIFEST_URL, manifestFile)
+		try {
+			ioService.download(MANIFEST_URL, manifestFile) { progressData ->
+				progressProvider.mutableProgress.emit(progressData)
+			}
+		} catch (e: Throwable) {
+			throw OkkeiException(LocalizedString.resource(R.string.error_http_file_download), e)
+		}
 		return try {
 			val jsonString = ioService.readAllText(manifestFile)
 			progressProvider.mutableProgress.makeIndeterminate()
@@ -88,7 +94,9 @@ class ManifestRepository @Inject constructor(private val ioService: IoService) :
 
 	private suspend inline fun backupManifest() {
 		if (manifestFile.exists()) {
-			ioService.copyFile(manifestFile, manifestBackupFile, progressProvider.mutableProgress)
+			ioService.copyFile(manifestFile, manifestBackupFile) { progressData ->
+				progressProvider.mutableProgress.emit(progressData)
+			}
 		}
 	}
 
@@ -98,7 +106,9 @@ class ManifestRepository @Inject constructor(private val ioService: IoService) :
 		return try {
 			val jsonString = ioService.readAllText(manifestBackupFile)
 			manifest = JsonSerializer.decodeFromString(jsonString)
-			ioService.copyFile(manifestBackupFile, manifestFile, progressProvider.mutableProgress)
+			ioService.copyFile(manifestBackupFile, manifestFile) { progressData ->
+				progressProvider.mutableProgress.emit(progressData)
+			}
 			manifestJsonString = jsonString
 			true
 		} catch (e: Throwable) {

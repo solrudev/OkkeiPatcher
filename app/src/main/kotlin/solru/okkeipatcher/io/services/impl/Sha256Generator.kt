@@ -2,7 +2,6 @@ package solru.okkeipatcher.io.services.impl
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ensureActive
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.withContext
 import okio.Buffer
 import okio.HashingSink.Companion.sha256
@@ -25,9 +24,9 @@ class Sha256Generator @Inject constructor(private val ioDispatcher: CoroutineDis
 	override suspend fun computeHash(
 		inputStream: InputStream,
 		size: Long,
-		progress: MutableSharedFlow<ProgressData>
+		onProgressChanged: suspend (ProgressData) -> Unit
 	) = withContext(ioDispatcher) {
-		progress.reset()
+		onProgressChanged(ProgressData())
 		val progressRatio = calculateProgressRatio(size, BUFFER_LENGTH)
 		sha256(blackholeSink()).use sha256@{ hashingSink ->
 			inputStream.source().buffer().use { source ->
@@ -40,7 +39,7 @@ class Sha256Generator @Inject constructor(private val ioDispatcher: CoroutineDis
 						hashingSink.write(buffer, buffer.size)
 						++currentProgress
 						if (currentProgress % progressRatio == 0) {
-							progress.emit(currentProgress / progressRatio, progressMax)
+							onProgressChanged(ProgressData(currentProgress / progressRatio, progressMax))
 						}
 					}
 					return@sha256 hashingSink.hash.hex()

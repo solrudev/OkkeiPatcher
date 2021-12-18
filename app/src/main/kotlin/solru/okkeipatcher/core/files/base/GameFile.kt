@@ -1,8 +1,8 @@
 package solru.okkeipatcher.core.files.base
 
-import solru.okkeipatcher.core.base.AppService
+import solru.okkeipatcher.core.base.ObservableService
 
-interface GameFile : AppService {
+interface GameFile : ObservableService {
 	val backupExists: Boolean
 	fun deleteBackup()
 	suspend fun backup()

@@ -11,7 +11,8 @@ import solru.okkeipatcher.core.AppKey
 import solru.okkeipatcher.core.ManifestRepository
 import solru.okkeipatcher.core.PatchService
 import solru.okkeipatcher.core.base.PatchInfoStrategy
-import solru.okkeipatcher.model.dto.AppServiceConfig
+import solru.okkeipatcher.model.LocalizedString
+import solru.okkeipatcher.model.dto.ServiceConfig
 import solru.okkeipatcher.utils.Preferences
 
 @HiltWorker
@@ -21,7 +22,7 @@ class PatchWorker @AssistedInject constructor(
 	private val patchService: PatchService,
 	private val manifestRepository: ManifestRepository,
 	private val patchInfoStrategy: PatchInfoStrategy
-) : BaseWorker(context, workerParameters, R.string.notification_title_patch, patchService) {
+) : BaseWorker(context, workerParameters, LocalizedString.resource(R.string.notification_title_patch), patchService) {
 
 	override suspend fun doServiceWork() {
 		val manifest = manifestRepository.getManifest()
@@ -30,7 +31,7 @@ class PatchWorker @AssistedInject constructor(
 			Build.VERSION.SDK_INT < Build.VERSION_CODES.R
 		)
 		val patchUpdates = patchInfoStrategy.patchUpdates(manifest)
-		val config = AppServiceConfig(processSaveData, patchUpdates)
+		val config = ServiceConfig(processSaveData, patchUpdates)
 		patchService.patch(manifest, config)
 	}
 

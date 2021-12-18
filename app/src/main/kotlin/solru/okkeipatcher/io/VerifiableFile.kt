@@ -5,7 +5,6 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
-import solru.okkeipatcher.core.base.ProgressProvider
 import solru.okkeipatcher.core.base.ProgressProviderImpl
 import solru.okkeipatcher.io.base.BaseFile
 import solru.okkeipatcher.io.base.File
@@ -17,7 +16,7 @@ import solru.okkeipatcher.utils.extensions.isEmptyOrBlank
 abstract class VerifiableFile(
 	private val fileImplementation: BaseFile,
 	private val progressProvider: ProgressProviderImpl
-) : File by fileImplementation, Verifiable, ProgressProvider {
+) : File by fileImplementation, Verifiable {
 
 	@OptIn(ExperimentalCoroutinesApi::class)
 	override val progress = merge(fileImplementation.progress, progressProvider.mutableProgress)

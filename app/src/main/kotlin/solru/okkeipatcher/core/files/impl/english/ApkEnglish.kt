@@ -13,13 +13,14 @@ import solru.okkeipatcher.core.OkkeiStorage
 import solru.okkeipatcher.core.files.base.Apk
 import solru.okkeipatcher.core.impl.english.FileVersionKey
 import solru.okkeipatcher.core.impl.english.PatchFile
+import solru.okkeipatcher.exceptions.OkkeiException
 import solru.okkeipatcher.io.services.base.IoService
 import solru.okkeipatcher.io.utils.deleteTempZipFiles
 import solru.okkeipatcher.model.Language
 import solru.okkeipatcher.model.LocalizedString
-import solru.okkeipatcher.model.files.common.CommonFileInstances
+import solru.okkeipatcher.model.files.common.CommonFiles
 import solru.okkeipatcher.model.files.english.FileHashKey
-import solru.okkeipatcher.model.files.english.FileInstancesEnglish
+import solru.okkeipatcher.model.files.english.FilesEnglish
 import solru.okkeipatcher.model.manifest.OkkeiManifest
 import solru.okkeipatcher.utils.Preferences
 import solru.okkeipatcher.utils.extensions.emit
@@ -29,66 +30,68 @@ import java.io.File
 import javax.inject.Inject
 
 class ApkEnglish @Inject constructor(
-	private val fileInstances: FileInstancesEnglish,
-	commonFileInstances: CommonFileInstances,
+	private val files: FilesEnglish,
+	commonFiles: CommonFiles,
 	ioService: IoService,
 	ioDispatcher: CoroutineDispatcher
-) : Apk(commonFileInstances, ioService, ioDispatcher) {
+) : Apk(commonFiles, ioService, ioDispatcher) {
 
 	@OptIn(ExperimentalCoroutinesApi::class)
-	override val progress = merge(super.progress, fileInstances.scripts.progress)
+	override val progress = merge(super.progress, files.scripts.progress)
 
 	override suspend fun patch(manifest: OkkeiManifest) {
-		tryWrapper {
-			progressProvider.mutableProgress.reset()
-			statusMutable.emit(LocalizedString.resource(R.string.status_comparing_apk))
-			if (verifyBackupIntegrity() && commonFileInstances.signedApk.verify()) {
-				installPatched()
-				return
-			}
+		progressProvider.mutableProgress.reset()
+		mutableStatus.emit(LocalizedString.resource(R.string.status_comparing_apk))
+		if (verifyBackupIntegrity() && commonFiles.signedApk.verify()) {
+			installPatched()
+			return
 		}
 		var extractedScriptsDirectory: File? = null
-		tryWrapper(onFinally = {
-			deleteTempZipFiles(OkkeiStorage.external)
-			extractedScriptsDirectory?.let { if (it.exists()) it.deleteRecursively() }
-			commonFileInstances.tempApk.delete()
-		}) {
+		try {
 			if (!isPackageInstalled(PACKAGE_NAME)) {
-				throwErrorMessage(R.string.error_game_not_found)
+				throw OkkeiException(LocalizedString.resource(R.string.error_game_not_found))
 			}
-			copyOriginalApkTo(commonFileInstances.tempApk)
+			copyOriginalApkTo(commonFiles.tempApk)
 			downloadScripts(manifest)
-			statusMutable.emit(LocalizedString.resource(R.string.status_extracting_scripts))
+			mutableStatus.emit(LocalizedString.resource(R.string.status_extracting_scripts))
 			extractedScriptsDirectory = extractScripts()
-			statusMutable.emit(LocalizedString.resource(R.string.status_replacing_scripts))
+			mutableStatus.emit(LocalizedString.resource(R.string.status_replacing_scripts))
 			val apkZip =
-				ZipFile(commonFileInstances.tempApk.fullPath).apply { isRunInThread = true }
+				ZipFile(commonFiles.tempApk.fullPath).apply { isRunInThread = true }
 			apkZip.use {
-				replaceScripts(it, extractedScriptsDirectory!!)
+				replaceScripts(it, extractedScriptsDirectory)
 				removeSignature(it)
 			}
 			sign()
 			installPatched()
+		} finally {
+			deleteTempZipFiles(OkkeiStorage.external)
+			extractedScriptsDirectory?.let { if (it.exists()) it.deleteRecursively() }
+			commonFiles.tempApk.delete()
 		}
 	}
 
 	private suspend inline fun downloadScripts(manifest: OkkeiManifest) {
-		statusMutable.emit(LocalizedString.resource(R.string.status_comparing_scripts))
-		if (fileInstances.scripts.verify()) {
+		mutableStatus.emit(LocalizedString.resource(R.string.status_comparing_scripts))
+		if (files.scripts.verify()) {
 			return
 		}
-		statusMutable.emit(LocalizedString.resource(R.string.status_downloading_scripts))
-		fileInstances.scripts.downloadAndWrapException(
-			manifest.patches[Language.English]?.get(
-				PatchFile.Scripts.name
-			)?.url!!
-		)
-		statusMutable.emit(LocalizedString.resource(R.string.status_comparing_scripts))
-		val scriptsHash = fileInstances.scripts.computeHash()
-		if (scriptsHash != manifest.patches[Language.English]?.get(PatchFile.Scripts.name)?.hash) {
-			throwErrorMessage(R.string.error_hash_scripts_mismatch)
+		mutableStatus.emit(LocalizedString.resource(R.string.status_downloading_scripts))
+		try {
+			files.scripts.downloadFrom(
+				manifest.patches[Language.English]?.get(
+					PatchFile.Scripts.name
+				)?.url!!
+			)
+		} catch (e: Throwable) {
+			throw OkkeiException(LocalizedString.resource(R.string.error_http_file_download), e)
 		}
-		statusMutable.emit(LocalizedString.resource(R.string.status_writing_scripts_hash))
+		mutableStatus.emit(LocalizedString.resource(R.string.status_comparing_scripts))
+		val scriptsHash = files.scripts.computeHash()
+		if (scriptsHash != manifest.patches[Language.English]?.get(PatchFile.Scripts.name)?.hash) {
+			throw OkkeiException(LocalizedString.resource(R.string.error_hash_scripts_mismatch))
+		}
+		mutableStatus.emit(LocalizedString.resource(R.string.status_writing_scripts_hash))
 		Preferences.set(FileHashKey.scripts_hash.name, scriptsHash)
 		manifest.patches[Language.English]?.get(PatchFile.Scripts.name)?.version?.let {
 			Preferences.set(FileVersionKey.scripts_version.name, it)
@@ -97,8 +100,7 @@ class ApkEnglish @Inject constructor(
 
 	private suspend inline fun extractScripts() = withContext(ioDispatcher) {
 		val extractedScriptsDirectory = File(OkkeiStorage.external, "script")
-		val scriptsZip =
-			ZipFile(fileInstances.scripts.fullPath).apply { isRunInThread = true }
+		val scriptsZip = ZipFile(files.scripts.fullPath).apply { isRunInThread = true }
 		scriptsZip.use { zipFile ->
 			val scriptsProgressMonitor = zipFile.progressMonitor
 			zipFile.extractAll(extractedScriptsDirectory.absolutePath)

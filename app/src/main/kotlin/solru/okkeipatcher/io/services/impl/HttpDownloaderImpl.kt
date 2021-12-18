@@ -10,16 +10,13 @@ import io.ktor.utils.io.*
 import io.ktor.utils.io.core.*
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ensureActive
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.withContext
 import okio.buffer
 import okio.sink
-import solru.okkeipatcher.exceptions.io.HttpStatusCodeException
+import solru.okkeipatcher.io.exceptions.HttpStatusCodeException
 import solru.okkeipatcher.io.services.base.HttpDownloader
 import solru.okkeipatcher.io.utils.calculateProgressRatio
 import solru.okkeipatcher.model.dto.ProgressData
-import solru.okkeipatcher.utils.extensions.emit
-import solru.okkeipatcher.utils.extensions.reset
 import java.io.OutputStream
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -46,12 +43,13 @@ class HttpDownloaderImpl @Inject constructor(private val ioDispatcher: Coroutine
 		}
 	}
 
+	@Suppress("BlockingMethodInNonBlockingContext")
 	override suspend fun download(
 		url: String,
 		outputStream: OutputStream,
-		progress: MutableSharedFlow<ProgressData>
+		onProgressChanged: suspend (ProgressData) -> Unit
 	) = withContext(ioDispatcher) {
-		progress.reset()
+		onProgressChanged(ProgressData())
 		client.get<HttpStatement>(url).execute { httpResponse ->
 			if (httpResponse.status.value != 200) {
 				throw HttpStatusCodeException(httpResponse.status)
@@ -76,7 +74,7 @@ class HttpDownloaderImpl @Inject constructor(private val ioDispatcher: Coroutine
 							++currentProgress
 						}
 						if (currentProgress % progressRatio == 0) {
-							progress.emit(currentProgress / progressRatio, progressMax)
+							onProgressChanged(ProgressData(currentProgress / progressRatio, progressMax))
 						}
 					}
 				}

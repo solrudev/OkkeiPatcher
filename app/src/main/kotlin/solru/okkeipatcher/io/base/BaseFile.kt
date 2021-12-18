@@ -10,7 +10,9 @@ abstract class BaseFile(
 ) : File, ProgressProvider by progressProvider {
 
 	override suspend fun computeHash() = createInputStream().use {
-		ioService.computeHash(it, length, progressProvider.mutableProgress)
+		ioService.computeHash(it, length) { progressData ->
+			progressProvider.mutableProgress.emit(progressData)
+		}
 	}
 
 	override suspend fun copyTo(destinationFile: File) {
@@ -18,7 +20,9 @@ abstract class BaseFile(
 		destinationFile.create()
 		createInputStream().use { inputFile ->
 			destinationFile.createOutputStream().use { outputFile ->
-				ioService.copy(inputFile, outputFile, length, progressProvider.mutableProgress)
+				ioService.copy(inputFile, outputFile, length) { progressData ->
+					progressProvider.mutableProgress.emit(progressData)
+				}
 			}
 		}
 	}
@@ -27,7 +31,9 @@ abstract class BaseFile(
 		delete()
 		create()
 		createOutputStream().use {
-			ioService.download(url, it, progressProvider.mutableProgress)
+			ioService.download(url, it) { progressData ->
+				progressProvider.mutableProgress.emit(progressData)
+			}
 		}
 	}
 }

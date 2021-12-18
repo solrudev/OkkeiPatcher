@@ -1,6 +1,5 @@
 package solru.okkeipatcher.io.services.impl
 
-import kotlinx.coroutines.flow.MutableSharedFlow
 import solru.okkeipatcher.io.services.base.*
 import solru.okkeipatcher.model.dto.ProgressData
 import java.io.InputStream
@@ -18,21 +17,21 @@ class IoServiceImpl @Inject constructor(
 	override suspend fun download(
 		url: String,
 		outputStream: OutputStream,
-		progress: MutableSharedFlow<ProgressData>
-	) = httpDownloader.download(url, outputStream, progress)
+		onProgressChanged: suspend (ProgressData) -> Unit
+	) = httpDownloader.download(url, outputStream, onProgressChanged)
 
 	override suspend fun computeHash(
 		inputStream: InputStream,
 		size: Long,
-		progress: MutableSharedFlow<ProgressData>
-	) = hashGenerator.computeHash(inputStream, size, progress)
+		onProgressChanged: suspend (ProgressData) -> Unit
+	) = hashGenerator.computeHash(inputStream, size, onProgressChanged)
 
 	override suspend fun copy(
 		inputStream: InputStream,
 		outputStream: OutputStream,
 		size: Long,
-		progress: MutableSharedFlow<ProgressData>
-	) = streamCopier.copy(inputStream, outputStream, size, progress)
+		onProgressChanged: suspend (ProgressData) -> Unit
+	) = streamCopier.copy(inputStream, outputStream, size, onProgressChanged)
 
 	override suspend fun readAllText(inputStream: InputStream) = textReader.readAllText(inputStream)
 

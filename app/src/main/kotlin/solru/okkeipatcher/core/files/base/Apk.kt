@@ -14,14 +14,14 @@ import net.lingala.zip4j.progress.ProgressMonitor
 import solru.okkeipatcher.OkkeiApplication
 import solru.okkeipatcher.R
 import solru.okkeipatcher.core.OkkeiStorage
-import solru.okkeipatcher.core.base.AppServiceBase
-import solru.okkeipatcher.core.base.ProgressProviderImpl
+import solru.okkeipatcher.core.base.ObservableServiceImpl
+import solru.okkeipatcher.exceptions.OkkeiException
 import solru.okkeipatcher.io.JavaFile
 import solru.okkeipatcher.io.services.base.IoService
 import solru.okkeipatcher.model.LocalizedString
 import solru.okkeipatcher.model.dto.ProgressData
 import solru.okkeipatcher.model.files.common.CommonFileHashKey
-import solru.okkeipatcher.model.files.common.CommonFileInstances
+import solru.okkeipatcher.model.files.common.CommonFiles
 import solru.okkeipatcher.model.manifest.OkkeiManifest
 import solru.okkeipatcher.utils.Preferences
 import solru.okkeipatcher.utils.extensions.emit
@@ -29,33 +29,30 @@ import solru.okkeipatcher.utils.extensions.makeIndeterminate
 import solru.okkeipatcher.utils.extensions.reset
 import solru.okkeipatcher.utils.getPackagePublicSourceDir
 import solru.okkeipatcher.utils.isPackageInstalled
-import java.io.File
 import java.io.FileOutputStream
 
 abstract class Apk(
-	protected val commonFileInstances: CommonFileInstances,
+	protected val commonFiles: CommonFiles,
 	protected val ioService: IoService,
 	protected val ioDispatcher: CoroutineDispatcher
-) : AppServiceBase(ProgressProviderImpl()), PatchableGameFile {
+) : ObservableServiceImpl(), PatchableGameFile {
 
 	override val backupExists: Boolean
-		get() = commonFileInstances.backupApk.exists
+		get() = commonFiles.backupApk.exists
 
-	protected var isUpdating = false
-		private set
-
-	protected val originalApk by lazy {
-		JavaFile(File(getPackagePublicSourceDir(PACKAGE_NAME)), ioService)
+	private val originalApk by lazy {
+		JavaFile(java.io.File(getPackagePublicSourceDir(PACKAGE_NAME)), ioService)
 	}
 
-	protected val privateKeyFile = File(OkkeiStorage.private, "testkey.pk8")
-	protected val rsaTemplateFile = File(OkkeiStorage.private, "testkey.past")
+	private val privateKeyFile = java.io.File(OkkeiStorage.private, PRIVATE_KEY_FILE_NAME)
+	private val rsaTemplateFile = java.io.File(OkkeiStorage.private, RSA_TEMPLATE_FILE_NAME)
+	private var isUpdating = false
 
 	@OptIn(ExperimentalCoroutinesApi::class)
 	override val progress = merge(
-		commonFileInstances.backupApk.progress,
-		commonFileInstances.tempApk.progress,
-		commonFileInstances.signedApk.progress,
+		commonFiles.backupApk.progress,
+		commonFiles.tempApk.progress,
+		commonFiles.signedApk.progress,
 		PackageInstaller.progress.map { ProgressData(it.progress, it.max, it.isIndeterminate) },
 		progressProvider.mutableProgress
 	)
@@ -64,8 +61,8 @@ abstract class Apk(
 		try {
 			isUpdating = true
 			progressProvider.mutableProgress.reset()
-			commonFileInstances.tempApk.delete()
-			commonFileInstances.signedApk.delete()
+			commonFiles.tempApk.delete()
+			commonFiles.signedApk.delete()
 			patch(manifest)
 		} finally {
 			isUpdating = false
@@ -73,46 +70,49 @@ abstract class Apk(
 	}
 
 	override fun deleteBackup() {
-		commonFileInstances.backupApk.delete()
+		commonFiles.backupApk.delete()
 	}
 
-	override suspend fun backup() =
-		tryWrapper(onCatch = { commonFileInstances.backupApk.delete() }) {
+	override suspend fun backup() {
+		try {
 			progressProvider.mutableProgress.reset()
 			if (!isPackageInstalled(PACKAGE_NAME)) {
-				throwErrorMessage(R.string.error_game_not_found)
+				throw OkkeiException(LocalizedString.resource(R.string.error_game_not_found))
 			}
-			statusMutable.emit(LocalizedString.resource(R.string.status_comparing_apk))
+			mutableStatus.emit(LocalizedString.resource(R.string.status_comparing_apk))
 			if (verifyBackupIntegrity()) return
-			statusMutable.emit(LocalizedString.resource(R.string.status_backing_up_apk))
-			copyOriginalApkTo(commonFileInstances.backupApk)
-			statusMutable.emit(LocalizedString.resource(R.string.status_writing_apk_hash))
+			mutableStatus.emit(LocalizedString.resource(R.string.status_backing_up_apk))
+			copyOriginalApkTo(commonFiles.backupApk)
+			mutableStatus.emit(LocalizedString.resource(R.string.status_writing_apk_hash))
 			Preferences.set(
 				CommonFileHashKey.backup_apk_hash.name,
-				commonFileInstances.backupApk.computeHash()
+				commonFiles.backupApk.computeHash()
 			)
+		} catch (e: Throwable) {
+			commonFiles.backupApk.delete()
 		}
+	}
 
-	override suspend fun restore() = tryWrapper {
+	override suspend fun restore() {
 		progressProvider.mutableProgress.reset()
-		if (!commonFileInstances.backupApk.exists) {
-			throwErrorMessage(R.string.error_apk_not_found_restore)
+		if (!commonFiles.backupApk.exists) {
+			throw OkkeiException(LocalizedString.resource(R.string.error_apk_not_found_restore))
 		}
-		statusMutable.emit(LocalizedString.resource(R.string.status_comparing_apk))
-		if (!commonFileInstances.backupApk.verify()) {
-			throwErrorMessage(R.string.error_not_trustworthy_apk_restore)
+		mutableStatus.emit(LocalizedString.resource(R.string.status_comparing_apk))
+		if (!commonFiles.backupApk.verify()) {
+			throw OkkeiException(LocalizedString.resource(R.string.error_not_trustworthy_apk_restore))
 		}
-		statusMutable.emit(LocalizedString.resource(R.string.empty))
+		mutableStatus.emit(LocalizedString.resource(R.string.empty))
 		if (isPackageInstalled(PACKAGE_NAME)) {
 			uninstall()
 		}
 		installBackup()
 	}
 
-	override suspend fun verifyBackupIntegrity() = commonFileInstances.backupApk.verify()
+	override suspend fun verifyBackupIntegrity() = commonFiles.backupApk.verify()
 
-	protected suspend inline fun copyOriginalApkTo(destinationFile: solru.okkeipatcher.io.base.File) = coroutineScope {
-		statusMutable.emit(LocalizedString.resource(R.string.status_copying_apk))
+	protected suspend fun copyOriginalApkTo(destinationFile: solru.okkeipatcher.io.base.File) = coroutineScope {
+		mutableStatus.emit(LocalizedString.resource(R.string.status_copying_apk))
 		val progressJob = launch {
 			progressProvider.mutableProgress.emitAll(originalApk.progress)
 		}
@@ -120,48 +120,49 @@ abstract class Apk(
 		progressJob.cancel()
 	}
 
-	protected suspend inline fun installPatched() {
-		if (!commonFileInstances.signedApk.exists) {
-			throwErrorMessage(R.string.error_apk_not_found_patch)
+	protected suspend fun installPatched() {
+		if (!commonFiles.signedApk.exists) {
+			throw OkkeiException(LocalizedString.resource(R.string.error_apk_not_found_patch))
 		}
-		statusMutable.emit(LocalizedString.resource(R.string.status_comparing_apk))
-		if (!commonFileInstances.signedApk.verify()) {
-			commonFileInstances.signedApk.delete()
-			throwErrorMessage(R.string.error_not_trustworthy_apk_patch)
+		mutableStatus.emit(LocalizedString.resource(R.string.status_comparing_apk))
+		if (!commonFiles.signedApk.verify()) {
+			commonFiles.signedApk.delete()
+			throw OkkeiException(LocalizedString.resource(R.string.error_not_trustworthy_apk_patch))
 		}
 		if (!isUpdating) {
 			uninstall()
 		}
 		progressProvider.mutableProgress.makeIndeterminate()
-		statusMutable.emit(LocalizedString.resource(R.string.status_installing))
+		mutableStatus.emit(LocalizedString.resource(R.string.status_installing))
 		val installResult =
-			PackageInstaller.installPackage(File(commonFileInstances.signedApk.fullPath))
+			PackageInstaller.installPackage(java.io.File(commonFiles.signedApk.fullPath))
 		if (installResult is InstallResult.Failure) {
-			throwErrorMessage(R.string.error_install)
+			throw OkkeiException(LocalizedString.resource(R.string.error_install))
 		}
-		commonFileInstances.signedApk.delete()
+		commonFiles.signedApk.delete()
 	}
 
-	protected suspend inline fun uninstall() {
-		statusMutable.emit(LocalizedString.resource(R.string.status_uninstalling))
+	private suspend inline fun uninstall() {
+		mutableStatus.emit(LocalizedString.resource(R.string.status_uninstalling))
 		progressProvider.mutableProgress.makeIndeterminate()
 		val uninstallResult = PackageUninstaller.uninstallPackage(PACKAGE_NAME)
 		if (!uninstallResult) {
-			throwErrorMessage(R.string.error_uninstall)
+			throw OkkeiException(LocalizedString.resource(R.string.error_uninstall))
 		}
 	}
 
 	private suspend inline fun installBackup() {
-		statusMutable.emit(LocalizedString.resource(R.string.status_installing))
+		mutableStatus.emit(LocalizedString.resource(R.string.status_installing))
 		val installResult =
-			PackageInstaller.installPackage(File(commonFileInstances.backupApk.fullPath))
+			PackageInstaller.installPackage(java.io.File(commonFiles.backupApk.fullPath))
 		if (installResult is InstallResult.Failure) {
-			throwErrorMessage(R.string.error_install)
+			throw OkkeiException(LocalizedString.resource(R.string.error_install))
 		}
 	}
 
-	protected suspend inline fun removeSignature(apkZip: ZipFile) {
-		statusMutable.emit(LocalizedString.resource(R.string.status_removing_signature))
+	@Suppress("BlockingMethodInNonBlockingContext")
+	protected suspend fun removeSignature(apkZip: ZipFile) {
+		mutableStatus.emit(LocalizedString.resource(R.string.status_removing_signature))
 		withContext(ioDispatcher) {
 			val apkProgressMonitor = apkZip.progressMonitor
 			apkZip.removeFile("META-INF/")
@@ -175,51 +176,54 @@ abstract class Apk(
 		}
 	}
 
-	protected suspend inline fun extractSigningKey() {
+	private suspend inline fun extractSigningKey() {
 		val assets = OkkeiApplication.context.assets
 		if (!privateKeyFile.exists()) {
-			assets.copyAssetToFile("testkey.pk8", privateKeyFile)
+			assets.copyAssetToFile(PRIVATE_KEY_FILE_NAME, privateKeyFile)
 		}
 		if (!rsaTemplateFile.exists()) {
-			assets.copyAssetToFile("testkey.past", rsaTemplateFile)
+			assets.copyAssetToFile(RSA_TEMPLATE_FILE_NAME, rsaTemplateFile)
 		}
 	}
 
-	protected suspend inline fun sign() {
-		statusMutable.emit(LocalizedString.resource(R.string.status_signing_apk))
+	protected suspend fun sign() {
+		mutableStatus.emit(LocalizedString.resource(R.string.status_signing_apk))
 		extractSigningKey()
 		progressProvider.mutableProgress.makeIndeterminate()
-		commonFileInstances.signedApk.delete()
-		commonFileInstances.signedApk.create()
-		commonFileInstances.tempApk.createInputStream().use { tempApk ->
-			commonFileInstances.signedApk.createOutputStream().use { signedApk ->
+		commonFiles.signedApk.delete()
+		commonFiles.signedApk.create()
+		commonFiles.tempApk.createInputStream().use { tempApk ->
+			commonFiles.signedApk.createOutputStream().use { signedApk ->
 				PseudoApkSigner(rsaTemplateFile, privateKeyFile).sign(tempApk, signedApk)
 			}
 		}
-		statusMutable.emit(LocalizedString.resource(R.string.status_writing_patched_apk_hash))
+		mutableStatus.emit(LocalizedString.resource(R.string.status_writing_patched_apk_hash))
 		Preferences.set(
 			CommonFileHashKey.signed_apk_hash.name,
-			commonFileInstances.signedApk.computeHash()
+			commonFiles.signedApk.computeHash()
 		)
-		commonFileInstances.tempApk.delete()
+		commonFiles.tempApk.delete()
 	}
 
-	protected suspend inline fun AssetManager.copyAssetToFile(assetName: String, file: File) {
-		openFd(assetName).use { fileDescriptor ->
-			fileDescriptor.createInputStream().use { inputStream ->
-				FileOutputStream(file).use { outputStream ->
-					ioService.copy(
-						inputStream,
-						outputStream,
-						fileDescriptor.length,
-						progressProvider.mutableProgress
-					)
+	@Suppress("BlockingMethodInNonBlockingContext")
+	private suspend inline fun AssetManager.copyAssetToFile(assetName: String, file: java.io.File) =
+		withContext(ioDispatcher) {
+			openFd(assetName).use { fileDescriptor ->
+				fileDescriptor.createInputStream().use { inputStream ->
+					FileOutputStream(file).use { outputStream ->
+						ioService.copy(
+							inputStream,
+							outputStream,
+							fileDescriptor.length
+						) { progressData -> progressProvider.mutableProgress.emit(progressData) }
+					}
 				}
 			}
 		}
-	}
 
 	companion object {
 		const val PACKAGE_NAME = "com.mages.chaoschild_jp"
+		protected const val PRIVATE_KEY_FILE_NAME = "testkey.pk8"
+		protected const val RSA_TEMPLATE_FILE_NAME = "testkey.past"
 	}
 }

@@ -1,6 +1,7 @@
 package solru.okkeipatcher.viewmodels
 
 import android.os.Build
+import android.util.Log
 import androidx.lifecycle.*
 import androidx.work.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -75,7 +76,6 @@ class MainViewModel @Inject constructor(
 		workObservingScope.observeWork(workRequest.id)
 	}
 
-	@Suppress("NON_EXHAUSTIVE_WHEN")
 	private fun CoroutineScope.observeWork(workId: UUID) = launch {
 		var isWorkStarted = false
 		WorkManager.getInstance(OkkeiApplication.context)
@@ -90,16 +90,18 @@ class MainViewModel @Inject constructor(
 				if (it.state.isFinished) {
 					resetState()
 					isWorkStarted = false
-					when (it.state) {
-						WorkInfo.State.FAILED, WorkInfo.State.CANCELLED ->
-							_status.value = LocalizedString.resource(R.string.status_aborted)
+					_status.value = when (it.state) {
+						WorkInfo.State.FAILED, WorkInfo.State.CANCELLED -> LocalizedString.resource(R.string.status_aborted)
 						WorkInfo.State.SUCCEEDED -> when (it.tags.firstOrNull()) {
-							PatchWorker::class.java.name ->
-								_status.value = LocalizedString.resource(R.string.status_patch_success)
-							RestoreWorker::class.java.name ->
-								_status.value = LocalizedString.resource(R.string.status_restore_success)
+							PatchWorker::class.java.name -> LocalizedString.resource(R.string.status_patch_success)
+							RestoreWorker::class.java.name -> LocalizedString.resource(R.string.status_restore_success)
+							else -> LocalizedString.empty()
 						}
-						else -> {} // isFinished == true
+						else -> LocalizedString.empty() // isFinished == true
+					}
+					if (it.state == WorkInfo.State.FAILED) {
+						val exception = it.outputData.getSerializable<Throwable>(BaseWorker.KEY_FAILURE_CAUSE)
+						Log.e(this@MainViewModel::class.java.name, "", exception)
 					}
 					WorkManager.getInstance(OkkeiApplication.context).pruneWork()
 					workObservingScope.coroutineContext[Job]?.cancelChildren()

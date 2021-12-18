@@ -5,7 +5,7 @@ import solru.okkeipatcher.io.VerifiableFile
 import solru.okkeipatcher.io.services.base.IoService
 import javax.inject.Inject
 
-class CommonFileInstances @Inject constructor(ioService: IoService) {
+class CommonFiles @Inject constructor(ioService: IoService) {
 
 	val backupApk: VerifiableFile by lazy { BackupApk(ioService) }
 	val backupObb: VerifiableFile by lazy { BackupObb(ioService) }

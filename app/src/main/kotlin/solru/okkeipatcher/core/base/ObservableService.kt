@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import solru.okkeipatcher.model.LocalizedString
 import solru.okkeipatcher.model.dto.Message
 
-interface AppService : ProgressProvider {
+interface ObservableService : ProgressProvider {
 	val status: Flow<LocalizedString>
-	val message: Flow<Message>
+	val messages: Flow<Message>
 }

@@ -9,7 +9,8 @@ import dagger.assisted.AssistedInject
 import solru.okkeipatcher.R
 import solru.okkeipatcher.core.AppKey
 import solru.okkeipatcher.core.RestoreService
-import solru.okkeipatcher.model.dto.AppServiceConfig
+import solru.okkeipatcher.model.LocalizedString
+import solru.okkeipatcher.model.dto.ServiceConfig
 import solru.okkeipatcher.utils.Preferences
 
 @HiltWorker
@@ -17,14 +18,19 @@ class RestoreWorker @AssistedInject constructor(
 	@Assisted context: Context,
 	@Assisted workerParameters: WorkerParameters,
 	private val restoreService: RestoreService
-) : BaseWorker(context, workerParameters, R.string.notification_title_restore, restoreService) {
+) : BaseWorker(
+	context,
+	workerParameters,
+	LocalizedString.resource(R.string.notification_title_restore),
+	restoreService
+) {
 
 	override suspend fun doServiceWork() {
 		val processSaveData = Preferences.get(
 			AppKey.process_save_data_enabled.name,
 			Build.VERSION.SDK_INT < Build.VERSION_CODES.R
 		)
-		val config = AppServiceConfig(processSaveData)
+		val config = ServiceConfig(processSaveData)
 		restoreService.restore(config)
 	}
 

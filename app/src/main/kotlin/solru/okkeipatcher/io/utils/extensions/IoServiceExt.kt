@@ -1,6 +1,5 @@
 package solru.okkeipatcher.io.utils.extensions
 
-import kotlinx.coroutines.flow.MutableSharedFlow
 import solru.okkeipatcher.io.services.base.IoService
 import solru.okkeipatcher.model.dto.ProgressData
 import java.io.File
@@ -10,34 +9,34 @@ import java.io.FileOutputStream
 suspend inline fun IoService.download(
 	url: String,
 	outputFile: File,
-	progress: MutableSharedFlow<ProgressData>
+	noinline onProgressChanged: suspend (ProgressData) -> Unit
 ) {
 	if (outputFile.exists()) outputFile.delete()
 	outputFile.parentFile?.mkdirs()
 	outputFile.createNewFile()
 	FileOutputStream(outputFile).use { outputStream ->
-		download(url, outputStream, progress)
+		download(url, outputStream, onProgressChanged)
 	}
 }
 
 suspend inline fun IoService.computeHash(
 	inputFile: File,
-	progress: MutableSharedFlow<ProgressData>
+	noinline onProgressChanged: suspend (ProgressData) -> Unit
 ) = FileInputStream(inputFile).use {
-	computeHash(it, inputFile.length(), progress)
+	computeHash(it, inputFile.length(), onProgressChanged)
 }
 
 suspend inline fun IoService.copyFile(
 	inputFile: File,
 	outputFile: File,
-	progress: MutableSharedFlow<ProgressData>
+	noinline onProgressChanged: suspend (ProgressData) -> Unit
 ) {
 	if (outputFile.exists()) outputFile.delete()
 	outputFile.parentFile?.mkdirs()
 	outputFile.createNewFile()
 	FileInputStream(inputFile).use { inputStream ->
 		FileOutputStream(outputFile).use { outputStream ->
-			copy(inputStream, outputStream, inputFile.length(), progress)
+			copy(inputStream, outputStream, inputFile.length(), onProgressChanged)
 		}
 	}
 }

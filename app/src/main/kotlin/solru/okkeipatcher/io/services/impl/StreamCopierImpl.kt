@@ -2,7 +2,6 @@ package solru.okkeipatcher.io.services.impl
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ensureActive
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.withContext
 import okio.Buffer
 import okio.buffer
@@ -11,8 +10,6 @@ import okio.source
 import solru.okkeipatcher.io.services.base.StreamCopier
 import solru.okkeipatcher.io.utils.calculateProgressRatio
 import solru.okkeipatcher.model.dto.ProgressData
-import solru.okkeipatcher.utils.extensions.emit
-import solru.okkeipatcher.utils.extensions.reset
 import java.io.InputStream
 import java.io.OutputStream
 import javax.inject.Inject
@@ -27,9 +24,9 @@ class StreamCopierImpl @Inject constructor(private val ioDispatcher: CoroutineDi
 		inputStream: InputStream,
 		outputStream: OutputStream,
 		size: Long,
-		progress: MutableSharedFlow<ProgressData>
+		onProgressChanged: suspend (ProgressData) -> Unit
 	) = withContext(ioDispatcher) {
-		progress.reset()
+		onProgressChanged(ProgressData())
 		val progressRatio = calculateProgressRatio(size, BUFFER_LENGTH)
 		inputStream.source().buffer().use { source ->
 			outputStream.sink().buffer().use { sink ->
@@ -42,7 +39,7 @@ class StreamCopierImpl @Inject constructor(private val ioDispatcher: CoroutineDi
 						sink.write(buffer, buffer.size)
 						++currentProgress
 						if (currentProgress % progressRatio == 0) {
-							progress.emit(currentProgress / progressRatio, progressMax)
+							onProgressChanged(ProgressData(currentProgress / progressRatio, progressMax))
 						}
 					}
 				}

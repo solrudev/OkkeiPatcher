@@ -1,6 +1,6 @@
 package solru.okkeipatcher.exceptions
 
-import solru.okkeipatcher.model.dto.Message
+import solru.okkeipatcher.model.LocalizedString
 
-class OkkeiFatalException(messageData: Message, cause: Throwable?) :
-	OkkeiException(messageData, cause)
+class OkkeiFatalException(localizedMessage: LocalizedString, cause: Throwable?) :
+	OkkeiException(localizedMessage, cause)
