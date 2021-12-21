@@ -1,13 +1,13 @@
 package solru.okkeipatcher.model.manifest
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
-@Serializable
+@JsonClass(generateAdapter = true)
 data class OkkeiPatcherInfo(
-	@SerialName("Version") val version: Int,
-	@SerialName("Changelog") val changelog: String,
-	@SerialName("URL") val url: String,
-	@SerialName("SHA256") val hash: String,
-	@SerialName("Size") val size: Long
+	@Json(name = "Version") val version: Int,
+	@Json(name = "Changelog") val changelog: String,
+	@Json(name = "URL") val url: String,
+	@Json(name = "SHA256") val hash: String,
+	@Json(name = "Size") val size: Long
 )

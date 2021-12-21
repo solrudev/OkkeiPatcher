@@ -89,9 +89,13 @@ android {
 }
 
 dependencies {
+	val retrofitVersion = "2.9.0"
+	val moshiVersion = "1.13.0"
+
 	kapt("androidx.databinding:databinding-compiler:7.0.4")
 	kapt("com.google.dagger:hilt-compiler:$hiltVersion")
 	kapt("androidx.hilt:hilt-compiler:1.0.0")
+	kapt("com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion")
 
 	implementation("com.google.dagger:hilt-android:$hiltVersion")
 	implementation("com.google.android.material:material:1.4.0")
@@ -100,7 +104,6 @@ dependencies {
 	implementation("androidx.fragment:fragment-ktx:1.4.0")
 	implementation("androidx.hilt:hilt-work:1.0.0")
 	implementation("androidx.work:work-runtime-ktx:2.7.1")
-	implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
 	implementation(project(":ktor-client-okhttp312"))
 	implementation("io.ktor:ktor-client-core-jvm:$ktorVersion")
 	implementation("com.squareup.okio:okio:$okioVersion")
@@ -108,6 +111,19 @@ dependencies {
 	implementation("com.anggrayudi:storage:0.13.0")
 	implementation("net.lingala.zip4j:zip4j:2.9.0")
 	implementation("io.github.solrudev:simpleinstaller:1.2.1")
+	implementation("com.squareup.moshi:moshi:$moshiVersion")
+	implementation("com.squareup.retrofit2:retrofit:$retrofitVersion") {
+		exclude(group = "com.squareup.okhttp3", module = "okhttp")
+	}
+	implementation("com.squareup.retrofit2:converter-moshi:$retrofitVersion") {
+		exclude(group = "com.squareup.okhttp3", module = "okhttp")
+	}
+
+	constraints {
+		implementation("com.squareup.okhttp3:okhttp:3.12.13") {
+			because("Android 4.4 support")
+		}
+	}
 
 	debugImplementation("androidx.multidex:multidex:2.0.1")
 

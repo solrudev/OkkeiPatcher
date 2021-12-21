@@ -18,6 +18,7 @@ import solru.okkeipatcher.core.workers.PatchWorker
 import solru.okkeipatcher.core.workers.RestoreWorker
 import solru.okkeipatcher.model.LocalizedString
 import solru.okkeipatcher.model.dto.ProgressData
+import solru.okkeipatcher.repository.ManifestRepository
 import solru.okkeipatcher.utils.Preferences
 import solru.okkeipatcher.utils.extensions.getSerializable
 import java.util.*

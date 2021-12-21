@@ -1,15 +1,15 @@
 package solru.okkeipatcher.model.manifest
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import solru.okkeipatcher.model.Language
 import solru.okkeipatcher.utils.extensions.isNotEmptyOrBlank
 
-@Serializable
+@JsonClass(generateAdapter = true)
 data class OkkeiManifest(
-	@SerialName("Version") val version: Int,
-	@SerialName("OkkeiPatcher") val okkeiPatcher: OkkeiPatcherInfo,
-	@SerialName("Patches") val patches: Map<Language, Map<String, FileInfo>>
+	@Json(name = "Version") val version: Int,
+	@Json(name = "OkkeiPatcher") val okkeiPatcher: OkkeiPatcherInfo,
+	@Json(name = "Patches") val patches: Map<Language, Map<String, FileInfo>>
 ) {
 	init {
 		require(isValid()) { "Manifest is invalid" }

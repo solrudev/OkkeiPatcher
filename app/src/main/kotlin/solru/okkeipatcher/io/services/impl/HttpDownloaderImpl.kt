@@ -11,6 +11,7 @@ import io.ktor.utils.io.core.*
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
 import okio.buffer
 import okio.sink
 import solru.okkeipatcher.io.exceptions.HttpStatusCodeException
@@ -18,27 +19,21 @@ import solru.okkeipatcher.io.services.base.HttpDownloader
 import solru.okkeipatcher.io.utils.calculateProgressRatio
 import solru.okkeipatcher.model.dto.ProgressData
 import java.io.OutputStream
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.io.use
 import kotlin.math.ceil
 
 private const val BUFFER_LENGTH: Long = 8192
 
-class HttpDownloaderImpl @Inject constructor(private val ioDispatcher: CoroutineDispatcher) :
-	HttpDownloader {
+class HttpDownloaderImpl @Inject constructor(
+	private val ioDispatcher: CoroutineDispatcher,
+	private val okHttpClient: OkHttpClient
+) : HttpDownloader {
 
 	private val client: HttpClient by lazy {
 		HttpClient(OkHttp312) {
 			engine {
-				config {
-					val tlsSocketFactory = TLSSocketFactory()
-					sslSocketFactory(tlsSocketFactory, tlsSocketFactory.trustManager)
-					followRedirects(true)
-					followSslRedirects(true)
-					readTimeout(0, TimeUnit.SECONDS)
-					writeTimeout(0, TimeUnit.SECONDS)
-				}
+				preconfigured = okHttpClient
 			}
 		}
 	}
