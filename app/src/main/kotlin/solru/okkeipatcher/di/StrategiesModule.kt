@@ -5,10 +5,10 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import solru.okkeipatcher.core.AppKey
-import solru.okkeipatcher.core.base.GameFileStrategy
-import solru.okkeipatcher.core.base.PatchInfoStrategy
-import solru.okkeipatcher.core.impl.english.GameFileStrategyEnglish
-import solru.okkeipatcher.core.impl.english.PatchInfoStrategyEnglish
+import solru.okkeipatcher.core.strategy.GameFileStrategy
+import solru.okkeipatcher.core.strategy.PatchInfoStrategy
+import solru.okkeipatcher.core.strategy.impl.english.GameFileStrategyEnglish
+import solru.okkeipatcher.core.strategy.impl.english.PatchInfoStrategyEnglish
 import solru.okkeipatcher.model.Language
 import solru.okkeipatcher.utils.Preferences
 

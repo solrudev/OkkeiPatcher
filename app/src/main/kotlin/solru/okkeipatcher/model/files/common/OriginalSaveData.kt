@@ -2,10 +2,10 @@ package solru.okkeipatcher.model.files.common
 
 import android.os.Environment
 import solru.okkeipatcher.core.base.ProgressProviderImpl
-import solru.okkeipatcher.io.DocumentFile
-import solru.okkeipatcher.io.JavaFile
-import solru.okkeipatcher.io.VerifiableFile
-import solru.okkeipatcher.io.base.BaseFile
+import solru.okkeipatcher.io.file.BaseFile
+import solru.okkeipatcher.io.file.DocumentFile
+import solru.okkeipatcher.io.file.JavaFile
+import solru.okkeipatcher.io.file.VerifiableFile
 import solru.okkeipatcher.io.services.base.IoService
 import java.io.File
 

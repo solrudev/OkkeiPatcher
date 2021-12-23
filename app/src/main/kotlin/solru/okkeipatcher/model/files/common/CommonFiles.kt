@@ -1,7 +1,7 @@
 package solru.okkeipatcher.model.files.common
 
 import android.os.Build
-import solru.okkeipatcher.io.VerifiableFile
+import solru.okkeipatcher.io.file.VerifiableFile
 import solru.okkeipatcher.io.services.base.IoService
 import javax.inject.Inject
 

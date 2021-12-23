@@ -12,12 +12,13 @@ import kotlinx.coroutines.flow.collect
 import solru.okkeipatcher.OkkeiApplication
 import solru.okkeipatcher.R
 import solru.okkeipatcher.core.*
-import solru.okkeipatcher.core.base.PatchInfoStrategy
+import solru.okkeipatcher.core.strategy.PatchInfoStrategy
 import solru.okkeipatcher.core.workers.BaseWorker
 import solru.okkeipatcher.core.workers.PatchWorker
 import solru.okkeipatcher.core.workers.RestoreWorker
 import solru.okkeipatcher.model.LocalizedString
 import solru.okkeipatcher.model.dto.ProgressData
+import solru.okkeipatcher.repository.AppUpdateRepository
 import solru.okkeipatcher.repository.ManifestRepository
 import solru.okkeipatcher.utils.Preferences
 import solru.okkeipatcher.utils.extensions.getSerializable

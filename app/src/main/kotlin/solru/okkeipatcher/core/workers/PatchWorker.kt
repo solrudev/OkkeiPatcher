@@ -8,8 +8,8 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import solru.okkeipatcher.R
 import solru.okkeipatcher.core.AppKey
-import solru.okkeipatcher.core.PatchService
-import solru.okkeipatcher.core.base.PatchInfoStrategy
+import solru.okkeipatcher.core.services.PatchService
+import solru.okkeipatcher.core.strategy.PatchInfoStrategy
 import solru.okkeipatcher.model.LocalizedString
 import solru.okkeipatcher.model.dto.ServiceConfig
 import solru.okkeipatcher.repository.ManifestRepository

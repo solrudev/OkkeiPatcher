@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.conflate
 import solru.okkeipatcher.R
-import solru.okkeipatcher.core.base.ObservableService
+import solru.okkeipatcher.core.services.ObservableService
 import solru.okkeipatcher.model.LocalizedString
 import solru.okkeipatcher.ui.activities.MainActivity
 import solru.okkeipatcher.utils.extensions.empty
