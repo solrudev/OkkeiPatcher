@@ -2,7 +2,7 @@ package solru.okkeipatcher.io.services.impl
 
 import io.ktor.client.*
 import io.ktor.client.call.*
-import io.ktor.client.engine.okhttp312.*
+import io.ktor.client.engine.okhttp.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
@@ -31,7 +31,7 @@ class HttpDownloaderImpl @Inject constructor(
 ) : HttpDownloader {
 
 	private val client: HttpClient by lazy {
-		HttpClient(OkHttp312) {
+		HttpClient(OkHttp) {
 			engine {
 				preconfigured = okHttpClient
 			}
