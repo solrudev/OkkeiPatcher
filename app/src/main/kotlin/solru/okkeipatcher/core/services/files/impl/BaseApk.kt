@@ -82,12 +82,9 @@ abstract class BaseApk(
 			mutableStatus.emit(LocalizedString.resource(R.string.status_comparing_apk))
 			if (verifyBackupIntegrity()) return
 			mutableStatus.emit(LocalizedString.resource(R.string.status_backing_up_apk))
-			copyOriginalApkTo(commonFiles.backupApk)
+			val hash = copyOriginalApkTo(commonFiles.backupApk, hashing = true)
 			mutableStatus.emit(LocalizedString.resource(R.string.status_writing_apk_hash))
-			Preferences.set(
-				CommonFileHashKey.backup_apk_hash.name,
-				commonFiles.backupApk.computeHash()
-			)
+			Preferences.set(CommonFileHashKey.backup_apk_hash.name, hash)
 		} catch (e: Throwable) {
 			commonFiles.backupApk.delete()
 		}
@@ -111,13 +108,21 @@ abstract class BaseApk(
 
 	override suspend fun verifyBackupIntegrity() = commonFiles.backupApk.verify()
 
-	protected suspend fun copyOriginalApkTo(destinationFile: solru.okkeipatcher.io.file.File) = coroutineScope {
+	/**
+	 * @param hashing Does output stream need to be hashed. Default is `false`.
+	 * @return File hash. Empty string if [hashing] is `false`.
+	 */
+	protected suspend fun copyOriginalApkTo(
+		destinationFile: solru.okkeipatcher.io.file.File,
+		hashing: Boolean = false
+	) = coroutineScope {
 		mutableStatus.emit(LocalizedString.resource(R.string.status_copying_apk))
 		val progressJob = launch {
 			progressProvider.mutableProgress.emitAll(originalApk.progress)
 		}
-		originalApk.copyTo(destinationFile)
+		val hash = originalApk.copyTo(destinationFile, hashing)
 		progressJob.cancel()
+		hash
 	}
 
 	protected suspend fun installPatched() {

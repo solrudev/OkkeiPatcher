@@ -76,17 +76,18 @@ class ApkEnglish @Inject constructor(
 			return
 		}
 		mutableStatus.emit(LocalizedString.resource(R.string.status_downloading_scripts))
+		val scriptsHash: String
 		try {
-			files.scripts.downloadFrom(
+			scriptsHash = files.scripts.downloadFrom(
 				manifest.patches[Language.English]?.get(
 					PatchFile.Scripts.name
-				)?.url!!
+				)?.url!!,
+				hashing = true
 			)
 		} catch (e: Throwable) {
-			throw OkkeiException(LocalizedString.resource(R.string.error_http_file_download), e)
+			throw OkkeiException(LocalizedString.resource(R.string.error_http_file_download), cause = e)
 		}
 		mutableStatus.emit(LocalizedString.resource(R.string.status_comparing_scripts))
-		val scriptsHash = files.scripts.computeHash()
 		if (scriptsHash != manifest.patches[Language.English]?.get(PatchFile.Scripts.name)?.hash) {
 			throw OkkeiException(LocalizedString.resource(R.string.error_hash_scripts_mismatch))
 		}

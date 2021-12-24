@@ -73,11 +73,11 @@
 	<string name="status_signing_apk">Подпись APK…</string>
 	<string name="status_uninstalling">Деинсталляция…</string>
 	<string name="status_update_app_downloading">Загрузка обновления…</string>
-	<string name="status_writing_apk_hash">Вычисление хэша APK…</string>
-	<string name="status_writing_obb_hash">Вычисление хэша OBB…</string>
-	<string name="status_writing_patched_apk_hash">Вычисление хэша модифицированного APK…</string>
-	<string name="status_writing_save_data_hash">Вычисление хэша файла сохранений…</string>
-	<string name="status_writing_scripts_hash">Вычисление хэша скриптов…</string>
+	<string name="status_writing_apk_hash">Запись хэша APK…</string>
+	<string name="status_writing_obb_hash">Запись хэша OBB…</string>
+	<string name="status_writing_patched_apk_hash">Запись хэша модифицированного APK…</string>
+	<string name="status_writing_save_data_hash">Запись хэша файла сохранений…</string>
+	<string name="status_writing_scripts_hash">Запись хэша скриптов…</string>
 	<string name="update">Обновление</string>
 	<string name="warning">Предупреждение</string>
 	<string name="warning_abort">Вы уверены, что хотите остановить процесс? Данные установки CHAOS;CHILD и/или данные Okkei Patcher могут быть повреждены.</string>

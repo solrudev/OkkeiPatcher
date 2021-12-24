@@ -6,42 +6,25 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 
+/**
+ * @param hashing Does output stream need to be hashed. Default is `false`.
+ * @return File hash. Empty string if [hashing] is `false`.
+ */
 suspend inline fun IoService.download(
 	url: String,
 	outputFile: File,
+	hashing: Boolean = false,
 	noinline onProgressChanged: suspend (ProgressData) -> Unit
-) {
+): String {
 	if (outputFile.exists()) outputFile.delete()
 	outputFile.parentFile?.mkdirs()
 	outputFile.createNewFile()
 	FileOutputStream(outputFile).use { outputStream ->
-		download(url, outputStream, onProgressChanged)
-	}
-}
-
-suspend inline fun IoService.computeHash(
-	inputFile: File,
-	noinline onProgressChanged: suspend (ProgressData) -> Unit
-) = FileInputStream(inputFile).use {
-	computeHash(it, inputFile.length(), onProgressChanged)
-}
-
-suspend inline fun IoService.copyFile(
-	inputFile: File,
-	outputFile: File,
-	noinline onProgressChanged: suspend (ProgressData) -> Unit
-) {
-	if (outputFile.exists()) outputFile.delete()
-	outputFile.parentFile?.mkdirs()
-	outputFile.createNewFile()
-	FileInputStream(inputFile).use { inputStream ->
-		FileOutputStream(outputFile).use { outputStream ->
-			copy(inputStream, outputStream, inputFile.length(), onProgressChanged)
-		}
+		return download(url, outputStream, hashing, onProgressChanged)
 	}
 }
 
 suspend inline fun IoService.readAllText(file: File) =
 	FileInputStream(file).use { inputStream ->
-		return@use readAllText(inputStream)
+		readAllText(inputStream)
 	}

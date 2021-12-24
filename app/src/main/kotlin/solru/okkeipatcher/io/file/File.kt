@@ -15,6 +15,16 @@ interface File : ProgressProvider {
 	fun createInputStream(): InputStream
 	fun createOutputStream(): OutputStream
 	suspend fun computeHash(): String
-	suspend fun copyTo(destinationFile: File)
-	suspend fun downloadFrom(url: String)
+
+	/**
+	 * @param hashing Does output stream need to be hashed. Default is `false`.
+	 * @return File hash. Empty string if [hashing] is `false`.
+	 */
+	suspend fun copyTo(destinationFile: File, hashing: Boolean = false): String
+
+	/**
+	 * @param hashing Does output stream need to be hashed. Default is `false`.
+	 * @return File hash. Empty string if [hashing] is `false`.
+	 */
+	suspend fun downloadFrom(url: String, hashing: Boolean = false): String
 }

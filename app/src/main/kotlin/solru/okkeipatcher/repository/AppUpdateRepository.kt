@@ -7,7 +7,6 @@ import solru.okkeipatcher.core.OkkeiStorage
 import solru.okkeipatcher.core.services.ObservableServiceImpl
 import solru.okkeipatcher.exceptions.OkkeiException
 import solru.okkeipatcher.io.services.base.IoService
-import solru.okkeipatcher.io.utils.extensions.computeHash
 import solru.okkeipatcher.io.utils.extensions.download
 import solru.okkeipatcher.model.LocalizedString
 import solru.okkeipatcher.model.manifest.OkkeiManifest
@@ -37,17 +36,14 @@ class AppUpdateRepository @Inject constructor(private val ioService: IoService) 
 		}
 		mutableStatus.emit(LocalizedString.resource(R.string.status_update_app_downloading))
 		try {
+			val updateHash: String
 			try {
-				ioService.download(manifest.okkeiPatcher.url, appUpdateFile) { progressData ->
-					progressProvider.mutableProgress.emit(progressData)
-				}
+				updateHash = ioService.download(manifest.okkeiPatcher.url, appUpdateFile, hashing = true)
+				{ progressData -> progressProvider.mutableProgress.emit(progressData) }
 			} catch (e: Throwable) {
-				throw OkkeiException(LocalizedString.resource(R.string.error_http_file_download), e)
+				throw OkkeiException(LocalizedString.resource(R.string.error_http_file_download), cause = e)
 			}
 			mutableStatus.emit(LocalizedString.resource(R.string.status_comparing_apk))
-			val updateHash = ioService.computeHash(appUpdateFile) { progressData ->
-				progressProvider.mutableProgress.emit(progressData)
-			}
 			if (updateHash != manifest.okkeiPatcher.hash) {
 				throw OkkeiException(LocalizedString.resource(R.string.error_update_app_corrupted))
 			}

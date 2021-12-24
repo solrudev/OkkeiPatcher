@@ -22,10 +22,6 @@ interface IoBindModule {
 
 	@Binds
 	@Reusable
-	fun bindHashGenerator(sha256Generator: Sha256Generator): HashGenerator
-
-	@Binds
-	@Reusable
 	fun bindStreamCopier(streamCopierImpl: StreamCopierImpl): StreamCopier
 
 	@Binds

@@ -8,7 +8,6 @@ import javax.inject.Inject
 
 class IoServiceImpl @Inject constructor(
 	private val httpDownloader: HttpDownloader,
-	private val hashGenerator: HashGenerator,
 	private val streamCopier: StreamCopier,
 	private val textReader: TextReader,
 	private val textWriter: TextWriter
@@ -17,21 +16,17 @@ class IoServiceImpl @Inject constructor(
 	override suspend fun download(
 		url: String,
 		outputStream: OutputStream,
+		hashing: Boolean,
 		onProgressChanged: suspend (ProgressData) -> Unit
-	) = httpDownloader.download(url, outputStream, onProgressChanged)
-
-	override suspend fun computeHash(
-		inputStream: InputStream,
-		size: Long,
-		onProgressChanged: suspend (ProgressData) -> Unit
-	) = hashGenerator.computeHash(inputStream, size, onProgressChanged)
+	) = httpDownloader.download(url, outputStream, hashing, onProgressChanged)
 
 	override suspend fun copy(
 		inputStream: InputStream,
 		outputStream: OutputStream,
 		size: Long,
+		hashing: Boolean,
 		onProgressChanged: suspend (ProgressData) -> Unit
-	) = streamCopier.copy(inputStream, outputStream, size, onProgressChanged)
+	) = streamCopier.copy(inputStream, outputStream, size, hashing, onProgressChanged)
 
 	override suspend fun readAllText(inputStream: InputStream) = textReader.readAllText(inputStream)
 

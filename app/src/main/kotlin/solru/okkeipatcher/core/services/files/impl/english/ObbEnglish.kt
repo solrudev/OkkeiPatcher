@@ -32,17 +32,18 @@ class ObbEnglish @Inject constructor(commonFiles: CommonFiles) : BaseObb(commonF
 	private suspend inline fun downloadObb(manifest: OkkeiManifest) {
 		try {
 			mutableStatus.emit(LocalizedString.resource(R.string.status_downloading_obb))
+			val obbHash: String
 			try {
-				commonFiles.obbToPatch.downloadFrom(
+				obbHash = commonFiles.obbToPatch.downloadFrom(
 					manifest.patches[Language.English]?.get(
 						PatchFile.Obb.name
-					)?.url!!
+					)?.url!!,
+					hashing = true
 				)
 			} catch (e: Throwable) {
-				throw OkkeiException(LocalizedString.resource(R.string.error_http_file_download), e)
+				throw OkkeiException(LocalizedString.resource(R.string.error_http_file_download), cause = e)
 			}
 			mutableStatus.emit(LocalizedString.resource(R.string.status_writing_obb_hash))
-			val obbHash = commonFiles.obbToPatch.computeHash()
 			if (obbHash != manifest.patches[Language.English]?.get(PatchFile.Obb.name)?.hash) {
 				throw OkkeiException(LocalizedString.resource(R.string.error_hash_obb_mismatch))
 			}

@@ -8,8 +8,9 @@ import solru.okkeipatcher.io.services.base.TextWriter
 import java.io.OutputStream
 import javax.inject.Inject
 
-class TextWriterImpl @Inject constructor(private val ioDispatcher: CoroutineDispatcher) :
-	TextWriter {
+class TextWriterImpl @Inject constructor(private val ioDispatcher: CoroutineDispatcher) : TextWriter {
+
+	@Suppress("BlockingMethodInNonBlockingContext")
 	override suspend fun writeAllText(outputStream: OutputStream, text: String) {
 		withContext(ioDispatcher) {
 			outputStream.sink().buffer().use {
