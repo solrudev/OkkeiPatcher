@@ -107,25 +107,22 @@ dependencies {
 	implementation("androidx.work:work-runtime-ktx:2.7.1")
 
 	// I/O
+	val excludeOkHttp = Action<ExternalModuleDependency> {
+		exclude(group = "com.squareup.okhttp3", module = "okhttp")
+	}
 	implementation("com.squareup.okio:okio:3.0.0")
 	implementation("com.squareup.moshi:moshi:$moshiVersion")
+	implementation("com.squareup.retrofit2:retrofit:$retrofitVersion", excludeOkHttp)
+	implementation("com.squareup.retrofit2:converter-moshi:$retrofitVersion", excludeOkHttp)
+	implementation("io.ktor:ktor-client-okhttp:1.6.3", excludeOkHttp)
 	implementation("com.squareup.okhttp3:okhttp:3.12.13") {
 		because("Android 4.4 support")
-	}
-	implementation("io.ktor:ktor-client-okhttp:1.6.3") {
-		exclude(group = "com.squareup.okhttp3", module = "okhttp")
-	}
-	implementation("com.squareup.retrofit2:retrofit:$retrofitVersion") {
-		exclude(group = "com.squareup.okhttp3", module = "okhttp")
-	}
-	implementation("com.squareup.retrofit2:converter-moshi:$retrofitVersion") {
-		exclude(group = "com.squareup.okhttp3", module = "okhttp")
 	}
 
 	// Miscellaneous
 	implementation("com.github.aefyr:pseudoapksigner:1.6")
-	implementation("com.anggrayudi:storage:0.13.0")
-	implementation("net.lingala.zip4j:zip4j:2.9.0")
+	implementation("com.anggrayudi:storage:0.14.0")
+	implementation("net.lingala.zip4j:zip4j:2.9.1")
 	implementation("io.github.solrudev:simpleinstaller:1.2.1")
 
 	debugImplementation("androidx.multidex:multidex:2.0.1")
