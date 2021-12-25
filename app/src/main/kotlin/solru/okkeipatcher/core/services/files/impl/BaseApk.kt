@@ -42,10 +42,6 @@ abstract class BaseApk(
 	override val backupExists: Boolean
 		get() = commonFiles.backupApk.exists
 
-	private val originalApk by lazy {
-		JavaFile(File(getPackagePublicSourceDir(PACKAGE_NAME)), ioService)
-	}
-
 	private val privateKeyFile = File(OkkeiStorage.private, PRIVATE_KEY_FILE_NAME)
 	private val rsaTemplateFile = File(OkkeiStorage.private, RSA_TEMPLATE_FILE_NAME)
 	private var isUpdating = false
@@ -117,6 +113,7 @@ abstract class BaseApk(
 		hashing: Boolean = false
 	) = coroutineScope {
 		mutableStatus.emit(LocalizedString.resource(R.string.status_copying_apk))
+		val originalApk = JavaFile(File(getPackagePublicSourceDir(PACKAGE_NAME)), ioService)
 		val progressJob = launch {
 			progressProvider.mutableProgress.emitAll(originalApk.progress)
 		}
@@ -170,6 +167,7 @@ abstract class BaseApk(
 			val apkProgressMonitor = apkZip.progressMonitor
 			apkZip.removeFile("META-INF/")
 			while (apkProgressMonitor.state == ProgressMonitor.State.BUSY) {
+				ensureActive()
 				progressProvider.mutableProgress.emit(
 					apkProgressMonitor.workCompleted.toInt(),
 					apkProgressMonitor.totalWork.toInt()

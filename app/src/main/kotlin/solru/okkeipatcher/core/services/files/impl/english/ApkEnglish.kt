@@ -1,10 +1,7 @@
 package solru.okkeipatcher.core.services.files.impl.english
 
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.merge
-import kotlinx.coroutines.withContext
 import net.lingala.zip4j.ZipFile
 import net.lingala.zip4j.model.ZipParameters
 import net.lingala.zip4j.progress.ProgressMonitor
@@ -15,7 +12,6 @@ import solru.okkeipatcher.core.strategy.impl.english.FileVersionKey
 import solru.okkeipatcher.core.strategy.impl.english.PatchFile
 import solru.okkeipatcher.exceptions.OkkeiException
 import solru.okkeipatcher.io.services.base.IoService
-import solru.okkeipatcher.io.utils.deleteTempZipFiles
 import solru.okkeipatcher.model.Language
 import solru.okkeipatcher.model.LocalizedString
 import solru.okkeipatcher.model.files.common.CommonFiles
@@ -23,9 +19,11 @@ import solru.okkeipatcher.model.files.english.FileHashKey
 import solru.okkeipatcher.model.files.english.FilesEnglish
 import solru.okkeipatcher.model.manifest.OkkeiManifest
 import solru.okkeipatcher.utils.Preferences
+import solru.okkeipatcher.utils.deleteTempZipFiles
 import solru.okkeipatcher.utils.extensions.emit
 import solru.okkeipatcher.utils.extensions.reset
 import solru.okkeipatcher.utils.isPackageInstalled
+import solru.okkeipatcher.utils.use
 import java.io.File
 import javax.inject.Inject
 
@@ -102,15 +100,17 @@ class ApkEnglish @Inject constructor(
 	private suspend inline fun extractScripts() = withContext(ioDispatcher) {
 		val extractedScriptsDirectory = File(OkkeiStorage.external, "script")
 		val scriptsZip = ZipFile(files.scripts.fullPath).apply { isRunInThread = true }
-		scriptsZip.use { zipFile ->
-			val scriptsProgressMonitor = zipFile.progressMonitor
-			zipFile.extractAll(extractedScriptsDirectory.absolutePath)
-			while (scriptsProgressMonitor.state == ProgressMonitor.State.BUSY) {
-				progressProvider.mutableProgress.emit(
-					scriptsProgressMonitor.workCompleted.toInt(),
-					scriptsProgressMonitor.totalWork.toInt()
-				)
-				delay(30)
+		scriptsZip.use {
+			with(it) {
+				extractAll(extractedScriptsDirectory.absolutePath)
+				while (progressMonitor.state == ProgressMonitor.State.BUSY) {
+					ensureActive()
+					progressProvider.mutableProgress.emit(
+						progressMonitor.workCompleted.toInt(),
+						progressMonitor.totalWork.toInt()
+					)
+					delay(30)
+				}
 			}
 		}
 		extractedScriptsDirectory
@@ -119,30 +119,33 @@ class ApkEnglish @Inject constructor(
 	@Suppress("BlockingMethodInNonBlockingContext")
 	private suspend inline fun replaceScripts(apkZip: ZipFile, scriptsDirectory: File) {
 		withContext(ioDispatcher) {
-			val apkProgressMonitor = apkZip.progressMonitor
-			val parameters = ZipParameters().apply { rootFolderNameInZip = "assets/script/" }
-			val scriptsList = scriptsDirectory.listFiles()!!.filter { it.isFile }
-			val apkSize = apkZip.file.length().toInt()
-			val scriptsSize = scriptsList.map { it.length() }.sum().toInt()
-			val progressMax = scriptsSize + apkSize
-			val apkScriptsList = scriptsList.map { "${parameters.rootFolderNameInZip}${it.name}" }
-			apkZip.removeFiles(apkScriptsList)
-			while (apkProgressMonitor.state == ProgressMonitor.State.BUSY) {
-				progressProvider.mutableProgress.emit(
-					apkProgressMonitor.workCompleted.toInt(),
-					progressMax
-				)
-				delay(30)
+			with(apkZip) {
+				val parameters = ZipParameters().apply { rootFolderNameInZip = "assets/script/" }
+				val scriptsList = scriptsDirectory.listFiles()!!.filter { it.isFile }
+				val apkSize = file.length().toInt()
+				val scriptsSize = scriptsList.map { it.length() }.sum().toInt()
+				val progressMax = scriptsSize + apkSize
+				val apkScriptsList = scriptsList.map { "${parameters.rootFolderNameInZip}${it.name}" }
+				removeFiles(apkScriptsList)
+				while (progressMonitor.state == ProgressMonitor.State.BUSY) {
+					ensureActive()
+					progressProvider.mutableProgress.emit(
+						progressMonitor.workCompleted.toInt(),
+						progressMax
+					)
+					delay(30)
+				}
+				addFiles(scriptsList, parameters)
+				while (progressMonitor.state == ProgressMonitor.State.BUSY) {
+					ensureActive()
+					progressProvider.mutableProgress.emit(
+						progressMonitor.workCompleted.toInt() + apkSize,
+						progressMax
+					)
+					delay(30)
+				}
+				scriptsDirectory.deleteRecursively()
 			}
-			apkZip.addFiles(scriptsList, parameters)
-			while (apkProgressMonitor.state == ProgressMonitor.State.BUSY) {
-				progressProvider.mutableProgress.emit(
-					apkProgressMonitor.workCompleted.toInt() + apkSize,
-					progressMax
-				)
-				delay(30)
-			}
-			scriptsDirectory.deleteRecursively()
 		}
 	}
 }
