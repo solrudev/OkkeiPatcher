@@ -7,7 +7,7 @@ import solru.okkeipatcher.io.utils.BlackholeOutputStream
 
 abstract class BaseFile(
 	private val ioService: IoService,
-	private val progressProvider: ProgressProviderImpl
+	private val progressProvider: ProgressProviderImpl = ProgressProviderImpl()
 ) : File, ProgressProvider by progressProvider {
 
 	override suspend fun computeHash() = createInputStream().use {
