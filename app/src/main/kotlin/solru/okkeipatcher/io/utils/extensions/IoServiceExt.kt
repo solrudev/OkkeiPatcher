@@ -1,9 +1,8 @@
 package solru.okkeipatcher.io.utils.extensions
 
-import solru.okkeipatcher.io.services.base.IoService
+import solru.okkeipatcher.io.services.IoService
 import solru.okkeipatcher.model.dto.ProgressData
 import java.io.File
-import java.io.FileInputStream
 import java.io.FileOutputStream
 
 /**
@@ -23,8 +22,3 @@ suspend inline fun IoService.download(
 		return download(url, outputStream, hashing, onProgressChanged)
 	}
 }
-
-suspend inline fun IoService.readAllText(file: File) =
-	FileInputStream(file).use { inputStream ->
-		readAllText(inputStream)
-	}

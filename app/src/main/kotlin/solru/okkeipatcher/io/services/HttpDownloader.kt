@@ -1,4 +1,4 @@
-package solru.okkeipatcher.io.services.base
+package solru.okkeipatcher.io.services
 
 import solru.okkeipatcher.model.dto.ProgressData
 import java.io.OutputStream

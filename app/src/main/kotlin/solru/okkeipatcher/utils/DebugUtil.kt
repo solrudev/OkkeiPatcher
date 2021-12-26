@@ -1,16 +1,10 @@
 package solru.okkeipatcher.utils
 
 import android.os.Build
-import solru.okkeipatcher.core.OkkeiStorage
-import solru.okkeipatcher.io.services.base.IoService
 import solru.okkeipatcher.utils.extensions.trimIndents
-import java.io.File
-import java.io.FileOutputStream
 import javax.inject.Inject
 
-class DebugUtil @Inject constructor(private val ioService: IoService) {
-
-	private val bugReportFile = File(OkkeiStorage.external, "bugreport.log")
+class DebugUtil @Inject constructor() {
 
 	fun getSharedPreferencesValues() = buildString {
 		Preferences.all.forEach {
@@ -48,8 +42,4 @@ class DebugUtil @Inject constructor(private val ioService: IoService) {
            ${e.stackTraceToString()}
            ----------------------------------
            """.trimIndents()
-
-	suspend fun writeBugReport(e: Throwable) {
-		ioService.writeAllText(FileOutputStream(bugReportFile), getBugReportText(e))
-	}
 }

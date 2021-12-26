@@ -5,8 +5,12 @@ import dagger.Module
 import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import solru.okkeipatcher.io.services.base.*
-import solru.okkeipatcher.io.services.impl.*
+import solru.okkeipatcher.io.services.HttpDownloader
+import solru.okkeipatcher.io.services.IoService
+import solru.okkeipatcher.io.services.StreamCopier
+import solru.okkeipatcher.io.services.impl.HttpDownloaderImpl
+import solru.okkeipatcher.io.services.impl.IoServiceImpl
+import solru.okkeipatcher.io.services.impl.StreamCopierImpl
 
 @InstallIn(SingletonComponent::class)
 @Module
@@ -23,12 +27,4 @@ interface IoBindModule {
 	@Binds
 	@Reusable
 	fun bindStreamCopier(streamCopierImpl: StreamCopierImpl): StreamCopier
-
-	@Binds
-	@Reusable
-	fun bindTextReader(textReaderImpl: TextReaderImpl): TextReader
-
-	@Binds
-	@Reusable
-	fun bindTextWriter(textWriterImpl: TextWriterImpl): TextWriter
 }

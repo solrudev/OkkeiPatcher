@@ -18,7 +18,7 @@ import solru.okkeipatcher.core.services.ObservableServiceImpl
 import solru.okkeipatcher.core.services.files.PatchableGameFile
 import solru.okkeipatcher.exceptions.OkkeiException
 import solru.okkeipatcher.io.file.JavaFile
-import solru.okkeipatcher.io.services.base.IoService
+import solru.okkeipatcher.io.services.IoService
 import solru.okkeipatcher.model.LocalizedString
 import solru.okkeipatcher.model.dto.ProgressData
 import solru.okkeipatcher.model.files.common.CommonFileHashKey

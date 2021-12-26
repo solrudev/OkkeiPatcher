@@ -1,7 +1,7 @@
 package solru.okkeipatcher.io.file
 
 import solru.okkeipatcher.core.base.ProgressProviderImpl
-import solru.okkeipatcher.io.services.base.IoService
+import solru.okkeipatcher.io.services.IoService
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream

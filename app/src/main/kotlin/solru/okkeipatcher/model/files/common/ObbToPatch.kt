@@ -3,7 +3,7 @@ package solru.okkeipatcher.model.files.common
 import android.os.Environment
 import solru.okkeipatcher.io.file.JavaFile
 import solru.okkeipatcher.io.file.VerifiableFile
-import solru.okkeipatcher.io.services.base.IoService
+import solru.okkeipatcher.io.services.IoService
 import java.io.File
 
 class ObbToPatch(ioService: IoService) : VerifiableFile(

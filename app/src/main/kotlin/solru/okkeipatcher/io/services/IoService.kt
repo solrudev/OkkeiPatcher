@@ -1,4 +1,4 @@
-package solru.okkeipatcher.io.services.base
+package solru.okkeipatcher.io.services
 
 import solru.okkeipatcher.model.dto.ProgressData
 import java.io.InputStream
@@ -28,7 +28,4 @@ interface IoService {
 		hashing: Boolean = false,
 		onProgressChanged: suspend (ProgressData) -> Unit
 	): String
-
-	suspend fun readAllText(inputStream: InputStream): String
-	suspend fun writeAllText(outputStream: OutputStream, text: String)
 }

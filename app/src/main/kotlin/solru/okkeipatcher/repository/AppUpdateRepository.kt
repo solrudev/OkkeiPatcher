@@ -6,7 +6,7 @@ import solru.okkeipatcher.R
 import solru.okkeipatcher.core.OkkeiStorage
 import solru.okkeipatcher.core.services.ObservableServiceImpl
 import solru.okkeipatcher.exceptions.OkkeiException
-import solru.okkeipatcher.io.services.base.IoService
+import solru.okkeipatcher.io.services.IoService
 import solru.okkeipatcher.io.utils.extensions.download
 import solru.okkeipatcher.model.LocalizedString
 import solru.okkeipatcher.model.manifest.OkkeiManifest

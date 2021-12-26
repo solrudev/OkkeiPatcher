@@ -18,7 +18,7 @@ import okio.blackholeSink
 import okio.buffer
 import okio.sink
 import solru.okkeipatcher.io.exceptions.HttpStatusCodeException
-import solru.okkeipatcher.io.services.base.HttpDownloader
+import solru.okkeipatcher.io.services.HttpDownloader
 import solru.okkeipatcher.io.utils.BlackholeOutputStream
 import solru.okkeipatcher.io.utils.calculateProgressRatio
 import solru.okkeipatcher.model.dto.ProgressData

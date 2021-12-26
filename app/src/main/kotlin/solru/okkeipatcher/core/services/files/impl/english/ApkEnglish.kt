@@ -11,7 +11,7 @@ import solru.okkeipatcher.core.services.files.impl.BaseApk
 import solru.okkeipatcher.core.strategy.impl.english.FileVersionKey
 import solru.okkeipatcher.core.strategy.impl.english.PatchFile
 import solru.okkeipatcher.exceptions.OkkeiException
-import solru.okkeipatcher.io.services.base.IoService
+import solru.okkeipatcher.io.services.IoService
 import solru.okkeipatcher.model.Language
 import solru.okkeipatcher.model.LocalizedString
 import solru.okkeipatcher.model.files.common.CommonFiles

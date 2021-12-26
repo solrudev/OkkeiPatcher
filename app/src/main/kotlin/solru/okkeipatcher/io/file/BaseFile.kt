@@ -2,7 +2,7 @@ package solru.okkeipatcher.io.file
 
 import solru.okkeipatcher.core.base.ProgressProvider
 import solru.okkeipatcher.core.base.ProgressProviderImpl
-import solru.okkeipatcher.io.services.base.IoService
+import solru.okkeipatcher.io.services.IoService
 import solru.okkeipatcher.io.utils.BlackholeOutputStream
 
 abstract class BaseFile(

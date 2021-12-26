@@ -7,7 +7,7 @@ import com.anggrayudi.storage.file.openInputStream
 import com.anggrayudi.storage.file.openOutputStream
 import solru.okkeipatcher.OkkeiApplication
 import solru.okkeipatcher.core.base.ProgressProviderImpl
-import solru.okkeipatcher.io.services.base.IoService
+import solru.okkeipatcher.io.services.IoService
 import java.io.IOException
 
 class DocumentFile(private val path: String, name: String, ioService: IoService) :
