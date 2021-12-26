@@ -1,4 +1,4 @@
-package solru.okkeipatcher.repository
+package solru.okkeipatcher.repository.impl
 
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.withContext
@@ -10,27 +10,27 @@ import solru.okkeipatcher.io.services.HttpDownloader
 import solru.okkeipatcher.io.utils.extensions.download
 import solru.okkeipatcher.model.LocalizedString
 import solru.okkeipatcher.model.manifest.OkkeiManifest
+import solru.okkeipatcher.repository.OkkeiPatcherRepository
 import solru.okkeipatcher.utils.appVersionCode
 import solru.okkeipatcher.utils.extensions.reset
 import java.io.File
 import javax.inject.Inject
-import javax.inject.Singleton
 
 private const val APP_UPDATE_FILE_NAME = "OkkeiPatcher.apk"
 
-@Singleton
-class AppUpdateRepository @Inject constructor(private val httpDownloader: HttpDownloader) : ObservableServiceImpl() {
+class OkkeiPatcherRepositoryImpl @Inject constructor(private val httpDownloader: HttpDownloader) :
+	ObservableServiceImpl(), OkkeiPatcherRepository {
 
 	private val appUpdateFile = File(OkkeiStorage.private, APP_UPDATE_FILE_NAME)
 	private var isAppUpdateDownloaded = false
 
-	fun isAppUpdateAvailable(manifest: OkkeiManifest) =
+	override fun isAppUpdateAvailable(manifest: OkkeiManifest) =
 		manifest.okkeiPatcher.version > appVersionCode
 
-	fun appUpdateSizeInMb(manifest: OkkeiManifest) =
+	override fun appUpdateSizeInMb(manifest: OkkeiManifest) =
 		"%.2f".format(manifest.okkeiPatcher.size / 1_048_576.0).toDouble()
 
-	suspend fun getAppUpdate(manifest: OkkeiManifest): File {
+	override suspend fun getAppUpdate(manifest: OkkeiManifest): File {
 		if (isAppUpdateDownloaded) {
 			return appUpdateFile
 		}

@@ -18,8 +18,8 @@ import solru.okkeipatcher.core.workers.PatchWorker
 import solru.okkeipatcher.core.workers.RestoreWorker
 import solru.okkeipatcher.model.LocalizedString
 import solru.okkeipatcher.model.dto.ProgressData
-import solru.okkeipatcher.repository.AppUpdateRepository
 import solru.okkeipatcher.repository.ManifestRepository
+import solru.okkeipatcher.repository.OkkeiPatcherRepository
 import solru.okkeipatcher.utils.Preferences
 import solru.okkeipatcher.utils.extensions.getSerializable
 import java.util.*
@@ -29,7 +29,7 @@ import javax.inject.Provider
 @HiltViewModel
 class MainViewModel @Inject constructor(
 	private val manifestRepository: ManifestRepository,
-	private val appUpdateRepository: AppUpdateRepository,
+	private val okkeiPatcherRepository: OkkeiPatcherRepository,
 	private val patchInfoStrategyProvider: Provider<PatchInfoStrategy>
 ) : ViewModel(), DefaultLifecycleObserver {
 
