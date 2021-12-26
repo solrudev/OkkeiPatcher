@@ -18,7 +18,7 @@ import solru.okkeipatcher.core.services.ObservableServiceImpl
 import solru.okkeipatcher.core.services.files.PatchableGameFile
 import solru.okkeipatcher.exceptions.OkkeiException
 import solru.okkeipatcher.io.file.JavaFile
-import solru.okkeipatcher.io.services.IoService
+import solru.okkeipatcher.io.services.StreamCopier
 import solru.okkeipatcher.model.LocalizedString
 import solru.okkeipatcher.model.dto.ProgressData
 import solru.okkeipatcher.model.files.common.CommonFileHashKey
@@ -35,7 +35,7 @@ import java.io.FileOutputStream
 
 abstract class BaseApk(
 	protected val commonFiles: CommonFiles,
-	protected val ioService: IoService,
+	protected val streamCopier: StreamCopier,
 	protected val ioDispatcher: CoroutineDispatcher
 ) : ObservableServiceImpl(), PatchableGameFile {
 
@@ -113,7 +113,7 @@ abstract class BaseApk(
 		hashing: Boolean = false
 	) = coroutineScope {
 		mutableStatus.emit(LocalizedString.resource(R.string.status_copying_apk))
-		val originalApk = JavaFile(File(getPackagePublicSourceDir(PACKAGE_NAME)), ioService)
+		val originalApk = JavaFile(File(getPackagePublicSourceDir(PACKAGE_NAME)), streamCopier)
 		val progressJob = launch {
 			progressProvider.mutableProgress.emitAll(originalApk.progress)
 		}
@@ -211,7 +211,7 @@ abstract class BaseApk(
 		openFd(assetName).use { fileDescriptor ->
 			fileDescriptor.createInputStream().use { inputStream ->
 				FileOutputStream(file).use { outputStream ->
-					ioService.copy(
+					streamCopier.copy(
 						inputStream,
 						outputStream,
 						fileDescriptor.length

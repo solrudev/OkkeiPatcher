@@ -6,7 +6,7 @@ import solru.okkeipatcher.R
 import solru.okkeipatcher.core.OkkeiStorage
 import solru.okkeipatcher.core.services.ObservableServiceImpl
 import solru.okkeipatcher.exceptions.OkkeiException
-import solru.okkeipatcher.io.services.IoService
+import solru.okkeipatcher.io.services.HttpDownloader
 import solru.okkeipatcher.io.utils.extensions.download
 import solru.okkeipatcher.model.LocalizedString
 import solru.okkeipatcher.model.manifest.OkkeiManifest
@@ -19,7 +19,7 @@ import javax.inject.Singleton
 private const val APP_UPDATE_FILE_NAME = "OkkeiPatcher.apk"
 
 @Singleton
-class AppUpdateRepository @Inject constructor(private val ioService: IoService) : ObservableServiceImpl() {
+class AppUpdateRepository @Inject constructor(private val httpDownloader: HttpDownloader) : ObservableServiceImpl() {
 
 	private val appUpdateFile = File(OkkeiStorage.private, APP_UPDATE_FILE_NAME)
 	private var isAppUpdateDownloaded = false
@@ -38,7 +38,7 @@ class AppUpdateRepository @Inject constructor(private val ioService: IoService) 
 		try {
 			val updateHash: String
 			try {
-				updateHash = ioService.download(manifest.okkeiPatcher.url, appUpdateFile, hashing = true)
+				updateHash = httpDownloader.download(manifest.okkeiPatcher.url, appUpdateFile, hashing = true)
 				{ progressData -> progressProvider.mutableProgress.emit(progressData) }
 			} catch (e: Throwable) {
 				throw OkkeiException(LocalizedString.resource(R.string.error_http_file_download), cause = e)

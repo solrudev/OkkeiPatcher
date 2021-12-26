@@ -13,7 +13,7 @@ import solru.okkeipatcher.utils.Preferences
 import solru.okkeipatcher.utils.extensions.reset
 import javax.inject.Inject
 
-class SaveDataGeneric @Inject constructor(private val commonFiles: CommonFiles) : ObservableServiceImpl(), SaveData {
+class SaveDataImpl @Inject constructor(private val commonFiles: CommonFiles) : ObservableServiceImpl(), SaveData {
 
 	@OptIn(ExperimentalCoroutinesApi::class)
 	override val progress = merge(

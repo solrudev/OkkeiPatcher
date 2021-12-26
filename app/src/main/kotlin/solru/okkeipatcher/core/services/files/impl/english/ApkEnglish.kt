@@ -11,7 +11,8 @@ import solru.okkeipatcher.core.services.files.impl.BaseApk
 import solru.okkeipatcher.core.strategy.impl.english.FileVersionKey
 import solru.okkeipatcher.core.strategy.impl.english.PatchFile
 import solru.okkeipatcher.exceptions.OkkeiException
-import solru.okkeipatcher.io.services.IoService
+import solru.okkeipatcher.io.services.HttpDownloader
+import solru.okkeipatcher.io.services.StreamCopier
 import solru.okkeipatcher.model.Language
 import solru.okkeipatcher.model.LocalizedString
 import solru.okkeipatcher.model.files.common.CommonFiles
@@ -29,10 +30,11 @@ import javax.inject.Inject
 
 class ApkEnglish @Inject constructor(
 	private val files: FilesEnglish,
+	private val httpDownloader: HttpDownloader,
 	commonFiles: CommonFiles,
-	ioService: IoService,
+	streamCopier: StreamCopier,
 	ioDispatcher: CoroutineDispatcher
-) : BaseApk(commonFiles, ioService, ioDispatcher) {
+) : BaseApk(commonFiles, streamCopier, ioDispatcher) {
 
 	@OptIn(ExperimentalCoroutinesApi::class)
 	override val progress = merge(super.progress, files.scripts.progress)
@@ -76,12 +78,15 @@ class ApkEnglish @Inject constructor(
 		mutableStatus.emit(LocalizedString.resource(R.string.status_downloading_scripts))
 		val scriptsHash: String
 		try {
-			scriptsHash = files.scripts.downloadFrom(
+			files.scripts.delete()
+			files.scripts.create()
+			scriptsHash = httpDownloader.download(
 				manifest.patches[Language.English]?.get(
 					PatchFile.Scripts.name
 				)?.url!!,
+				files.scripts.createOutputStream(),
 				hashing = true
-			)
+			) { progressData -> progressProvider.mutableProgress.emit(progressData) }
 		} catch (e: Throwable) {
 			throw OkkeiException(LocalizedString.resource(R.string.error_http_file_download), cause = e)
 		}

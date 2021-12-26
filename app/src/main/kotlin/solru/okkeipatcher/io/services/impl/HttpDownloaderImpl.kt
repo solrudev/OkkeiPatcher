@@ -32,7 +32,7 @@ private const val BUFFER_LENGTH = 8192L
 
 class HttpDownloaderImpl @Inject constructor(
 	private val ioDispatcher: CoroutineDispatcher,
-	private val okHttpClient: OkHttpClient
+	okHttpClient: OkHttpClient
 ) : HttpDownloader {
 
 	private val client: HttpClient by lazy {

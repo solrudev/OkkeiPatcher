@@ -2,16 +2,16 @@ package solru.okkeipatcher.io.file
 
 import solru.okkeipatcher.core.base.ProgressProvider
 import solru.okkeipatcher.core.base.ProgressProviderImpl
-import solru.okkeipatcher.io.services.IoService
+import solru.okkeipatcher.io.services.StreamCopier
 import solru.okkeipatcher.io.utils.BlackholeOutputStream
 
 abstract class BaseFile(
-	private val ioService: IoService,
+	private val streamCopier: StreamCopier,
 	private val progressProvider: ProgressProviderImpl = ProgressProviderImpl()
 ) : File, ProgressProvider by progressProvider {
 
 	override suspend fun computeHash() = createInputStream().use {
-		ioService.copy(it, BlackholeOutputStream(), length, hashing = true) { progressData ->
+		streamCopier.copy(it, BlackholeOutputStream(), length, hashing = true) { progressData ->
 			progressProvider.mutableProgress.emit(progressData)
 		}
 	}
@@ -21,19 +21,9 @@ abstract class BaseFile(
 		destinationFile.create()
 		createInputStream().use { inputFile ->
 			destinationFile.createOutputStream().use { outputFile ->
-				return ioService.copy(inputFile, outputFile, length, hashing) { progressData ->
+				return streamCopier.copy(inputFile, outputFile, length, hashing) { progressData ->
 					progressProvider.mutableProgress.emit(progressData)
 				}
-			}
-		}
-	}
-
-	override suspend fun downloadFrom(url: String, hashing: Boolean): String {
-		delete()
-		create()
-		createOutputStream().use {
-			return ioService.download(url, it, hashing) { progressData ->
-				progressProvider.mutableProgress.emit(progressData)
 			}
 		}
 	}

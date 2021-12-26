@@ -1,6 +1,6 @@
 package solru.okkeipatcher.io.utils.extensions
 
-import solru.okkeipatcher.io.services.IoService
+import solru.okkeipatcher.io.services.HttpDownloader
 import solru.okkeipatcher.model.dto.ProgressData
 import java.io.File
 import java.io.FileOutputStream
@@ -9,7 +9,7 @@ import java.io.FileOutputStream
  * @param hashing Does output stream need to be hashed. Default is `false`.
  * @return File hash. Empty string if [hashing] is `false`.
  */
-suspend inline fun IoService.download(
+suspend inline fun HttpDownloader.download(
 	url: String,
 	outputFile: File,
 	hashing: Boolean = false,

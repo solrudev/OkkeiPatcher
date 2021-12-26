@@ -1,13 +1,12 @@
 package solru.okkeipatcher.io.file
 
-import solru.okkeipatcher.core.base.ProgressProviderImpl
-import solru.okkeipatcher.io.services.IoService
+import solru.okkeipatcher.io.services.StreamCopier
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
 
-class JavaFile(private val file: File, ioService: IoService) : BaseFile(ioService, ProgressProviderImpl()) {
+class JavaFile(private val file: File, streamCopier: StreamCopier) : BaseFile(streamCopier) {
 
 	override val name: String
 		get() = file.name

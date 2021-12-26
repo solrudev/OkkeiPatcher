@@ -2,26 +2,26 @@ package solru.okkeipatcher.model.files.common
 
 import android.os.Build
 import solru.okkeipatcher.io.file.VerifiableFile
-import solru.okkeipatcher.io.services.IoService
+import solru.okkeipatcher.io.services.StreamCopier
 import javax.inject.Inject
 
-class CommonFiles @Inject constructor(ioService: IoService) {
+class CommonFiles @Inject constructor(streamCopier: StreamCopier) {
 
-	val backupApk: VerifiableFile by lazy { BackupApk(ioService) }
-	val backupObb: VerifiableFile by lazy { BackupObb(ioService) }
-	val backupSaveData: VerifiableFile by lazy { BackupSaveData(ioService) }
-	val obbToBackup: VerifiableFile by lazy { ObbToBackup(ioService) }
-	val obbToPatch: VerifiableFile by lazy { ObbToPatch(ioService) }
+	val backupApk: VerifiableFile by lazy { BackupApk(streamCopier) }
+	val backupObb: VerifiableFile by lazy { BackupObb(streamCopier) }
+	val backupSaveData: VerifiableFile by lazy { BackupSaveData(streamCopier) }
+	val obbToBackup: VerifiableFile by lazy { ObbToBackup(streamCopier) }
+	val obbToPatch: VerifiableFile by lazy { ObbToPatch(streamCopier) }
 
 	val originalSaveData: VerifiableFile by lazy {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-			OriginalSaveData.DocumentFileImpl(ioService)
+			OriginalSaveData.DocumentFileImpl(streamCopier)
 		} else {
-			OriginalSaveData.JavaFileImpl(ioService)
+			OriginalSaveData.JavaFileImpl(streamCopier)
 		}
 	}
 
-	val signedApk: VerifiableFile by lazy { SignedApk(ioService) }
-	val tempApk: VerifiableFile by lazy { TempApk(ioService) }
-	val tempSaveData: VerifiableFile by lazy { TempSaveData(ioService) }
+	val signedApk: VerifiableFile by lazy { SignedApk(streamCopier) }
+	val tempApk: VerifiableFile by lazy { TempApk(streamCopier) }
+	val tempSaveData: VerifiableFile by lazy { TempSaveData(streamCopier) }
 }

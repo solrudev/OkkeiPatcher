@@ -1,17 +1,24 @@
 package solru.okkeipatcher.model.files.common
 
 import android.os.Environment
-import solru.okkeipatcher.io.file.BaseFile
 import solru.okkeipatcher.io.file.DocumentFile
+import solru.okkeipatcher.io.file.File
 import solru.okkeipatcher.io.file.JavaFile
 import solru.okkeipatcher.io.file.VerifiableFile
-import solru.okkeipatcher.io.services.IoService
-import java.io.File
+import solru.okkeipatcher.io.services.StreamCopier
 
-sealed class OriginalSaveData(implementation: BaseFile, private val ioService: IoService) :
-	VerifiableFile(implementation) {
+sealed class OriginalSaveData(
+	implementation: File,
+	private val streamCopier: StreamCopier
+) : VerifiableFile(implementation) {
 
-	override suspend fun verify() = exists && compareByFile(BackupSaveData(ioService))
+	override suspend fun verify() = exists && compareByFile(BackupSaveData(streamCopier))
+
+	class JavaFileImpl(streamCopier: StreamCopier) :
+		OriginalSaveData(JavaFile(java.io.File(filePath, fileName), streamCopier), streamCopier)
+
+	class DocumentFileImpl(streamCopier: StreamCopier) :
+		OriginalSaveData(DocumentFile(filePath, fileName, streamCopier), streamCopier)
 
 	@Suppress("DEPRECATION")
 	companion object {
@@ -19,10 +26,4 @@ sealed class OriginalSaveData(implementation: BaseFile, private val ioService: I
 		val filePath =
 			"${Environment.getExternalStorageDirectory().absolutePath}/Android/data/com.mages.chaoschild_jp/files"
 	}
-
-	class JavaFileImpl(ioService: IoService) :
-		OriginalSaveData(JavaFile(File(filePath, fileName), ioService), ioService)
-
-	class DocumentFileImpl(ioService: IoService) :
-		OriginalSaveData(DocumentFile(filePath, fileName, ioService), ioService)
 }

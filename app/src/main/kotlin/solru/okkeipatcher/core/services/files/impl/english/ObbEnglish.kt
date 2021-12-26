@@ -5,6 +5,7 @@ import solru.okkeipatcher.core.services.files.impl.BaseObb
 import solru.okkeipatcher.core.strategy.impl.english.FileVersionKey
 import solru.okkeipatcher.core.strategy.impl.english.PatchFile
 import solru.okkeipatcher.exceptions.OkkeiException
+import solru.okkeipatcher.io.services.HttpDownloader
 import solru.okkeipatcher.model.Language
 import solru.okkeipatcher.model.LocalizedString
 import solru.okkeipatcher.model.files.common.CommonFileHashKey
@@ -14,7 +15,10 @@ import solru.okkeipatcher.utils.Preferences
 import solru.okkeipatcher.utils.extensions.reset
 import javax.inject.Inject
 
-class ObbEnglish @Inject constructor(commonFiles: CommonFiles) : BaseObb(commonFiles) {
+class ObbEnglish @Inject constructor(
+	private val httpDownloader: HttpDownloader,
+	commonFiles: CommonFiles
+) : BaseObb(commonFiles) {
 
 	override suspend fun patch(manifest: OkkeiManifest) {
 		progressProvider.mutableProgress.reset()
@@ -34,12 +38,15 @@ class ObbEnglish @Inject constructor(commonFiles: CommonFiles) : BaseObb(commonF
 			mutableStatus.emit(LocalizedString.resource(R.string.status_downloading_obb))
 			val obbHash: String
 			try {
-				obbHash = commonFiles.obbToPatch.downloadFrom(
+				commonFiles.obbToPatch.delete()
+				commonFiles.obbToPatch.create()
+				obbHash = httpDownloader.download(
 					manifest.patches[Language.English]?.get(
 						PatchFile.Obb.name
 					)?.url!!,
+					commonFiles.obbToPatch.createOutputStream(),
 					hashing = true
-				)
+				) { progressData -> progressProvider.mutableProgress.emit(progressData) }
 			} catch (e: Throwable) {
 				throw OkkeiException(LocalizedString.resource(R.string.error_http_file_download), cause = e)
 			}

@@ -6,12 +6,10 @@ import com.anggrayudi.storage.file.makeFile
 import com.anggrayudi.storage.file.openInputStream
 import com.anggrayudi.storage.file.openOutputStream
 import solru.okkeipatcher.OkkeiApplication
-import solru.okkeipatcher.core.base.ProgressProviderImpl
-import solru.okkeipatcher.io.services.IoService
+import solru.okkeipatcher.io.services.StreamCopier
 import java.io.IOException
 
-class DocumentFile(private val path: String, name: String, ioService: IoService) :
-	BaseFile(ioService, ProgressProviderImpl()) {
+class DocumentFile(private val path: String, name: String, streamCopier: StreamCopier) : BaseFile(streamCopier) {
 
 	private val documentFile: DocumentFile? by lazy {
 		DocumentFileCompat.fromFullPath(

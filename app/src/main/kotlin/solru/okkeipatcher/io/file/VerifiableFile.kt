@@ -10,7 +10,7 @@ import solru.okkeipatcher.utils.Preferences
 import solru.okkeipatcher.utils.extensions.empty
 import solru.okkeipatcher.utils.extensions.isEmptyOrBlank
 
-abstract class VerifiableFile(private val fileImplementation: BaseFile) : File by fileImplementation, Verifiable {
+abstract class VerifiableFile(private val fileImplementation: File) : File by fileImplementation, Verifiable {
 
 	private val progressProvider = ProgressProviderImpl()
 
