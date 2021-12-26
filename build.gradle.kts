@@ -1,8 +1,8 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
-	val kotlinVersion: String by extra("1.6.0")
-	val hiltVersion: String by extra("2.38.1")
+	val kotlinVersion: String by extra("1.6.10")
+	val hiltVersion: String by extra("2.40.5")
 
 	repositories {
 		google()
