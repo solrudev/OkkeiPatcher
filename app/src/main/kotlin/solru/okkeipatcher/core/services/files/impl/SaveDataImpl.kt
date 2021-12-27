@@ -20,7 +20,7 @@ class SaveDataImpl @Inject constructor(private val commonFiles: CommonFiles) : O
 		commonFiles.backupSaveData.progress,
 		commonFiles.originalSaveData.progress,
 		commonFiles.tempSaveData.progress,
-		progressProvider.mutableProgress
+		progressPublisher.mutableProgress
 	)
 
 	override val backupExists: Boolean
@@ -29,7 +29,7 @@ class SaveDataImpl @Inject constructor(private val commonFiles: CommonFiles) : O
 	override fun deleteBackup() = commonFiles.backupSaveData.delete()
 
 	override suspend fun backup() {
-		progressProvider.mutableProgress.reset()
+		progressPublisher.mutableProgress.reset()
 		if (commonFiles.originalSaveData.exists) {
 			if (commonFiles.originalSaveData.verify()) return
 			mutableStatus.emit(LocalizedString.resource(R.string.status_backing_up_save_data))
@@ -40,7 +40,7 @@ class SaveDataImpl @Inject constructor(private val commonFiles: CommonFiles) : O
 	}
 
 	override suspend fun restore() {
-		progressProvider.mutableProgress.reset()
+		progressPublisher.mutableProgress.reset()
 		mutableStatus.emit(LocalizedString.resource(R.string.status_comparing_saves))
 		if (verifyBackupIntegrity()) {
 			mutableStatus.emit(LocalizedString.resource(R.string.status_restoring_saves))

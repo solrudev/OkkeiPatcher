@@ -52,13 +52,13 @@ abstract class BaseApk(
 		commonFiles.tempApk.progress,
 		commonFiles.signedApk.progress,
 		PackageInstaller.progress.map { ProgressData(it.progress, it.max, it.isIndeterminate) },
-		progressProvider.mutableProgress
+		progressPublisher.mutableProgress
 	)
 
 	override suspend fun update(manifest: OkkeiManifest) {
 		try {
 			isUpdating = true
-			progressProvider.mutableProgress.reset()
+			progressPublisher.mutableProgress.reset()
 			commonFiles.tempApk.delete()
 			commonFiles.signedApk.delete()
 			patch(manifest)
@@ -71,7 +71,7 @@ abstract class BaseApk(
 
 	override suspend fun backup() {
 		try {
-			progressProvider.mutableProgress.reset()
+			progressPublisher.mutableProgress.reset()
 			if (!isPackageInstalled(PACKAGE_NAME)) {
 				throw OkkeiException(LocalizedString.resource(R.string.error_game_not_found))
 			}
@@ -87,7 +87,7 @@ abstract class BaseApk(
 	}
 
 	override suspend fun restore() {
-		progressProvider.mutableProgress.reset()
+		progressPublisher.mutableProgress.reset()
 		if (!commonFiles.backupApk.exists) {
 			throw OkkeiException(LocalizedString.resource(R.string.error_apk_not_found_restore))
 		}
@@ -115,7 +115,7 @@ abstract class BaseApk(
 		mutableStatus.emit(LocalizedString.resource(R.string.status_copying_apk))
 		val originalApk = JavaFile(File(getPackagePublicSourceDir(PACKAGE_NAME)), streamCopier)
 		val progressJob = launch {
-			progressProvider.mutableProgress.emitAll(originalApk.progress)
+			progressPublisher.mutableProgress.emitAll(originalApk.progress)
 		}
 		val hash = originalApk.copyTo(destinationFile, hashing)
 		progressJob.cancel()
@@ -134,7 +134,7 @@ abstract class BaseApk(
 		if (!isUpdating) {
 			uninstall()
 		}
-		progressProvider.mutableProgress.makeIndeterminate()
+		progressPublisher.mutableProgress.makeIndeterminate()
 		mutableStatus.emit(LocalizedString.resource(R.string.status_installing))
 		val installResult = PackageInstaller.installPackage(File(commonFiles.signedApk.fullPath))
 		if (installResult is InstallResult.Failure) {
@@ -145,7 +145,7 @@ abstract class BaseApk(
 
 	private suspend inline fun uninstall() {
 		mutableStatus.emit(LocalizedString.resource(R.string.status_uninstalling))
-		progressProvider.mutableProgress.makeIndeterminate()
+		progressPublisher.mutableProgress.makeIndeterminate()
 		val uninstallResult = PackageUninstaller.uninstallPackage(PACKAGE_NAME)
 		if (!uninstallResult) {
 			throw OkkeiException(LocalizedString.resource(R.string.error_uninstall))
@@ -168,7 +168,7 @@ abstract class BaseApk(
 			apkZip.removeFile("META-INF/")
 			while (apkProgressMonitor.state == ProgressMonitor.State.BUSY) {
 				ensureActive()
-				progressProvider.mutableProgress.emit(
+				progressPublisher.mutableProgress.emit(
 					apkProgressMonitor.workCompleted.toInt(),
 					apkProgressMonitor.totalWork.toInt()
 				)
@@ -190,7 +190,7 @@ abstract class BaseApk(
 	protected suspend fun sign() {
 		mutableStatus.emit(LocalizedString.resource(R.string.status_signing_apk))
 		extractSigningKey()
-		progressProvider.mutableProgress.makeIndeterminate()
+		progressPublisher.mutableProgress.makeIndeterminate()
 		commonFiles.signedApk.delete()
 		commonFiles.signedApk.create()
 		commonFiles.tempApk.createInputStream().use { tempApk ->
@@ -215,7 +215,7 @@ abstract class BaseApk(
 						inputStream,
 						outputStream,
 						fileDescriptor.length
-					) { progressData -> progressProvider.mutableProgress.emit(progressData) }
+					) { progressData -> progressPublisher.mutableProgress.emit(progressData) }
 				}
 			}
 		}

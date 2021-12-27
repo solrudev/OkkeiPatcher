@@ -39,7 +39,7 @@ class OkkeiPatcherRepositoryImpl @Inject constructor(private val httpDownloader:
 			val updateHash: String
 			try {
 				updateHash = httpDownloader.download(manifest.okkeiPatcher.url, appUpdateFile, hashing = true)
-				{ progressData -> progressProvider.mutableProgress.emit(progressData) }
+				{ progressData -> progressPublisher.mutableProgress.emit(progressData) }
 			} catch (e: Throwable) {
 				throw OkkeiException(LocalizedString.resource(R.string.error_http_file_download), cause = e)
 			}
@@ -52,7 +52,7 @@ class OkkeiPatcherRepositoryImpl @Inject constructor(private val httpDownloader:
 			withContext(NonCancellable) { mutableStatus.emit(LocalizedString.resource(R.string.status_aborted)) }
 			throw e
 		} finally {
-			withContext(NonCancellable) { progressProvider.mutableProgress.reset() }
+			withContext(NonCancellable) { progressPublisher.mutableProgress.reset() }
 		}
 		isAppUpdateDownloaded = true
 		return appUpdateFile

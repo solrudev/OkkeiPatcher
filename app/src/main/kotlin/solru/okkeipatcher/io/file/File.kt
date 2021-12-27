@@ -1,10 +1,10 @@
 package solru.okkeipatcher.io.file
 
-import solru.okkeipatcher.core.base.ProgressProvider
+import solru.okkeipatcher.core.progress.ProgressPublisher
 import java.io.InputStream
 import java.io.OutputStream
 
-interface File : ProgressProvider {
+interface File : ProgressPublisher {
 	val name: String
 	val fullPath: String
 	val exists: Boolean

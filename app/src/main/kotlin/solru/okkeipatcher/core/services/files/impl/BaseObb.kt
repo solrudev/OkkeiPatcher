@@ -22,20 +22,20 @@ abstract class BaseObb(protected val commonFiles: CommonFiles) : ObservableServi
 		commonFiles.backupObb.progress,
 		commonFiles.obbToBackup.progress,
 		commonFiles.obbToPatch.progress,
-		progressProvider.mutableProgress
+		progressPublisher.mutableProgress
 	)
 
 	override fun deleteBackup() = commonFiles.backupObb.delete()
 
 	override suspend fun backup() {
-		progressProvider.mutableProgress.reset()
+		progressPublisher.mutableProgress.reset()
 		if (!commonFiles.obbToBackup.exists) {
 			throw OkkeiException(LocalizedString.resource(R.string.error_obb_not_found))
 		}
 		mutableStatus.emit(LocalizedString.resource(R.string.status_comparing_obb))
 		if (verifyBackupIntegrity()) return
 		try {
-			progressProvider.mutableProgress.reset()
+			progressPublisher.mutableProgress.reset()
 			if (!commonFiles.obbToBackup.exists) {
 				throw OkkeiException(LocalizedString.resource(R.string.error_obb_not_found))
 			}
@@ -53,7 +53,7 @@ abstract class BaseObb(protected val commonFiles: CommonFiles) : ObservableServi
 
 	override suspend fun restore() {
 		try {
-			progressProvider.mutableProgress.reset()
+			progressPublisher.mutableProgress.reset()
 			if (!commonFiles.backupObb.exists) {
 				throw OkkeiException(LocalizedString.resource(R.string.error_obb_not_found))
 			}

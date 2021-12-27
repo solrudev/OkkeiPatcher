@@ -5,17 +5,17 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
-import solru.okkeipatcher.core.base.ProgressProviderImpl
+import solru.okkeipatcher.core.progress.ProgressPublisherImpl
 import solru.okkeipatcher.utils.Preferences
 import solru.okkeipatcher.utils.extensions.empty
 import solru.okkeipatcher.utils.extensions.isEmptyOrBlank
 
 abstract class VerifiableFile(private val fileImplementation: File) : File by fileImplementation, Verifiable {
 
-	private val progressProvider = ProgressProviderImpl()
+	private val progressPublisher = ProgressPublisherImpl()
 
 	@OptIn(ExperimentalCoroutinesApi::class)
-	override val progress = merge(fileImplementation.progress, progressProvider.progress)
+	override val progress = merge(fileImplementation.progress, progressPublisher.progress)
 
 	protected suspend fun compareBySharedPreferences(key: String): Boolean {
 		var hash = String.empty
@@ -35,7 +35,7 @@ abstract class VerifiableFile(private val fileImplementation: File) : File by fi
 		if (file.exists) {
 			coroutineScope {
 				val progressJob = launch {
-					progressProvider.mutableProgress.emitAll(file.progress)
+					progressPublisher.mutableProgress.emitAll(file.progress)
 				}
 				hashToCompare = file.computeHash()
 				progressJob.cancel()

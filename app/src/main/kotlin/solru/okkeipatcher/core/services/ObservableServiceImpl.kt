@@ -4,14 +4,14 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import solru.okkeipatcher.core.base.ProgressProvider
-import solru.okkeipatcher.core.base.ProgressProviderImpl
+import solru.okkeipatcher.core.progress.ProgressPublisher
+import solru.okkeipatcher.core.progress.ProgressPublisherImpl
 import solru.okkeipatcher.model.LocalizedString
 import solru.okkeipatcher.model.dto.Message
 
 open class ObservableServiceImpl(
-	protected val progressProvider: ProgressProviderImpl = ProgressProviderImpl()
-) : ObservableService, ProgressProvider by progressProvider {
+	protected val progressPublisher: ProgressPublisherImpl = ProgressPublisherImpl()
+) : ObservableService, ProgressPublisher by progressPublisher {
 
 	protected val mutableStatus = MutableSharedFlow<LocalizedString>()
 

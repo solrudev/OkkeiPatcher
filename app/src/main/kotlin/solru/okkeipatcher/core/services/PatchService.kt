@@ -26,7 +26,7 @@ class PatchService @Inject constructor(private val strategy: GameFileStrategy) :
 		strategy.apk.progress,
 		strategy.obb.progress,
 		strategy.saveData.progress,
-		progressProvider.mutableProgress
+		progressPublisher.mutableProgress
 	).shareIn(GlobalScope, SharingStarted.Eagerly, replay = 1)
 
 	@OptIn(DelicateCoroutinesApi::class, ExperimentalCoroutinesApi::class)
@@ -54,7 +54,7 @@ class PatchService @Inject constructor(private val strategy: GameFileStrategy) :
 		throw e
 	} finally {
 		strategy.saveData.close()
-		withContext(NonCancellable) { progressProvider.mutableProgress.reset() }
+		withContext(NonCancellable) { progressPublisher.mutableProgress.reset() }
 	}
 
 	private suspend inline fun freshPatch(manifest: OkkeiManifest, config: ServiceConfig) {

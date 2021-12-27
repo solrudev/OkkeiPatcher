@@ -1,4 +1,4 @@
-package solru.okkeipatcher.core.base
+package solru.okkeipatcher.core.progress
 
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import solru.okkeipatcher.model.dto.ProgressData
 
-open class ProgressProviderImpl : ProgressProvider {
+class ProgressPublisherImpl : ProgressPublisher {
 
 	val mutableProgress = MutableSharedFlow<ProgressData>(
 		extraBufferCapacity = 1,

@@ -21,14 +21,14 @@ class ObbEnglish @Inject constructor(
 ) : BaseObb(commonFiles) {
 
 	override suspend fun patch(manifest: OkkeiManifest) {
-		progressProvider.mutableProgress.reset()
+		progressPublisher.mutableProgress.reset()
 		mutableStatus.emit(LocalizedString.resource(R.string.status_comparing_obb))
 		if (commonFiles.obbToPatch.verify()) return
 		downloadObb(manifest)
 	}
 
 	override suspend fun update(manifest: OkkeiManifest) {
-		progressProvider.mutableProgress.reset()
+		progressPublisher.mutableProgress.reset()
 		commonFiles.obbToPatch.delete()
 		downloadObb(manifest)
 	}
@@ -46,7 +46,7 @@ class ObbEnglish @Inject constructor(
 					)?.url!!,
 					commonFiles.obbToPatch.createOutputStream(),
 					hashing = true
-				) { progressData -> progressProvider.mutableProgress.emit(progressData) }
+				) { progressData -> progressPublisher.mutableProgress.emit(progressData) }
 			} catch (e: Throwable) {
 				throw OkkeiException(LocalizedString.resource(R.string.error_http_file_download), cause = e)
 			}

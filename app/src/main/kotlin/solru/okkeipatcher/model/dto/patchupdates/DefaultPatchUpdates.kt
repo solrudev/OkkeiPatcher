@@ -1,6 +1,6 @@
 package solru.okkeipatcher.model.dto.patchupdates
 
-data class PatchUpdatesDefault(
+data class DefaultPatchUpdates(
 	override val apkUpdates: Boolean = false,
 	override val obbUpdates: Boolean = false
 ) : PatchUpdates

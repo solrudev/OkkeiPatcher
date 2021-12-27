@@ -40,7 +40,7 @@ class ApkEnglish @Inject constructor(
 	override val progress = merge(super.progress, files.scripts.progress)
 
 	override suspend fun patch(manifest: OkkeiManifest) {
-		progressProvider.mutableProgress.reset()
+		progressPublisher.mutableProgress.reset()
 		mutableStatus.emit(LocalizedString.resource(R.string.status_comparing_apk))
 		if (verifyBackupIntegrity() && commonFiles.signedApk.verify()) {
 			installPatched()
@@ -86,7 +86,7 @@ class ApkEnglish @Inject constructor(
 				)?.url!!,
 				files.scripts.createOutputStream(),
 				hashing = true
-			) { progressData -> progressProvider.mutableProgress.emit(progressData) }
+			) { progressData -> progressPublisher.mutableProgress.emit(progressData) }
 		} catch (e: Throwable) {
 			throw OkkeiException(LocalizedString.resource(R.string.error_http_file_download), cause = e)
 		}
@@ -110,7 +110,7 @@ class ApkEnglish @Inject constructor(
 				extractAll(extractedScriptsDirectory.absolutePath)
 				while (progressMonitor.state == ProgressMonitor.State.BUSY) {
 					ensureActive()
-					progressProvider.mutableProgress.emit(
+					progressPublisher.mutableProgress.emit(
 						progressMonitor.workCompleted.toInt(),
 						progressMonitor.totalWork.toInt()
 					)
@@ -134,7 +134,7 @@ class ApkEnglish @Inject constructor(
 				removeFiles(apkScriptsList)
 				while (progressMonitor.state == ProgressMonitor.State.BUSY) {
 					ensureActive()
-					progressProvider.mutableProgress.emit(
+					progressPublisher.mutableProgress.emit(
 						progressMonitor.workCompleted.toInt(),
 						progressMax
 					)
@@ -143,7 +143,7 @@ class ApkEnglish @Inject constructor(
 				addFiles(scriptsList, parameters)
 				while (progressMonitor.state == ProgressMonitor.State.BUSY) {
 					ensureActive()
-					progressProvider.mutableProgress.emit(
+					progressPublisher.mutableProgress.emit(
 						progressMonitor.workCompleted.toInt() + apkSize,
 						progressMax
 					)
