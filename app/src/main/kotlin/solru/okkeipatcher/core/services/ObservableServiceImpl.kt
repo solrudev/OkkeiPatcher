@@ -6,8 +6,8 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import solru.okkeipatcher.core.progress.ProgressPublisher
 import solru.okkeipatcher.core.progress.ProgressPublisherImpl
-import solru.okkeipatcher.model.LocalizedString
-import solru.okkeipatcher.model.dto.Message
+import solru.okkeipatcher.data.LocalizedString
+import solru.okkeipatcher.data.Message
 
 open class ObservableServiceImpl(
 	protected val progressPublisher: ProgressPublisherImpl = ProgressPublisherImpl()

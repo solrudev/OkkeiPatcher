@@ -12,12 +12,12 @@ import kotlinx.coroutines.flow.collect
 import solru.okkeipatcher.OkkeiApplication
 import solru.okkeipatcher.R
 import solru.okkeipatcher.core.*
-import solru.okkeipatcher.core.strategy.PatchInfoStrategy
+import solru.okkeipatcher.core.strategy.PatchDataStrategy
 import solru.okkeipatcher.core.workers.BaseWorker
 import solru.okkeipatcher.core.workers.PatchWorker
 import solru.okkeipatcher.core.workers.RestoreWorker
-import solru.okkeipatcher.model.LocalizedString
-import solru.okkeipatcher.model.dto.ProgressData
+import solru.okkeipatcher.data.LocalizedString
+import solru.okkeipatcher.data.ProgressData
 import solru.okkeipatcher.repository.ManifestRepository
 import solru.okkeipatcher.repository.OkkeiPatcherRepository
 import solru.okkeipatcher.utils.Preferences
@@ -30,7 +30,7 @@ import javax.inject.Provider
 class MainViewModel @Inject constructor(
 	private val manifestRepository: ManifestRepository,
 	private val okkeiPatcherRepository: OkkeiPatcherRepository,
-	private val patchInfoStrategyProvider: Provider<PatchInfoStrategy>
+	private val patchDataStrategyProvider: Provider<PatchDataStrategy>
 ) : ViewModel(), DefaultLifecycleObserver {
 
 	private val _patchText = MutableStateFlow<LocalizedString>(LocalizedString.resource(R.string.patch))

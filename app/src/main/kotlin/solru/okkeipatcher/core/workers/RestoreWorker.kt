@@ -9,8 +9,8 @@ import dagger.assisted.AssistedInject
 import solru.okkeipatcher.R
 import solru.okkeipatcher.core.AppKey
 import solru.okkeipatcher.core.services.RestoreService
-import solru.okkeipatcher.model.LocalizedString
-import solru.okkeipatcher.model.dto.ServiceConfig
+import solru.okkeipatcher.data.LocalizedString
+import solru.okkeipatcher.data.ServiceConfig
 import solru.okkeipatcher.utils.Preferences
 
 @HiltWorker

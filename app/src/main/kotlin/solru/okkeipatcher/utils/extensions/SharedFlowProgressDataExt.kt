@@ -2,7 +2,7 @@ package solru.okkeipatcher.utils.extensions
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
-import solru.okkeipatcher.model.dto.ProgressData
+import solru.okkeipatcher.data.ProgressData
 
 suspend inline fun MutableSharedFlow<ProgressData>.emit(currentProgress: Int, progressMax: Int) {
 	emit(ProgressData(currentProgress, progressMax))

@@ -5,10 +5,10 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 import okio.*
 import okio.HashingSink.Companion.sha256
+import solru.okkeipatcher.data.ProgressData
 import solru.okkeipatcher.io.services.StreamCopier
 import solru.okkeipatcher.io.utils.BlackholeOutputStream
 import solru.okkeipatcher.io.utils.calculateProgressRatio
-import solru.okkeipatcher.model.dto.ProgressData
 import solru.okkeipatcher.utils.extensions.empty
 import java.io.InputStream
 import java.io.OutputStream

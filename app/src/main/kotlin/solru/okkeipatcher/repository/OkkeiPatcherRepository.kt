@@ -1,6 +1,6 @@
 package solru.okkeipatcher.repository
 
-import solru.okkeipatcher.model.manifest.OkkeiManifest
+import solru.okkeipatcher.data.manifest.OkkeiManifest
 import java.io.File
 
 interface OkkeiPatcherRepository {

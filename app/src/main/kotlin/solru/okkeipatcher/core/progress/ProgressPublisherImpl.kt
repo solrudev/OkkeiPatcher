@@ -4,7 +4,7 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import solru.okkeipatcher.model.dto.ProgressData
+import solru.okkeipatcher.data.ProgressData
 
 class ProgressPublisherImpl : ProgressPublisher {
 

@@ -1,6 +1,6 @@
 package solru.okkeipatcher.io.services
 
-import solru.okkeipatcher.model.dto.ProgressData
+import solru.okkeipatcher.data.ProgressData
 import java.io.OutputStream
 
 interface HttpDownloader {

@@ -5,11 +5,11 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import solru.okkeipatcher.core.AppKey
+import solru.okkeipatcher.core.model.Language
 import solru.okkeipatcher.core.strategy.GameFileStrategy
-import solru.okkeipatcher.core.strategy.PatchInfoStrategy
+import solru.okkeipatcher.core.strategy.PatchDataStrategy
 import solru.okkeipatcher.core.strategy.impl.english.GameFileStrategyEnglish
-import solru.okkeipatcher.core.strategy.impl.english.PatchInfoStrategyEnglish
-import solru.okkeipatcher.model.Language
+import solru.okkeipatcher.core.strategy.impl.english.PatchDataStrategyEnglish
 import solru.okkeipatcher.utils.Preferences
 
 @InstallIn(SingletonComponent::class)
@@ -17,9 +17,9 @@ import solru.okkeipatcher.utils.Preferences
 object StrategiesModule {
 
 	@Provides
-	fun providePatchInfoStrategy(): PatchInfoStrategy =
+	fun providePatchDataStrategy(): PatchDataStrategy =
 		when (Preferences.get(AppKey.patch_language.name, Language.English.name)) {
-			Language.English.name -> PatchInfoStrategyEnglish()
+			Language.English.name -> PatchDataStrategyEnglish()
 			else -> throw IllegalStateException("Unknown patch language")
 		}
 

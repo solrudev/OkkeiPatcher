@@ -17,11 +17,11 @@ import okio.HashingSink.Companion.sha256
 import okio.blackholeSink
 import okio.buffer
 import okio.sink
+import solru.okkeipatcher.data.ProgressData
 import solru.okkeipatcher.io.exceptions.HttpStatusCodeException
 import solru.okkeipatcher.io.services.HttpDownloader
 import solru.okkeipatcher.io.utils.BlackholeOutputStream
 import solru.okkeipatcher.io.utils.calculateProgressRatio
-import solru.okkeipatcher.model.dto.ProgressData
 import solru.okkeipatcher.utils.extensions.empty
 import java.io.OutputStream
 import javax.inject.Inject

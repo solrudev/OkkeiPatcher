@@ -1,7 +1,7 @@
 package solru.okkeipatcher.io.utils.extensions
 
+import solru.okkeipatcher.data.ProgressData
 import solru.okkeipatcher.io.services.HttpDownloader
-import solru.okkeipatcher.model.dto.ProgressData
 import java.io.File
 import java.io.FileOutputStream
 

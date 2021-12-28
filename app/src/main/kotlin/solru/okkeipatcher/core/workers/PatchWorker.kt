@@ -9,9 +9,9 @@ import dagger.assisted.AssistedInject
 import solru.okkeipatcher.R
 import solru.okkeipatcher.core.AppKey
 import solru.okkeipatcher.core.services.PatchService
-import solru.okkeipatcher.core.strategy.PatchInfoStrategy
-import solru.okkeipatcher.model.LocalizedString
-import solru.okkeipatcher.model.dto.ServiceConfig
+import solru.okkeipatcher.core.strategy.PatchDataStrategy
+import solru.okkeipatcher.data.LocalizedString
+import solru.okkeipatcher.data.ServiceConfig
 import solru.okkeipatcher.repository.ManifestRepository
 import solru.okkeipatcher.utils.Preferences
 
@@ -21,7 +21,7 @@ class PatchWorker @AssistedInject constructor(
 	@Assisted workerParameters: WorkerParameters,
 	private val patchService: PatchService,
 	private val manifestRepository: ManifestRepository,
-	private val patchInfoStrategy: PatchInfoStrategy
+	private val patchDataStrategy: PatchDataStrategy
 ) : BaseWorker(context, workerParameters, LocalizedString.resource(R.string.notification_title_patch), patchService) {
 
 	override suspend fun doServiceWork() {
@@ -30,7 +30,7 @@ class PatchWorker @AssistedInject constructor(
 			AppKey.process_save_data_enabled.name,
 			Build.VERSION.SDK_INT < Build.VERSION_CODES.R
 		)
-		val patchUpdates = patchInfoStrategy.patchUpdates(manifest)
+		val patchUpdates = patchDataStrategy.patchUpdates(manifest)
 		val config = ServiceConfig(processSaveData, patchUpdates)
 		patchService.patch(manifest, config)
 	}

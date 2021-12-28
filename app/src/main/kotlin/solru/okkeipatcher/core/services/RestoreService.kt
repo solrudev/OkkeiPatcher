@@ -8,9 +8,9 @@ import solru.okkeipatcher.R
 import solru.okkeipatcher.core.AppKey
 import solru.okkeipatcher.core.OkkeiStorage
 import solru.okkeipatcher.core.strategy.GameFileStrategy
+import solru.okkeipatcher.data.LocalizedString
+import solru.okkeipatcher.data.ServiceConfig
 import solru.okkeipatcher.exceptions.OkkeiException
-import solru.okkeipatcher.model.LocalizedString
-import solru.okkeipatcher.model.dto.ServiceConfig
 import solru.okkeipatcher.utils.Preferences
 import solru.okkeipatcher.utils.extensions.reset
 import javax.inject.Inject

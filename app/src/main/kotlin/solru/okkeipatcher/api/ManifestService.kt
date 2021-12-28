@@ -1,7 +1,7 @@
 package solru.okkeipatcher.api
 
 import retrofit2.http.GET
-import solru.okkeipatcher.model.manifest.OkkeiManifest
+import solru.okkeipatcher.data.manifest.OkkeiManifest
 
 interface ManifestService {
 
