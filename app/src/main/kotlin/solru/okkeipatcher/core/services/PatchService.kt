@@ -7,11 +7,10 @@ import kotlinx.coroutines.flow.shareIn
 import solru.okkeipatcher.R
 import solru.okkeipatcher.core.AppKey
 import solru.okkeipatcher.core.OkkeiStorage
-import solru.okkeipatcher.core.services.gamefiles.impl.BaseApk
+import solru.okkeipatcher.core.services.gamefile.impl.BaseApk
 import solru.okkeipatcher.core.strategy.GameFileStrategy
 import solru.okkeipatcher.data.LocalizedString
-import solru.okkeipatcher.data.ServiceConfig
-import solru.okkeipatcher.data.manifest.OkkeiManifest
+import solru.okkeipatcher.data.patchupdates.DefaultPatchUpdates
 import solru.okkeipatcher.data.patchupdates.PatchUpdates
 import solru.okkeipatcher.exceptions.OkkeiException
 import solru.okkeipatcher.utils.Preferences
@@ -41,12 +40,12 @@ class PatchService @Inject constructor(private val strategy: GameFileStrategy) :
 	override val messages =
 		merge(strategy.apk.messages, strategy.obb.messages, strategy.saveData.messages, mutableMessages)
 
-	suspend fun patch(manifest: OkkeiManifest, config: ServiceConfig) = try {
-		checkCanPatch(config.patchUpdates)
-		if (config.patchUpdates.available) {
-			update(manifest, config)
+	suspend fun patch(processSaveData: Boolean, patchUpdates: PatchUpdates = DefaultPatchUpdates()) = try {
+		checkCanPatch(patchUpdates)
+		if (patchUpdates.available) {
+			update(patchUpdates)
 		} else {
-			freshPatch(manifest, config)
+			freshPatch(processSaveData)
 		}
 		mutableStatus.emit(LocalizedString.resource(R.string.status_patch_success))
 	} catch (e: Throwable) {
@@ -57,26 +56,26 @@ class PatchService @Inject constructor(private val strategy: GameFileStrategy) :
 		withContext(NonCancellable) { progressPublisher.mutableProgress.reset() }
 	}
 
-	private suspend inline fun freshPatch(manifest: OkkeiManifest, config: ServiceConfig) {
-		if (config.processSaveData) {
+	private suspend inline fun freshPatch(processSaveData: Boolean) {
+		if (processSaveData) {
 			strategy.saveData.backup()
 		}
 		strategy.obb.backup()
 		strategy.apk.backup()
-		strategy.apk.patch(manifest)
-		strategy.obb.patch(manifest)
-		if (config.processSaveData) {
+		strategy.apk.patch()
+		strategy.obb.patch()
+		if (processSaveData) {
 			strategy.saveData.restore()
 		}
 		Preferences.set(AppKey.is_patched.name, true)
 	}
 
-	private suspend inline fun update(manifest: OkkeiManifest, config: ServiceConfig) {
-		if (config.patchUpdates.apkUpdates) {
-			strategy.apk.update(manifest)
+	private suspend inline fun update(patchUpdates: PatchUpdates) {
+		if (patchUpdates.apkUpdatesAvailable) {
+			strategy.apk.update()
 		}
-		if (config.patchUpdates.obbUpdates) {
-			strategy.obb.update(manifest)
+		if (patchUpdates.obbUpdatesAvailable) {
+			strategy.obb.update()
 		}
 	}
 

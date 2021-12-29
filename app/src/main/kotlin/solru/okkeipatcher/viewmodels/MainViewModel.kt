@@ -18,7 +18,6 @@ import solru.okkeipatcher.core.workers.PatchWorker
 import solru.okkeipatcher.core.workers.RestoreWorker
 import solru.okkeipatcher.data.LocalizedString
 import solru.okkeipatcher.data.ProgressData
-import solru.okkeipatcher.repository.ManifestRepository
 import solru.okkeipatcher.repository.OkkeiPatcherRepository
 import solru.okkeipatcher.utils.Preferences
 import solru.okkeipatcher.utils.extensions.getSerializable
@@ -28,7 +27,6 @@ import javax.inject.Provider
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-	private val manifestRepository: ManifestRepository,
 	private val okkeiPatcherRepository: OkkeiPatcherRepository,
 	private val patchDataStrategyProvider: Provider<PatchDataStrategy>
 ) : ViewModel(), DefaultLifecycleObserver {
@@ -99,7 +97,7 @@ class MainViewModel @Inject constructor(
 							RestoreWorker::class.java.name -> LocalizedString.resource(R.string.status_restore_success)
 							else -> LocalizedString.empty()
 						}
-						else -> LocalizedString.empty() // isFinished == true
+						else -> LocalizedString.empty()
 					}
 					if (it.state == WorkInfo.State.FAILED) {
 						val exception = it.outputData.getSerializable<Throwable>(BaseWorker.KEY_FAILURE_CAUSE)

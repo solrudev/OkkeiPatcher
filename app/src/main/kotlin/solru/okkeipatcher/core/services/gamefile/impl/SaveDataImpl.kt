@@ -1,4 +1,4 @@
-package solru.okkeipatcher.core.services.gamefiles.impl
+package solru.okkeipatcher.core.services.gamefile.impl
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.merge
@@ -6,7 +6,7 @@ import solru.okkeipatcher.R
 import solru.okkeipatcher.core.model.files.common.CommonFileHashKey
 import solru.okkeipatcher.core.model.files.common.CommonFiles
 import solru.okkeipatcher.core.services.ObservableServiceImpl
-import solru.okkeipatcher.core.services.gamefiles.SaveData
+import solru.okkeipatcher.core.services.gamefile.SaveData
 import solru.okkeipatcher.data.LocalizedString
 import solru.okkeipatcher.data.Message
 import solru.okkeipatcher.utils.Preferences

@@ -1,6 +1,6 @@
 package solru.okkeipatcher.data.patchupdates
 
 data class DefaultPatchUpdates(
-	override val apkUpdates: Boolean = false,
-	override val obbUpdates: Boolean = false
+	override val apkUpdatesAvailable: Boolean = false,
+	override val obbUpdatesAvailable: Boolean = false
 ) : PatchUpdates

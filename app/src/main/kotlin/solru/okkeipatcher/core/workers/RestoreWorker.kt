@@ -10,7 +10,6 @@ import solru.okkeipatcher.R
 import solru.okkeipatcher.core.AppKey
 import solru.okkeipatcher.core.services.RestoreService
 import solru.okkeipatcher.data.LocalizedString
-import solru.okkeipatcher.data.ServiceConfig
 import solru.okkeipatcher.utils.Preferences
 
 @HiltWorker
@@ -30,11 +29,10 @@ class RestoreWorker @AssistedInject constructor(
 			AppKey.process_save_data_enabled.name,
 			Build.VERSION.SDK_INT < Build.VERSION_CODES.R
 		)
-		val config = ServiceConfig(processSaveData)
-		restoreService.restore(config)
+		restoreService.restore(processSaveData)
 	}
 
 	companion object {
-		const val WORK_NAME = "OkkeiPatcher_RESTORE_WORK"
+		const val WORK_NAME = "OKKEI_PATCHER_RESTORE_WORK"
 	}
 }

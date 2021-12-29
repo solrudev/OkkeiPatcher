@@ -1,8 +1,7 @@
 package solru.okkeipatcher.data.patchupdates
 
 interface PatchUpdates {
-	val apkUpdates: Boolean
-	val obbUpdates: Boolean
-	val available: Boolean
-		get() = apkUpdates || obbUpdates
+	val apkUpdatesAvailable: Boolean
+	val obbUpdatesAvailable: Boolean
+	val available: Boolean get() = apkUpdatesAvailable || obbUpdatesAvailable
 }

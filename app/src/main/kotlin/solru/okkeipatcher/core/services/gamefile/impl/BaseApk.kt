@@ -1,4 +1,4 @@
-package solru.okkeipatcher.core.services.gamefiles.impl
+package solru.okkeipatcher.core.services.gamefile.impl
 
 import android.content.res.AssetManager
 import com.aefyr.pseudoapksigner.PseudoApkSigner
@@ -17,10 +17,9 @@ import solru.okkeipatcher.core.OkkeiStorage
 import solru.okkeipatcher.core.model.files.common.CommonFileHashKey
 import solru.okkeipatcher.core.model.files.common.CommonFiles
 import solru.okkeipatcher.core.services.ObservableServiceImpl
-import solru.okkeipatcher.core.services.gamefiles.PatchableGameFile
+import solru.okkeipatcher.core.services.gamefile.PatchableGameFile
 import solru.okkeipatcher.data.LocalizedString
 import solru.okkeipatcher.data.ProgressData
-import solru.okkeipatcher.data.manifest.OkkeiManifest
 import solru.okkeipatcher.exceptions.OkkeiException
 import solru.okkeipatcher.io.file.JavaFile
 import solru.okkeipatcher.io.services.StreamCopier
@@ -55,13 +54,13 @@ abstract class BaseApk(
 		progressPublisher.mutableProgress
 	)
 
-	override suspend fun update(manifest: OkkeiManifest) {
+	override suspend fun update() {
 		try {
 			isUpdating = true
 			progressPublisher.mutableProgress.reset()
 			commonFiles.tempApk.delete()
 			commonFiles.signedApk.delete()
-			patch(manifest)
+			patch()
 		} finally {
 			isUpdating = false
 		}
@@ -164,15 +163,15 @@ abstract class BaseApk(
 	protected suspend fun removeSignature(apkZip: ZipFile) {
 		mutableStatus.emit(LocalizedString.resource(R.string.status_removing_signature))
 		withContext(ioDispatcher) {
-			val apkProgressMonitor = apkZip.progressMonitor
+			val progressMonitor = apkZip.progressMonitor
 			apkZip.removeFile("META-INF/")
-			while (apkProgressMonitor.state == ProgressMonitor.State.BUSY) {
+			while (progressMonitor.state == ProgressMonitor.State.BUSY) {
 				ensureActive()
 				progressPublisher.mutableProgress.emit(
-					apkProgressMonitor.workCompleted.toInt(),
-					apkProgressMonitor.totalWork.toInt()
+					progressMonitor.workCompleted.toInt(),
+					progressMonitor.totalWork.toInt()
 				)
-				delay(30)
+				delay(20)
 			}
 		}
 	}

@@ -4,10 +4,10 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import solru.okkeipatcher.repository.ManifestRepository
 import solru.okkeipatcher.repository.OkkeiPatcherRepository
-import solru.okkeipatcher.repository.impl.ManifestRepositoryImpl
 import solru.okkeipatcher.repository.impl.OkkeiPatcherRepositoryImpl
+import solru.okkeipatcher.repository.patch.EnglishPatchRepository
+import solru.okkeipatcher.repository.patch.impl.EnglishPatchRepositoryImpl
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
@@ -16,9 +16,9 @@ interface RepositoryBindModule {
 
 	@Binds
 	@Singleton
-	fun bindManifestRepository(manifestRepository: ManifestRepositoryImpl): ManifestRepository
+	fun bindOkkeiPatcherRepository(okkeiPatcherRepository: OkkeiPatcherRepositoryImpl): OkkeiPatcherRepository
 
 	@Binds
 	@Singleton
-	fun bindOkkeiPatcherRepository(okkeiPatcherRepository: OkkeiPatcherRepositoryImpl): OkkeiPatcherRepository
+	fun bindEnglishPatchRepository(englishPatchRepository: EnglishPatchRepositoryImpl): EnglishPatchRepository
 }

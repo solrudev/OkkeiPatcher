@@ -1,4 +1,4 @@
-package solru.okkeipatcher.core.services.gamefiles
+package solru.okkeipatcher.core.services.gamefile
 
 import solru.okkeipatcher.core.services.ObservableService
 

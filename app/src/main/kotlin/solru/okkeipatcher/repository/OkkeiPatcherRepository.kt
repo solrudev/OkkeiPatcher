@@ -1,10 +1,11 @@
 package solru.okkeipatcher.repository
 
-import solru.okkeipatcher.data.manifest.OkkeiManifest
+import solru.okkeipatcher.data.OkkeiPatcherChangelog
 import java.io.File
 
 interface OkkeiPatcherRepository {
-	fun isAppUpdateAvailable(manifest: OkkeiManifest): Boolean
-	fun appUpdateSizeInMb(manifest: OkkeiManifest): Double
-	suspend fun getAppUpdate(manifest: OkkeiManifest): File
+	suspend fun isUpdateAvailable(): Boolean
+	suspend fun getUpdateSizeInMb(): Double
+	suspend fun getUpdateFile(): File
+	suspend fun getChangelog(): OkkeiPatcherChangelog
 }

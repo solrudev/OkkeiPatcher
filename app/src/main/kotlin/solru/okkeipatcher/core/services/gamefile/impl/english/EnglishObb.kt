@@ -1,66 +1,61 @@
-package solru.okkeipatcher.core.services.gamefiles.impl.english
+package solru.okkeipatcher.core.services.gamefile.impl.english
 
 import solru.okkeipatcher.R
-import solru.okkeipatcher.core.model.Language
 import solru.okkeipatcher.core.model.files.common.CommonFileHashKey
 import solru.okkeipatcher.core.model.files.common.CommonFiles
-import solru.okkeipatcher.core.services.gamefiles.impl.BaseObb
+import solru.okkeipatcher.core.services.gamefile.impl.BaseObb
 import solru.okkeipatcher.core.strategy.impl.english.FileVersionKey
-import solru.okkeipatcher.core.strategy.impl.english.PatchFile
 import solru.okkeipatcher.data.LocalizedString
-import solru.okkeipatcher.data.manifest.OkkeiManifest
 import solru.okkeipatcher.exceptions.OkkeiException
 import solru.okkeipatcher.io.services.HttpDownloader
+import solru.okkeipatcher.repository.patch.EnglishPatchRepository
 import solru.okkeipatcher.utils.Preferences
 import solru.okkeipatcher.utils.extensions.reset
 import javax.inject.Inject
 
-class ObbEnglish @Inject constructor(
+class EnglishObb @Inject constructor(
+	private val patchRepository: EnglishPatchRepository,
 	private val httpDownloader: HttpDownloader,
 	commonFiles: CommonFiles
 ) : BaseObb(commonFiles) {
 
-	override suspend fun patch(manifest: OkkeiManifest) {
+	override suspend fun patch() {
 		progressPublisher.mutableProgress.reset()
 		mutableStatus.emit(LocalizedString.resource(R.string.status_comparing_obb))
 		if (commonFiles.obbToPatch.verify()) return
-		downloadObb(manifest)
+		downloadObb()
 	}
 
-	override suspend fun update(manifest: OkkeiManifest) {
+	override suspend fun update() {
 		progressPublisher.mutableProgress.reset()
 		commonFiles.obbToPatch.delete()
-		downloadObb(manifest)
+		downloadObb()
 	}
 
-	private suspend inline fun downloadObb(manifest: OkkeiManifest) {
+	private suspend inline fun downloadObb() {
+		val obb = commonFiles.obbToPatch
 		try {
 			mutableStatus.emit(LocalizedString.resource(R.string.status_downloading_obb))
+			val obbData = patchRepository.getObbData()
 			val obbHash: String
 			try {
-				commonFiles.obbToPatch.delete()
-				commonFiles.obbToPatch.create()
-				obbHash = httpDownloader.download(
-					manifest.patches[Language.English]?.get(
-						PatchFile.Obb.name
-					)?.url!!,
-					commonFiles.obbToPatch.createOutputStream(),
-					hashing = true
-				) { progressData -> progressPublisher.mutableProgress.emit(progressData) }
+				obb.delete()
+				obb.create()
+				val outputStream = obb.createOutputStream()
+				obbHash = httpDownloader.download(obbData.url, outputStream, hashing = true) { progressData ->
+					progressPublisher.mutableProgress.emit(progressData)
+				}
 			} catch (e: Throwable) {
 				throw OkkeiException(LocalizedString.resource(R.string.error_http_file_download), cause = e)
 			}
 			mutableStatus.emit(LocalizedString.resource(R.string.status_writing_obb_hash))
-			if (obbHash != manifest.patches[Language.English]?.get(PatchFile.Obb.name)?.hash) {
+			if (obbHash != obbData.hash) {
 				throw OkkeiException(LocalizedString.resource(R.string.error_hash_obb_mismatch))
 			}
 			Preferences.set(CommonFileHashKey.patched_obb_hash.name, obbHash)
-			Preferences.set(
-				FileVersionKey.obb_version.name,
-				manifest.patches[Language.English]?.get(PatchFile.Obb.name)?.version!!
-			)
+			Preferences.set(FileVersionKey.obb_version.name, obbData.version)
 		} catch (e: Throwable) {
-			commonFiles.obbToPatch.delete()
+			obb.delete()
 			throw e
 		}
 	}

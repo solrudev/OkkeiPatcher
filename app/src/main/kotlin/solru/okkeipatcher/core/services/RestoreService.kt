@@ -9,7 +9,6 @@ import solru.okkeipatcher.core.AppKey
 import solru.okkeipatcher.core.OkkeiStorage
 import solru.okkeipatcher.core.strategy.GameFileStrategy
 import solru.okkeipatcher.data.LocalizedString
-import solru.okkeipatcher.data.ServiceConfig
 import solru.okkeipatcher.exceptions.OkkeiException
 import solru.okkeipatcher.utils.Preferences
 import solru.okkeipatcher.utils.extensions.reset
@@ -40,14 +39,14 @@ class RestoreService @Inject constructor(private val strategy: GameFileStrategy)
 	private val isBackupAvailable: Boolean
 		get() = strategy.apk.backupExists && strategy.obb.backupExists
 
-	suspend fun restore(config: ServiceConfig) = try {
+	suspend fun restore(processSaveData: Boolean) = try {
 		checkCanRestore()
-		if (config.processSaveData) {
+		if (processSaveData) {
 			strategy.saveData.backup()
 		}
 		strategy.apk.restore()
 		strategy.obb.restore()
-		if (config.processSaveData) {
+		if (processSaveData) {
 			strategy.saveData.restore()
 		}
 		strategy.apk.deleteBackup()
