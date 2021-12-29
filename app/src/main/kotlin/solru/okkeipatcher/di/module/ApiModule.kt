@@ -1,4 +1,4 @@
-package solru.okkeipatcher.di
+package solru.okkeipatcher.di.module
 
 import com.squareup.moshi.Moshi
 import dagger.Module
@@ -9,7 +9,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import solru.okkeipatcher.api.OkkeiPatcherService
-import solru.okkeipatcher.api.patchdata.EnglishPatchDataService
+import solru.okkeipatcher.api.patchdata.DefaultPatchDataService
 import javax.inject.Singleton
 
 private const val BASE_URL = "https://raw.githubusercontent.com/ForrrmerBlack/okkei-patcher/test/"
@@ -33,6 +33,6 @@ object ApiModule {
 
 	@Provides
 	@Singleton
-	fun provideEnglishPatchDataService(retrofit: Retrofit): EnglishPatchDataService =
-		retrofit.create(EnglishPatchDataService::class.java)
+	fun provideDefaultPatchDataService(retrofit: Retrofit): DefaultPatchDataService =
+		retrofit.create(DefaultPatchDataService::class.java)
 }

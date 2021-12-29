@@ -10,7 +10,6 @@ import solru.okkeipatcher.core.OkkeiStorage
 import solru.okkeipatcher.core.services.gamefile.impl.BaseApk
 import solru.okkeipatcher.core.strategy.GameFileStrategy
 import solru.okkeipatcher.data.LocalizedString
-import solru.okkeipatcher.data.patchupdates.DefaultPatchUpdates
 import solru.okkeipatcher.data.patchupdates.PatchUpdates
 import solru.okkeipatcher.exceptions.OkkeiException
 import solru.okkeipatcher.utils.Preferences
@@ -26,7 +25,7 @@ class PatchService @Inject constructor(private val strategy: GameFileStrategy) :
 		strategy.obb.progress,
 		strategy.saveData.progress,
 		progressPublisher.mutableProgress
-	).shareIn(GlobalScope, SharingStarted.Eagerly, replay = 1)
+	).shareIn(GlobalScope, SharingStarted.WhileSubscribed(5000), replay = 1)
 
 	@OptIn(DelicateCoroutinesApi::class, ExperimentalCoroutinesApi::class)
 	override val status = merge(
@@ -34,13 +33,13 @@ class PatchService @Inject constructor(private val strategy: GameFileStrategy) :
 		strategy.obb.status,
 		strategy.saveData.status,
 		mutableStatus
-	).shareIn(GlobalScope, SharingStarted.Eagerly, replay = 1)
+	).shareIn(GlobalScope, SharingStarted.WhileSubscribed(5000), replay = 1)
 
 	@OptIn(ExperimentalCoroutinesApi::class)
 	override val messages =
 		merge(strategy.apk.messages, strategy.obb.messages, strategy.saveData.messages, mutableMessages)
 
-	suspend fun patch(processSaveData: Boolean, patchUpdates: PatchUpdates = DefaultPatchUpdates()) = try {
+	suspend fun patch(processSaveData: Boolean, patchUpdates: PatchUpdates) = try {
 		checkCanPatch(patchUpdates)
 		if (patchUpdates.available) {
 			update(patchUpdates)

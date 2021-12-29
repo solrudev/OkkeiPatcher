@@ -1,0 +1,3 @@
+package solru.okkeipatcher.repository.patch
+
+interface DefaultPatchRepository : ScriptsDataRepository, ObbDataRepository

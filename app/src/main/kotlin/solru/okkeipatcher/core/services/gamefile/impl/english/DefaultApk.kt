@@ -9,14 +9,14 @@ import solru.okkeipatcher.R
 import solru.okkeipatcher.core.OkkeiStorage
 import solru.okkeipatcher.core.model.files.common.CommonFiles
 import solru.okkeipatcher.core.model.files.english.FileHashKey
-import solru.okkeipatcher.core.model.files.english.FilesEnglish
+import solru.okkeipatcher.core.model.files.english.DefaultFiles
 import solru.okkeipatcher.core.services.gamefile.impl.BaseApk
 import solru.okkeipatcher.core.strategy.impl.english.FileVersionKey
 import solru.okkeipatcher.data.LocalizedString
 import solru.okkeipatcher.exceptions.OkkeiException
 import solru.okkeipatcher.io.services.HttpDownloader
 import solru.okkeipatcher.io.services.StreamCopier
-import solru.okkeipatcher.repository.patch.EnglishPatchRepository
+import solru.okkeipatcher.repository.patch.DefaultPatchRepository
 import solru.okkeipatcher.utils.Preferences
 import solru.okkeipatcher.utils.deleteTempZipFiles
 import solru.okkeipatcher.utils.extensions.emit
@@ -26,9 +26,9 @@ import solru.okkeipatcher.utils.use
 import java.io.File
 import javax.inject.Inject
 
-class EnglishApk @Inject constructor(
-	private val patchRepository: EnglishPatchRepository,
-	private val files: FilesEnglish,
+class DefaultApk @Inject constructor(
+	private val patchRepository: DefaultPatchRepository,
+	private val files: DefaultFiles,
 	private val httpDownloader: HttpDownloader,
 	commonFiles: CommonFiles,
 	streamCopier: StreamCopier,

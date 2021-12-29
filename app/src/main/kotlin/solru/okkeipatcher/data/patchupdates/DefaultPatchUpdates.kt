@@ -1,6 +1,9 @@
 package solru.okkeipatcher.data.patchupdates
 
 data class DefaultPatchUpdates(
-	override val apkUpdatesAvailable: Boolean = false,
-	override val obbUpdatesAvailable: Boolean = false
-) : PatchUpdates
+	val scriptsUpdateAvailable: Boolean = false,
+	val obbUpdateAvailable: Boolean = false
+) : PatchUpdates {
+	override val apkUpdatesAvailable: Boolean get() = scriptsUpdateAvailable
+	override val obbUpdatesAvailable: Boolean get() = obbUpdateAvailable
+}

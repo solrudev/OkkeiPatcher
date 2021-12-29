@@ -8,13 +8,13 @@ import solru.okkeipatcher.core.strategy.impl.english.FileVersionKey
 import solru.okkeipatcher.data.LocalizedString
 import solru.okkeipatcher.exceptions.OkkeiException
 import solru.okkeipatcher.io.services.HttpDownloader
-import solru.okkeipatcher.repository.patch.EnglishPatchRepository
+import solru.okkeipatcher.repository.patch.DefaultPatchRepository
 import solru.okkeipatcher.utils.Preferences
 import solru.okkeipatcher.utils.extensions.reset
 import javax.inject.Inject
 
-class EnglishObb @Inject constructor(
-	private val patchRepository: EnglishPatchRepository,
+class DefaultObb @Inject constructor(
+	private val patchRepository: DefaultPatchRepository,
 	private val httpDownloader: HttpDownloader,
 	commonFiles: CommonFiles
 ) : BaseObb(commonFiles) {

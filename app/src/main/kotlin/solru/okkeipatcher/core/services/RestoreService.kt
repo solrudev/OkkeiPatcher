@@ -22,7 +22,7 @@ class RestoreService @Inject constructor(private val strategy: GameFileStrategy)
 		strategy.obb.progress,
 		strategy.saveData.progress,
 		progressPublisher.mutableProgress
-	).shareIn(GlobalScope, SharingStarted.Eagerly, replay = 1)
+	).shareIn(GlobalScope, SharingStarted.WhileSubscribed(5000), replay = 1)
 
 	@OptIn(DelicateCoroutinesApi::class, ExperimentalCoroutinesApi::class)
 	override val status = merge(
@@ -30,7 +30,7 @@ class RestoreService @Inject constructor(private val strategy: GameFileStrategy)
 		strategy.obb.status,
 		strategy.saveData.status,
 		mutableStatus
-	).shareIn(GlobalScope, SharingStarted.Eagerly, replay = 1)
+	).shareIn(GlobalScope, SharingStarted.WhileSubscribed(5000), replay = 1)
 
 	@OptIn(ExperimentalCoroutinesApi::class)
 	override val messages =

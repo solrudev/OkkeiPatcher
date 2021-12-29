@@ -1,4 +1,4 @@
-package solru.okkeipatcher.di
+package solru.okkeipatcher.di.module
 
 import com.squareup.moshi.Moshi
 import dagger.Module

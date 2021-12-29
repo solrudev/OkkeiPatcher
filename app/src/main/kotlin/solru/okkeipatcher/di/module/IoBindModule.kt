@@ -1,4 +1,4 @@
-package solru.okkeipatcher.di
+package solru.okkeipatcher.di.module
 
 import dagger.Binds
 import dagger.Module

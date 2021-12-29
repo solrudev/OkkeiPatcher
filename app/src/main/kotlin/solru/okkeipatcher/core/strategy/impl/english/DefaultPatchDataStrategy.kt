@@ -2,18 +2,18 @@ package solru.okkeipatcher.core.strategy.impl.english
 
 import solru.okkeipatcher.core.AppKey
 import solru.okkeipatcher.core.strategy.PatchDataStrategy
-import solru.okkeipatcher.data.patchupdates.EnglishPatchUpdates
+import solru.okkeipatcher.data.patchupdates.DefaultPatchUpdates
 import solru.okkeipatcher.data.patchupdates.PatchUpdates
-import solru.okkeipatcher.repository.patch.EnglishPatchRepository
+import solru.okkeipatcher.repository.patch.DefaultPatchRepository
 import solru.okkeipatcher.utils.Preferences
 import javax.inject.Inject
 import kotlin.math.round
 
-class EnglishPatchDataStrategy @Inject constructor(private val patchRepository: EnglishPatchRepository) :
+class DefaultPatchDataStrategy @Inject constructor(private val patchRepository: DefaultPatchRepository) :
 	PatchDataStrategy {
 
 	override suspend fun getPatchUpdates(): PatchUpdates {
-		return EnglishPatchUpdates(
+		return DefaultPatchUpdates(
 			isScriptsUpdateAvailable(),
 			isObbUpdateAvailable()
 		)
