@@ -3,7 +3,6 @@ package solru.okkeipatcher.di.module
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
-import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +16,6 @@ import javax.inject.Singleton
 object IoModule {
 
 	@Provides
-	@Reusable
 	fun provideIoDispatcher() = Dispatchers.IO
 
 	@Provides

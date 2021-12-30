@@ -4,7 +4,9 @@ import android.os.Build
 import solru.okkeipatcher.io.file.VerifiableFile
 import solru.okkeipatcher.io.services.StreamCopier
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class CommonFiles @Inject constructor(streamCopier: StreamCopier) {
 
 	val backupApk: VerifiableFile by lazy { BackupApk(streamCopier) }

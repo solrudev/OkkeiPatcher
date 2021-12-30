@@ -38,9 +38,7 @@ abstract class BaseApk(
 	protected val ioDispatcher: CoroutineDispatcher
 ) : ObservableServiceImpl(), PatchableGameFile {
 
-	override val backupExists: Boolean
-		get() = commonFiles.backupApk.exists
-
+	override val backupExists: Boolean get() = commonFiles.backupApk.exists
 	private val privateKeyFile = File(OkkeiStorage.private, PRIVATE_KEY_FILE_NAME)
 	private val rsaTemplateFile = File(OkkeiStorage.private, RSA_TEMPLATE_FILE_NAME)
 	private var isUpdating = false
@@ -107,7 +105,7 @@ abstract class BaseApk(
 	 * @param hashing Does output stream need to be hashed. Default is `false`.
 	 * @return File hash. Empty string if [hashing] is `false`.
 	 */
-	protected suspend fun copyOriginalApkTo(
+	suspend fun copyOriginalApkTo(
 		destinationFile: solru.okkeipatcher.io.file.File,
 		hashing: Boolean = false
 	) = coroutineScope {
@@ -119,6 +117,42 @@ abstract class BaseApk(
 		val hash = originalApk.copyTo(destinationFile, hashing)
 		progressJob.cancel()
 		hash
+	}
+
+	suspend fun sign() {
+		mutableStatus.emit(LocalizedString.resource(R.string.status_signing_apk))
+		extractSigningKey()
+		progressPublisher.mutableProgress.makeIndeterminate()
+		commonFiles.signedApk.delete()
+		commonFiles.signedApk.create()
+		commonFiles.tempApk.createInputStream().use { tempApk ->
+			commonFiles.signedApk.createOutputStream().use { signedApk ->
+				PseudoApkSigner(rsaTemplateFile, privateKeyFile).sign(tempApk, signedApk)
+			}
+		}
+		mutableStatus.emit(LocalizedString.resource(R.string.status_writing_patched_apk_hash))
+		Preferences.set(
+			CommonFileHashKey.signed_apk_hash.name,
+			commonFiles.signedApk.computeHash()
+		)
+		commonFiles.tempApk.delete()
+	}
+
+	@Suppress("BlockingMethodInNonBlockingContext")
+	suspend fun removeSignature(apkZip: ZipFile) {
+		mutableStatus.emit(LocalizedString.resource(R.string.status_removing_signature))
+		withContext(ioDispatcher) {
+			val progressMonitor = apkZip.progressMonitor
+			apkZip.removeFile("META-INF/")
+			while (progressMonitor.state == ProgressMonitor.State.BUSY) {
+				ensureActive()
+				progressPublisher.mutableProgress.emit(
+					progressMonitor.workCompleted.toInt(),
+					progressMonitor.totalWork.toInt()
+				)
+				delay(20)
+			}
+		}
 	}
 
 	protected suspend fun installPatched() {
@@ -159,23 +193,6 @@ abstract class BaseApk(
 		}
 	}
 
-	@Suppress("BlockingMethodInNonBlockingContext")
-	protected suspend fun removeSignature(apkZip: ZipFile) {
-		mutableStatus.emit(LocalizedString.resource(R.string.status_removing_signature))
-		withContext(ioDispatcher) {
-			val progressMonitor = apkZip.progressMonitor
-			apkZip.removeFile("META-INF/")
-			while (progressMonitor.state == ProgressMonitor.State.BUSY) {
-				ensureActive()
-				progressPublisher.mutableProgress.emit(
-					progressMonitor.workCompleted.toInt(),
-					progressMonitor.totalWork.toInt()
-				)
-				delay(20)
-			}
-		}
-	}
-
 	private suspend inline fun extractSigningKey() {
 		val assets = OkkeiApplication.context.assets
 		if (!privateKeyFile.exists()) {
@@ -184,25 +201,6 @@ abstract class BaseApk(
 		if (!rsaTemplateFile.exists()) {
 			assets.copyAssetToFile(RSA_TEMPLATE_FILE_NAME, rsaTemplateFile)
 		}
-	}
-
-	protected suspend fun sign() {
-		mutableStatus.emit(LocalizedString.resource(R.string.status_signing_apk))
-		extractSigningKey()
-		progressPublisher.mutableProgress.makeIndeterminate()
-		commonFiles.signedApk.delete()
-		commonFiles.signedApk.create()
-		commonFiles.tempApk.createInputStream().use { tempApk ->
-			commonFiles.signedApk.createOutputStream().use { signedApk ->
-				PseudoApkSigner(rsaTemplateFile, privateKeyFile).sign(tempApk, signedApk)
-			}
-		}
-		mutableStatus.emit(LocalizedString.resource(R.string.status_writing_patched_apk_hash))
-		Preferences.set(
-			CommonFileHashKey.signed_apk_hash.name,
-			commonFiles.signedApk.computeHash()
-		)
-		commonFiles.tempApk.delete()
 	}
 
 	@Suppress("BlockingMethodInNonBlockingContext")

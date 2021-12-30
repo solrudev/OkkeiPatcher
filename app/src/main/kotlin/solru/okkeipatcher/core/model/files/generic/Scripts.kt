@@ -1,4 +1,4 @@
-package solru.okkeipatcher.core.model.files.english
+package solru.okkeipatcher.core.model.files.generic
 
 import solru.okkeipatcher.core.OkkeiStorage
 import solru.okkeipatcher.io.file.JavaFile
@@ -11,5 +11,5 @@ class Scripts(streamCopier: StreamCopier) : VerifiableFile(
 		File(OkkeiStorage.external.absolutePath, "scripts.zip"), streamCopier
 	)
 ) {
-	override suspend fun verify() = exists && compareBySharedPreferences(FileHashKey.scripts_hash.name)
+	override suspend fun verify() = exists && compareBySharedPreferences(PatchFileHashKey.scripts_hash.name)
 }
