@@ -11,22 +11,23 @@ import solru.okkeipatcher.core.strategy.PatchDataStrategy
 import solru.okkeipatcher.core.strategy.impl.english.DefaultGameFileStrategy
 import solru.okkeipatcher.core.strategy.impl.english.DefaultPatchDataStrategy
 import solru.okkeipatcher.utils.Preferences
+import javax.inject.Provider
 
 @InstallIn(SingletonComponent::class)
 @Module
 object StrategyModule {
 
 	@Provides
-	fun providePatchDataStrategy(english: DefaultPatchDataStrategy): PatchDataStrategy =
+	fun providePatchDataStrategy(english: Provider<DefaultPatchDataStrategy>): PatchDataStrategy =
 		when (Preferences.get(AppKey.patch_language.name, Language.English.name)) {
-			Language.English.name -> english
+			Language.English.name -> english.get()
 			else -> throw IllegalStateException("Unknown patch language")
 		}
 
 	@Provides
-	fun provideGameFileStrategy(english: DefaultGameFileStrategy): GameFileStrategy =
+	fun provideGameFileStrategy(english: Provider<DefaultGameFileStrategy>): GameFileStrategy =
 		when (Preferences.get(AppKey.patch_language.name, Language.English.name)) {
-			Language.English.name -> english
+			Language.English.name -> english.get()
 			else -> throw IllegalStateException("Unknown patch language")
 		}
 }
