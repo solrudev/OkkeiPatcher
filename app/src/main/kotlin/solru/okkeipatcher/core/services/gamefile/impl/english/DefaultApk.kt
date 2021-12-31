@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.merge
 import solru.okkeipatcher.R
 import solru.okkeipatcher.core.model.files.common.CommonFiles
 import solru.okkeipatcher.core.model.files.generic.DefaultPatchFiles
-import solru.okkeipatcher.core.services.gamefile.impl.BaseApk
+import solru.okkeipatcher.core.services.gamefile.impl.Apk
 import solru.okkeipatcher.data.LocalizedString
 import solru.okkeipatcher.di.factory.ScriptsPatcherFactory
 import solru.okkeipatcher.io.services.StreamCopier
@@ -21,7 +21,7 @@ class DefaultApk @Inject constructor(
 	commonFiles: CommonFiles,
 	streamCopier: StreamCopier,
 	ioDispatcher: CoroutineDispatcher
-) : BaseApk(commonFiles, streamCopier, ioDispatcher) {
+) : Apk(commonFiles, streamCopier, ioDispatcher) {
 
 	private val scriptsPatcher = scriptsPatcherFactory.create(this, patchRepository, patchFiles.scripts)
 

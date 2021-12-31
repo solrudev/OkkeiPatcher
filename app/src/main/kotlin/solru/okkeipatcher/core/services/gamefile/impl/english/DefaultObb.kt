@@ -4,7 +4,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.merge
 import solru.okkeipatcher.R
 import solru.okkeipatcher.core.model.files.common.CommonFiles
-import solru.okkeipatcher.core.services.gamefile.impl.BaseObb
+import solru.okkeipatcher.core.services.gamefile.impl.Obb
 import solru.okkeipatcher.data.LocalizedString
 import solru.okkeipatcher.di.factory.ObbDownloaderFactory
 import solru.okkeipatcher.repository.patch.DefaultPatchRepository
@@ -15,7 +15,7 @@ class DefaultObb @Inject constructor(
 	patchRepository: DefaultPatchRepository,
 	obbDownloaderFactory: ObbDownloaderFactory,
 	commonFiles: CommonFiles
-) : BaseObb(commonFiles) {
+) : Obb(commonFiles) {
 
 	private val obbDownloader = obbDownloaderFactory.create(patchRepository)
 

@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.shareIn
 import solru.okkeipatcher.R
 import solru.okkeipatcher.core.AppKey
 import solru.okkeipatcher.core.OkkeiStorage
-import solru.okkeipatcher.core.services.gamefile.impl.BaseApk
+import solru.okkeipatcher.core.services.gamefile.impl.Apk
 import solru.okkeipatcher.core.strategy.GameFileStrategy
 import solru.okkeipatcher.data.LocalizedString
 import solru.okkeipatcher.data.patchupdates.PatchUpdates
@@ -83,7 +83,7 @@ class PatchService @Inject constructor(private val strategy: GameFileStrategy) :
 		if (isPatched && !patchUpdates.available) {
 			throw OkkeiException(LocalizedString.resource(R.string.error_patched))
 		}
-		if (!isPackageInstalled(BaseApk.PACKAGE_NAME)) {
+		if (!isPackageInstalled(Apk.PACKAGE_NAME)) {
 			throw OkkeiException(LocalizedString.resource(R.string.error_game_not_found))
 		}
 		if (!OkkeiStorage.isEnoughSpace) {

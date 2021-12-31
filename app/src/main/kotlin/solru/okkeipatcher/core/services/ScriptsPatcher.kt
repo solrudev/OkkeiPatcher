@@ -11,7 +11,7 @@ import solru.okkeipatcher.R
 import solru.okkeipatcher.core.OkkeiStorage
 import solru.okkeipatcher.core.model.files.common.CommonFiles
 import solru.okkeipatcher.core.model.files.generic.PatchFileHashKey
-import solru.okkeipatcher.core.services.gamefile.impl.BaseApk
+import solru.okkeipatcher.core.services.gamefile.impl.Apk
 import solru.okkeipatcher.core.strategy.impl.english.FileVersionKey
 import solru.okkeipatcher.data.LocalizedString
 import solru.okkeipatcher.exceptions.OkkeiException
@@ -27,7 +27,7 @@ import solru.okkeipatcher.utils.use
 import java.io.File
 
 class ScriptsPatcher @AssistedInject constructor(
-	@Assisted private val apk: BaseApk,
+	@Assisted private val apk: Apk,
 	@Assisted private val scriptsDataRepository: ScriptsDataRepository,
 	@Assisted private val scriptsFile: VerifiableFile,
 	private val httpDownloader: HttpDownloader,
@@ -41,7 +41,7 @@ class ScriptsPatcher @AssistedInject constructor(
 	suspend fun patch() {
 		var extractedScriptsDirectory: File? = null
 		try {
-			if (!isPackageInstalled(BaseApk.PACKAGE_NAME)) {
+			if (!isPackageInstalled(Apk.PACKAGE_NAME)) {
 				throw OkkeiException(LocalizedString.resource(R.string.error_game_not_found))
 			}
 			apk.copyOriginalApkTo(commonFiles.tempApk)

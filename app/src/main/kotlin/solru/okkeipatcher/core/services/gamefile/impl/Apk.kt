@@ -32,7 +32,7 @@ import solru.okkeipatcher.utils.isPackageInstalled
 import java.io.File
 import java.io.FileOutputStream
 
-abstract class BaseApk(
+abstract class Apk(
 	protected val commonFiles: CommonFiles,
 	protected val streamCopier: StreamCopier,
 	protected val ioDispatcher: CoroutineDispatcher
