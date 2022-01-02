@@ -16,8 +16,11 @@ import solru.okkeipatcher.utils.Preferences
 import solru.okkeipatcher.utils.extensions.reset
 import solru.okkeipatcher.utils.isPackageInstalled
 import javax.inject.Inject
+import kotlin.coroutines.EmptyCoroutineContext
 
 class PatchService @Inject constructor(private val strategy: GameFileStrategy) : ObservableServiceImpl() {
+
+	private val scope = CoroutineScope(EmptyCoroutineContext)
 
 	@OptIn(DelicateCoroutinesApi::class, ExperimentalCoroutinesApi::class)
 	override val progress = merge(
@@ -25,7 +28,7 @@ class PatchService @Inject constructor(private val strategy: GameFileStrategy) :
 		strategy.obb.progress,
 		strategy.saveData.progress,
 		progressPublisher.mutableProgress
-	).shareIn(GlobalScope, SharingStarted.WhileSubscribed(5000), replay = 1)
+	).shareIn(scope, SharingStarted.Eagerly, replay = 1)
 
 	@OptIn(DelicateCoroutinesApi::class, ExperimentalCoroutinesApi::class)
 	override val status = merge(
@@ -33,7 +36,7 @@ class PatchService @Inject constructor(private val strategy: GameFileStrategy) :
 		strategy.obb.status,
 		strategy.saveData.status,
 		mutableStatus
-	).shareIn(GlobalScope, SharingStarted.WhileSubscribed(5000), replay = 1)
+	).shareIn(scope, SharingStarted.Eagerly, replay = 1)
 
 	@OptIn(ExperimentalCoroutinesApi::class)
 	override val messages =
@@ -53,6 +56,7 @@ class PatchService @Inject constructor(private val strategy: GameFileStrategy) :
 	} finally {
 		strategy.saveData.close()
 		withContext(NonCancellable) { progressPublisher.mutableProgress.reset() }
+		scope.cancel()
 	}
 
 	private suspend inline fun freshPatch(processSaveData: Boolean) {
