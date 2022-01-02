@@ -34,10 +34,10 @@ class DefaultPatchDataStrategy @Inject constructor(private val patchRepository: 
 		if (!Preferences.get(AppKey.is_patched.name, false)) {
 			return false
 		}
-		if (!Preferences.containsKey(FileVersionKey.scripts_version.name)) {
-			Preferences.set(FileVersionKey.scripts_version.name, 1)
+		if (!Preferences.containsKey(PatchFileVersionKey.scripts_version.name)) {
+			Preferences.set(PatchFileVersionKey.scripts_version.name, 1)
 		}
-		val currentScriptsVersion = Preferences.get(FileVersionKey.scripts_version.name, 1)
+		val currentScriptsVersion = Preferences.get(PatchFileVersionKey.scripts_version.name, 1)
 		val latestScriptsVersion = patchRepository.getScriptsData().version
 		return latestScriptsVersion > currentScriptsVersion
 	}
@@ -46,11 +46,11 @@ class DefaultPatchDataStrategy @Inject constructor(private val patchRepository: 
 		if (!Preferences.get(AppKey.is_patched.name, false)) {
 			return false
 		}
-		if (!Preferences.containsKey(FileVersionKey.obb_version.name)) {
-			Preferences.set(FileVersionKey.obb_version.name, 1)
+		if (!Preferences.containsKey(PatchFileVersionKey.obb_version.name)) {
+			Preferences.set(PatchFileVersionKey.obb_version.name, 1)
 		}
-		val currentObbVersion = Preferences.get(FileVersionKey.obb_version.name, 1)
-		val manifestObbVersion = patchRepository.getObbData().version
-		return manifestObbVersion > currentObbVersion
+		val currentObbVersion = Preferences.get(PatchFileVersionKey.obb_version.name, 1)
+		val latestObbVersion = patchRepository.getObbData().version
+		return latestObbVersion > currentObbVersion
 	}
 }

@@ -17,7 +17,7 @@ class DefaultObb @Inject constructor(
 	commonFiles: CommonFiles
 ) : Obb(commonFiles) {
 
-	private val obbDownloader = obbDownloaderFactory.create(patchRepository)
+	private val obbDownloader = obbDownloaderFactory.create(patchRepository, commonFiles)
 
 	@OptIn(ExperimentalCoroutinesApi::class)
 	override val status = merge(super.status, obbDownloader.status)

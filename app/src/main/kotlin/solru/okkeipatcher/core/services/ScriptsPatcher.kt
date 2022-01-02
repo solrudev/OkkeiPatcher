@@ -12,7 +12,7 @@ import solru.okkeipatcher.core.OkkeiStorage
 import solru.okkeipatcher.core.model.files.common.CommonFiles
 import solru.okkeipatcher.core.model.files.generic.PatchFileHashKey
 import solru.okkeipatcher.core.services.gamefile.impl.Apk
-import solru.okkeipatcher.core.strategy.impl.english.FileVersionKey
+import solru.okkeipatcher.core.strategy.impl.english.PatchFileVersionKey
 import solru.okkeipatcher.data.LocalizedString
 import solru.okkeipatcher.exceptions.OkkeiException
 import solru.okkeipatcher.io.file.VerifiableFile
@@ -30,8 +30,8 @@ class ScriptsPatcher @AssistedInject constructor(
 	@Assisted private val apk: Apk,
 	@Assisted private val scriptsDataRepository: ScriptsDataRepository,
 	@Assisted private val scriptsFile: VerifiableFile,
+	@Assisted private val commonFiles: CommonFiles,
 	private val httpDownloader: HttpDownloader,
-	private val commonFiles: CommonFiles,
 	private val ioDispatcher: CoroutineDispatcher
 ) : ObservableServiceImpl() {
 
@@ -79,6 +79,7 @@ class ScriptsPatcher @AssistedInject constructor(
 				progressPublisher.mutableProgress.emit(progressData)
 			}
 		} catch (e: Throwable) {
+			scriptsFile.delete()
 			throw OkkeiException(LocalizedString.resource(R.string.error_http_file_download), cause = e)
 		}
 		mutableStatus.emit(LocalizedString.resource(R.string.status_comparing_scripts))
@@ -87,7 +88,7 @@ class ScriptsPatcher @AssistedInject constructor(
 		}
 		mutableStatus.emit(LocalizedString.resource(R.string.status_writing_scripts_hash))
 		Preferences.set(PatchFileHashKey.scripts_hash.name, scriptsHash)
-		Preferences.set(FileVersionKey.scripts_version.name, scriptsData.version)
+		Preferences.set(PatchFileVersionKey.scripts_version.name, scriptsData.version)
 	}
 
 	@Suppress("BlockingMethodInNonBlockingContext")

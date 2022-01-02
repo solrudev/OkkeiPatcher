@@ -1,6 +1,7 @@
 package solru.okkeipatcher.di.factory
 
 import dagger.assisted.AssistedFactory
+import solru.okkeipatcher.core.model.files.common.CommonFiles
 import solru.okkeipatcher.core.services.ScriptsPatcher
 import solru.okkeipatcher.core.services.gamefile.impl.Apk
 import solru.okkeipatcher.io.file.VerifiableFile
@@ -12,6 +13,7 @@ interface ScriptsPatcherFactory {
 	fun create(
 		apk: Apk,
 		scriptsDataRepository: ScriptsDataRepository,
-		scriptsFile: VerifiableFile
+		scriptsFile: VerifiableFile,
+		commonFiles: CommonFiles
 	): ScriptsPatcher
 }

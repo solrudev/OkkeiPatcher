@@ -2,10 +2,12 @@ package solru.okkeipatcher.core.services
 
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.merge
 import solru.okkeipatcher.R
 import solru.okkeipatcher.core.model.files.common.CommonFileHashKey
 import solru.okkeipatcher.core.model.files.common.CommonFiles
-import solru.okkeipatcher.core.strategy.impl.english.FileVersionKey
+import solru.okkeipatcher.core.strategy.impl.english.PatchFileVersionKey
 import solru.okkeipatcher.data.LocalizedString
 import solru.okkeipatcher.exceptions.OkkeiException
 import solru.okkeipatcher.io.services.HttpDownloader
@@ -14,9 +16,12 @@ import solru.okkeipatcher.utils.Preferences
 
 class ObbDownloader @AssistedInject constructor(
 	@Assisted private val obbDataRepository: ObbDataRepository,
-	private val httpDownloader: HttpDownloader,
-	private val commonFiles: CommonFiles
+	@Assisted private val commonFiles: CommonFiles,
+	private val httpDownloader: HttpDownloader
 ) : ObservableServiceImpl() {
+
+	@OptIn(ExperimentalCoroutinesApi::class)
+	override val progress = merge(super.progress, commonFiles.obbToPatch.progress)
 
 	suspend fun download() {
 		val obb = commonFiles.obbToPatch
@@ -32,6 +37,7 @@ class ObbDownloader @AssistedInject constructor(
 					progressPublisher.mutableProgress.emit(progressData)
 				}
 			} catch (e: Throwable) {
+				obb.delete()
 				throw OkkeiException(LocalizedString.resource(R.string.error_http_file_download), cause = e)
 			}
 			mutableStatus.emit(LocalizedString.resource(R.string.status_writing_obb_hash))
@@ -39,7 +45,7 @@ class ObbDownloader @AssistedInject constructor(
 				throw OkkeiException(LocalizedString.resource(R.string.error_hash_obb_mismatch))
 			}
 			Preferences.set(CommonFileHashKey.patched_obb_hash.name, obbHash)
-			Preferences.set(FileVersionKey.obb_version.name, obbData.version)
+			Preferences.set(PatchFileVersionKey.obb_version.name, obbData.version)
 		} catch (e: Throwable) {
 			obb.delete()
 			throw e

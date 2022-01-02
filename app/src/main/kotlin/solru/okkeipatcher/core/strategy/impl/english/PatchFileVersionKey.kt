@@ -1,7 +1,7 @@
 package solru.okkeipatcher.core.strategy.impl.english
 
 @Suppress("EnumEntryName")
-enum class FileVersionKey {
+enum class PatchFileVersionKey {
 	scripts_version,
 	obb_version
 }

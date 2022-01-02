@@ -41,7 +41,6 @@ abstract class Apk(
 	override val backupExists: Boolean get() = commonFiles.backupApk.exists
 	private val privateKeyFile = File(OkkeiStorage.private, PRIVATE_KEY_FILE_NAME)
 	private val rsaTemplateFile = File(OkkeiStorage.private, RSA_TEMPLATE_FILE_NAME)
-	private var isUpdating = false
 
 	@OptIn(ExperimentalCoroutinesApi::class)
 	override val progress = merge(
@@ -51,18 +50,6 @@ abstract class Apk(
 		PackageInstaller.progress.map { ProgressData(it.progress, it.max, it.isIndeterminate) },
 		progressPublisher.mutableProgress
 	)
-
-	override suspend fun update() {
-		try {
-			isUpdating = true
-			progressPublisher.mutableProgress.reset()
-			commonFiles.tempApk.delete()
-			commonFiles.signedApk.delete()
-			patch()
-		} finally {
-			isUpdating = false
-		}
-	}
 
 	override fun deleteBackup() = commonFiles.backupApk.delete()
 
@@ -155,7 +142,7 @@ abstract class Apk(
 		}
 	}
 
-	protected suspend fun installPatched() {
+	protected suspend fun installPatched(updating: Boolean) {
 		if (!commonFiles.signedApk.exists) {
 			throw OkkeiException(LocalizedString.resource(R.string.error_apk_not_found_patch))
 		}
@@ -164,7 +151,7 @@ abstract class Apk(
 			commonFiles.signedApk.delete()
 			throw OkkeiException(LocalizedString.resource(R.string.error_not_trustworthy_apk_patch))
 		}
-		if (!isUpdating) {
+		if (!updating) {
 			uninstall()
 		}
 		progressPublisher.mutableProgress.makeIndeterminate()

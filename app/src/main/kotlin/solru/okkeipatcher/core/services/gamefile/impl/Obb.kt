@@ -21,7 +21,6 @@ abstract class Obb(protected val commonFiles: CommonFiles) : ObservableServiceIm
 	override val progress = merge(
 		commonFiles.backupObb.progress,
 		commonFiles.obbToBackup.progress,
-		commonFiles.obbToPatch.progress,
 		progressPublisher.mutableProgress
 	)
 
