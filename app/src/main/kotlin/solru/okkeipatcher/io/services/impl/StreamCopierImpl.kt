@@ -33,14 +33,14 @@ class StreamCopierImpl @Inject constructor(private val ioDispatcher: CoroutineDi
 		inputStream.source().buffer().use { source ->
 			val baseSink = if (outputStream is BlackholeOutputStream) blackholeSink() else outputStream.sink()
 			val sink = if (hashing) sha256(baseSink) else baseSink
-			sink.buffer().use bufferedSink@{ bufferedSink ->
+			sink.buffer().use { bufferedSink ->
 				val progressMax = ceil(size.toDouble() / (BUFFER_LENGTH * progressRatio)).toInt()
 				var currentProgress = 0
 				Buffer().use { buffer ->
 					while (source.read(buffer, BUFFER_LENGTH) > 0) {
 						ensureActive()
 						bufferedSink.write(buffer, buffer.size)
-						++currentProgress
+						currentProgress++
 						if (currentProgress % progressRatio == 0) {
 							onProgressChanged(ProgressData(currentProgress / progressRatio, progressMax))
 						}

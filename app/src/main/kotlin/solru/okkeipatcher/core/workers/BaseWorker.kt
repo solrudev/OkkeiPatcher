@@ -115,7 +115,7 @@ abstract class BaseWorker(
 	private fun CoroutineScope.collectWarnings() = launch {
 		service.messages
 			.collect {
-				++MESSAGE_NOTIFICATION_ID
+				MESSAGE_NOTIFICATION_ID++
 				val notification = createWarningNotification(it.title, it.message)
 				notificationManager.notify(MESSAGE_NOTIFICATION_ID, notification)
 			}

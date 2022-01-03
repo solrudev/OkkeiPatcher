@@ -63,7 +63,7 @@ class HttpDownloaderImpl @Inject constructor(
 			var transferredBytes: Long = 0
 			val baseSink = if (outputStream is BlackholeOutputStream) blackholeSink() else outputStream.sink()
 			val sink = if (hashing) sha256(baseSink) else baseSink
-			sink.buffer().use bufferedSink@{ bufferedSink ->
+			sink.buffer().use { bufferedSink ->
 				while (!channel.isClosedForRead) {
 					ensureActive()
 					val packet = channel.readRemaining(BUFFER_LENGTH)
@@ -73,7 +73,7 @@ class HttpDownloaderImpl @Inject constructor(
 						bufferedSink.write(bytes)
 						transferredBytes += bytes.size
 						if (transferredBytes % BUFFER_LENGTH == 0L || packet.isEmpty) {
-							++currentProgress
+							currentProgress++
 						}
 						if (currentProgress % progressRatio == 0) {
 							onProgressChanged(ProgressData(currentProgress / progressRatio, progressMax))
