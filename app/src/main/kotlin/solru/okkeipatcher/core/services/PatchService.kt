@@ -20,7 +20,7 @@ import kotlin.coroutines.EmptyCoroutineContext
 
 class PatchService @Inject constructor(private val strategy: GameFileStrategy) : ObservableServiceImpl() {
 
-	private val scope = CoroutineScope(EmptyCoroutineContext)
+	private val sharingScope = CoroutineScope(EmptyCoroutineContext)
 
 	@OptIn(DelicateCoroutinesApi::class, ExperimentalCoroutinesApi::class)
 	override val progress = merge(
@@ -28,7 +28,7 @@ class PatchService @Inject constructor(private val strategy: GameFileStrategy) :
 		strategy.obb.progress,
 		strategy.saveData.progress,
 		progressPublisher.mutableProgress
-	).shareIn(scope, SharingStarted.Eagerly, replay = 1)
+	).shareIn(sharingScope, SharingStarted.Eagerly, replay = 1)
 
 	@OptIn(DelicateCoroutinesApi::class, ExperimentalCoroutinesApi::class)
 	override val status = merge(
@@ -36,7 +36,7 @@ class PatchService @Inject constructor(private val strategy: GameFileStrategy) :
 		strategy.obb.status,
 		strategy.saveData.status,
 		mutableStatus
-	).shareIn(scope, SharingStarted.Eagerly, replay = 1)
+	).shareIn(sharingScope, SharingStarted.Eagerly, replay = 1)
 
 	@OptIn(ExperimentalCoroutinesApi::class)
 	override val messages =
@@ -56,7 +56,7 @@ class PatchService @Inject constructor(private val strategy: GameFileStrategy) :
 	} finally {
 		strategy.saveData.close()
 		withContext(NonCancellable) { progressPublisher.mutableProgress.reset() }
-		scope.cancel()
+		sharingScope.cancel()
 	}
 
 	private suspend inline fun freshPatch(processSaveData: Boolean) {
