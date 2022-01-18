@@ -1,6 +1,5 @@
 package solru.okkeipatcher.core.workers
 
-import android.app.Notification
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
@@ -12,19 +11,21 @@ import androidx.work.Data
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.conflate
 import solru.okkeipatcher.R
 import solru.okkeipatcher.core.services.ObservableService
 import solru.okkeipatcher.data.LocalizedString
+import solru.okkeipatcher.data.Message
 import solru.okkeipatcher.ui.activities.MainActivity
 import solru.okkeipatcher.utils.extensions.empty
 import solru.okkeipatcher.utils.extensions.putSerializable
+import java.util.concurrent.atomic.AtomicInteger
 
-private const val PROGRESS_NOTIFICATION_ID = 813047
+private val workerProgressNotificationId = AtomicInteger(813047)
+private val workerMessageNotificationId = AtomicInteger(49725)
 
-abstract class BaseWorker(
+abstract class ForegroundWorker(
 	context: Context,
 	workerParameters: WorkerParameters,
 	notificationTitle: LocalizedString,
@@ -32,37 +33,46 @@ abstract class BaseWorker(
 ) : CoroutineWorker(context, workerParameters) {
 
 	private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-	private val channelId = applicationContext.getString(R.string.notification_channel_id)
 	private val simpleNotificationBuilder = createNotificationBuilder(progressNotification = false)
-
-	private val progressNotificationBuilder =
-		createNotificationBuilder(notificationTitle, progressNotification = true)
+	private val progressNotificationBuilder = createNotificationBuilder(notificationTitle, progressNotification = true)
+	private val progressNotificationId = workerProgressNotificationId.incrementAndGet()
+	private val shownMessageNotifications = mutableListOf<Int>()
 
 	abstract suspend fun doServiceWork()
 
-	// TODO: notifications on finish
 	final override suspend fun doWork(): Result {
 		try {
 			setForeground(createForegroundInfo())
 			coroutineScope {
-				observeService()
+				val observeJob = observeService()
 				doServiceWork()
-				cancel()
+				observeJob.cancel()
 			}
 		} catch (e: Throwable) {
-			notificationManager.cancelAll()
-			if (e !is CancellationException) {
-				return Result.failure(
-					Data.Builder()
-						.putSerializable(KEY_FAILURE_CAUSE, e)
-						.build()
-				)
+			shownMessageNotifications.forEach { notificationManager.cancel(it) }
+			if (e is CancellationException) {
+				throw e
 			}
+			val failMessage = Message(
+				LocalizedString.resource(R.string.notification_title_work_finished),
+				LocalizedString.resource(R.string.notification_message_work_failed)
+			)
+			displayMessageNotification(failMessage)
+			return Result.failure(
+				Data.Builder()
+					.putSerializable(KEY_FAILURE_CAUSE, e)
+					.build()
+			)
 		}
+		val successMessage = Message(
+			LocalizedString.resource(R.string.notification_title_work_finished),
+			LocalizedString.resource(R.string.notification_message_work_success)
+		)
+		displayMessageNotification(successMessage)
 		return Result.success()
 	}
 
-	private fun createForegroundInfo() = ForegroundInfo(PROGRESS_NOTIFICATION_ID, progressNotificationBuilder.build())
+	private fun createForegroundInfo() = ForegroundInfo(progressNotificationId, progressNotificationBuilder.build())
 
 	private fun CoroutineScope.observeService() = launch {
 		reportProgress()
@@ -96,7 +106,7 @@ abstract class BaseWorker(
 					it.progress,
 					it.isIndeterminate
 				).build()
-				notificationManager.notify(PROGRESS_NOTIFICATION_ID, notification)
+				notificationManager.notify(progressNotificationId, notification)
 				delay(1000)
 			}
 	}
@@ -107,7 +117,7 @@ abstract class BaseWorker(
 			.collect {
 				val statusString = it.resolve(applicationContext)
 				val notification = progressNotificationBuilder.setContentText(statusString).build()
-				notificationManager.notify(PROGRESS_NOTIFICATION_ID, notification)
+				notificationManager.notify(progressNotificationId, notification)
 				delay(500)
 			}
 	}
@@ -115,19 +125,20 @@ abstract class BaseWorker(
 	private fun CoroutineScope.collectWarnings() = launch {
 		service.messages
 			.collect {
-				MESSAGE_NOTIFICATION_ID++
-				val notification = createWarningNotification(it.title, it.message)
-				notificationManager.notify(MESSAGE_NOTIFICATION_ID, notification)
+				displayMessageNotification(it)
 			}
 	}
 
-	private fun createWarningNotification(title: LocalizedString, message: LocalizedString): Notification {
-		val titleString = title.resolve(applicationContext)
-		val messageString = message.resolve(applicationContext)
-		return simpleNotificationBuilder.apply {
+	private fun displayMessageNotification(message: Message) {
+		val titleString = message.title.resolve(applicationContext)
+		val messageString = message.message.resolve(applicationContext)
+		val notification = simpleNotificationBuilder.apply {
 			setContentTitle(titleString)
 			setContentText(messageString)
 		}.build()
+		val notificationId = workerMessageNotificationId.incrementAndGet()
+		shownMessageNotifications.add(notificationId)
+		notificationManager.notify(notificationId, notification)
 	}
 
 	private fun createNotificationBuilder(
@@ -140,7 +151,7 @@ abstract class BaseWorker(
 		}
 		val contentIntent = PendingIntent.getActivity(
 			applicationContext,
-			MESSAGE_NOTIFICATION_ID,
+			0,
 			activityIntent,
 			PendingIntent.FLAG_UPDATE_CURRENT.apply {
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -148,6 +159,11 @@ abstract class BaseWorker(
 				}
 			}
 		)
+		val channelId = if (progressNotification) {
+			applicationContext.getString(R.string.notification_channel_progress_id)
+		} else {
+			applicationContext.getString(R.string.notification_channel_messages_id)
+		}
 		return NotificationCompat.Builder(applicationContext, channelId).apply {
 			setContentTitle(contentTitle)
 			setContentText(String.empty)
@@ -168,6 +184,5 @@ abstract class BaseWorker(
 		const val KEY_PROGRESS_DATA = "PROGRESS_DATA"
 		const val KEY_STATUS = "STATUS"
 		const val KEY_FAILURE_CAUSE = "WORKER_FAILURE_CAUSE"
-		private var MESSAGE_NOTIFICATION_ID = 49725
 	}
 }

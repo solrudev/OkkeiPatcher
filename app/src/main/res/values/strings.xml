@@ -2,7 +2,8 @@
 	<string name="app_name" translatable="false">Okkei Patcher</string>
 	<string name="dialog_ok" translatable="false">OK</string>
 	<string name="empty" translatable="false" />
-	<string name="notification_channel_id" translatable="false">OkkeiPatcher_NotificationChannel</string>
+	<string name="notification_channel_messages_id" translatable="false">OkkeiPatcher_Messages_NotificationChannel</string>
+	<string name="notification_channel_progress_id" translatable="false">OkkeiPatcher_Progress_NotificationChannel</string>
 	<string name="okkei" translatable="false">Okkei</string>
 	<string name="abort">Abort</string>
 	<string name="action_settings">Settings</string>
@@ -38,10 +39,15 @@
 	<string name="info_version">Version %1$s by solru</string>
 	<string name="not_implemented">Nothing here yet…</string>
 	<string name="notice_exception">Send \"bugreport.log\" file located in /sdcard/Android/data/%1$s/files/ directory to the creator of this application.</string>
-	<string name="notification_channel_description">Display current status and progress</string>
-	<string name="notification_channel_name">Status and progress</string>
+	<string name="notification_channel_messages_description">Display warnings and messages</string>
+	<string name="notification_channel_messages_name">Messages</string>
+	<string name="notification_channel_progress_description">Display current status and progress</string>
+	<string name="notification_channel_progress_name">Status and progress</string>
+	<string name="notification_message_work_failed">Work failed.</string>
+	<string name="notification_message_work_success">Work succeeded.</string>
 	<string name="notification_title_patch">Patching…</string>
 	<string name="notification_title_restore">Restoring…</string>
+	<string name="notification_title_work_finished">Work finished</string>
 	<string name="patch">Patch</string>
 	<string name="prompt_manifest">For proper work Okkei Patcher needs an internet connection to download data about patch and updates. Before you proceed by clicking OK ensure that you have stable internet connection.</string>
 	<string name="prompt_update_app_install">You will now be prompted to install updated Okkei Patcher. Please confirm the installation. Note that after that Okkei Patcher will be closed and you\'ll have to relaunch it manually.</string>
@@ -51,7 +57,7 @@
 	<string name="rationale_storage_permission">Okkei Patcher requires permission to read from and write to external storage to proceed. Would you like to try to grant permission again? Otherwise Okkei Patcher will be closed.</string>
 	<string name="rationale_storage_permission_denied">Okkei Patcher requires permission to read from and write to external storage to proceed. Would you like to try to grant permission again? If you click OK you will be redirected to Okkei Patcher settings where you should go to permissions settings and enable storage permission. Otherwise Okkei Patcher will be closed.</string>
 	<string name="restore">Restore</string>
-	<string name="status_aborted">Operation aborted.</string>
+	<string name="status_aborted">Work aborted.</string>
 	<string name="status_backing_up_apk">Backing up APK…</string>
 	<string name="status_backing_up_obb">Backing up OBB…</string>
 	<string name="status_backing_up_save_data">Backing up save data…</string>

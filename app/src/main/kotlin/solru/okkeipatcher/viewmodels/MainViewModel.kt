@@ -8,12 +8,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import solru.okkeipatcher.OkkeiApplication
 import solru.okkeipatcher.R
 import solru.okkeipatcher.core.*
 import solru.okkeipatcher.core.strategy.PatchDataStrategy
-import solru.okkeipatcher.core.workers.BaseWorker
+import solru.okkeipatcher.core.workers.ForegroundWorker
 import solru.okkeipatcher.core.workers.PatchWorker
 import solru.okkeipatcher.core.workers.RestoreWorker
 import solru.okkeipatcher.data.LocalizedString
@@ -84,8 +83,8 @@ class MainViewModel @Inject constructor(
 			.collect {
 				if (it == null) return@collect
 				with(it.progress) {
-					_status.value = getSerializable(BaseWorker.KEY_STATUS) ?: LocalizedString.empty()
-					_progressData.value = getSerializable(BaseWorker.KEY_PROGRESS_DATA) ?: ProgressData()
+					_status.value = getSerializable(ForegroundWorker.KEY_STATUS) ?: LocalizedString.empty()
+					_progressData.value = getSerializable(ForegroundWorker.KEY_PROGRESS_DATA) ?: ProgressData()
 				}
 				if (it.state.isFinished) {
 					resetState()
@@ -100,7 +99,7 @@ class MainViewModel @Inject constructor(
 						else -> LocalizedString.empty()
 					}
 					if (it.state == WorkInfo.State.FAILED) {
-						val exception = it.outputData.getSerializable<Throwable>(BaseWorker.KEY_FAILURE_CAUSE)
+						val exception = it.outputData.getSerializable<Throwable>(ForegroundWorker.KEY_FAILURE_CAUSE)
 						Log.e(this@MainViewModel::class.java.name, "", exception)
 					}
 					WorkManager.getInstance(OkkeiApplication.context).pruneWork()

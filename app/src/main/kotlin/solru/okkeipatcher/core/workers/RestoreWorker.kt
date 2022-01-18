@@ -17,7 +17,7 @@ class RestoreWorker @AssistedInject constructor(
 	@Assisted context: Context,
 	@Assisted workerParameters: WorkerParameters,
 	private val restoreService: RestoreService
-) : BaseWorker(
+) : ForegroundWorker(
 	context,
 	workerParameters,
 	LocalizedString.resource(R.string.notification_title_restore),

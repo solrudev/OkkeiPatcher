@@ -29,13 +29,16 @@ class OkkeiApplication : Application(), Configuration.Provider {
 		setCheckBoxStatePreferenceIfNotSet()
 		setLanguagePreferenceIfNotSet()
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			val notificationManager =
-				getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+			val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 			notificationManager.createNotificationChannel(
-				R.string.notification_channel_id,
-				R.string.notification_channel_name,
-				R.string.notification_channel_description,
-				important = false
+				R.string.notification_channel_progress_id,
+				R.string.notification_channel_progress_name,
+				R.string.notification_channel_progress_description
+			)
+			notificationManager.createNotificationChannel(
+				R.string.notification_channel_messages_id,
+				R.string.notification_channel_messages_name,
+				R.string.notification_channel_messages_description
 			)
 		}
 	}
@@ -62,24 +65,21 @@ class OkkeiApplication : Application(), Configuration.Provider {
 	private fun NotificationManager.createNotificationChannel(
 		channelId: Int,
 		nameId: Int,
-		descriptionId: Int,
-		important: Boolean
+		descriptionId: Int
 	) {
 		val channelIdString = getString(channelId)
 		val channelName = getString(nameId)
 		val channelDescription = getString(descriptionId)
-		val importance = NotificationManager.IMPORTANCE_HIGH
+		val importance = NotificationManager.IMPORTANCE_DEFAULT
 		val channel = NotificationChannel(channelIdString, channelName, importance).apply {
 			description = channelDescription
-			if (!important) setSound(null, null)
 		}
 		createNotificationChannel(channel)
 	}
 
-	override fun getWorkManagerConfiguration() =
-		Configuration.Builder()
-			.setWorkerFactory(workerFactory)
-			.build()
+	override fun getWorkManagerConfiguration() = Configuration.Builder()
+		.setWorkerFactory(workerFactory)
+		.build()
 
 	companion object {
 		private lateinit var instance: OkkeiApplication

@@ -19,7 +19,12 @@ class PatchWorker @AssistedInject constructor(
 	@Assisted workerParameters: WorkerParameters,
 	private val patchService: PatchService,
 	private val patchDataStrategy: PatchDataStrategy
-) : BaseWorker(context, workerParameters, LocalizedString.resource(R.string.notification_title_patch), patchService) {
+) : ForegroundWorker(
+	context,
+	workerParameters,
+	LocalizedString.resource(R.string.notification_title_patch),
+	patchService
+) {
 
 	override suspend fun doServiceWork() {
 		val processSaveData = Preferences.get(

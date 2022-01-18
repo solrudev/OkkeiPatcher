@@ -33,10 +33,15 @@
 	<string name="info_version">Версия %1$s by solru</string>
 	<string name="not_implemented">Тут пока ничего нет…</string>
 	<string name="notice_exception">Отправьте файл \"bugreport.log\" из директории /sdcard/Android/data/%1$s/files/ разработчику приложения.</string>
-	<string name="notification_channel_description">Отображать текущий статус и прогресс</string>
-	<string name="notification_channel_name">Статус и прогресс</string>
+	<string name="notification_channel_messages_description">Отображать предупреждения и сообщения</string>
+	<string name="notification_channel_messages_name">Сообщения</string>
+	<string name="notification_channel_progress_description">Отображать текущий статус и прогресс</string>
+	<string name="notification_channel_progress_name">Статус и прогресс</string>
+	<string name="notification_message_work_failed">Процесс завершился с ошибкой.</string>
+	<string name="notification_message_work_success">Процесс прошёл успешно.</string>
 	<string name="notification_title_patch">Патчинг…</string>
 	<string name="notification_title_restore">Восстановление…</string>
+	<string name="notification_title_work_finished">Процесс завершён</string>
 	<string name="patch">Патч</string>
 	<string name="prompt_manifest">Для работы Okkei Patcher необходимо подключение к сети, чтобы загрузить данные о патче и обновлениях. Прежде чем продолжить, нажав на кнопку OK, убедитесь, что у Вас есть стабильное интернет-соединение.</string>
 	<string name="prompt_update_app_install">Сейчас последует запрос на установку обновления Okkei Patcher. Пожалуйста, подтвердите установку. Обратите внимание, что после установки Okkei Patcher будет закрыт, и Вам придётся перезапустить его вручную.</string>
@@ -46,7 +51,7 @@
 	<string name="rationale_storage_permission">Okkei Patcher требует разрешения на чтение и запись внутренней памяти устройства для продолжения работы. Хотите ли Вы попытаться дать разрешение ещё раз? В противном случае Okkei Patcher будет закрыт.</string>
 	<string name="rationale_storage_permission_denied">Okkei Patcher требует разрешения на чтение и запись внутренней памяти устройства для продолжения работы. Хотите ли Вы попытаться дать разрешение ещё раз? Если Вы нажмёте OK, откроются настройки Okkei Patcher, где Вы должны перейти в меню с разрешениями и активировать разрешение на доступ к внутренней памяти. В противном случае Okkei Patcher будет закрыт.</string>
 	<string name="restore">Восстановить</string>
-	<string name="status_aborted">Операция отменена.</string>
+	<string name="status_aborted">Процесс отменён.</string>
 	<string name="status_backing_up_apk">Создание резервной копии APK…</string>
 	<string name="status_backing_up_obb">Создание резервной копии OBB…</string>
 	<string name="status_backing_up_save_data">Создание копии файла сохранений…</string>
