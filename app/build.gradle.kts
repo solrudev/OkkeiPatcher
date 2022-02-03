@@ -92,7 +92,7 @@ dependencies {
 	val retrofitVersion = "2.9.0"
 	val moshiVersion = "1.13.0"
 
-	kapt("androidx.databinding:databinding-compiler:7.0.4")
+	kapt("androidx.databinding:databinding-compiler:7.1.0")
 	kapt("com.google.dagger:hilt-compiler:$hiltVersion")
 	kapt("androidx.hilt:hilt-compiler:1.0.0")
 	kapt("com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion")
