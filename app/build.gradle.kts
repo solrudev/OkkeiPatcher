@@ -14,7 +14,7 @@ plugins {
 }
 
 base {
-	archivesBaseName = packageName
+	archivesName.set(packageName)
 }
 
 android {
@@ -99,10 +99,10 @@ dependencies {
 
 	// AndroidX
 	implementation("com.google.dagger:hilt-android:$hiltVersion")
-	implementation("com.google.android.material:material:1.4.0")
-	implementation("androidx.preference:preference-ktx:1.1.1")
+	implementation("com.google.android.material:material:1.5.0")
+	implementation("androidx.preference:preference-ktx:1.2.0")
 	implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.4.0")
-	implementation("androidx.fragment:fragment-ktx:1.4.0")
+	implementation("androidx.fragment:fragment-ktx:1.4.1")
 	implementation("androidx.hilt:hilt-work:1.0.0")
 	implementation("androidx.work:work-runtime-ktx:2.7.1")
 
@@ -121,7 +121,7 @@ dependencies {
 
 	// Miscellaneous
 	implementation("com.android.tools.build:apksig:7.1.0")
-	implementation("com.anggrayudi:storage:0.14.0")
+	implementation("com.anggrayudi:storage:1.1.0")
 	implementation("net.lingala.zip4j:zip4j:2.9.1")
 	implementation("io.github.solrudev:simpleinstaller:1.2.3")
 
