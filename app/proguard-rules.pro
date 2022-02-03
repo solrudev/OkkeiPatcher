@@ -1,25 +1,3 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
-
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
-
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
-
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
-
 #### OkHttp, Retrofit and Moshi
 -keepclasseswithmembers class * {
     @retrofit2.http.* <methods>;
@@ -50,10 +28,6 @@
     @com.squareup.moshi.ToJson <methods>;
 }
 
--keepnames @kotlin.Metadata class solru.okkeipatcher.model.manifest.**
--keep class solru.okkeipatcher.model.manifest.** { *; }
--keepclassmembers class solru.okkeipatcher.model.manifest.** { *; }
-
 # Retrofit does reflection on generic parameters. InnerClasses is required to use Signature and
 # EnclosingMethod is required to use InnerClasses.
 -keepattributes Signature, InnerClasses, EnclosingMethod
@@ -82,3 +56,7 @@
 # kept. Suspend functions are wrapped in continuations where the type argument
 # is used.
 -keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
+
+#### ApkSigner
+-keep @com.android.apksig.internal.asn1.Asn1Class class *
+-keepclassmembers class * { @com.android.apksig.internal.asn1.Asn1Field <fields>; }
