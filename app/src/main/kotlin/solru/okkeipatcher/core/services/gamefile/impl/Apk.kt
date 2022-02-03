@@ -1,7 +1,6 @@
 package solru.okkeipatcher.core.services.gamefile.impl
 
-import android.content.res.AssetManager
-import com.aefyr.pseudoapksigner.PseudoApkSigner
+import com.android.apksig.ApkSigner
 import io.github.solrudev.simpleinstaller.PackageInstaller
 import io.github.solrudev.simpleinstaller.PackageUninstaller
 import io.github.solrudev.simpleinstaller.data.InstallResult
@@ -13,7 +12,6 @@ import net.lingala.zip4j.ZipFile
 import net.lingala.zip4j.progress.ProgressMonitor
 import solru.okkeipatcher.OkkeiApplication
 import solru.okkeipatcher.R
-import solru.okkeipatcher.core.OkkeiStorage
 import solru.okkeipatcher.core.model.files.common.CommonFileHashKey
 import solru.okkeipatcher.core.model.files.common.CommonFiles
 import solru.okkeipatcher.core.services.ObservableServiceImpl
@@ -30,7 +28,10 @@ import solru.okkeipatcher.utils.extensions.reset
 import solru.okkeipatcher.utils.getPackagePublicSourceDir
 import solru.okkeipatcher.utils.isPackageInstalled
 import java.io.File
-import java.io.FileOutputStream
+import java.security.KeyFactory
+import java.security.cert.CertificateFactory
+import java.security.cert.X509Certificate
+import java.security.spec.PKCS8EncodedKeySpec
 
 abstract class Apk(
 	protected val commonFiles: CommonFiles,
@@ -39,8 +40,6 @@ abstract class Apk(
 ) : ObservableServiceImpl(), PatchableGameFile {
 
 	override val backupExists: Boolean get() = commonFiles.backupApk.exists
-	private val privateKeyFile = File(OkkeiStorage.private, PRIVATE_KEY_FILE_NAME)
-	private val rsaTemplateFile = File(OkkeiStorage.private, RSA_TEMPLATE_FILE_NAME)
 
 	@OptIn(ExperimentalCoroutinesApi::class)
 	override val progress = merge(
@@ -106,17 +105,25 @@ abstract class Apk(
 		hash
 	}
 
+	@Suppress("BlockingMethodInNonBlockingContext")
 	suspend fun sign() {
 		mutableStatus.emit(LocalizedString.resource(R.string.status_signing_apk))
-		extractSigningKey()
 		progressPublisher.mutableProgress.makeIndeterminate()
-		commonFiles.signedApk.delete()
-		commonFiles.signedApk.create()
-		commonFiles.tempApk.createInputStream().use { tempApk ->
-			commonFiles.signedApk.createOutputStream().use { signedApk ->
-				PseudoApkSigner(rsaTemplateFile, privateKeyFile).sign(tempApk, signedApk)
-			}
-		}
+		val certificate = getSigningCertificate()
+		val privateKey = getSigningPrivateKey()
+		val signerConfig = ApkSigner.SignerConfig.Builder(
+			"OKKEI",
+			privateKey,
+			listOf(certificate)
+		).build()
+		val inputApk = File(commonFiles.tempApk.fullPath)
+		val outputApk = File(commonFiles.signedApk.fullPath)
+		val apkSigner = ApkSigner.Builder(listOf(signerConfig))
+			.setCreatedBy("Okkei Patcher")
+			.setInputApk(inputApk)
+			.setOutputApk(outputApk)
+			.build()
+		withContext(ioDispatcher) { apkSigner.sign() }
 		mutableStatus.emit(LocalizedString.resource(R.string.status_writing_patched_apk_hash))
 		Preferences.set(
 			CommonFileHashKey.signed_apk_hash.name,
@@ -180,34 +187,28 @@ abstract class Apk(
 		}
 	}
 
-	private suspend inline fun extractSigningKey() {
+	@Suppress("BlockingMethodInNonBlockingContext")
+	private suspend inline fun getSigningCertificate() = withContext(ioDispatcher) {
 		val assets = OkkeiApplication.context.assets
-		if (!privateKeyFile.exists()) {
-			assets.copyAssetToFile(PRIVATE_KEY_FILE_NAME, privateKeyFile)
-		}
-		if (!rsaTemplateFile.exists()) {
-			assets.copyAssetToFile(RSA_TEMPLATE_FILE_NAME, rsaTemplateFile)
-		}
+		val certificateStream = assets.open(CERTIFICATE_FILE_NAME)
+		val certificateFactory = CertificateFactory.getInstance("X.509")
+		certificateFactory.generateCertificate(certificateStream) as X509Certificate
 	}
 
 	@Suppress("BlockingMethodInNonBlockingContext")
-	private suspend inline fun AssetManager.copyAssetToFile(assetName: String, file: File) = withContext(ioDispatcher) {
-		openFd(assetName).use { fileDescriptor ->
-			fileDescriptor.createInputStream().use { inputStream ->
-				FileOutputStream(file).use { outputStream ->
-					streamCopier.copy(
-						inputStream,
-						outputStream,
-						fileDescriptor.length
-					) { progressData -> progressPublisher.mutableProgress.emit(progressData) }
-				}
-			}
-		}
+	private suspend inline fun getSigningPrivateKey() = withContext(ioDispatcher) {
+		val assets = OkkeiApplication.context.assets
+		val keyFd = assets.openFd(PRIVATE_KEY_FILE_NAME)
+		val keyByteArray = ByteArray(keyFd.declaredLength.toInt())
+		assets.open(PRIVATE_KEY_FILE_NAME).read(keyByteArray)
+		val keySpec = PKCS8EncodedKeySpec(keyByteArray)
+		val keyFactory = KeyFactory.getInstance("RSA")
+		keyFactory.generatePrivate(keySpec)
 	}
 
 	companion object {
 		const val PACKAGE_NAME = "com.mages.chaoschild_jp"
-		protected const val PRIVATE_KEY_FILE_NAME = "testkey.pk8"
-		protected const val RSA_TEMPLATE_FILE_NAME = "testkey.past"
+		private const val CERTIFICATE_FILE_NAME = "testkey.x509.pem"
+		private const val PRIVATE_KEY_FILE_NAME = "testkey.pk8"
 	}
 }

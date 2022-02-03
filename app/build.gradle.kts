@@ -62,7 +62,8 @@ android {
 		}
 	}
 
-	aaptOptions {
+	androidResources {
+		noCompress("pem")
 		noCompress("pk8")
 		noCompress("past")
 	}
@@ -119,7 +120,7 @@ dependencies {
 	}
 
 	// Miscellaneous
-	implementation("com.github.aefyr:pseudoapksigner:1.6")
+	implementation("com.android.tools.build:apksig:7.1.0")
 	implementation("com.anggrayudi:storage:0.14.0")
 	implementation("net.lingala.zip4j:zip4j:2.9.1")
 	implementation("io.github.solrudev:simpleinstaller:1.2.3")

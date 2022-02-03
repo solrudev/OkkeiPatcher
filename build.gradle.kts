@@ -16,12 +16,10 @@ buildscript {
 	}
 }
 
-@Suppress("JcenterRepositoryObsolete")
 allprojects {
 	repositories {
 		google()
 		mavenCentral()
-		jcenter()
 	}
 
 	tasks.withType<KotlinCompile> {
