@@ -19,7 +19,7 @@ inline fun <T : ZipFile, R> T.use(block: (T) -> R): R {
 		return block(this)
 	} catch (e: Throwable) {
 		exception = e
-		executorService.shutdownNow()
+		executorService?.shutdownNow()
 		throw e
 	} finally {
 		when (exception) {
