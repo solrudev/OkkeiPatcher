@@ -23,7 +23,7 @@ class DefaultApk @Inject constructor(
 	ioDispatcher: CoroutineDispatcher
 ) : Apk(commonFiles, streamCopier, ioDispatcher) {
 
-	private val scriptsPatcher = scriptsPatcherFactory.create(this, patchRepository, patchFiles.scripts, commonFiles)
+	private val scriptsPatcher = scriptsPatcherFactory.create(this, patchRepository, patchFiles.scripts)
 
 	@OptIn(ExperimentalCoroutinesApi::class)
 	override val status = merge(super.status, scriptsPatcher.status)
@@ -34,7 +34,7 @@ class DefaultApk @Inject constructor(
 	@OptIn(ExperimentalCoroutinesApi::class)
 	override val messages = merge(super.messages, scriptsPatcher.messages)
 
-	override suspend fun patch() {
+	override suspend fun applyPatch() {
 		progressPublisher.mutableProgress.reset()
 		mutableStatus.emit(LocalizedString.resource(R.string.status_comparing_apk))
 		if (verifyBackupIntegrity() && commonFiles.signedApk.verify()) {
@@ -45,7 +45,7 @@ class DefaultApk @Inject constructor(
 		installPatched(updating = false)
 	}
 
-	override suspend fun update() {
+	override suspend fun applyUpdate() {
 		progressPublisher.mutableProgress.reset()
 		commonFiles.tempApk.delete()
 		commonFiles.signedApk.delete()

@@ -9,7 +9,6 @@ import net.lingala.zip4j.model.ZipParameters
 import net.lingala.zip4j.progress.ProgressMonitor
 import solru.okkeipatcher.R
 import solru.okkeipatcher.core.OkkeiStorage
-import solru.okkeipatcher.core.model.files.common.CommonFiles
 import solru.okkeipatcher.core.model.files.generic.PatchFileHashKey
 import solru.okkeipatcher.core.services.gamefile.impl.Apk
 import solru.okkeipatcher.core.strategy.impl.english.PatchFileVersionKey
@@ -22,7 +21,6 @@ import solru.okkeipatcher.utils.Preferences
 import solru.okkeipatcher.utils.deleteTempZipFiles
 import solru.okkeipatcher.utils.extensions.emit
 import solru.okkeipatcher.utils.extensions.reset
-import solru.okkeipatcher.utils.isPackageInstalled
 import solru.okkeipatcher.utils.use
 import java.io.File
 
@@ -30,7 +28,6 @@ class ScriptsPatcher @AssistedInject constructor(
 	@Assisted private val apk: Apk,
 	@Assisted private val scriptsDataRepository: ScriptsDataRepository,
 	@Assisted private val scriptsFile: VerifiableFile,
-	@Assisted private val commonFiles: CommonFiles,
 	private val httpDownloader: HttpDownloader,
 	private val ioDispatcher: CoroutineDispatcher
 ) : ObservableServiceImpl() {
@@ -41,24 +38,17 @@ class ScriptsPatcher @AssistedInject constructor(
 	suspend fun patch() {
 		var extractedScriptsDirectory: File? = null
 		try {
-			if (!isPackageInstalled(Apk.PACKAGE_NAME)) {
-				throw OkkeiException(LocalizedString.resource(R.string.error_game_not_found))
-			}
-			apk.copyOriginalApkTo(commonFiles.tempApk)
 			downloadScripts()
-			mutableStatus.emit(LocalizedString.resource(R.string.status_extracting_scripts))
 			extractedScriptsDirectory = extractScripts()
-			mutableStatus.emit(LocalizedString.resource(R.string.status_replacing_scripts))
-			val apkZip = ZipFile(commonFiles.tempApk.fullPath).apply { isRunInThread = true }
+			val apkZip = apk.asZipFile()
 			apkZip.use {
 				replaceScripts(it, extractedScriptsDirectory)
-				apk.removeSignature(it)
 			}
+			apk.removeSignature()
 			apk.sign()
 		} finally {
 			deleteTempZipFiles(OkkeiStorage.external)
 			extractedScriptsDirectory?.let { if (it.exists()) it.deleteRecursively() }
-			commonFiles.tempApk.delete()
 		}
 	}
 
@@ -93,6 +83,7 @@ class ScriptsPatcher @AssistedInject constructor(
 
 	@Suppress("BlockingMethodInNonBlockingContext")
 	private suspend inline fun extractScripts() = withContext(ioDispatcher) {
+		mutableStatus.emit(LocalizedString.resource(R.string.status_extracting_scripts))
 		val extractedScriptsDirectory = File(OkkeiStorage.external, "script")
 		val scriptsZip = ZipFile(scriptsFile.fullPath).apply { isRunInThread = true }
 		scriptsZip.use {
@@ -113,12 +104,13 @@ class ScriptsPatcher @AssistedInject constructor(
 
 	@Suppress("BlockingMethodInNonBlockingContext")
 	private suspend inline fun replaceScripts(apkZip: ZipFile, scriptsDirectory: File) {
+		mutableStatus.emit(LocalizedString.resource(R.string.status_replacing_scripts))
 		withContext(ioDispatcher) {
 			with(apkZip) {
 				val parameters = ZipParameters().apply { rootFolderNameInZip = "assets/script/" }
 				val scriptsList = scriptsDirectory.listFiles()!!.filter { it.isFile }
 				val apkSize = file.length().toInt()
-				val scriptsSize = scriptsList.map { it.length() }.sum().toInt()
+				val scriptsSize = scriptsList.sumOf { it.length() }.toInt()
 				val progressMax = scriptsSize + apkSize
 				val apkScriptsList = scriptsList.map { "${parameters.rootFolderNameInZip}${it.name}" }
 				removeFiles(apkScriptsList)

@@ -2,7 +2,10 @@ package solru.okkeipatcher.viewmodels
 
 import android.os.Build
 import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asFlow
 import androidx.work.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
@@ -10,7 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import solru.okkeipatcher.OkkeiApplication
 import solru.okkeipatcher.R
-import solru.okkeipatcher.core.*
+import solru.okkeipatcher.core.AppKey
 import solru.okkeipatcher.core.strategy.PatchDataStrategy
 import solru.okkeipatcher.core.workers.ForegroundWorker
 import solru.okkeipatcher.core.workers.PatchWorker

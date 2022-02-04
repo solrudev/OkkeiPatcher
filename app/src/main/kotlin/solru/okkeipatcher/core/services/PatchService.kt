@@ -14,7 +14,6 @@ import solru.okkeipatcher.data.patchupdates.PatchUpdates
 import solru.okkeipatcher.exceptions.OkkeiException
 import solru.okkeipatcher.utils.Preferences
 import solru.okkeipatcher.utils.extensions.reset
-import solru.okkeipatcher.utils.isPackageInstalled
 import javax.inject.Inject
 import kotlin.coroutines.EmptyCoroutineContext
 
@@ -87,7 +86,7 @@ class PatchService @Inject constructor(private val strategy: GameFileStrategy) :
 		if (isPatched && !patchUpdates.available) {
 			throw OkkeiException(LocalizedString.resource(R.string.error_patched))
 		}
-		if (!isPackageInstalled(Apk.PACKAGE_NAME)) {
+		if (!Apk.isInstalled) {
 			throw OkkeiException(LocalizedString.resource(R.string.error_game_not_found))
 		}
 		if (!OkkeiStorage.isEnoughSpace) {

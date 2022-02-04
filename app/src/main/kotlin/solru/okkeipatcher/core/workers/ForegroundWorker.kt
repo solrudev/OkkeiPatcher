@@ -38,7 +38,7 @@ abstract class ForegroundWorker(
 	private val progressNotificationId = workerProgressNotificationId.incrementAndGet()
 	private val shownMessageNotifications = mutableListOf<Int>()
 
-	abstract suspend fun doServiceWork()
+	protected abstract suspend fun doServiceWork()
 
 	final override suspend fun doWork(): Result {
 		try {
