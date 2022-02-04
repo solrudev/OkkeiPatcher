@@ -4,12 +4,12 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import solru.okkeipatcher.core.AppKey
-import solru.okkeipatcher.core.model.Language
-import solru.okkeipatcher.core.strategy.GameFileStrategy
-import solru.okkeipatcher.core.strategy.PatchDataStrategy
-import solru.okkeipatcher.core.strategy.impl.english.DefaultGameFileStrategy
-import solru.okkeipatcher.core.strategy.impl.english.DefaultPatchDataStrategy
+import solru.okkeipatcher.domain.AppKey
+import solru.okkeipatcher.domain.model.Language
+import solru.okkeipatcher.domain.strategy.GameFileStrategy
+import solru.okkeipatcher.domain.strategy.PatchDataStrategy
+import solru.okkeipatcher.domain.strategy.impl.english.DefaultGameFileStrategy
+import solru.okkeipatcher.domain.strategy.impl.english.DefaultPatchDataStrategy
 import solru.okkeipatcher.utils.Preferences
 import javax.inject.Provider
 

@@ -1,8 +1,8 @@
 package solru.okkeipatcher.di.factory
 
 import dagger.assisted.AssistedFactory
-import solru.okkeipatcher.core.model.files.common.CommonFiles
-import solru.okkeipatcher.core.services.ObbDownloader
+import solru.okkeipatcher.domain.model.files.common.CommonFiles
+import solru.okkeipatcher.domain.services.ObbDownloader
 import solru.okkeipatcher.repository.patch.ObbDataRepository
 
 @AssistedFactory

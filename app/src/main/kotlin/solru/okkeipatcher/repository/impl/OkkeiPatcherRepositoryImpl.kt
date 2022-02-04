@@ -6,10 +6,10 @@ import kotlinx.coroutines.withContext
 import solru.okkeipatcher.OkkeiApplication
 import solru.okkeipatcher.R
 import solru.okkeipatcher.api.OkkeiPatcherService
-import solru.okkeipatcher.core.OkkeiStorage
-import solru.okkeipatcher.core.services.ObservableServiceImpl
 import solru.okkeipatcher.data.LocalizedString
 import solru.okkeipatcher.data.OkkeiPatcherChangelog
+import solru.okkeipatcher.domain.OkkeiStorage
+import solru.okkeipatcher.domain.services.ObservableServiceImpl
 import solru.okkeipatcher.exceptions.OkkeiException
 import solru.okkeipatcher.io.services.HttpDownloader
 import solru.okkeipatcher.io.utils.extensions.download

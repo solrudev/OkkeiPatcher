@@ -5,7 +5,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
-import solru.okkeipatcher.core.progress.ProgressPublisherImpl
+import solru.okkeipatcher.domain.progress.ProgressPublisherImpl
 import solru.okkeipatcher.utils.Preferences
 import solru.okkeipatcher.utils.extensions.empty
 import solru.okkeipatcher.utils.extensions.isEmptyOrBlank

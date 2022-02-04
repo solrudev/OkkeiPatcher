@@ -1,7 +1,7 @@
 package solru.okkeipatcher.io.file
 
-import solru.okkeipatcher.core.progress.ProgressPublisher
-import solru.okkeipatcher.core.progress.ProgressPublisherImpl
+import solru.okkeipatcher.domain.progress.ProgressPublisher
+import solru.okkeipatcher.domain.progress.ProgressPublisherImpl
 import solru.okkeipatcher.io.services.StreamCopier
 import solru.okkeipatcher.io.utils.BlackholeOutputStream
 

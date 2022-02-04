@@ -1,7 +1,7 @@
 package solru.okkeipatcher.repository
 
-import solru.okkeipatcher.core.services.ObservableService
 import solru.okkeipatcher.data.OkkeiPatcherChangelog
+import solru.okkeipatcher.domain.services.ObservableService
 import java.io.File
 
 interface OkkeiPatcherRepository : ObservableService {

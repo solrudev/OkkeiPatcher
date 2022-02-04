@@ -10,8 +10,8 @@ import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import dagger.hilt.android.HiltAndroidApp
 import io.github.solrudev.simpleinstaller.SimpleInstaller
-import solru.okkeipatcher.core.AppKey
-import solru.okkeipatcher.core.model.Language
+import solru.okkeipatcher.domain.AppKey
+import solru.okkeipatcher.domain.model.Language
 import solru.okkeipatcher.utils.Preferences
 import javax.inject.Inject
 
