@@ -5,18 +5,14 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.Dispatchers
 import okhttp3.OkHttpClient
 import solru.okkeipatcher.io.TLSSocketFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
-@Module(includes = [IoBindModule::class])
+@Module(includes = [IoBindModule::class, DispatchersModule::class])
 object IoModule {
-
-	@Provides
-	fun provideIoDispatcher() = Dispatchers.IO
 
 	@Provides
 	@Singleton

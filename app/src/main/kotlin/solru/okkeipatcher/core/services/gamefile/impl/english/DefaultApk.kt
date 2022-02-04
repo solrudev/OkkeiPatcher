@@ -9,6 +9,7 @@ import solru.okkeipatcher.core.model.files.generic.DefaultPatchFiles
 import solru.okkeipatcher.core.services.gamefile.impl.Apk
 import solru.okkeipatcher.data.LocalizedString
 import solru.okkeipatcher.di.factory.ScriptsPatcherFactory
+import solru.okkeipatcher.di.module.IoDispatcher
 import solru.okkeipatcher.io.services.StreamCopier
 import solru.okkeipatcher.repository.patch.DefaultPatchRepository
 import solru.okkeipatcher.utils.extensions.reset
@@ -20,7 +21,7 @@ class DefaultApk @Inject constructor(
 	patchFiles: DefaultPatchFiles,
 	commonFiles: CommonFiles,
 	streamCopier: StreamCopier,
-	ioDispatcher: CoroutineDispatcher
+	@IoDispatcher ioDispatcher: CoroutineDispatcher
 ) : Apk(commonFiles, streamCopier, ioDispatcher) {
 
 	private val scriptsPatcher = scriptsPatcherFactory.create(this, patchRepository, patchFiles.scripts)

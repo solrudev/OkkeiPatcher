@@ -13,6 +13,7 @@ import solru.okkeipatcher.core.model.files.generic.PatchFileHashKey
 import solru.okkeipatcher.core.services.gamefile.impl.Apk
 import solru.okkeipatcher.core.strategy.impl.english.PatchFileVersionKey
 import solru.okkeipatcher.data.LocalizedString
+import solru.okkeipatcher.di.module.IoDispatcher
 import solru.okkeipatcher.exceptions.OkkeiException
 import solru.okkeipatcher.io.file.VerifiableFile
 import solru.okkeipatcher.io.services.HttpDownloader
@@ -28,8 +29,8 @@ class ScriptsPatcher @AssistedInject constructor(
 	@Assisted private val apk: Apk,
 	@Assisted private val scriptsDataRepository: ScriptsDataRepository,
 	@Assisted private val scriptsFile: VerifiableFile,
-	private val httpDownloader: HttpDownloader,
-	private val ioDispatcher: CoroutineDispatcher
+	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+	private val httpDownloader: HttpDownloader
 ) : ObservableServiceImpl() {
 
 	@OptIn(ExperimentalCoroutinesApi::class)

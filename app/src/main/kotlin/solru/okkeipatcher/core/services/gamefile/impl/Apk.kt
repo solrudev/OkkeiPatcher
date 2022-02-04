@@ -18,6 +18,7 @@ import solru.okkeipatcher.core.services.ObservableServiceImpl
 import solru.okkeipatcher.core.services.gamefile.PatchableGameFile
 import solru.okkeipatcher.data.LocalizedString
 import solru.okkeipatcher.data.ProgressData
+import solru.okkeipatcher.di.module.IoDispatcher
 import solru.okkeipatcher.exceptions.OkkeiException
 import solru.okkeipatcher.io.file.JavaFile
 import solru.okkeipatcher.io.services.StreamCopier
@@ -40,7 +41,7 @@ private const val PRIVATE_KEY_FILE_NAME = "testkey.pk8"
 abstract class Apk(
 	protected val commonFiles: CommonFiles,
 	protected val streamCopier: StreamCopier,
-	protected val ioDispatcher: CoroutineDispatcher
+	@IoDispatcher protected val ioDispatcher: CoroutineDispatcher
 ) : ObservableServiceImpl(), PatchableGameFile {
 
 	override val backupExists: Boolean get() = commonFiles.backupApk.exists

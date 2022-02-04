@@ -18,6 +18,7 @@ import okio.blackholeSink
 import okio.buffer
 import okio.sink
 import solru.okkeipatcher.data.ProgressData
+import solru.okkeipatcher.di.module.IoDispatcher
 import solru.okkeipatcher.io.exceptions.HttpStatusCodeException
 import solru.okkeipatcher.io.services.HttpDownloader
 import solru.okkeipatcher.io.utils.BlackholeOutputStream
@@ -31,7 +32,7 @@ import kotlin.math.ceil
 private const val BUFFER_LENGTH = 8192L
 
 class HttpDownloaderImpl @Inject constructor(
-	private val ioDispatcher: CoroutineDispatcher,
+	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	okHttpClient: OkHttpClient
 ) : HttpDownloader {
 

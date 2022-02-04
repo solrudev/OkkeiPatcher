@@ -6,6 +6,7 @@ import kotlinx.coroutines.withContext
 import okio.*
 import okio.HashingSink.Companion.sha256
 import solru.okkeipatcher.data.ProgressData
+import solru.okkeipatcher.di.module.IoDispatcher
 import solru.okkeipatcher.io.services.StreamCopier
 import solru.okkeipatcher.io.utils.BlackholeOutputStream
 import solru.okkeipatcher.io.utils.calculateProgressRatio
@@ -18,7 +19,9 @@ import kotlin.math.ceil
 
 private const val BUFFER_LENGTH = 8192L
 
-class StreamCopierImpl @Inject constructor(private val ioDispatcher: CoroutineDispatcher) : StreamCopier {
+class StreamCopierImpl @Inject constructor(
+	@IoDispatcher private val ioDispatcher: CoroutineDispatcher
+) : StreamCopier {
 
 	@Suppress("BlockingMethodInNonBlockingContext")
 	override suspend fun copy(
