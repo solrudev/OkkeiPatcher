@@ -65,7 +65,6 @@ android {
 	androidResources {
 		noCompress("pem")
 		noCompress("pk8")
-		noCompress("past")
 	}
 
 	compileOptions {
