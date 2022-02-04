@@ -27,6 +27,7 @@ import solru.okkeipatcher.utils.extensions.makeIndeterminate
 import solru.okkeipatcher.utils.extensions.reset
 import solru.okkeipatcher.utils.getPackagePublicSourceDir
 import solru.okkeipatcher.utils.isPackageInstalled
+import solru.okkeipatcher.utils.use
 import java.io.File
 import java.security.KeyFactory
 import java.security.cert.CertificateFactory
