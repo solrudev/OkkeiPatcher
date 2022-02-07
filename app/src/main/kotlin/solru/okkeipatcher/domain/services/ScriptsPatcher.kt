@@ -13,7 +13,7 @@ import solru.okkeipatcher.data.LocalizedString
 import solru.okkeipatcher.di.module.IoDispatcher
 import solru.okkeipatcher.domain.OkkeiStorage
 import solru.okkeipatcher.domain.model.files.generic.PatchFileHashKey
-import solru.okkeipatcher.domain.services.gamefile.impl.Apk
+import solru.okkeipatcher.domain.services.gamefile.impl.AbstractApk
 import solru.okkeipatcher.domain.strategy.impl.english.PatchFileVersionKey
 import solru.okkeipatcher.exceptions.OkkeiException
 import solru.okkeipatcher.io.file.VerifiableFile
@@ -28,7 +28,7 @@ import solru.okkeipatcher.utils.use
 import java.io.File
 
 class ScriptsPatcher @AssistedInject constructor(
-	@Assisted private val apk: Apk,
+	@Assisted private val apk: AbstractApk,
 	@Assisted private val scriptsDataRepository: ScriptsDataRepository,
 	@Assisted private val scriptsFile: VerifiableFile,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,

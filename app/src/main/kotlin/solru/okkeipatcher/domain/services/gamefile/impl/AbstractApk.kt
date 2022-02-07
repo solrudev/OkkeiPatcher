@@ -17,13 +17,16 @@ import solru.okkeipatcher.di.module.IoDispatcher
 import solru.okkeipatcher.domain.model.files.common.CommonFileHashKey
 import solru.okkeipatcher.domain.model.files.common.CommonFiles
 import solru.okkeipatcher.domain.services.ObservableServiceImpl
-import solru.okkeipatcher.domain.services.gamefile.PatchableGameFile
+import solru.okkeipatcher.domain.services.gamefile.Apk
 import solru.okkeipatcher.exceptions.OkkeiException
 import solru.okkeipatcher.io.file.JavaFile
 import solru.okkeipatcher.io.services.StreamCopier
-import solru.okkeipatcher.utils.*
+import solru.okkeipatcher.utils.Preferences
 import solru.okkeipatcher.utils.extensions.makeIndeterminate
 import solru.okkeipatcher.utils.extensions.reset
+import solru.okkeipatcher.utils.getPackagePublicSourceDir
+import solru.okkeipatcher.utils.observe
+import solru.okkeipatcher.utils.use
 import java.io.File
 import java.security.KeyFactory
 import java.security.cert.CertificateFactory
@@ -33,11 +36,11 @@ import java.security.spec.PKCS8EncodedKeySpec
 private const val CERTIFICATE_FILE_NAME = "testkey.x509.pem"
 private const val PRIVATE_KEY_FILE_NAME = "testkey.pk8"
 
-abstract class Apk(
+abstract class AbstractApk(
 	protected val commonFiles: CommonFiles,
 	protected val streamCopier: StreamCopier,
 	@IoDispatcher protected val ioDispatcher: CoroutineDispatcher
-) : ObservableServiceImpl(), PatchableGameFile {
+) : ObservableServiceImpl(), Apk {
 
 	override val backupExists: Boolean get() = commonFiles.backupApk.exists
 
@@ -50,28 +53,14 @@ abstract class Apk(
 		progressPublisher.mutableProgress
 	)
 
+	private val tempZipFiles = mutableListOf<ZipFile>()
+
 	override fun deleteBackup() = commonFiles.backupApk.delete()
-
-	final override suspend fun patch() {
-		try {
-			applyPatch()
-		} finally {
-			commonFiles.tempApk.delete()
-		}
-	}
-
-	final override suspend fun update() {
-		try {
-			applyUpdate()
-		} finally {
-			commonFiles.tempApk.delete()
-		}
-	}
 
 	override suspend fun backup() {
 		try {
 			progressPublisher.mutableProgress.reset()
-			if (!isInstalled) {
+			if (!Apk.isInstalled) {
 				throw OkkeiException(LocalizedString.resource(R.string.error_game_not_found))
 			}
 			mutableStatus.emit(LocalizedString.resource(R.string.status_comparing_apk))
@@ -95,7 +84,7 @@ abstract class Apk(
 			throw OkkeiException(LocalizedString.resource(R.string.error_not_trustworthy_apk_restore))
 		}
 		mutableStatus.emit(LocalizedString.resource(R.string.empty))
-		if (isInstalled) {
+		if (Apk.isInstalled) {
 			uninstall()
 		}
 		installBackup()
@@ -104,7 +93,19 @@ abstract class Apk(
 	override suspend fun verifyBackupIntegrity() = commonFiles.backupApk.verify()
 
 	/**
-	 * Creates temp copy of game APK if it doesn't exist.
+	 * Closes all [ZipFile] instances gotten from [asZipFile] and deletes temporary files.
+	 */
+	override fun close() {
+		tempZipFiles.forEach {
+			it.executorService?.shutdownNow()
+			it.close()
+		}
+		tempZipFiles.clear()
+		commonFiles.tempApk.delete()
+	}
+
+	/**
+	 * Creates temporary copy of game APK if it doesn't exist.
 	 *
 	 * @return temp copy of game APK represented as [ZipFile].
 	 */
@@ -112,7 +113,9 @@ abstract class Apk(
 		if (!commonFiles.tempApk.exists) {
 			copyInstalledApkTo(commonFiles.tempApk)
 		}
-		return ZipFile(commonFiles.tempApk.fullPath).apply { isRunInThread = true }
+		return ZipFile(commonFiles.tempApk.fullPath)
+			.apply { isRunInThread = true }
+			.also { tempZipFiles.add(it) }
 	}
 
 	@Suppress("BlockingMethodInNonBlockingContext")
@@ -145,20 +148,16 @@ abstract class Apk(
 
 	@Suppress("BlockingMethodInNonBlockingContext")
 	suspend fun removeSignature() {
-		mutableStatus.emit(LocalizedString.resource(R.string.status_removing_signature))
 		withContext(ioDispatcher) {
-			ZipFile(commonFiles.tempApk.fullPath).apply { isRunInThread = true }.use { zipFile ->
-				val progressMonitor = zipFile.progressMonitor
+			asZipFile().use { zipFile ->
+				mutableStatus.emit(LocalizedString.resource(R.string.status_removing_signature))
 				zipFile.removeFile("META-INF/")
-				progressMonitor.observe { progressData ->
+				zipFile.progressMonitor.observe { progressData ->
 					progressPublisher.mutableProgress.emit(progressData)
 				}
 			}
 		}
 	}
-
-	protected abstract suspend fun applyPatch()
-	protected abstract suspend fun applyUpdate()
 
 	protected suspend fun installPatched(updating: Boolean) {
 		if (!commonFiles.signedApk.exists) {
@@ -189,11 +188,11 @@ abstract class Apk(
 		destinationFile: solru.okkeipatcher.io.file.File,
 		hashing: Boolean = false
 	) = coroutineScope {
-		if (!isInstalled) {
+		if (!Apk.isInstalled) {
 			throw OkkeiException(LocalizedString.resource(R.string.error_game_not_found))
 		}
 		mutableStatus.emit(LocalizedString.resource(R.string.status_copying_apk))
-		val originalApk = JavaFile(File(getPackagePublicSourceDir(PACKAGE_NAME)), streamCopier)
+		val originalApk = JavaFile(File(getPackagePublicSourceDir(Apk.PACKAGE_NAME)), streamCopier)
 		val progressJob = launch {
 			progressPublisher.mutableProgress.emitAll(originalApk.progress)
 		}
@@ -205,7 +204,7 @@ abstract class Apk(
 	private suspend inline fun uninstall() {
 		mutableStatus.emit(LocalizedString.resource(R.string.status_uninstalling))
 		progressPublisher.mutableProgress.makeIndeterminate()
-		val uninstallResult = PackageUninstaller.uninstallPackage(PACKAGE_NAME)
+		val uninstallResult = PackageUninstaller.uninstallPackage(Apk.PACKAGE_NAME)
 		if (!uninstallResult) {
 			throw OkkeiException(LocalizedString.resource(R.string.error_uninstall))
 		}
@@ -240,10 +239,5 @@ abstract class Apk(
 			val keyFactory = KeyFactory.getInstance("RSA")
 			keyFactory.generatePrivate(keySpec)
 		}
-	}
-
-	companion object {
-		const val PACKAGE_NAME = "com.mages.chaoschild_jp"
-		val isInstalled get() = isPackageInstalled(PACKAGE_NAME)
 	}
 }

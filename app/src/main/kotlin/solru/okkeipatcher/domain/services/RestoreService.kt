@@ -60,6 +60,7 @@ class RestoreService @Inject constructor(private val strategy: GameFileStrategy)
 		withContext(NonCancellable) { mutableStatus.emit(LocalizedString.resource(R.string.status_aborted)) }
 		throw e
 	} finally {
+		strategy.apk.close()
 		strategy.saveData.close()
 		withContext(NonCancellable) { progressPublisher.mutableProgress.reset() }
 		sharingScope.cancel()

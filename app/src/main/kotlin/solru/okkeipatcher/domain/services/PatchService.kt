@@ -9,7 +9,7 @@ import solru.okkeipatcher.data.LocalizedString
 import solru.okkeipatcher.data.patchupdates.PatchUpdates
 import solru.okkeipatcher.domain.AppKey
 import solru.okkeipatcher.domain.OkkeiStorage
-import solru.okkeipatcher.domain.services.gamefile.impl.Apk
+import solru.okkeipatcher.domain.services.gamefile.Apk
 import solru.okkeipatcher.domain.strategy.GameFileStrategy
 import solru.okkeipatcher.exceptions.OkkeiException
 import solru.okkeipatcher.utils.Preferences
@@ -53,6 +53,7 @@ class PatchService @Inject constructor(private val strategy: GameFileStrategy) :
 		withContext(NonCancellable) { mutableStatus.emit(LocalizedString.resource(R.string.status_aborted)) }
 		throw e
 	} finally {
+		strategy.apk.close()
 		strategy.saveData.close()
 		withContext(NonCancellable) { progressPublisher.mutableProgress.reset() }
 		sharingScope.cancel()

@@ -6,7 +6,7 @@ import solru.okkeipatcher.R
 import solru.okkeipatcher.data.LocalizedString
 import solru.okkeipatcher.di.factory.ObbDownloaderFactory
 import solru.okkeipatcher.domain.model.files.common.CommonFiles
-import solru.okkeipatcher.domain.services.gamefile.impl.Obb
+import solru.okkeipatcher.domain.services.gamefile.impl.AbstractObb
 import solru.okkeipatcher.repository.patch.DefaultPatchRepository
 import solru.okkeipatcher.utils.extensions.reset
 import javax.inject.Inject
@@ -15,7 +15,7 @@ class DefaultObb @Inject constructor(
 	patchRepository: DefaultPatchRepository,
 	obbDownloaderFactory: ObbDownloaderFactory,
 	commonFiles: CommonFiles
-) : Obb(commonFiles) {
+) : AbstractObb(commonFiles) {
 
 	private val obbDownloader = obbDownloaderFactory.create(patchRepository, commonFiles)
 

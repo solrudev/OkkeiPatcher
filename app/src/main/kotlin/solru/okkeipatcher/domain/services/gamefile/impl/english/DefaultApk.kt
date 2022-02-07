@@ -9,7 +9,7 @@ import solru.okkeipatcher.di.factory.ScriptsPatcherFactory
 import solru.okkeipatcher.di.module.IoDispatcher
 import solru.okkeipatcher.domain.model.files.common.CommonFiles
 import solru.okkeipatcher.domain.model.files.generic.DefaultPatchFiles
-import solru.okkeipatcher.domain.services.gamefile.impl.Apk
+import solru.okkeipatcher.domain.services.gamefile.impl.AbstractApk
 import solru.okkeipatcher.io.services.StreamCopier
 import solru.okkeipatcher.repository.patch.DefaultPatchRepository
 import solru.okkeipatcher.utils.extensions.reset
@@ -22,7 +22,7 @@ class DefaultApk @Inject constructor(
 	commonFiles: CommonFiles,
 	streamCopier: StreamCopier,
 	@IoDispatcher ioDispatcher: CoroutineDispatcher
-) : Apk(commonFiles, streamCopier, ioDispatcher) {
+) : AbstractApk(commonFiles, streamCopier, ioDispatcher) {
 
 	private val scriptsPatcher = scriptsPatcherFactory.create(this, patchRepository, patchFiles.scripts)
 
@@ -35,7 +35,7 @@ class DefaultApk @Inject constructor(
 	@OptIn(ExperimentalCoroutinesApi::class)
 	override val messages = merge(super.messages, scriptsPatcher.messages)
 
-	override suspend fun applyPatch() {
+	override suspend fun patch() {
 		progressPublisher.mutableProgress.reset()
 		mutableStatus.emit(LocalizedString.resource(R.string.status_comparing_apk))
 		if (verifyBackupIntegrity() && commonFiles.signedApk.verify()) {
@@ -46,7 +46,7 @@ class DefaultApk @Inject constructor(
 		installPatched(updating = false)
 	}
 
-	override suspend fun applyUpdate() {
+	override suspend fun update() {
 		progressPublisher.mutableProgress.reset()
 		commonFiles.tempApk.delete()
 		commonFiles.signedApk.delete()

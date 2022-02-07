@@ -2,7 +2,7 @@ package solru.okkeipatcher.di.factory
 
 import dagger.assisted.AssistedFactory
 import solru.okkeipatcher.domain.services.ScriptsPatcher
-import solru.okkeipatcher.domain.services.gamefile.impl.Apk
+import solru.okkeipatcher.domain.services.gamefile.impl.AbstractApk
 import solru.okkeipatcher.io.file.VerifiableFile
 import solru.okkeipatcher.repository.patch.ScriptsDataRepository
 
@@ -10,7 +10,7 @@ import solru.okkeipatcher.repository.patch.ScriptsDataRepository
 interface ScriptsPatcherFactory {
 
 	fun create(
-		apk: Apk,
+		apk: AbstractApk,
 		scriptsDataRepository: ScriptsDataRepository,
 		scriptsFile: VerifiableFile
 	): ScriptsPatcher

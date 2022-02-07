@@ -12,7 +12,7 @@ import solru.okkeipatcher.exceptions.OkkeiException
 import solru.okkeipatcher.utils.Preferences
 import solru.okkeipatcher.utils.extensions.reset
 
-abstract class Obb(protected val commonFiles: CommonFiles) : ObservableServiceImpl(), PatchableGameFile {
+abstract class AbstractObb(protected val commonFiles: CommonFiles) : ObservableServiceImpl(), PatchableGameFile {
 
 	override val backupExists: Boolean get() = commonFiles.backupObb.exists
 
