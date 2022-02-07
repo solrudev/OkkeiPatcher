@@ -25,10 +25,10 @@ import solru.okkeipatcher.io.file.JavaFile
 import solru.okkeipatcher.io.services.StreamCopier
 import solru.okkeipatcher.utils.Preferences
 import solru.okkeipatcher.utils.extensions.makeIndeterminate
+import solru.okkeipatcher.utils.extensions.observe
 import solru.okkeipatcher.utils.extensions.reset
+import solru.okkeipatcher.utils.extensions.use
 import solru.okkeipatcher.utils.getPackagePublicSourceDir
-import solru.okkeipatcher.utils.observe
-import solru.okkeipatcher.utils.use
 import java.io.File
 import java.security.KeyFactory
 import java.security.cert.CertificateFactory

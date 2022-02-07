@@ -22,9 +22,9 @@ import solru.okkeipatcher.repository.patch.ScriptsDataRepository
 import solru.okkeipatcher.utils.Preferences
 import solru.okkeipatcher.utils.deleteTempZipFiles
 import solru.okkeipatcher.utils.extensions.emit
+import solru.okkeipatcher.utils.extensions.observe
 import solru.okkeipatcher.utils.extensions.reset
-import solru.okkeipatcher.utils.observe
-import solru.okkeipatcher.utils.use
+import solru.okkeipatcher.utils.extensions.use
 import java.io.File
 
 class ScriptsPatcher @AssistedInject constructor(
