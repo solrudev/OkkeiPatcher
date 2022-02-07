@@ -8,6 +8,8 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import net.lingala.zip4j.ZipFile
 import solru.okkeipatcher.OkkeiApplication
 import solru.okkeipatcher.R
@@ -54,6 +56,7 @@ abstract class AbstractApk(
 	)
 
 	private val tempZipFiles = mutableListOf<ZipFile>()
+	private val tempZipFilesMutex = Mutex()
 
 	override fun deleteBackup() = commonFiles.backupApk.delete()
 
@@ -96,11 +99,15 @@ abstract class AbstractApk(
 	 * Closes all [ZipFile] instances gotten from [asZipFile] and deletes temporary files.
 	 */
 	override fun close() {
-		tempZipFiles.forEach {
-			it.executorService?.shutdownNow()
-			it.close()
+		runBlocking {
+			tempZipFilesMutex.withLock {
+				tempZipFiles.forEach {
+					it.executorService?.shutdownNow()
+					it.close()
+				}
+				tempZipFiles.clear()
+			}
 		}
-		tempZipFiles.clear()
 		commonFiles.tempApk.delete()
 	}
 
@@ -115,7 +122,11 @@ abstract class AbstractApk(
 		}
 		return ZipFile(commonFiles.tempApk.fullPath)
 			.apply { isRunInThread = true }
-			.also { tempZipFiles.add(it) }
+			.also { zipFile ->
+				tempZipFilesMutex.withLock {
+					tempZipFiles.add(zipFile)
+				}
+			}
 	}
 
 	@Suppress("BlockingMethodInNonBlockingContext")

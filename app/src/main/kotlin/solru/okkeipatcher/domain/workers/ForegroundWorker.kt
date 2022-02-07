@@ -13,6 +13,8 @@ import androidx.work.WorkerParameters
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import solru.okkeipatcher.R
 import solru.okkeipatcher.data.LocalizedString
 import solru.okkeipatcher.data.Message
@@ -37,6 +39,7 @@ abstract class ForegroundWorker(
 	private val progressNotificationBuilder = createNotificationBuilder(notificationTitle, progressNotification = true)
 	private val progressNotificationId = workerProgressNotificationId.incrementAndGet()
 	private val shownMessageNotifications = mutableListOf<Int>()
+	private val shownMessageNotificationsMutex = Mutex()
 
 	protected abstract suspend fun doServiceWork()
 
@@ -49,7 +52,9 @@ abstract class ForegroundWorker(
 				observeJob.cancel()
 			}
 		} catch (e: Throwable) {
-			shownMessageNotifications.forEach { notificationManager.cancel(it) }
+			shownMessageNotifications.forEach {
+				notificationManager.cancel(it)
+			}
 			if (e is CancellationException) {
 				throw e
 			}
@@ -129,7 +134,7 @@ abstract class ForegroundWorker(
 			}
 	}
 
-	private fun displayMessageNotification(message: Message) {
+	private suspend fun displayMessageNotification(message: Message) {
 		val titleString = message.title.resolve(applicationContext)
 		val messageString = message.message.resolve(applicationContext)
 		val notification = simpleNotificationBuilder.apply {
@@ -137,7 +142,9 @@ abstract class ForegroundWorker(
 			setContentText(messageString)
 		}.build()
 		val notificationId = workerMessageNotificationId.incrementAndGet()
-		shownMessageNotifications.add(notificationId)
+		shownMessageNotificationsMutex.withLock {
+			shownMessageNotifications.add(notificationId)
+		}
 		notificationManager.notify(notificationId, notification)
 	}
 
