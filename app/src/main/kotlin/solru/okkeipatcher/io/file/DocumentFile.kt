@@ -9,7 +9,7 @@ import solru.okkeipatcher.OkkeiApplication
 import solru.okkeipatcher.io.services.StreamCopier
 import java.io.IOException
 
-class DocumentFile(private val path: String, name: String, streamCopier: StreamCopier) : BaseFile(streamCopier) {
+class DocumentFile(private val path: String, name: String, streamCopier: StreamCopier) : AbstractFile(streamCopier) {
 
 	private val documentFile: DocumentFile? by lazy {
 		DocumentFileCompat.fromFullPath(

@@ -5,7 +5,7 @@ import solru.okkeipatcher.domain.progress.ProgressPublisherImpl
 import solru.okkeipatcher.io.services.StreamCopier
 import solru.okkeipatcher.io.utils.BlackholeOutputStream
 
-abstract class BaseFile(
+abstract class AbstractFile(
 	private val streamCopier: StreamCopier,
 	private val progressPublisher: ProgressPublisherImpl = ProgressPublisherImpl()
 ) : File, ProgressPublisher by progressPublisher {

@@ -6,7 +6,7 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
 
-class JavaFile(private val file: File, streamCopier: StreamCopier) : BaseFile(streamCopier) {
+class JavaFile(private val file: File, streamCopier: StreamCopier) : AbstractFile(streamCopier) {
 
 	override val name: String
 		get() = file.name
