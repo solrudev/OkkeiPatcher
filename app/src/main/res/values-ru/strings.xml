@@ -37,7 +37,7 @@
 	<string name="notification_channel_messages_name">Сообщения</string>
 	<string name="notification_channel_progress_description">Отображать текущий статус и прогресс</string>
 	<string name="notification_channel_progress_name">Статус и прогресс</string>
-	<string name="notification_message_work_failed">Процесс завершился с ошибкой.</string>
+	<string name="notification_message_work_failed">Процесс завершился с ошибкой. Нажмите, чтобы узнать подробности.</string>
 	<string name="notification_message_work_success">Процесс прошёл успешно.</string>
 	<string name="notification_title_patch">Патчинг…</string>
 	<string name="notification_title_restore">Восстановление…</string>

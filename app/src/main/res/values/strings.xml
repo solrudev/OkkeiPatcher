@@ -43,7 +43,7 @@
 	<string name="notification_channel_messages_name">Messages</string>
 	<string name="notification_channel_progress_description">Display current status and progress</string>
 	<string name="notification_channel_progress_name">Status and progress</string>
-	<string name="notification_message_work_failed">Work failed.</string>
+	<string name="notification_message_work_failed">Work failed. Press to learn more.</string>
 	<string name="notification_message_work_success">Work succeeded.</string>
 	<string name="notification_title_patch">Patching…</string>
 	<string name="notification_title_restore">Restoring…</string>
