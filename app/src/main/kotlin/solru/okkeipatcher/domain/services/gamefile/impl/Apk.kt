@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import net.lingala.zip4j.ZipFile
-import net.lingala.zip4j.progress.ProgressMonitor
 import solru.okkeipatcher.OkkeiApplication
 import solru.okkeipatcher.R
 import solru.okkeipatcher.data.LocalizedString
@@ -22,13 +21,9 @@ import solru.okkeipatcher.domain.services.gamefile.PatchableGameFile
 import solru.okkeipatcher.exceptions.OkkeiException
 import solru.okkeipatcher.io.file.JavaFile
 import solru.okkeipatcher.io.services.StreamCopier
-import solru.okkeipatcher.utils.Preferences
-import solru.okkeipatcher.utils.extensions.emit
+import solru.okkeipatcher.utils.*
 import solru.okkeipatcher.utils.extensions.makeIndeterminate
 import solru.okkeipatcher.utils.extensions.reset
-import solru.okkeipatcher.utils.getPackagePublicSourceDir
-import solru.okkeipatcher.utils.isPackageInstalled
-import solru.okkeipatcher.utils.use
 import java.io.File
 import java.security.KeyFactory
 import java.security.cert.CertificateFactory
@@ -60,8 +55,6 @@ abstract class Apk(
 	final override suspend fun patch() {
 		try {
 			applyPatch()
-		} catch (e: Throwable) {
-			throw e
 		} finally {
 			commonFiles.tempApk.delete()
 		}
@@ -70,8 +63,6 @@ abstract class Apk(
 	final override suspend fun update() {
 		try {
 			applyUpdate()
-		} catch (e: Throwable) {
-			throw e
 		} finally {
 			commonFiles.tempApk.delete()
 		}
@@ -159,13 +150,8 @@ abstract class Apk(
 			ZipFile(commonFiles.tempApk.fullPath).apply { isRunInThread = true }.use { zipFile ->
 				val progressMonitor = zipFile.progressMonitor
 				zipFile.removeFile("META-INF/")
-				while (progressMonitor.state == ProgressMonitor.State.BUSY) {
-					ensureActive()
-					progressPublisher.mutableProgress.emit(
-						progressMonitor.workCompleted.toInt(),
-						progressMonitor.totalWork.toInt()
-					)
-					delay(20)
+				progressMonitor.observe { progressData ->
+					progressPublisher.mutableProgress.emit(progressData)
 				}
 			}
 		}

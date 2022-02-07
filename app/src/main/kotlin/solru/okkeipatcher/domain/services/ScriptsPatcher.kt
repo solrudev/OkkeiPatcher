@@ -2,11 +2,12 @@ package solru.okkeipatcher.domain.services
 
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.withContext
 import net.lingala.zip4j.ZipFile
 import net.lingala.zip4j.model.ZipParameters
-import net.lingala.zip4j.progress.ProgressMonitor
 import solru.okkeipatcher.R
 import solru.okkeipatcher.data.LocalizedString
 import solru.okkeipatcher.di.module.IoDispatcher
@@ -22,6 +23,7 @@ import solru.okkeipatcher.utils.Preferences
 import solru.okkeipatcher.utils.deleteTempZipFiles
 import solru.okkeipatcher.utils.extensions.emit
 import solru.okkeipatcher.utils.extensions.reset
+import solru.okkeipatcher.utils.observe
 import solru.okkeipatcher.utils.use
 import java.io.File
 
@@ -90,13 +92,8 @@ class ScriptsPatcher @AssistedInject constructor(
 		scriptsZip.use {
 			with(it) {
 				extractAll(extractedScriptsDirectory.absolutePath)
-				while (progressMonitor.state == ProgressMonitor.State.BUSY) {
-					ensureActive()
-					progressPublisher.mutableProgress.emit(
-						progressMonitor.workCompleted.toInt(),
-						progressMonitor.totalWork.toInt()
-					)
-					delay(20)
+				progressMonitor.observe { progressData ->
+					progressPublisher.mutableProgress.emit(progressData)
 				}
 			}
 		}
@@ -115,22 +112,12 @@ class ScriptsPatcher @AssistedInject constructor(
 				val progressMax = scriptsSize + apkSize
 				val apkScriptsList = scriptsList.map { "${parameters.rootFolderNameInZip}${it.name}" }
 				removeFiles(apkScriptsList)
-				while (progressMonitor.state == ProgressMonitor.State.BUSY) {
-					ensureActive()
-					progressPublisher.mutableProgress.emit(
-						progressMonitor.workCompleted.toInt(),
-						progressMax
-					)
-					delay(20)
+				progressMonitor.observe { progressData ->
+					progressPublisher.mutableProgress.emit(progressData.progress, progressMax)
 				}
 				addFiles(scriptsList, parameters)
-				while (progressMonitor.state == ProgressMonitor.State.BUSY) {
-					ensureActive()
-					progressPublisher.mutableProgress.emit(
-						progressMonitor.workCompleted.toInt() + apkSize,
-						progressMax
-					)
-					delay(20)
+				progressMonitor.observe { progressData ->
+					progressPublisher.mutableProgress.emit(progressData.progress + apkSize, progressMax)
 				}
 				scriptsDirectory.deleteRecursively()
 			}
