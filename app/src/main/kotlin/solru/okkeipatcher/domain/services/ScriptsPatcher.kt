@@ -20,7 +20,6 @@ import solru.okkeipatcher.io.file.VerifiableFile
 import solru.okkeipatcher.io.services.HttpDownloader
 import solru.okkeipatcher.repository.patch.ScriptsDataRepository
 import solru.okkeipatcher.utils.Preferences
-import solru.okkeipatcher.utils.deleteTempZipFiles
 import solru.okkeipatcher.utils.extensions.emit
 import solru.okkeipatcher.utils.extensions.observe
 import solru.okkeipatcher.utils.extensions.reset
@@ -50,7 +49,6 @@ class ScriptsPatcher @AssistedInject constructor(
 			apk.removeSignature()
 			apk.sign()
 		} finally {
-			deleteTempZipFiles(OkkeiStorage.external)
 			extractedScriptsDirectory?.let { if (it.exists()) it.deleteRecursively() }
 		}
 	}

@@ -16,6 +16,7 @@ import solru.okkeipatcher.R
 import solru.okkeipatcher.data.LocalizedString
 import solru.okkeipatcher.data.ProgressData
 import solru.okkeipatcher.di.module.IoDispatcher
+import solru.okkeipatcher.domain.OkkeiStorage
 import solru.okkeipatcher.domain.model.files.common.CommonFileHashKey
 import solru.okkeipatcher.domain.model.files.common.CommonFiles
 import solru.okkeipatcher.domain.services.ObservableServiceImpl
@@ -24,6 +25,7 @@ import solru.okkeipatcher.exceptions.OkkeiException
 import solru.okkeipatcher.io.file.JavaFile
 import solru.okkeipatcher.io.services.StreamCopier
 import solru.okkeipatcher.utils.Preferences
+import solru.okkeipatcher.utils.deleteTempZipFiles
 import solru.okkeipatcher.utils.extensions.makeIndeterminate
 import solru.okkeipatcher.utils.extensions.observe
 import solru.okkeipatcher.utils.extensions.reset
@@ -108,6 +110,7 @@ abstract class AbstractApk(
 				tempZipFiles.clear()
 			}
 		}
+		deleteTempZipFiles(OkkeiStorage.external)
 		commonFiles.tempApk.delete()
 	}
 
