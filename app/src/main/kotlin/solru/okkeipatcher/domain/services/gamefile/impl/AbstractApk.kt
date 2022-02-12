@@ -102,6 +102,8 @@ abstract class AbstractApk(
 	 * Closes all [ZipFile] instances gotten from [asZipFile] and deletes temporary files.
 	 */
 	override fun close() {
+		deleteTempZipFiles(OkkeiStorage.external)
+		commonFiles.tempApk.delete()
 		runBlocking {
 			tempZipFilesMutex.withLock {
 				tempZipFiles.forEach {
@@ -111,8 +113,6 @@ abstract class AbstractApk(
 				tempZipFiles.clear()
 			}
 		}
-		deleteTempZipFiles(OkkeiStorage.external)
-		commonFiles.tempApk.delete()
 	}
 
 	/**
