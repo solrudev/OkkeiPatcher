@@ -2,6 +2,7 @@ import java.io.FileInputStream
 import java.util.*
 
 val packageName = "solru.okkeipatcher"
+val androidGradleVersion: String by rootProject.extra
 val hiltVersion: String by rootProject.extra
 val ktorVersion: String by rootProject.extra
 val okioVersion: String by rootProject.extra
@@ -91,7 +92,7 @@ dependencies {
 	val retrofitVersion = "2.9.0"
 	val moshiVersion = "1.13.0"
 
-	kapt("androidx.databinding:databinding-compiler:7.1.0")
+	kapt("androidx.databinding:databinding-compiler:$androidGradleVersion")
 	kapt("com.google.dagger:hilt-compiler:$hiltVersion")
 	kapt("androidx.hilt:hilt-compiler:1.0.0")
 	kapt("com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion")
@@ -119,7 +120,7 @@ dependencies {
 	}
 
 	// Miscellaneous
-	implementation("com.android.tools.build:apksig:7.1.0")
+	implementation("com.android.tools.build:apksig:$androidGradleVersion")
 	implementation("com.anggrayudi:storage:1.1.0")
 	implementation("net.lingala.zip4j:zip4j:2.9.1")
 	implementation("io.github.solrudev:simpleinstaller:1.2.3")

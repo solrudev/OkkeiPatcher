@@ -1,6 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
+	val androidGradleVersion: String by extra("7.1.1")
 	val kotlinVersion: String by extra("1.6.10")
 	val hiltVersion: String by extra("2.40.5")
 
@@ -10,7 +11,7 @@ buildscript {
 	}
 
 	dependencies {
-		classpath("com.android.tools.build:gradle:7.1.0")
+		classpath("com.android.tools.build:gradle:$androidGradleVersion")
 		classpath(kotlin("gradle-plugin", kotlinVersion))
 		classpath("com.google.dagger:hilt-android-gradle-plugin:$hiltVersion")
 	}
