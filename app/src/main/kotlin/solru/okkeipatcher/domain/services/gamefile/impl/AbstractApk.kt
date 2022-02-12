@@ -76,6 +76,7 @@ abstract class AbstractApk(
 			Preferences.set(CommonFileHashKey.backup_apk_hash.name, hash)
 		} catch (e: Throwable) {
 			commonFiles.backupApk.delete()
+			throw e
 		}
 	}
 
