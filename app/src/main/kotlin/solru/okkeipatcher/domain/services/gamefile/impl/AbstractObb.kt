@@ -13,7 +13,8 @@ import solru.okkeipatcher.utils.extensions.reset
 
 abstract class AbstractObb(protected val commonFiles: CommonFiles) : ObservableServiceImpl(), PatchableGameFile {
 
-	override val backupExists: Boolean get() = commonFiles.backupObb.exists
+	override val backupExists: Boolean
+		get() = commonFiles.backupObb.exists
 
 	override val progress = merge(
 		commonFiles.backupObb.progress,

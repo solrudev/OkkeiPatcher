@@ -46,7 +46,8 @@ abstract class AbstractApk(
 	@IoDispatcher protected val ioDispatcher: CoroutineDispatcher
 ) : ObservableServiceImpl(), Apk {
 
-	override val backupExists: Boolean get() = commonFiles.backupApk.exists
+	override val backupExists: Boolean
+		get() = commonFiles.backupApk.exists
 
 	override val progress = merge(
 		commonFiles.backupApk.progress,
