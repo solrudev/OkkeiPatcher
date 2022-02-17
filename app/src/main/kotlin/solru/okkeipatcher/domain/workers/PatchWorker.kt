@@ -10,7 +10,7 @@ import solru.okkeipatcher.R
 import solru.okkeipatcher.data.LocalizedString
 import solru.okkeipatcher.domain.AppKey
 import solru.okkeipatcher.domain.services.PatchService
-import solru.okkeipatcher.domain.strategy.PatchDataStrategy
+import solru.okkeipatcher.domain.usecase.GetPatchUpdatesUseCase
 import solru.okkeipatcher.utils.Preferences
 
 @HiltWorker
@@ -18,7 +18,7 @@ class PatchWorker @AssistedInject constructor(
 	@Assisted context: Context,
 	@Assisted workerParameters: WorkerParameters,
 	private val patchService: PatchService,
-	private val patchDataStrategy: PatchDataStrategy
+	private val getPatchUpdatesUseCase: GetPatchUpdatesUseCase
 ) : ForegroundWorker(
 	context,
 	workerParameters,
@@ -31,7 +31,7 @@ class PatchWorker @AssistedInject constructor(
 			AppKey.process_save_data_enabled.name,
 			Build.VERSION.SDK_INT < Build.VERSION_CODES.R
 		)
-		val patchUpdates = patchDataStrategy.getPatchUpdates()
+		val patchUpdates = getPatchUpdatesUseCase()
 		patchService.patch(processSaveData, patchUpdates)
 	}
 

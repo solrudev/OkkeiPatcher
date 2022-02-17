@@ -16,7 +16,8 @@ import solru.okkeipatcher.R
 import solru.okkeipatcher.data.LocalizedString
 import solru.okkeipatcher.data.ProgressData
 import solru.okkeipatcher.domain.AppKey
-import solru.okkeipatcher.domain.strategy.PatchDataStrategy
+import solru.okkeipatcher.domain.usecase.GetPatchSizeInMbUseCase
+import solru.okkeipatcher.domain.usecase.GetPatchUpdatesUseCase
 import solru.okkeipatcher.domain.workers.ForegroundWorker
 import solru.okkeipatcher.domain.workers.PatchWorker
 import solru.okkeipatcher.domain.workers.RestoreWorker
@@ -30,7 +31,8 @@ import javax.inject.Provider
 @HiltViewModel
 class MainViewModel @Inject constructor(
 	private val okkeiPatcherRepository: OkkeiPatcherRepository,
-	private val patchDataStrategyProvider: Provider<PatchDataStrategy>
+	private val getPatchUpdatesUseCase: Provider<GetPatchUpdatesUseCase>,
+	private val getPatchSizeInMbUseCase: Provider<GetPatchSizeInMbUseCase>
 ) : ViewModel(), DefaultLifecycleObserver {
 
 	private val _patchText = MutableStateFlow<LocalizedString>(LocalizedString.resource(R.string.patch))

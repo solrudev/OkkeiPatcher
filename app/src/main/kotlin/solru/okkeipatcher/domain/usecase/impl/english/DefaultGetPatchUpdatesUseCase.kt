@@ -1,34 +1,20 @@
-package solru.okkeipatcher.domain.strategy.impl.english
+package solru.okkeipatcher.domain.usecase.impl.english
 
 import solru.okkeipatcher.data.patchupdates.DefaultPatchUpdates
-import solru.okkeipatcher.data.patchupdates.PatchUpdates
 import solru.okkeipatcher.domain.AppKey
-import solru.okkeipatcher.domain.strategy.PatchDataStrategy
+import solru.okkeipatcher.domain.strategy.impl.english.PatchFileVersionKey
+import solru.okkeipatcher.domain.usecase.GetPatchUpdatesUseCase
 import solru.okkeipatcher.repository.patch.DefaultPatchRepository
 import solru.okkeipatcher.utils.Preferences
 import javax.inject.Inject
-import kotlin.math.round
 
-class DefaultPatchDataStrategy @Inject constructor(private val patchRepository: DefaultPatchRepository) :
-	PatchDataStrategy {
+class DefaultGetPatchUpdatesUseCase @Inject constructor(private val patchRepository: DefaultPatchRepository) :
+	GetPatchUpdatesUseCase {
 
-	override suspend fun getPatchUpdates(): PatchUpdates {
-		return DefaultPatchUpdates(
-			isScriptsUpdateAvailable(),
-			isObbUpdateAvailable()
-		)
-	}
-
-	override suspend fun getPatchSizeInMb(): Double {
-		val scriptsSize = patchRepository.getScriptsData().size / 1_048_576.0
-		val obbSize = patchRepository.getObbData().size / 1_048_576.0
-		if (!getPatchUpdates().available) {
-			return scriptsSize + obbSize
-		}
-		val scriptsUpdateSize = if (isScriptsUpdateAvailable()) scriptsSize else 0.0
-		val obbUpdateSize = if (isObbUpdateAvailable()) obbSize else 0.0
-		return round(scriptsUpdateSize + obbUpdateSize)
-	}
+	override suspend fun invoke() = DefaultPatchUpdates(
+		isScriptsUpdateAvailable(),
+		isObbUpdateAvailable()
+	)
 
 	private suspend inline fun isScriptsUpdateAvailable(): Boolean {
 		if (!Preferences.get(AppKey.is_patched.name, false)) {
