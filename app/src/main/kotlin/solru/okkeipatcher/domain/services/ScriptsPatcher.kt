@@ -3,7 +3,6 @@ package solru.okkeipatcher.domain.services
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.withContext
 import net.lingala.zip4j.ZipFile
@@ -34,7 +33,6 @@ class ScriptsPatcher @AssistedInject constructor(
 	private val httpDownloader: HttpDownloader
 ) : ObservableServiceImpl() {
 
-	@OptIn(ExperimentalCoroutinesApi::class)
 	override val progress = merge(super.progress, scriptsFile.progress)
 
 	suspend fun patch() {

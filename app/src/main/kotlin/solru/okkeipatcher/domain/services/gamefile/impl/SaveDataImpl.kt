@@ -1,6 +1,5 @@
 package solru.okkeipatcher.domain.services.gamefile.impl
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.merge
 import solru.okkeipatcher.R
 import solru.okkeipatcher.data.LocalizedString
@@ -15,7 +14,6 @@ import javax.inject.Inject
 
 class SaveDataImpl @Inject constructor(private val commonFiles: CommonFiles) : ObservableServiceImpl(), SaveData {
 
-	@OptIn(ExperimentalCoroutinesApi::class)
 	override val progress = merge(
 		commonFiles.backupSaveData.progress,
 		commonFiles.originalSaveData.progress,

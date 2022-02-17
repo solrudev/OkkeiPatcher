@@ -2,7 +2,6 @@ package solru.okkeipatcher.domain.services
 
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.merge
 import solru.okkeipatcher.R
 import solru.okkeipatcher.data.LocalizedString
@@ -20,7 +19,6 @@ class ObbDownloader @AssistedInject constructor(
 	private val httpDownloader: HttpDownloader
 ) : ObservableServiceImpl() {
 
-	@OptIn(ExperimentalCoroutinesApi::class)
 	override val progress = merge(super.progress, commonFiles.obbToPatch.progress)
 
 	suspend fun download() {

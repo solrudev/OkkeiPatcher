@@ -1,6 +1,5 @@
 package solru.okkeipatcher.io.file
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.merge
@@ -13,8 +12,6 @@ import solru.okkeipatcher.utils.extensions.isEmptyOrBlank
 abstract class VerifiableFile(private val fileImplementation: File) : File by fileImplementation, Verifiable {
 
 	private val progressPublisher = ProgressPublisherImpl()
-
-	@OptIn(ExperimentalCoroutinesApi::class)
 	override val progress = merge(fileImplementation.progress, progressPublisher.progress)
 
 	protected suspend fun compareBySharedPreferences(key: String): Boolean {

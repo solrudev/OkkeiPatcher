@@ -48,7 +48,6 @@ abstract class AbstractApk(
 
 	override val backupExists: Boolean get() = commonFiles.backupApk.exists
 
-	@OptIn(ExperimentalCoroutinesApi::class)
 	override val progress = merge(
 		commonFiles.backupApk.progress,
 		commonFiles.tempApk.progress,

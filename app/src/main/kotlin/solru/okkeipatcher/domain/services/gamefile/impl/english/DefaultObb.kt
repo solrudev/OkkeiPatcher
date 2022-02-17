@@ -1,6 +1,5 @@
 package solru.okkeipatcher.domain.services.gamefile.impl.english
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.merge
 import solru.okkeipatcher.R
 import solru.okkeipatcher.data.LocalizedString
@@ -18,14 +17,8 @@ class DefaultObb @Inject constructor(
 ) : AbstractObb(commonFiles) {
 
 	private val obbDownloader = obbDownloaderFactory.create(patchRepository, commonFiles)
-
-	@OptIn(ExperimentalCoroutinesApi::class)
 	override val status = merge(super.status, obbDownloader.status)
-
-	@OptIn(ExperimentalCoroutinesApi::class)
 	override val progress = merge(super.progress, obbDownloader.progress)
-
-	@OptIn(ExperimentalCoroutinesApi::class)
 	override val messages = merge(super.messages, obbDownloader.messages)
 
 	override suspend fun patch() {

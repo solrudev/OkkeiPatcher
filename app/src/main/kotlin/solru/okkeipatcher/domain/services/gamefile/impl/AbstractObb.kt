@@ -1,6 +1,5 @@
 package solru.okkeipatcher.domain.services.gamefile.impl
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.merge
 import solru.okkeipatcher.R
 import solru.okkeipatcher.data.LocalizedString
@@ -16,7 +15,6 @@ abstract class AbstractObb(protected val commonFiles: CommonFiles) : ObservableS
 
 	override val backupExists: Boolean get() = commonFiles.backupObb.exists
 
-	@OptIn(ExperimentalCoroutinesApi::class)
 	override val progress = merge(
 		commonFiles.backupObb.progress,
 		commonFiles.obbToBackup.progress,

@@ -1,9 +1,12 @@
 package solru.okkeipatcher.domain.services
 
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.withContext
 import solru.okkeipatcher.R
 import solru.okkeipatcher.data.LocalizedString
 import solru.okkeipatcher.data.patchupdates.PatchUpdates
@@ -21,25 +24,25 @@ class PatchService @Inject constructor(private val strategy: GameFileStrategy) :
 
 	private val sharingScope = CoroutineScope(EmptyCoroutineContext)
 
-	@OptIn(DelicateCoroutinesApi::class, ExperimentalCoroutinesApi::class)
-	override val progress = merge(
-		strategy.apk.progress,
-		strategy.obb.progress,
-		strategy.saveData.progress,
-		progressPublisher.mutableProgress
-	).shareIn(sharingScope, SharingStarted.Eagerly, replay = 1)
+	override val progress = with(strategy) {
+		merge(apk.progress, obb.progress, saveData.progress, progressPublisher.mutableProgress).shareIn(
+			sharingScope,
+			SharingStarted.Eagerly,
+			replay = 1
+		)
+	}
 
-	@OptIn(DelicateCoroutinesApi::class, ExperimentalCoroutinesApi::class)
-	override val status = merge(
-		strategy.apk.status,
-		strategy.obb.status,
-		strategy.saveData.status,
-		mutableStatus
-	).shareIn(sharingScope, SharingStarted.Eagerly, replay = 1)
+	override val status = with(strategy) {
+		merge(apk.status, obb.status, saveData.status, mutableStatus).shareIn(
+			sharingScope,
+			SharingStarted.Eagerly,
+			replay = 1
+		)
+	}
 
-	@OptIn(ExperimentalCoroutinesApi::class)
-	override val messages =
-		merge(strategy.apk.messages, strategy.obb.messages, strategy.saveData.messages, mutableMessages)
+	override val messages = with(strategy) {
+		merge(apk.messages, obb.messages, saveData.messages, mutableMessages)
+	}
 
 	suspend fun patch(processSaveData: Boolean, patchUpdates: PatchUpdates) = try {
 		checkCanPatch(patchUpdates)
@@ -53,32 +56,31 @@ class PatchService @Inject constructor(private val strategy: GameFileStrategy) :
 		withContext(NonCancellable) { mutableStatus.emit(LocalizedString.resource(R.string.status_aborted)) }
 		throw e
 	} finally {
-		strategy.apk.close()
-		strategy.saveData.close()
+		strategy.close()
 		withContext(NonCancellable) { progressPublisher.mutableProgress.reset() }
 		sharingScope.cancel()
 	}
 
-	private suspend inline fun freshPatch(processSaveData: Boolean) {
+	private suspend inline fun freshPatch(processSaveData: Boolean) = with(strategy) {
 		if (processSaveData) {
-			strategy.saveData.backup()
+			saveData.backup()
 		}
-		strategy.obb.backup()
-		strategy.apk.backup()
-		strategy.apk.patch()
-		strategy.obb.patch()
+		obb.backup()
+		apk.backup()
+		apk.patch()
+		obb.patch()
 		if (processSaveData) {
-			strategy.saveData.restore()
+			saveData.restore()
 		}
 		Preferences.set(AppKey.is_patched.name, true)
 	}
 
-	private suspend inline fun update(patchUpdates: PatchUpdates) {
+	private suspend inline fun update(patchUpdates: PatchUpdates) = with(strategy) {
 		if (patchUpdates.apkUpdatesAvailable) {
-			strategy.apk.update()
+			apk.update()
 		}
 		if (patchUpdates.obbUpdatesAvailable) {
-			strategy.obb.update()
+			obb.update()
 		}
 	}
 

@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 buildscript {
 	val androidGradleVersion: String by extra("7.1.1")
 	val kotlinVersion: String by extra("1.6.10")
@@ -21,12 +19,6 @@ allprojects {
 	repositories {
 		google()
 		mavenCentral()
-	}
-
-	tasks.withType<KotlinCompile> {
-		kotlinOptions {
-			freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
-		}
 	}
 }
 

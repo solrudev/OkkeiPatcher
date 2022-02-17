@@ -1,7 +1,6 @@
 package solru.okkeipatcher.domain.services.gamefile.impl.english
 
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.merge
 import solru.okkeipatcher.R
 import solru.okkeipatcher.data.LocalizedString
@@ -25,14 +24,8 @@ class DefaultApk @Inject constructor(
 ) : AbstractApk(commonFiles, streamCopier, ioDispatcher) {
 
 	private val scriptsPatcher = scriptsPatcherFactory.create(this, patchRepository, patchFiles.scripts)
-
-	@OptIn(ExperimentalCoroutinesApi::class)
 	override val status = merge(super.status, scriptsPatcher.status)
-
-	@OptIn(ExperimentalCoroutinesApi::class)
 	override val progress = merge(super.progress, scriptsPatcher.progress)
-
-	@OptIn(ExperimentalCoroutinesApi::class)
 	override val messages = merge(super.messages, scriptsPatcher.messages)
 
 	override suspend fun patch() {

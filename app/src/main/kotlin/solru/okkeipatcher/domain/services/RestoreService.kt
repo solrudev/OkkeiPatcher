@@ -1,9 +1,12 @@
 package solru.okkeipatcher.domain.services
 
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.withContext
 import solru.okkeipatcher.R
 import solru.okkeipatcher.data.LocalizedString
 import solru.okkeipatcher.domain.AppKey
@@ -19,51 +22,54 @@ class RestoreService @Inject constructor(private val strategy: GameFileStrategy)
 
 	private val sharingScope = CoroutineScope(EmptyCoroutineContext)
 
-	@OptIn(ExperimentalCoroutinesApi::class)
-	override val progress = merge(
-		strategy.apk.progress,
-		strategy.obb.progress,
-		strategy.saveData.progress,
-		progressPublisher.mutableProgress
-	).shareIn(sharingScope, SharingStarted.Eagerly, replay = 1)
+	override val progress = with(strategy) {
+		merge(apk.progress, obb.progress, saveData.progress, progressPublisher.mutableProgress).shareIn(
+			sharingScope,
+			SharingStarted.Eagerly,
+			replay = 1
+		)
+	}
 
-	@OptIn(ExperimentalCoroutinesApi::class)
-	override val status = merge(
-		strategy.apk.status,
-		strategy.obb.status,
-		strategy.saveData.status,
-		mutableStatus
-	).shareIn(sharingScope, SharingStarted.Eagerly, replay = 1)
+	override val status = with(strategy) {
+		merge(apk.status, obb.status, saveData.status, mutableStatus).shareIn(
+			sharingScope,
+			SharingStarted.Eagerly,
+			replay = 1
+		)
+	}
 
-	@OptIn(ExperimentalCoroutinesApi::class)
-	override val messages =
-		merge(strategy.apk.messages, strategy.obb.messages, strategy.saveData.messages, mutableMessages)
+	override val messages = with(strategy) {
+		merge(apk.messages, obb.messages, saveData.messages, mutableMessages)
+	}
 
 	private val isBackupAvailable: Boolean
-		get() = strategy.apk.backupExists && strategy.obb.backupExists
+		get() = with(strategy) {
+			apk.backupExists && obb.backupExists
+		}
 
-	suspend fun restore(processSaveData: Boolean) = try {
-		checkCanRestore()
-		if (processSaveData) {
-			strategy.saveData.backup()
+	suspend fun restore(processSaveData: Boolean) = with(strategy) {
+		try {
+			checkCanRestore()
+			if (processSaveData) {
+				saveData.backup()
+			}
+			apk.restore()
+			obb.restore()
+			if (processSaveData) {
+				saveData.restore()
+			}
+			apk.deleteBackup()
+			obb.deleteBackup()
+			Preferences.set(AppKey.is_patched.name, false)
+			mutableStatus.emit(LocalizedString.resource(R.string.status_restore_success))
+		} catch (e: Throwable) {
+			withContext(NonCancellable) { mutableStatus.emit(LocalizedString.resource(R.string.status_aborted)) }
+			throw e
+		} finally {
+			strategy.close()
+			withContext(NonCancellable) { progressPublisher.mutableProgress.reset() }
+			sharingScope.cancel()
 		}
-		strategy.apk.restore()
-		strategy.obb.restore()
-		if (processSaveData) {
-			strategy.saveData.restore()
-		}
-		strategy.apk.deleteBackup()
-		strategy.obb.deleteBackup()
-		Preferences.set(AppKey.is_patched.name, false)
-		mutableStatus.emit(LocalizedString.resource(R.string.status_restore_success))
-	} catch (e: Throwable) {
-		withContext(NonCancellable) { mutableStatus.emit(LocalizedString.resource(R.string.status_aborted)) }
-		throw e
-	} finally {
-		strategy.apk.close()
-		strategy.saveData.close()
-		withContext(NonCancellable) { progressPublisher.mutableProgress.reset() }
-		sharingScope.cancel()
 	}
 
 	private fun checkCanRestore() {
