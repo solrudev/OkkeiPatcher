@@ -118,7 +118,7 @@ abstract class AbstractApk(
 	/**
 	 * Creates temporary copy of game APK if it doesn't exist.
 	 *
-	 * @return temp copy of game APK represented as [ZipFile].
+	 * @return temp copy of game APK represented as [ZipFile]. Has `isRunInThread` set to `true`.
 	 */
 	suspend fun asZipFile(): ZipFile {
 		if (!commonFiles.tempApk.exists) {
@@ -161,15 +161,12 @@ abstract class AbstractApk(
 		)
 	}
 
-	@Suppress("BlockingMethodInNonBlockingContext")
 	suspend fun removeSignature() {
-		withContext(ioDispatcher) {
-			asZipFile().use { zipFile ->
-				mutableStatus.emit(LocalizedString.resource(R.string.status_removing_signature))
-				zipFile.removeFile("META-INF/")
-				zipFile.progressMonitor.observe { progressData ->
-					progressPublisher.mutableProgress.emit(progressData)
-				}
+		asZipFile().use { zipFile ->
+			mutableStatus.emit(LocalizedString.resource(R.string.status_removing_signature))
+			zipFile.removeFile("META-INF/")
+			zipFile.progressMonitor.observe { progressData ->
+				progressPublisher.mutableProgress.emit(progressData)
 			}
 		}
 	}

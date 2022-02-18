@@ -61,7 +61,7 @@ class PatchService @Inject constructor(private val strategy: GameFileStrategy) :
 		sharingScope.cancel()
 	}
 
-	private suspend inline fun freshPatch(processSaveData: Boolean) = with(strategy) {
+	private suspend inline fun freshPatch(processSaveData: Boolean) = strategy.run {
 		if (processSaveData) {
 			saveData.backup()
 		}
@@ -75,7 +75,7 @@ class PatchService @Inject constructor(private val strategy: GameFileStrategy) :
 		Preferences.set(AppKey.is_patched.name, true)
 	}
 
-	private suspend inline fun update(patchUpdates: PatchUpdates) = with(strategy) {
+	private suspend inline fun update(patchUpdates: PatchUpdates) = strategy.run {
 		if (patchUpdates.apkUpdatesAvailable) {
 			apk.update()
 		}

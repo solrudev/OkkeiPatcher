@@ -2,14 +2,11 @@ package solru.okkeipatcher.domain.services
 
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.merge
-import kotlinx.coroutines.withContext
 import net.lingala.zip4j.ZipFile
 import net.lingala.zip4j.model.ZipParameters
 import solru.okkeipatcher.R
 import solru.okkeipatcher.data.LocalizedString
-import solru.okkeipatcher.di.module.IoDispatcher
 import solru.okkeipatcher.domain.OkkeiStorage
 import solru.okkeipatcher.domain.model.files.generic.PatchFileHashKey
 import solru.okkeipatcher.domain.services.gamefile.impl.AbstractApk
@@ -29,7 +26,6 @@ class ScriptsPatcher @AssistedInject constructor(
 	@Assisted private val apk: AbstractApk,
 	@Assisted private val scriptsDataRepository: ScriptsDataRepository,
 	@Assisted private val scriptsFile: VerifiableFile,
-	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	private val httpDownloader: HttpDownloader
 ) : ObservableServiceImpl() {
 
@@ -40,9 +36,8 @@ class ScriptsPatcher @AssistedInject constructor(
 		try {
 			downloadScripts()
 			extractedScriptsDirectory = extractScripts()
-			val apkZip = apk.asZipFile()
-			apkZip.use {
-				replaceScripts(it, extractedScriptsDirectory)
+			apk.asZipFile().use {
+				it.replaceScripts(extractedScriptsDirectory)
 			}
 			apk.removeSignature()
 			apk.sign()
@@ -80,43 +75,36 @@ class ScriptsPatcher @AssistedInject constructor(
 		Preferences.set(PatchFileVersionKey.scripts_version.name, scriptsData.version)
 	}
 
-	@Suppress("BlockingMethodInNonBlockingContext")
-	private suspend inline fun extractScripts() = withContext(ioDispatcher) {
+	private suspend inline fun extractScripts(): File {
 		mutableStatus.emit(LocalizedString.resource(R.string.status_extracting_scripts))
 		val extractedScriptsDirectory = File(OkkeiStorage.external, "script")
 		val scriptsZip = ZipFile(scriptsFile.fullPath).apply { isRunInThread = true }
 		scriptsZip.use {
-			with(it) {
-				extractAll(extractedScriptsDirectory.absolutePath)
-				progressMonitor.observe { progressData ->
-					progressPublisher.mutableProgress.emit(progressData)
-				}
+			it.extractAll(extractedScriptsDirectory.absolutePath)
+			it.progressMonitor.observe { progressData ->
+				progressPublisher.mutableProgress.emit(progressData)
 			}
 		}
-		extractedScriptsDirectory
+		return extractedScriptsDirectory
 	}
 
 	@Suppress("BlockingMethodInNonBlockingContext")
-	private suspend inline fun replaceScripts(apkZip: ZipFile, scriptsDirectory: File) {
+	private suspend inline fun ZipFile.replaceScripts(scriptsDirectory: File) {
 		mutableStatus.emit(LocalizedString.resource(R.string.status_replacing_scripts))
-		withContext(ioDispatcher) {
-			with(apkZip) {
-				val parameters = ZipParameters().apply { rootFolderNameInZip = "assets/script/" }
-				val scriptsList = scriptsDirectory.listFiles()!!.filter { it.isFile }
-				val apkSize = file.length().toInt()
-				val scriptsSize = scriptsList.sumOf { it.length() }.toInt()
-				val progressMax = scriptsSize + apkSize
-				val apkScriptsList = scriptsList.map { "${parameters.rootFolderNameInZip}${it.name}" }
-				removeFiles(apkScriptsList)
-				progressMonitor.observe { progressData ->
-					progressPublisher.mutableProgress.emit(progressData.progress, progressMax)
-				}
-				addFiles(scriptsList, parameters)
-				progressMonitor.observe { progressData ->
-					progressPublisher.mutableProgress.emit(progressData.progress + apkSize, progressMax)
-				}
-				scriptsDirectory.deleteRecursively()
-			}
+		val parameters = ZipParameters().apply { rootFolderNameInZip = "assets/script/" }
+		val scriptsList = scriptsDirectory.listFiles()!!.filter { it.isFile }
+		val apkSize = file.length().toInt()
+		val scriptsSize = scriptsList.sumOf { it.length() }.toInt()
+		val progressMax = scriptsSize + apkSize
+		val apkScriptsList = scriptsList.map { "${parameters.rootFolderNameInZip}${it.name}" }
+		removeFiles(apkScriptsList)
+		progressMonitor.observe { progressData ->
+			progressPublisher.mutableProgress.emit(progressData.progress, progressMax)
 		}
+		addFiles(scriptsList, parameters)
+		progressMonitor.observe { progressData ->
+			progressPublisher.mutableProgress.emit(progressData.progress + apkSize, progressMax)
+		}
+		scriptsDirectory.deleteRecursively()
 	}
 }
