@@ -4,6 +4,7 @@ import solru.okkeipatcher.data.patchupdates.DefaultPatchUpdates
 import solru.okkeipatcher.domain.AppKey
 import solru.okkeipatcher.domain.strategy.impl.english.PatchFileVersionKey
 import solru.okkeipatcher.domain.usecase.GetPatchUpdatesUseCase
+import solru.okkeipatcher.io.exceptions.NetworkNotAvailableException
 import solru.okkeipatcher.repository.patch.DefaultPatchRepository
 import solru.okkeipatcher.utils.Preferences
 import javax.inject.Inject
@@ -24,7 +25,11 @@ class DefaultGetPatchUpdatesUseCase @Inject constructor(private val patchReposit
 			Preferences.set(PatchFileVersionKey.scripts_version.name, 1)
 		}
 		val currentScriptsVersion = Preferences.get(PatchFileVersionKey.scripts_version.name, 1)
-		val latestScriptsVersion = patchRepository.getScriptsData().version
+		val latestScriptsVersion = try {
+			patchRepository.getScriptsData().version
+		} catch (_: NetworkNotAvailableException) {
+			currentScriptsVersion
+		}
 		return latestScriptsVersion > currentScriptsVersion
 	}
 
@@ -36,7 +41,11 @@ class DefaultGetPatchUpdatesUseCase @Inject constructor(private val patchReposit
 			Preferences.set(PatchFileVersionKey.obb_version.name, 1)
 		}
 		val currentObbVersion = Preferences.get(PatchFileVersionKey.obb_version.name, 1)
-		val latestObbVersion = patchRepository.getObbData().version
+		val latestObbVersion = try {
+			patchRepository.getObbData().version
+		} catch (_: NetworkNotAvailableException) {
+			currentObbVersion
+		}
 		return latestObbVersion > currentObbVersion
 	}
 }

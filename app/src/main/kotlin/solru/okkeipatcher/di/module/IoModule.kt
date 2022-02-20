@@ -6,6 +6,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
+import solru.okkeipatcher.io.ConnectivityInterceptor
 import solru.okkeipatcher.io.TLSSocketFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
@@ -23,6 +24,7 @@ object IoModule {
 		followSslRedirects(true)
 		readTimeout(0, TimeUnit.SECONDS)
 		writeTimeout(0, TimeUnit.SECONDS)
+		addInterceptor(ConnectivityInterceptor())
 	}.build()
 
 	@Provides

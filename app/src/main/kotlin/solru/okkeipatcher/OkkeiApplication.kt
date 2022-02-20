@@ -4,6 +4,10 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.hilt.work.HiltWorkerFactory
@@ -24,10 +28,11 @@ class OkkeiApplication : Application(), Configuration.Provider {
 	override fun onCreate() {
 		super.onCreate()
 		instance = this
+		connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 		SimpleInstaller.initialize(this, R.mipmap.ic_launcher_foreground)
-		setIsPatchedPreferenceIfNotSet()
-		setCheckBoxStatePreferenceIfNotSet()
-		setLanguagePreferenceIfNotSet()
+		initIsPatchedPreference()
+		initSaveDataPreference()
+		initLanguagePreference()
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 			notificationManager.createNotificationChannel(
@@ -41,14 +46,17 @@ class OkkeiApplication : Application(), Configuration.Provider {
 				R.string.notification_channel_messages_description
 			)
 		}
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			startNetworkMonitoring()
+		}
 	}
 
-	private fun setIsPatchedPreferenceIfNotSet() {
+	private fun initIsPatchedPreference() {
 		if (Preferences.containsKey(AppKey.is_patched.name)) return
 		Preferences.set(AppKey.is_patched.name, false)
 	}
 
-	private fun setCheckBoxStatePreferenceIfNotSet() {
+	private fun initSaveDataPreference() {
 		if (Preferences.containsKey(AppKey.process_save_data_enabled.name)) return
 		Preferences.set(
 			AppKey.process_save_data_enabled.name,
@@ -56,7 +64,7 @@ class OkkeiApplication : Application(), Configuration.Provider {
 		)
 	}
 
-	private fun setLanguagePreferenceIfNotSet() {
+	private fun initLanguagePreference() {
 		if (Preferences.containsKey(AppKey.patch_language.name)) return
 		Preferences.set(AppKey.patch_language.name, Language.English.name)
 	}
@@ -82,7 +90,51 @@ class OkkeiApplication : Application(), Configuration.Provider {
 		.build()
 
 	companion object {
+
+		val context: Context
+			get() = instance.applicationContext
+
+		val isNetworkAvailable: Boolean
+			get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				_isNetworkAvailable
+			} else {
+				isActiveNetworkConnected()
+			}
+
 		private lateinit var instance: OkkeiApplication
-		val context: Context get() = instance.applicationContext
+		private lateinit var connectivityManager: ConnectivityManager
+		private var _isNetworkAvailable = false
+
+		@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+		private val networkCallback = object : ConnectivityManager.NetworkCallback() {
+
+			override fun onAvailable(network: Network) {
+				_isNetworkAvailable = true
+			}
+
+			override fun onLost(network: Network) {
+				_isNetworkAvailable = false
+			}
+		}
+
+		@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+		private fun startNetworkMonitoring() {
+			val networkRequest = NetworkRequest.Builder().apply {
+				addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+					addCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+				}
+				addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+				addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+				addTransportType(NetworkCapabilities.TRANSPORT_ETHERNET)
+			}.build()
+			connectivityManager.registerNetworkCallback(networkRequest, networkCallback)
+		}
+
+		@Suppress("DEPRECATION")
+		private fun isActiveNetworkConnected(): Boolean {
+			val activeNetworkInfo = connectivityManager.activeNetworkInfo
+			return activeNetworkInfo != null && activeNetworkInfo.isConnected
+		}
 	}
 }
