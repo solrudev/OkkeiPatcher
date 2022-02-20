@@ -20,12 +20,10 @@
 	<string name="error_apk_not_found">APK для установки не найден.</string>
 	<string name="error_backup_not_found">Резервная копия CHAOS;CHILD не найдена.</string>
 	<string name="error_game_not_found">CHAOS;CHILD не найден на этом устройстве.</string>
-	<string name="error_hash_obb_mismatch">Загруженный OBB повреждён. Пожалуйста, попробуйте перезапустить процесс патча.</string>
-	<string name="error_hash_scripts_mismatch">Загруженные скрипты повреждены. Пожалуйста, попробуйте перезапустить процесс патча.</string>
+	<string name="error_hash_obb_mismatch">Загруженный OBB повреждён.</string>
+	<string name="error_hash_scripts_mismatch">Загруженные скрипты повреждены.</string>
 	<string name="error_http_file_download">Во время загрузки файла произошла ошибка.</string>
-	<string name="error_install">Произошла ошибка при установке APK. Пожалуйста, попробуйте заново. Описание ошибки: %1$s</string>
-	<string name="error_manifest_corrupted">Манифест повреждён. Okkei Patcher не может продолжить работу. Пожалуйста, попробуйте перезапустить Okkei Patcher.</string>
-	<string name="error_manifest_download_failed">Не удалось загрузить манифест. Okkei Patcher не может продолжить работу. Пожалуйста, перезапустите Okkei Patcher.</string>
+	<string name="error_install">Произошла ошибка при установке APK.\n%1$s</string>
 	<string name="error_no_free_space">Недостаточно свободного места. Убедитесь, что на устройстве свободно как минимум 2 ГБ.</string>
 	<string name="error_no_install_permission">Okkei Patcher не может получить разрешение на установку пакетов приложений.</string>
 	<string name="error_no_storage_permission">Okkei Patcher не может получить разрешение на чтение и запись внутренней памяти устройства.</string>
@@ -33,8 +31,8 @@
 	<string name="error_not_trustworthy_apk">Возможно, APK для установки не был создан с помощью Okkei Patcher.</string>
 	<string name="error_obb_not_found">Файл OBB не найден.</string>
 	<string name="error_patched">Патч уже применён к CHAOS;CHILD.</string>
-	<string name="error_uninstall">CHAOS;CHILD не был удалён с устройства. Пожалуйста, попробуйте заново.</string>
-	<string name="error_update_app_corrupted">Обновление Okkei Patcher повреждено. Попробуйте заново позже.</string>
+	<string name="error_uninstall">CHAOS;CHILD не был удалён с устройства.</string>
+	<string name="error_update_app_corrupted">Обновление Okkei Patcher повреждено.</string>
 
 	<!--Notifications-->
 	<string name="notification_channel_messages_description">Отображать предупреждения и сообщения</string>
@@ -48,10 +46,9 @@
 	<string name="notification_title_work_finished">Процесс завершён</string>
 
 	<!--Prompts-->
-	<string name="prompt_manifest">Для работы Okkei Patcher необходимо подключение к сети, чтобы загрузить данные о патче и обновлениях. Прежде чем продолжить, нажав на кнопку OK, убедитесь, что у Вас есть стабильное интернет-соединение.</string>
 	<string name="prompt_update_app_install">Сейчас последует запрос на установку обновления Okkei Patcher. Пожалуйста, подтвердите установку. Обратите внимание, что после установки Okkei Patcher будет закрыт, и Вам придётся перезапустить его вручную.</string>
 	<string name="prompt_update_app_available">Доступна новая версия Okkei Patcher!\nТекущая версия: %1$s\nРазмер обновления: %2$s МБ\nСписок изменений:\n%3$s</string>
-	<string name="prompt_update_patch_available">Доступно обновление патча! Нажмите кнопку ПАТЧ, чтобы загрузить и применить обновление.\nРазмер файлов для загрузки: %1$s МБ</string>
+	<string name="prompt_update_patch_available">Доступно обновление патча</string>
 
 	<!--Rationales-->
 	<string name="rationale_install_permission">Okkei Patcher требует разрешения на установку пакетов приложений из неизвестных источников для продолжения работы. После нажатия на кнопку OK откроется страница с настройками, где Вы должны активировать данную опцию. После этого Вы можете вернуться в Okkei Patcher с помощью кнопки или жеста Назад.</string>
@@ -79,7 +76,6 @@
 	<string name="status_comparing_saves">Сравнение хэшей сохранений…</string>
 	<string name="status_comparing_scripts">Сравнение хэшей скриптов…</string>
 	<string name="status_copying_apk">Копирование APK…</string>
-	<string name="status_data_cleared">Все данные очищены.</string>
 	<string name="status_downloading_obb">Загрузка OBB…</string>
 	<string name="status_downloading_scripts">Загрузка скриптов…</string>
 	<string name="status_extracting_scripts">Распаковка скриптов…</string>
