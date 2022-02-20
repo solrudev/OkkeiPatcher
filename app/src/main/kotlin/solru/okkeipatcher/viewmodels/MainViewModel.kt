@@ -15,13 +15,20 @@ import javax.inject.Provider
 @HiltViewModel
 class MainViewModel @Inject constructor(
 	private val getIsAppUpdateAvailableUseCase: IsAppUpdateAvailableUseCase,
-	private val getPatchUpdatesUseCase: Provider<GetPatchUpdatesUseCase>
+	private val getPatchUpdatesUseCaseProvider: Provider<GetPatchUpdatesUseCase>
 ) : ViewModel(), DefaultLifecycleObserver {
 
 	private val _isPatchEnabled = MutableStateFlow(!isPatched())
 	private val _isRestoreEnabled = MutableStateFlow(isPatched())
 	val isPatchEnabled = _isPatchEnabled.asStateFlow()
 	val isRestoreEnabled = _isRestoreEnabled.asStateFlow()
+
+	suspend fun patchUpdatesAvailable(): Boolean {
+		val getPatchUpdatesUseCase = getPatchUpdatesUseCaseProvider.get()
+		val updatesAvailable = getPatchUpdatesUseCase().available
+		_isPatchEnabled.value = updatesAvailable
+		return updatesAvailable
+	}
 
 	fun setIsPatched(value: Boolean) {
 		_isPatchEnabled.value = !value

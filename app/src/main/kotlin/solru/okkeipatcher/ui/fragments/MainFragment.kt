@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -26,6 +27,9 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 		setupNavigation()
 		viewLifecycleOwner.lifecycle.addObserver(viewModel)
 		viewLifecycleOwner.lifecycleScope.observeViewModel()
+		if (savedInstanceState == null) {
+			viewLifecycleOwner.lifecycleScope.checkPatchUpdates()
+		}
 	}
 
 	private fun setupNavigation() {
@@ -36,6 +40,14 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 		binding.buttonMainRestore.setOnClickListener {
 			val toRestoreFragment = MainFragmentDirections.actionMainFragmentToRestoreFragment()
 			findNavController().navigate(toRestoreFragment)
+		}
+	}
+
+	private fun CoroutineScope.checkPatchUpdates() = launch {
+		if (viewModel.patchUpdatesAvailable()) {
+			view?.let {
+				Snackbar.make(it, R.string.prompt_update_patch_available, Snackbar.LENGTH_LONG).show()
+			}
 		}
 	}
 
