@@ -12,7 +12,6 @@ import solru.okkeipatcher.data.LocalizedString
 import solru.okkeipatcher.data.patchupdates.PatchUpdates
 import solru.okkeipatcher.domain.AppKey
 import solru.okkeipatcher.domain.OkkeiStorage
-import solru.okkeipatcher.domain.services.gamefile.Apk
 import solru.okkeipatcher.domain.strategy.GameFileStrategy
 import solru.okkeipatcher.exceptions.OkkeiException
 import solru.okkeipatcher.utils.Preferences
@@ -84,13 +83,16 @@ class PatchService @Inject constructor(private val strategy: GameFileStrategy) :
 		}
 	}
 
-	private fun checkCanPatch(patchUpdates: PatchUpdates) {
+	private fun checkCanPatch(patchUpdates: PatchUpdates) = with(strategy) {
 		val isPatched = Preferences.get(AppKey.is_patched.name, false)
 		if (isPatched && !patchUpdates.available) {
 			throw OkkeiException(LocalizedString.resource(R.string.error_patched))
 		}
-		if (!Apk.isInstalled) {
-			throw OkkeiException(LocalizedString.resource(R.string.error_game_not_found))
+		apk.canPatch { failMessage ->
+			throw OkkeiException(failMessage)
+		}
+		obb.canPatch { failMessage ->
+			throw OkkeiException(failMessage)
 		}
 		if (!OkkeiStorage.isEnoughSpace) {
 			throw OkkeiException(LocalizedString.resource(R.string.error_no_free_space))

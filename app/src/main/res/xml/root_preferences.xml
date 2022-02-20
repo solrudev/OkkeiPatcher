@@ -1,0 +1,36 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+	<PreferenceCategory app:title="@string/preference_general_header">
+
+		<SwitchPreferenceCompat
+			app:icon="@drawable/ic_save_white_24dp"
+			app:key="process_save_data_enabled"
+			app:summary="@string/preference_save_data_summary"
+			app:title="@string/preference_save_data_title" />
+
+		<Preference
+			app:icon="@drawable/ic_clear_white_24dp"
+			app:key="clear_data"
+			app:persistent="false"
+			app:summary="@string/preference_clear_data_summary"
+			app:title="@string/preference_clear_data_title" />
+
+	</PreferenceCategory>
+
+	<PreferenceCategory app:title="@string/preference_miscellaneous_header">
+
+		<Preference
+			app:icon="@drawable/ic_info_white_24dp"
+			app:key="about"
+			app:persistent="false"
+			app:title="@string/preference_about_title" />
+
+		<Preference
+			app:icon="@drawable/ic_text_snippet_white_24dp"
+			app:key="third_party_notices"
+			app:persistent="false"
+			app:title="@string/preference_third_party_notices_title" />
+
+	</PreferenceCategory>
+
+</PreferenceScreen>

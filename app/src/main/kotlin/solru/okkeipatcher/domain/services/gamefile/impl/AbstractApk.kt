@@ -60,16 +60,29 @@ abstract class AbstractApk(
 	private val tempZipFiles = mutableListOf<ZipFile>()
 	private val tempZipFilesMutex = Mutex()
 
+	override fun canPatch(onFail: (LocalizedString) -> Unit): Boolean {
+		val canInstallPatchedApk = backupExists && commonFiles.signedApk.exists
+		if (!Apk.isInstalled && canInstallPatchedApk) {
+			return true
+		}
+		return if (Apk.isInstalled) {
+			true
+		} else {
+			onFail(LocalizedString.resource(R.string.error_game_not_found))
+			false
+		}
+	}
+
 	override fun deleteBackup() = commonFiles.backupApk.delete()
 
 	override suspend fun backup() {
+		progressPublisher.mutableProgress.reset()
+		mutableStatus.emit(LocalizedString.resource(R.string.status_comparing_apk))
+		if (verifyBackupIntegrity()) return
 		try {
-			progressPublisher.mutableProgress.reset()
 			if (!Apk.isInstalled) {
 				throw OkkeiException(LocalizedString.resource(R.string.error_game_not_found))
 			}
-			mutableStatus.emit(LocalizedString.resource(R.string.status_comparing_apk))
-			if (verifyBackupIntegrity()) return
 			mutableStatus.emit(LocalizedString.resource(R.string.status_backing_up_apk))
 			val hash = copyInstalledApkTo(commonFiles.backupApk, hashing = true)
 			mutableStatus.emit(LocalizedString.resource(R.string.status_writing_apk_hash))
@@ -83,13 +96,13 @@ abstract class AbstractApk(
 	override suspend fun restore() {
 		progressPublisher.mutableProgress.reset()
 		if (!commonFiles.backupApk.exists) {
-			throw OkkeiException(LocalizedString.resource(R.string.error_apk_not_found_restore))
+			throw OkkeiException(LocalizedString.resource(R.string.error_apk_not_found))
 		}
 		mutableStatus.emit(LocalizedString.resource(R.string.status_comparing_apk))
 		if (!commonFiles.backupApk.verify()) {
-			throw OkkeiException(LocalizedString.resource(R.string.error_not_trustworthy_apk_restore))
+			throw OkkeiException(LocalizedString.resource(R.string.error_not_trustworthy_apk))
 		}
-		mutableStatus.emit(LocalizedString.resource(R.string.empty))
+		mutableStatus.emit(LocalizedString.empty())
 		if (Apk.isInstalled) {
 			uninstall()
 		}
@@ -173,21 +186,26 @@ abstract class AbstractApk(
 
 	protected suspend fun installPatched(updating: Boolean) {
 		if (!commonFiles.signedApk.exists) {
-			throw OkkeiException(LocalizedString.resource(R.string.error_apk_not_found_patch))
+			throw OkkeiException(LocalizedString.resource(R.string.error_apk_not_found))
 		}
 		mutableStatus.emit(LocalizedString.resource(R.string.status_comparing_apk))
 		if (!commonFiles.signedApk.verify()) {
 			commonFiles.signedApk.delete()
-			throw OkkeiException(LocalizedString.resource(R.string.error_not_trustworthy_apk_patch))
+			throw OkkeiException(LocalizedString.resource(R.string.error_not_trustworthy_apk))
 		}
-		if (!updating) {
+		if (!updating && Apk.isInstalled) {
 			uninstall()
 		}
 		progressPublisher.mutableProgress.makeIndeterminate()
 		mutableStatus.emit(LocalizedString.resource(R.string.status_installing))
 		val installResult = PackageInstaller.installPackage(File(commonFiles.signedApk.fullPath))
 		if (installResult is InstallResult.Failure) {
-			throw OkkeiException(LocalizedString.resource(R.string.error_install))
+			throw OkkeiException(
+				LocalizedString.resource(
+					R.string.error_install,
+					installResult.cause?.message.toString()
+				)
+			)
 		}
 		commonFiles.signedApk.delete()
 	}
@@ -226,7 +244,12 @@ abstract class AbstractApk(
 		mutableStatus.emit(LocalizedString.resource(R.string.status_installing))
 		val installResult = PackageInstaller.installPackage(File(commonFiles.backupApk.fullPath))
 		if (installResult is InstallResult.Failure) {
-			throw OkkeiException(LocalizedString.resource(R.string.error_install))
+			throw OkkeiException(
+				LocalizedString.resource(
+					R.string.error_install,
+					installResult.cause?.message.toString()
+				)
+			)
 		}
 	}
 

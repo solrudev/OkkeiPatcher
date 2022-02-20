@@ -14,7 +14,7 @@ import solru.okkeipatcher.utils.Preferences
 import javax.inject.Provider
 
 @InstallIn(SingletonComponent::class)
-@Module
+@Module(includes = [UseCaseBindModule::class])
 object UseCaseModule {
 
 	@Provides

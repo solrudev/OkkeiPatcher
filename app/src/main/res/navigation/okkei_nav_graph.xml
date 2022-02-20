@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/okkei_nav_graph"
+	app:startDestination="@id/main_fragment">
+
+	<fragment
+		android:id="@+id/main_fragment"
+		android:name="solru.okkeipatcher.ui.fragments.MainFragment"
+		android:label="@string/app_name"
+		tools:layout="@layout/fragment_main">
+		<action
+			android:id="@+id/action_mainFragment_to_patchFragment"
+			app:destination="@id/patch_fragment"
+			app:enterAnim="@anim/nav_default_enter_anim"
+			app:exitAnim="@anim/nav_default_exit_anim"
+			app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+			app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+		<action
+			android:id="@+id/action_mainFragment_to_restoreFragment"
+			app:destination="@id/restore_fragment"
+			app:enterAnim="@anim/nav_default_enter_anim"
+			app:exitAnim="@anim/nav_default_exit_anim"
+			app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+			app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+		<action
+			android:id="@+id/action_mainFragment_to_settingsFragment"
+			app:destination="@id/settings_fragment"
+			app:enterAnim="@anim/nav_default_enter_anim"
+			app:exitAnim="@anim/nav_default_exit_anim"
+			app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+			app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+	</fragment>
+	<fragment
+		android:id="@+id/patch_fragment"
+		android:name="solru.okkeipatcher.ui.fragments.PatchFragment"
+		android:label="@string/patch"
+		tools:layout="@layout/fragment_work" />
+	<fragment
+		android:id="@+id/restore_fragment"
+		android:name="solru.okkeipatcher.ui.fragments.RestoreFragment"
+		android:label="@string/restoring"
+		tools:layout="@layout/fragment_work" />
+	<fragment
+		android:id="@+id/settings_fragment"
+		android:name="solru.okkeipatcher.ui.fragments.SettingsFragment"
+		android:label="@string/settings">
+		<action
+			android:id="@+id/action_settingsFragment_to_aboutFragment"
+			app:destination="@id/about_fragment"
+			app:enterAnim="@anim/nav_default_enter_anim"
+			app:exitAnim="@anim/nav_default_exit_anim"
+			app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+			app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+	</fragment>
+	<fragment
+		android:id="@+id/about_fragment"
+		android:name="solru.okkeipatcher.ui.fragments.AboutFragment"
+		android:label="@string/preference_about_title"
+		tools:layout="@layout/fragment_about" />
+</navigation>

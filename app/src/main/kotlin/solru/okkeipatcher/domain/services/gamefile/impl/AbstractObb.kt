@@ -22,22 +22,24 @@ abstract class AbstractObb(protected val commonFiles: CommonFiles) : ObservableS
 		progressPublisher.mutableProgress
 	)
 
+	override fun canPatch(onFail: (LocalizedString) -> Unit): Boolean {
+		if (!commonFiles.obbToPatch.exists && !backupExists) {
+			onFail(LocalizedString.resource(R.string.error_obb_not_found))
+			return false
+		}
+		return true
+	}
+
 	override fun deleteBackup() = commonFiles.backupObb.delete()
 
 	override suspend fun backup() {
 		progressPublisher.mutableProgress.reset()
-		if (!commonFiles.obbToBackup.exists) {
-			throw OkkeiException(LocalizedString.resource(R.string.error_obb_not_found))
-		}
 		mutableStatus.emit(LocalizedString.resource(R.string.status_comparing_obb))
 		if (verifyBackupIntegrity()) return
 		try {
-			progressPublisher.mutableProgress.reset()
 			if (!commonFiles.obbToBackup.exists) {
 				throw OkkeiException(LocalizedString.resource(R.string.error_obb_not_found))
 			}
-			mutableStatus.emit(LocalizedString.resource(R.string.status_comparing_obb))
-			if (verifyBackupIntegrity()) return
 			mutableStatus.emit(LocalizedString.resource(R.string.status_backing_up_obb))
 			val hash = commonFiles.obbToBackup.copyTo(commonFiles.backupObb, hashing = true)
 			mutableStatus.emit(LocalizedString.resource(R.string.status_writing_obb_hash))

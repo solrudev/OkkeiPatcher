@@ -19,7 +19,7 @@ import solru.okkeipatcher.R
 import solru.okkeipatcher.data.LocalizedString
 import solru.okkeipatcher.data.Message
 import solru.okkeipatcher.domain.services.ObservableService
-import solru.okkeipatcher.ui.activities.MainActivity
+import solru.okkeipatcher.ui.activities.OkkeiActivity
 import solru.okkeipatcher.utils.extensions.empty
 import solru.okkeipatcher.utils.extensions.putSerializable
 import java.util.concurrent.atomic.AtomicInteger
@@ -140,6 +140,9 @@ abstract class ForegroundWorker(
 		val notification = simpleNotificationBuilder.apply {
 			setContentTitle(titleString)
 			setContentText(messageString)
+			if (messageString.length > 28) {
+				setStyle(NotificationCompat.BigTextStyle().bigText(messageString))
+			}
 		}.build()
 		val notificationId = workerMessageNotificationId.incrementAndGet()
 		shownMessageNotificationsMutex.withLock {
@@ -153,7 +156,7 @@ abstract class ForegroundWorker(
 		progressNotification: Boolean
 	): NotificationCompat.Builder {
 		val contentTitle = title.resolve(applicationContext)
-		val activityIntent = Intent(applicationContext, MainActivity::class.java).apply {
+		val activityIntent = Intent(applicationContext, OkkeiActivity::class.java).apply {
 			flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
 		}
 		val contentIntent = PendingIntent.getActivity(

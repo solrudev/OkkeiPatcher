@@ -1,38 +1,42 @@
 ﻿<resources>
+	<!--General-->
 	<string name="abort">Стоп</string>
-	<string name="action_settings">Настройки</string>
+	<string name="settings">Настройки</string>
 	<string name="attention">Внимание</string>
-	<string name="back_button_pressed">Нажмите кнопку/используйте жест Назад снова, чтобы выйти</string>
-	<string name="checkbox_save_data">Делать копию/восст. сохранения</string>
-	<string name="clear_data">Очистить все данные</string>
-	<string name="dialog_cancel">Отмена</string>
-	<string name="dialog_exit">Выход</string>
-	<string name="dialog_update">Обновить</string>
+	<string name="exception">Возникло исключение</string>
+	<string name="about_version">Версия %1$s\nby solrudev</string>
+	<string name="not_implemented">Тут пока ничего нет…</string>
+	<string name="patch">Патч</string>
+	<string name="restoring">Восстановление</string>
+	<string name="toast_copied_to_clipboard">Скопировано в буфер обмена</string>
+	<string name="update">Обновление</string>
+
+	<!--Dialogs-->
+	<string name="dialog_button_cancel">Отмена</string>
+	<string name="dialog_button_copy_to_clipboard">Копировать в буфер обмена</string>
+
+	<!--Errors-->
 	<string name="error">Ошибка</string>
-	<string name="error_apk_not_found_patch">APK для установки не найден. Пожалуйста, начните процесс локализации заново.</string>
-	<string name="error_apk_not_found_restore">APK для установки не найден. Процесс восстановления отменён.</string>
+	<string name="error_apk_not_found">APK для установки не найден.</string>
 	<string name="error_backup_not_found">Резервная копия CHAOS;CHILD не найдена.</string>
 	<string name="error_game_not_found">CHAOS;CHILD не найден на этом устройстве.</string>
 	<string name="error_hash_obb_mismatch">Загруженный OBB повреждён. Пожалуйста, попробуйте перезапустить процесс патча.</string>
 	<string name="error_hash_scripts_mismatch">Загруженные скрипты повреждены. Пожалуйста, попробуйте перезапустить процесс патча.</string>
 	<string name="error_http_file_download">Во время загрузки файла произошла ошибка.</string>
-	<string name="error_install">Произошла ошибка при установке APK. Пожалуйста, попробуйте заново.</string>
+	<string name="error_install">Произошла ошибка при установке APK. Пожалуйста, попробуйте заново. Описание ошибки: %1$s</string>
 	<string name="error_manifest_corrupted">Манифест повреждён. Okkei Patcher не может продолжить работу. Пожалуйста, попробуйте перезапустить Okkei Patcher.</string>
 	<string name="error_manifest_download_failed">Не удалось загрузить манифест. Okkei Patcher не может продолжить работу. Пожалуйста, перезапустите Okkei Patcher.</string>
 	<string name="error_no_free_space">Недостаточно свободного места. Убедитесь, что на устройстве свободно как минимум 2 ГБ.</string>
 	<string name="error_no_install_permission">Okkei Patcher не может получить разрешение на установку пакетов приложений.</string>
 	<string name="error_no_storage_permission">Okkei Patcher не может получить разрешение на чтение и запись внутренней памяти устройства.</string>
 	<string name="error_not_patched">Патч ещё не был применён к CHAOS;CHILD.</string>
-	<string name="error_not_trustworthy_apk_patch">Возможно, APK для установки не был создан с помощью Okkei Patcher. Пожалуйста, начните процесс локализации заново.</string>
-	<string name="error_not_trustworthy_apk_restore">Возможно, APK для установки не был создан с помощью Okkei Patcher. Процесс восстановления отменён.</string>
-	<string name="error_obb_not_found">Файл OBB не найден. Процесс отменён.</string>
+	<string name="error_not_trustworthy_apk">Возможно, APK для установки не был создан с помощью Okkei Patcher.</string>
+	<string name="error_obb_not_found">Файл OBB не найден.</string>
 	<string name="error_patched">Патч уже применён к CHAOS;CHILD.</string>
 	<string name="error_uninstall">CHAOS;CHILD не был удалён с устройства. Пожалуйста, попробуйте заново.</string>
 	<string name="error_update_app_corrupted">Обновление Okkei Patcher повреждено. Попробуйте заново позже.</string>
-	<string name="exception">Возникло исключение</string>
-	<string name="info_version">Версия %1$s by solru</string>
-	<string name="not_implemented">Тут пока ничего нет…</string>
-	<string name="notice_exception">Отправьте файл \"bugreport.log\" из директории /sdcard/Android/data/%1$s/files/ разработчику приложения.</string>
+
+	<!--Notifications-->
 	<string name="notification_channel_messages_description">Отображать предупреждения и сообщения</string>
 	<string name="notification_channel_messages_name">Сообщения</string>
 	<string name="notification_channel_progress_description">Отображать текущий статус и прогресс</string>
@@ -42,15 +46,29 @@
 	<string name="notification_title_patch">Патчинг…</string>
 	<string name="notification_title_restore">Восстановление…</string>
 	<string name="notification_title_work_finished">Процесс завершён</string>
-	<string name="patch">Патч</string>
+
+	<!--Prompts-->
 	<string name="prompt_manifest">Для работы Okkei Patcher необходимо подключение к сети, чтобы загрузить данные о патче и обновлениях. Прежде чем продолжить, нажав на кнопку OK, убедитесь, что у Вас есть стабильное интернет-соединение.</string>
 	<string name="prompt_update_app_install">Сейчас последует запрос на установку обновления Okkei Patcher. Пожалуйста, подтвердите установку. Обратите внимание, что после установки Okkei Patcher будет закрыт, и Вам придётся перезапустить его вручную.</string>
 	<string name="prompt_update_app_available">Доступна новая версия Okkei Patcher!\nТекущая версия: %1$s\nРазмер обновления: %2$s МБ\nСписок изменений:\n%3$s</string>
 	<string name="prompt_update_patch_available">Доступно обновление патча! Нажмите кнопку ПАТЧ, чтобы загрузить и применить обновление.\nРазмер файлов для загрузки: %1$s МБ</string>
+
+	<!--Rationales-->
 	<string name="rationale_install_permission">Okkei Patcher требует разрешения на установку пакетов приложений из неизвестных источников для продолжения работы. После нажатия на кнопку OK откроется страница с настройками, где Вы должны активировать данную опцию. После этого Вы можете вернуться в Okkei Patcher с помощью кнопки или жеста Назад.</string>
 	<string name="rationale_storage_permission">Okkei Patcher требует разрешения на чтение и запись внутренней памяти устройства для продолжения работы. Хотите ли Вы попытаться дать разрешение ещё раз? В противном случае Okkei Patcher будет закрыт.</string>
 	<string name="rationale_storage_permission_denied">Okkei Patcher требует разрешения на чтение и запись внутренней памяти устройства для продолжения работы. Хотите ли Вы попытаться дать разрешение ещё раз? Если Вы нажмёте OK, откроются настройки Okkei Patcher, где Вы должны перейти в меню с разрешениями и активировать разрешение на доступ к внутренней памяти. В противном случае Okkei Patcher будет закрыт.</string>
-	<string name="restore">Восстановить</string>
+
+	<!--Settings-->
+	<string name="preference_general_header">Общие</string>
+	<string name="preference_miscellaneous_header">Разное</string>
+	<string name="preference_about_title">О программе</string>
+	<string name="preference_clear_data_title">Очистить все данные</string>
+	<string name="preference_save_data_title">Игровые сохранения</string>
+	<string name="preference_third_party_notices_title">Уведомления третьих сторон</string>
+	<string name="preference_clear_data_summary">Используйте эту опцию ТОЛЬКО при переустановке CHAOS;CHILD из-за повреждения данных</string>
+	<string name="preference_save_data_summary">Делать копию и восстанавливать сохранения игры</string>
+
+	<!--Statuses-->
 	<string name="status_aborted">Процесс отменён.</string>
 	<string name="status_backing_up_apk">Создание резервной копии APK…</string>
 	<string name="status_backing_up_obb">Создание резервной копии OBB…</string>
@@ -83,10 +101,10 @@
 	<string name="status_writing_patched_apk_hash">Запись хэша модифицированного APK…</string>
 	<string name="status_writing_save_data_hash">Запись хэша файла сохранений…</string>
 	<string name="status_writing_scripts_hash">Запись хэша скриптов…</string>
-	<string name="update">Обновление</string>
+
+	<!--Warnings-->
 	<string name="warning">Предупреждение</string>
 	<string name="warning_abort">Вы уверены, что хотите остановить процесс? Данные установки CHAOS;CHILD и/или данные Okkei Patcher могут быть повреждены.</string>
-	<string name="warning_clear_data">Вы собираетесь очистить ВСЕ данные Okkei Patcher, включая резервную копию предыдущей установки CHAOS;CHILD. Используйте эту опцию ТОЛЬКО при переустановке CHAOS;CHILD из-за повреждения данных. Данная операция не может быть отменена. Вы уверены, что хотите очистить все данные?</string>
 	<string name="warning_download_size">Будет загружено %1$s МБ данных. Убедитесь, что у Вас есть стабильное подключение к сети. Рекомендуется использовать безлимитное подключение (как например Wi-Fi).</string>
 	<string name="warning_long_process">Данный процесс может занять длительное время. Если Вы отмените его или закроете Okkei Patcher, данные установки CHAOS;CHILD и/или данные Okkei Patcher могут быть повреждены. Вы уверены, что хотите начать процесс?</string>
 	<string name="warning_save_data_backup_not_found_or_corrupted">Копия файла сохранений не найдена или повреждена. Okkei Patcher не может восстановить старые сохранения.</string>

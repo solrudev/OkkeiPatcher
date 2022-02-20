@@ -1,9 +1,7 @@
 package solru.okkeipatcher.repository.impl
 
-import androidx.core.os.ConfigurationCompat
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.withContext
-import solru.okkeipatcher.OkkeiApplication
 import solru.okkeipatcher.R
 import solru.okkeipatcher.api.OkkeiPatcherService
 import solru.okkeipatcher.data.LocalizedString
@@ -17,6 +15,7 @@ import solru.okkeipatcher.repository.OkkeiPatcherRepository
 import solru.okkeipatcher.utils.appVersionCode
 import solru.okkeipatcher.utils.extensions.reset
 import java.io.File
+import java.util.*
 import javax.inject.Inject
 
 private const val APP_UPDATE_FILE_NAME = "OkkeiPatcher.apk"
@@ -66,8 +65,7 @@ class OkkeiPatcherRepositoryImpl @Inject constructor(
 		return updateFile
 	}
 
-	override suspend fun getChangelog(): OkkeiPatcherChangelog {
-		val locale = ConfigurationCompat.getLocales(OkkeiApplication.context.resources.configuration)[0]
+	override suspend fun getChangelog(locale: Locale): OkkeiPatcherChangelog {
 		return okkeiPatcherService.getChangelog(locale.language)
 	}
 }

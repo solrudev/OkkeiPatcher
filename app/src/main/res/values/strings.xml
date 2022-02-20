@@ -1,44 +1,48 @@
 <resources>
+	<!--General-->
+	<string name="app_icon_content_description" translatable="false">App icon</string>
 	<string name="app_name" translatable="false">Okkei Patcher</string>
-	<string name="dialog_ok" translatable="false">OK</string>
-	<string name="empty" translatable="false" />
 	<string name="notification_channel_messages_id" translatable="false">OkkeiPatcher_Messages_NotificationChannel</string>
 	<string name="notification_channel_progress_id" translatable="false">OkkeiPatcher_Progress_NotificationChannel</string>
 	<string name="okkei" translatable="false">Okkei</string>
+	<string name="about_version">Version %1$s\nby solrudev</string>
 	<string name="abort">Abort</string>
-	<string name="action_settings">Settings</string>
+	<string name="settings">Settings</string>
 	<string name="attention">Attention</string>
-	<string name="back_button_pressed">Press back button/use the gesture again to exit</string>
-	<string name="checkbox_save_data">Backup/restore save data</string>
-	<string name="clear_data">Clear all data</string>
-	<string name="dialog_cancel">Cancel</string>
-	<string name="dialog_exit">Exit</string>
-	<string name="dialog_update">Update</string>
+	<string name="exception">Exception</string>
+	<string name="not_implemented">Nothing here yet…</string>
+	<string name="patch">Patch</string>
+	<string name="restoring">Restoring</string>
+	<string name="toast_copied_to_clipboard">Copied to clipboard</string>
+	<string name="update">Update</string>
+
+	<!--Dialogs-->
+	<string name="dialog_button_cancel">Cancel</string>
+	<string name="dialog_button_copy_to_clipboard">Copy to clipboard</string>
+	<string name="dialog_button_ok" translatable="false">OK</string>
+
+	<!--Errors-->
 	<string name="error">Error</string>
-	<string name="error_apk_not_found_patch">APK to be installed was not found. Please restart patching process.</string>
-	<string name="error_apk_not_found_restore">APK to be installed was not found. Okkei Patcher will now abort restoring process.</string>
+	<string name="error_apk_not_found">APK to be installed was not found.</string>
 	<string name="error_backup_not_found">Backup of CHAOS;CHILD was not found.</string>
 	<string name="error_game_not_found">CHAOS;CHILD was not found on this device.</string>
 	<string name="error_hash_obb_mismatch">Downloaded OBB is corrupted. Please try restarting patch process.</string>
 	<string name="error_hash_scripts_mismatch">Downloaded scripts are corrupted. Please try restarting patch process.</string>
 	<string name="error_http_file_download">An error occurred while downloading file.</string>
-	<string name="error_install">An error occurred while installing APK. Please try again.</string>
+	<string name="error_install">An error occurred while installing APK. Please try again. Error description: %1$s</string>
 	<string name="error_manifest_corrupted">Manifest is corrupted. Okkei Patcher can\'t proceed. Please try to restart Okkei Patcher.</string>
 	<string name="error_manifest_download_failed">Manifest download failed. Okkei Patcher can\'t proceed. Please restart Okkei Patcher.</string>
 	<string name="error_no_free_space">Not enough free disk space. Ensure that you have at least 2 GB of free space.</string>
 	<string name="error_no_install_permission">Okkei Patcher can\'t get permission to install packages.</string>
 	<string name="error_no_storage_permission">Okkei Patcher can\'t get permission to read from and write to external storage.</string>
 	<string name="error_not_patched">CHAOS;CHILD hasn\'t been patched yet.</string>
-	<string name="error_not_trustworthy_apk_patch">APK to be installed might be not created by Okkei Patcher. Please restart patching process.</string>
-	<string name="error_not_trustworthy_apk_restore">APK to be installed might be not created by Okkei Patcher. Okkei Patcher will now abort restoring process.</string>
-	<string name="error_obb_not_found">OBB file was not found. Okkei Patcher will abort current process.</string>
+	<string name="error_not_trustworthy_apk">APK to be installed might be not created by Okkei Patcher. Please restart patching process.</string>
+	<string name="error_obb_not_found">OBB file was not found.</string>
 	<string name="error_patched">CHAOS;CHILD is already patched.</string>
 	<string name="error_uninstall">CHAOS;CHILD was not uninstalled. Please try again.</string>
 	<string name="error_update_app_corrupted">Okkei Patcher update is corrupted. Try again later.</string>
-	<string name="exception">Exception</string>
-	<string name="info_version">Version %1$s by solru</string>
-	<string name="not_implemented">Nothing here yet…</string>
-	<string name="notice_exception">Send \"bugreport.log\" file located in /sdcard/Android/data/%1$s/files/ directory to the creator of this application.</string>
+
+	<!--Notifications-->
 	<string name="notification_channel_messages_description">Display warnings and messages</string>
 	<string name="notification_channel_messages_name">Messages</string>
 	<string name="notification_channel_progress_description">Display current status and progress</string>
@@ -48,15 +52,29 @@
 	<string name="notification_title_patch">Patching…</string>
 	<string name="notification_title_restore">Restoring…</string>
 	<string name="notification_title_work_finished">Work finished</string>
-	<string name="patch">Patch</string>
+
+	<!--Prompts-->
 	<string name="prompt_manifest">For proper work Okkei Patcher needs an internet connection to download data about patch and updates. Before you proceed by clicking OK ensure that you have stable internet connection.</string>
 	<string name="prompt_update_app_install">You will now be prompted to install updated Okkei Patcher. Please confirm the installation. Note that after that Okkei Patcher will be closed and you\'ll have to relaunch it manually.</string>
 	<string name="prompt_update_app_available">A new version of Okkei Patcher is available!\nCurrent version: %1$s\nDownload size: %2$s MB\nChangelog:\n%3$s</string>
 	<string name="prompt_update_patch_available">Patch update is available! Click PATCH button to download and apply the update.\nDownload size: %1$s MB</string>
+
+	<!--Rationales-->
 	<string name="rationale_install_permission">Okkei Patcher requires permission to install applications from unknown sources to continue. After pressing the OK button you will be redirected to your device settings where you should enable this option. Then you can return to Okkei Patcher using the back button or gesture.</string>
 	<string name="rationale_storage_permission">Okkei Patcher requires permission to read from and write to external storage to proceed. Would you like to try to grant permission again? Otherwise Okkei Patcher will be closed.</string>
 	<string name="rationale_storage_permission_denied">Okkei Patcher requires permission to read from and write to external storage to proceed. Would you like to try to grant permission again? If you click OK you will be redirected to Okkei Patcher settings where you should go to permissions settings and enable storage permission. Otherwise Okkei Patcher will be closed.</string>
-	<string name="restore">Restore</string>
+
+	<!--Settings-->
+	<string name="preference_general_header">General</string>
+	<string name="preference_miscellaneous_header">Miscellaneous</string>
+	<string name="preference_about_title">About</string>
+	<string name="preference_clear_data_title">Clear all data</string>
+	<string name="preference_save_data_title">Game save data</string>
+	<string name="preference_third_party_notices_title">Third-party notices</string>
+	<string name="preference_clear_data_summary">Use this ONLY when reinstalling CHAOS;CHILD due to data damage</string>
+	<string name="preference_save_data_summary">Backup and restore game save data</string>
+
+	<!--Statuses-->
 	<string name="status_aborted">Work aborted.</string>
 	<string name="status_backing_up_apk">Backing up APK…</string>
 	<string name="status_backing_up_obb">Backing up OBB…</string>
@@ -89,10 +107,10 @@
 	<string name="status_writing_patched_apk_hash">Writing patched APK checksum…</string>
 	<string name="status_writing_save_data_hash">Writing save data checksum…</string>
 	<string name="status_writing_scripts_hash">Writing scripts checksum…</string>
-	<string name="update">Update</string>
+
+	<!--Warnings-->
 	<string name="warning">Warning</string>
 	<string name="warning_abort">Are you sure you want to abort the process? Your CHAOS;CHILD installation and/or Okkei Patcher data may be damaged.</string>
-	<string name="warning_clear_data">You\'re about to clear ALL Okkei Patcher data including backup of your old CHAOS;CHILD installation. Use this ONLY when reinstalling CHAOS;CHILD because of data damage. This operation cannot be undone. Are you sure you want to clear all data?</string>
 	<string name="warning_download_size">You\'re about to download %1$s MB of data. Ensure that you have stable internet connection. It is recommended to use unmetered internet connection (such as Wi-Fi).</string>
 	<string name="warning_long_process">This process can take quite a long time. If you abort it or close Okkei Patcher your CHAOS;CHILD installation and/or Okkei Patcher data may be damaged. Are you sure you want to start the process?</string>
 	<string name="warning_save_data_backup_not_found_or_corrupted">Save data backup was not found or is corrupted. Okkei Patcher can not restore your save data.</string>

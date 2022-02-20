@@ -6,12 +6,14 @@ val androidGradleVersion: String by rootProject.extra
 val hiltVersion: String by rootProject.extra
 val ktorVersion: String by rootProject.extra
 val okioVersion: String by rootProject.extra
+val navigationVersion: String by rootProject.extra
 
 plugins {
 	id("com.android.application")
 	kotlin("android")
 	kotlin("kapt")
 	id("dagger.hilt.android.plugin")
+	id("androidx.navigation.safeargs.kotlin")
 }
 
 base {
@@ -83,28 +85,28 @@ android {
 	}
 
 	buildFeatures {
-		dataBinding = true
 		viewBinding = true
 	}
 }
 
 dependencies {
+	implementation("androidx.preference:preference:1.2.0")
 	val retrofitVersion = "2.9.0"
 	val moshiVersion = "1.13.0"
 
-	kapt("androidx.databinding:databinding-compiler:$androidGradleVersion")
 	kapt("com.google.dagger:hilt-compiler:$hiltVersion")
 	kapt("androidx.hilt:hilt-compiler:1.0.0")
 	kapt("com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion")
 
 	// AndroidX
 	implementation("com.google.dagger:hilt-android:$hiltVersion")
-	implementation("com.google.android.material:material:1.5.0")
 	implementation("androidx.preference:preference-ktx:1.2.0")
-	implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.4.0")
+	implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.4.1")
 	implementation("androidx.fragment:fragment-ktx:1.4.1")
 	implementation("androidx.hilt:hilt-work:1.0.0")
 	implementation("androidx.work:work-runtime-ktx:2.7.1")
+	implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
+	implementation("androidx.navigation:navigation-ui-ktx:$navigationVersion")
 
 	// I/O
 	val excludeOkHttp = Action<ExternalModuleDependency> {
@@ -124,6 +126,7 @@ dependencies {
 	implementation("com.anggrayudi:storage:1.1.0")
 	implementation("net.lingala.zip4j:zip4j:2.9.1")
 	implementation("io.github.solrudev:simpleinstaller:1.2.4")
+	implementation("com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.6")
 
 	debugImplementation("androidx.multidex:multidex:2.0.1")
 

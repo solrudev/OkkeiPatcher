@@ -10,11 +10,7 @@ object Preferences {
 	private val locker = Any()
 
 	private val sharedPreferences: SharedPreferences
-		get() = PreferenceManager.getDefaultSharedPreferences(
-			OkkeiApplication.context
-		)
-
-	val all: Map<String, *> get() = sharedPreferences.all
+		get() = PreferenceManager.getDefaultSharedPreferences(OkkeiApplication.context)
 
 	fun get(key: String, defaultValue: String) = sharedPreferences.getString(key, defaultValue)!!
 	fun get(key: String, defaultValue: Int) = sharedPreferences.getInt(key, defaultValue)

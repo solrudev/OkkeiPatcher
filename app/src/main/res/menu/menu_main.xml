@@ -1,10 +1,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
-	tools:context="solru.okkeipatcher.ui.activities.MainActivity">
+	tools:context="solru.okkeipatcher.ui.activities.OkkeiActivity">
 	<item
-		android:id="@+id/action_settings"
-		android:orderInCategory="100"
-		android:title="@string/action_settings"
-		app:showAsAction="never" />
+		android:id="@+id/action_update"
+		android:icon="@drawable/ic_update_white_24dp"
+		android:title="@string/update"
+		android:visible="false"
+		app:showAsAction="always"
+		tools:ignore="AlwaysShowAction" />
+	<item
+		android:id="@+id/settings_fragment"
+		android:icon="@drawable/ic_settings_white_24dp"
+		android:title="@string/settings"
+		app:showAsAction="always" />
 </menu>
