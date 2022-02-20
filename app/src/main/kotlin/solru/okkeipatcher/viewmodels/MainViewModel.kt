@@ -26,7 +26,7 @@ class MainViewModel @Inject constructor(
 	suspend fun patchUpdatesAvailable(): Boolean {
 		val getPatchUpdatesUseCase = getPatchUpdatesUseCaseProvider.get()
 		val updatesAvailable = getPatchUpdatesUseCase().available
-		_isPatchEnabled.value = updatesAvailable
+		_isPatchEnabled.value = updatesAvailable || !isPatched()
 		return updatesAvailable
 	}
 
