@@ -6,7 +6,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import solru.okkeipatcher.domain.AppKey
-import solru.okkeipatcher.domain.usecase.GetPatchSizeInMbUseCase
 import solru.okkeipatcher.domain.usecase.GetPatchUpdatesUseCase
 import solru.okkeipatcher.domain.usecase.IsAppUpdateAvailableUseCase
 import solru.okkeipatcher.utils.Preferences
@@ -16,8 +15,7 @@ import javax.inject.Provider
 @HiltViewModel
 class MainViewModel @Inject constructor(
 	private val getIsAppUpdateAvailableUseCase: IsAppUpdateAvailableUseCase,
-	private val getPatchUpdatesUseCase: Provider<GetPatchUpdatesUseCase>,
-	private val getPatchSizeInMbUseCase: Provider<GetPatchSizeInMbUseCase>
+	private val getPatchUpdatesUseCase: Provider<GetPatchUpdatesUseCase>
 ) : ViewModel(), DefaultLifecycleObserver {
 
 	private val _isPatchEnabled = MutableStateFlow(!isPatched())

@@ -3,7 +3,6 @@ package solru.okkeipatcher.ui.fragments
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
-import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -47,9 +46,6 @@ abstract class WorkFragment : Fragment(R.layout.fragment_work) {
 	protected abstract fun onSuccess()
 
 	private fun setupNavigation() {
-		requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-			onButtonClick()
-		}
 		binding.buttonWork.setOnClickListener {
 			onButtonClick()
 		}
