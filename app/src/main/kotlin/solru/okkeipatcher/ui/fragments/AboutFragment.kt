@@ -21,7 +21,7 @@ class AboutFragment : Fragment(R.layout.fragment_about) {
 
 	override fun onPrepareOptionsMenu(menu: Menu) {
 		super.onPrepareOptionsMenu(menu)
-		menu.clear()
+		menu.removeItem(R.id.settings_fragment)
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

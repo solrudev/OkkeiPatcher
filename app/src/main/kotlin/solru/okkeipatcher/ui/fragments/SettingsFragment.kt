@@ -22,7 +22,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
 	override fun onPrepareOptionsMenu(menu: Menu) {
 		super.onPrepareOptionsMenu(menu)
-		menu.clear()
+		menu.removeItem(R.id.settings_fragment)
 	}
 
 	override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
