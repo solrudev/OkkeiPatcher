@@ -23,7 +23,12 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 	private val binding by viewBinding(FragmentMainBinding::bind)
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		setupNavigation()
 		viewLifecycleOwner.lifecycle.addObserver(viewModel)
+		viewLifecycleOwner.lifecycleScope.observeViewModel()
+	}
+
+	private fun setupNavigation() {
 		binding.buttonMainPatch.setOnClickListener {
 			val toPatchFragment = MainFragmentDirections.actionMainFragmentToPatchFragment()
 			findNavController().navigate(toPatchFragment)
@@ -32,7 +37,6 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 			val toRestoreFragment = MainFragmentDirections.actionMainFragmentToRestoreFragment()
 			findNavController().navigate(toRestoreFragment)
 		}
-		viewLifecycleOwner.lifecycleScope.observeViewModel()
 	}
 
 	private fun CoroutineScope.observeViewModel() = launch {
@@ -49,9 +53,8 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 	}
 
 	private fun CoroutineScope.observeIsRestoreEnabled() = launch {
-		viewModel.isRestoreEnabled
-			.collect {
-				binding.buttonMainRestore.isEnabled = it
-			}
+		viewModel.isRestoreEnabled.collect {
+			binding.buttonMainRestore.isEnabled = it
+		}
 	}
 }

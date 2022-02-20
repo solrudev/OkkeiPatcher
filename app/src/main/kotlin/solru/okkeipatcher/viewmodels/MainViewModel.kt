@@ -8,14 +8,14 @@ import kotlinx.coroutines.flow.asStateFlow
 import solru.okkeipatcher.domain.AppKey
 import solru.okkeipatcher.domain.usecase.GetPatchSizeInMbUseCase
 import solru.okkeipatcher.domain.usecase.GetPatchUpdatesUseCase
-import solru.okkeipatcher.repository.OkkeiPatcherRepository
+import solru.okkeipatcher.domain.usecase.IsAppUpdateAvailableUseCase
 import solru.okkeipatcher.utils.Preferences
 import javax.inject.Inject
 import javax.inject.Provider
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-	private val okkeiPatcherRepository: OkkeiPatcherRepository,
+	private val getIsAppUpdateAvailableUseCase: IsAppUpdateAvailableUseCase,
 	private val getPatchUpdatesUseCase: Provider<GetPatchUpdatesUseCase>,
 	private val getPatchSizeInMbUseCase: Provider<GetPatchSizeInMbUseCase>
 ) : ViewModel(), DefaultLifecycleObserver {

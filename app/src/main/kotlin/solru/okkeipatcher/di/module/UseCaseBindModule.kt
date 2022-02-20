@@ -35,4 +35,20 @@ interface UseCaseBindModule {
 	@Binds
 	@Reusable
 	fun bindGetWorkStateFlowByIdUseCase(getWorkStateFlowByIdUseCase: GetWorkStateFlowByIdUseCaseImpl): GetWorkStateFlowByIdUseCase
+
+	@Binds
+	@Reusable
+	fun bindIsAppUpdateAvailableUseCase(isAppUpdateAvailableUseCase: IsAppUpdateAvailableUseCaseImpl): IsAppUpdateAvailableUseCase
+
+	@Binds
+	@Reusable
+	fun bindGetAppUpdateSizeInMbUseCase(getAppUpdateSizeInMbUseCase: GetAppUpdateSizeInMbUseCaseImpl): GetAppUpdateSizeInMbUseCase
+
+	@Binds
+	@Reusable
+	fun bindGetAppUpdateFileUseCase(getAppUpdateFileUseCase: GetAppUpdateFileUseCaseImpl): GetAppUpdateFileUseCase
+
+	@Binds
+	@Reusable
+	fun bindGetAppChangelogUseCase(getAppChangelogUseCase: GetAppChangelogUseCaseImpl): GetAppChangelogUseCase
 }

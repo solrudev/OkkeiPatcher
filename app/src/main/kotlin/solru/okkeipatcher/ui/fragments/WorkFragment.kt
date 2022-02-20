@@ -36,13 +36,8 @@ abstract class WorkFragment : Fragment(R.layout.fragment_work) {
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		setupNavigation()
 		viewLifecycleOwner.lifecycle.addObserver(viewModel)
-		requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-			onButtonClick()
-		}
-		binding.buttonWork.setOnClickListener {
-			onButtonClick()
-		}
 		viewLifecycleOwner.lifecycleScope.observeViewModel()
 		if (savedInstanceState == null && !viewModel.isWorkRunning) {
 			viewModel.startWork()
@@ -50,6 +45,15 @@ abstract class WorkFragment : Fragment(R.layout.fragment_work) {
 	}
 
 	protected abstract fun onSuccess()
+
+	private fun setupNavigation() {
+		requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+			onButtonClick()
+		}
+		binding.buttonWork.setOnClickListener {
+			onButtonClick()
+		}
+	}
 
 	private fun onButtonClick() {
 		if (viewModel.isWorkRunning) {
