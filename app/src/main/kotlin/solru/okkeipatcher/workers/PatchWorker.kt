@@ -33,7 +33,7 @@ class PatchWorker @AssistedInject constructor(
 		patchService.patch(processSaveData, patchUpdates)
 	}
 
-	override fun createDeepLinkPendingIntent() = NavDeepLinkBuilder(applicationContext)
+	override fun createPendingIntent() = NavDeepLinkBuilder(applicationContext)
 		.setGraph(R.navigation.okkei_nav_graph)
 		.setDestination(R.id.patch_fragment)
 		.createPendingIntent()

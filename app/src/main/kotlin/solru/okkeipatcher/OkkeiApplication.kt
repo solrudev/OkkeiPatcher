@@ -10,6 +10,7 @@ import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.core.content.getSystemService
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import dagger.hilt.android.HiltAndroidApp
@@ -28,19 +29,19 @@ class OkkeiApplication : Application(), Configuration.Provider {
 	override fun onCreate() {
 		super.onCreate()
 		instance = this
-		connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+		connectivityManager = getSystemService()
 		SimpleInstaller.initialize(this, R.mipmap.ic_launcher_foreground)
 		initIsPatchedPreference()
 		initSaveDataPreference()
 		initLanguagePreference()
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-			notificationManager.createNotificationChannel(
+			val notificationManager = getSystemService<NotificationManager>()
+			notificationManager?.createNotificationChannel(
 				R.string.notification_channel_progress_id,
 				R.string.notification_channel_progress_name,
 				R.string.notification_channel_progress_description
 			)
-			notificationManager.createNotificationChannel(
+			notificationManager?.createNotificationChannel(
 				R.string.notification_channel_messages_id,
 				R.string.notification_channel_messages_name,
 				R.string.notification_channel_messages_description
@@ -102,7 +103,7 @@ class OkkeiApplication : Application(), Configuration.Provider {
 			}
 
 		private lateinit var instance: OkkeiApplication
-		private lateinit var connectivityManager: ConnectivityManager
+		private var connectivityManager: ConnectivityManager? = null
 		private var _isNetworkAvailable = false
 
 		@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -128,12 +129,12 @@ class OkkeiApplication : Application(), Configuration.Provider {
 				addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
 				addTransportType(NetworkCapabilities.TRANSPORT_ETHERNET)
 			}.build()
-			connectivityManager.registerNetworkCallback(networkRequest, networkCallback)
+			connectivityManager?.registerNetworkCallback(networkRequest, networkCallback)
 		}
 
 		@Suppress("DEPRECATION")
 		private fun isActiveNetworkConnected(): Boolean {
-			val activeNetworkInfo = connectivityManager.activeNetworkInfo
+			val activeNetworkInfo = connectivityManager?.activeNetworkInfo
 			return activeNetworkInfo != null && activeNetworkInfo.isConnected
 		}
 	}

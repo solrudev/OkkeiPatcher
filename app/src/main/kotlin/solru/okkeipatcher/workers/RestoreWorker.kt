@@ -30,7 +30,7 @@ class RestoreWorker @AssistedInject constructor(
 		restoreService.restore(processSaveData)
 	}
 
-	override fun createDeepLinkPendingIntent() = NavDeepLinkBuilder(applicationContext)
+	override fun createPendingIntent() = NavDeepLinkBuilder(applicationContext)
 		.setGraph(R.navigation.okkei_nav_graph)
 		.setDestination(R.id.restore_fragment)
 		.createPendingIntent()

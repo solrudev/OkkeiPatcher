@@ -4,6 +4,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import androidx.core.app.NotificationCompat
+import androidx.core.content.getSystemService
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.ForegroundInfo
@@ -31,7 +32,7 @@ abstract class ForegroundWorker(
 ) : CoroutineWorker(context, workerParameters) {
 
 	protected abstract val progressNotificationTitle: LocalizedString
-	private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+	private val notificationManager = context.getSystemService<NotificationManager>()
 	private val progressNotificationId = workerProgressNotificationId.incrementAndGet()
 	private val shownMessageNotifications = mutableListOf<Int>()
 	private val shownMessageNotificationsMutex = Mutex()
@@ -45,7 +46,7 @@ abstract class ForegroundWorker(
 	}
 
 	protected abstract suspend fun doServiceWork()
-	protected abstract fun createDeepLinkPendingIntent(): PendingIntent
+	protected abstract fun createPendingIntent(): PendingIntent
 
 	final override suspend fun doWork(): Result {
 		try {
@@ -57,7 +58,7 @@ abstract class ForegroundWorker(
 			}
 		} catch (e: Throwable) {
 			shownMessageNotifications.forEach {
-				notificationManager.cancel(it)
+				notificationManager?.cancel(it)
 			}
 			if (e is CancellationException) {
 				throw e
@@ -115,7 +116,7 @@ abstract class ForegroundWorker(
 					it.progress,
 					it.isIndeterminate
 				).build()
-				notificationManager.notify(progressNotificationId, notification)
+				notificationManager?.notify(progressNotificationId, notification)
 				delay(1000)
 			}
 	}
@@ -126,7 +127,7 @@ abstract class ForegroundWorker(
 			.collect {
 				val statusString = it.resolve(applicationContext)
 				val notification = progressNotificationBuilder.setContentText(statusString).build()
-				notificationManager.notify(progressNotificationId, notification)
+				notificationManager?.notify(progressNotificationId, notification)
 				delay(500)
 			}
 	}
@@ -152,7 +153,7 @@ abstract class ForegroundWorker(
 		shownMessageNotificationsMutex.withLock {
 			shownMessageNotifications.add(notificationId)
 		}
-		notificationManager.notify(notificationId, notification)
+		notificationManager?.notify(notificationId, notification)
 	}
 
 	private fun createNotificationBuilder(
@@ -160,7 +161,7 @@ abstract class ForegroundWorker(
 		progressNotification: Boolean
 	): NotificationCompat.Builder {
 		val contentTitle = title.resolve(applicationContext)
-		val contentIntent = createDeepLinkPendingIntent()
+		val contentIntent = createPendingIntent()
 		val channelId = if (progressNotification) {
 			applicationContext.getString(R.string.notification_channel_progress_id)
 		} else {
