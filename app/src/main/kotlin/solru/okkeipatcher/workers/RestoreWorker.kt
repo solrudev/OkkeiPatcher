@@ -3,6 +3,7 @@ package solru.okkeipatcher.workers
 import android.content.Context
 import android.os.Build
 import androidx.hilt.work.HiltWorker
+import androidx.navigation.NavDeepLinkBuilder
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -17,12 +18,9 @@ class RestoreWorker @AssistedInject constructor(
 	@Assisted context: Context,
 	@Assisted workerParameters: WorkerParameters,
 	private val restoreService: RestoreService
-) : ForegroundWorker(
-	context,
-	workerParameters,
-	LocalizedString.resource(R.string.notification_title_restore),
-	restoreService
-) {
+) : ForegroundWorker(context, workerParameters, restoreService) {
+
+	override val progressNotificationTitle = LocalizedString.resource(R.string.notification_title_restore)
 
 	override suspend fun doServiceWork() {
 		val processSaveData = Preferences.get(
@@ -31,6 +29,11 @@ class RestoreWorker @AssistedInject constructor(
 		)
 		restoreService.restore(processSaveData)
 	}
+
+	override fun createDeepLinkPendingIntent() = NavDeepLinkBuilder(applicationContext)
+		.setGraph(R.navigation.okkei_nav_graph)
+		.setDestination(R.id.restore_fragment)
+		.createPendingIntent()
 
 	companion object {
 		const val WORK_NAME = "OKKEI_PATCHER_RESTORE_WORK"

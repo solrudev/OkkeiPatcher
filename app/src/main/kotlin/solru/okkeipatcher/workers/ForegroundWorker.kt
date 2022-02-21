@@ -3,8 +3,6 @@ package solru.okkeipatcher.workers
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
-import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.work.CoroutineWorker
 import androidx.work.Data
@@ -19,7 +17,6 @@ import solru.okkeipatcher.R
 import solru.okkeipatcher.data.LocalizedString
 import solru.okkeipatcher.data.Message
 import solru.okkeipatcher.domain.services.ObservableService
-import solru.okkeipatcher.ui.activities.OkkeiActivity
 import solru.okkeipatcher.utils.extensions.empty
 import solru.okkeipatcher.utils.extensions.putSerializable
 import java.util.concurrent.atomic.AtomicInteger
@@ -30,18 +27,25 @@ private val workerMessageNotificationId = AtomicInteger(49725)
 abstract class ForegroundWorker(
 	context: Context,
 	workerParameters: WorkerParameters,
-	notificationTitle: LocalizedString,
 	private val service: ObservableService
 ) : CoroutineWorker(context, workerParameters) {
 
+	protected abstract val progressNotificationTitle: LocalizedString
 	private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-	private val simpleNotificationBuilder = createNotificationBuilder(progressNotification = false)
-	private val progressNotificationBuilder = createNotificationBuilder(notificationTitle, progressNotification = true)
 	private val progressNotificationId = workerProgressNotificationId.incrementAndGet()
 	private val shownMessageNotifications = mutableListOf<Int>()
 	private val shownMessageNotificationsMutex = Mutex()
 
+	private val simpleNotificationBuilder by lazy {
+		createNotificationBuilder(progressNotification = false)
+	}
+
+	private val progressNotificationBuilder by lazy {
+		createNotificationBuilder(progressNotificationTitle, progressNotification = true)
+	}
+
 	protected abstract suspend fun doServiceWork()
+	protected abstract fun createDeepLinkPendingIntent(): PendingIntent
 
 	final override suspend fun doWork(): Result {
 		try {
@@ -156,19 +160,7 @@ abstract class ForegroundWorker(
 		progressNotification: Boolean
 	): NotificationCompat.Builder {
 		val contentTitle = title.resolve(applicationContext)
-		val activityIntent = Intent(applicationContext, OkkeiActivity::class.java).apply {
-			flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-		}
-		val contentIntent = PendingIntent.getActivity(
-			applicationContext,
-			0,
-			activityIntent,
-			PendingIntent.FLAG_UPDATE_CURRENT.apply {
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-					this or PendingIntent.FLAG_IMMUTABLE
-				}
-			}
-		)
+		val contentIntent = createDeepLinkPendingIntent()
 		val channelId = if (progressNotification) {
 			applicationContext.getString(R.string.notification_channel_progress_id)
 		} else {
