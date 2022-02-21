@@ -66,7 +66,6 @@
 	<string name="preference_save_data_summary">Делать копию и восстанавливать сохранения игры</string>
 
 	<!--Statuses-->
-	<string name="status_aborted">Процесс отменён.</string>
 	<string name="status_backing_up_apk">Создание резервной копии APK…</string>
 	<string name="status_backing_up_obb">Создание резервной копии OBB…</string>
 	<string name="status_backing_up_save_data">Создание копии файла сохранений…</string>
@@ -80,16 +79,12 @@
 	<string name="status_downloading_scripts">Загрузка скриптов…</string>
 	<string name="status_extracting_scripts">Распаковка скриптов…</string>
 	<string name="status_installing">Установка…</string>
-	<string name="status_manifest_backup_used">Используется резервная копия манифеста.</string>
-	<string name="status_manifest_downloading">Загрузка манифеста…</string>
-	<string name="status_manifest_download_completed">Манифест загружен.</string>
-	<string name="status_patch_success">Локализация прошла успешно.</string>
 	<string name="status_removing_signature">Удаление старой подписи…</string>
 	<string name="status_replacing_scripts">Замена скриптов…</string>
-	<string name="status_restore_success">Резервная копия восстановлена успешно.</string>
 	<string name="status_restoring_obb">Восстановление OBB…</string>
 	<string name="status_restoring_saves">Восстановление файла сохранений…</string>
 	<string name="status_signing_apk">Подпись APK…</string>
+	<string name="status_succeeded">Процесс прошёл успешно.</string>
 	<string name="status_uninstalling">Деинсталляция…</string>
 	<string name="status_update_app_downloading">Загрузка обновления…</string>
 	<string name="status_writing_apk_hash">Запись хэша APK…</string>

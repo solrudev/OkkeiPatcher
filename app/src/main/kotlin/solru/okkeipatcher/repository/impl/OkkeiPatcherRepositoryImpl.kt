@@ -1,7 +1,5 @@
 package solru.okkeipatcher.repository.impl
 
-import kotlinx.coroutines.NonCancellable
-import kotlinx.coroutines.withContext
 import solru.okkeipatcher.R
 import solru.okkeipatcher.api.OkkeiPatcherService
 import solru.okkeipatcher.data.LocalizedString
@@ -13,7 +11,6 @@ import solru.okkeipatcher.io.services.HttpDownloader
 import solru.okkeipatcher.io.utils.extensions.download
 import solru.okkeipatcher.repository.OkkeiPatcherRepository
 import solru.okkeipatcher.utils.appVersionCode
-import solru.okkeipatcher.utils.extensions.reset
 import java.io.File
 import java.util.*
 import javax.inject.Inject
@@ -55,11 +52,10 @@ class OkkeiPatcherRepositoryImpl @Inject constructor(
 				throw OkkeiException(LocalizedString.resource(R.string.error_update_app_corrupted))
 			}
 		} catch (e: Throwable) {
-			if (updateFile.exists()) updateFile.delete()
-			withContext(NonCancellable) { mutableStatus.emit(LocalizedString.resource(R.string.status_aborted)) }
+			if (updateFile.exists()) {
+				updateFile.delete()
+			}
 			throw e
-		} finally {
-			withContext(NonCancellable) { progressPublisher.mutableProgress.reset() }
 		}
 		isUpdateDownloaded = true
 		return updateFile

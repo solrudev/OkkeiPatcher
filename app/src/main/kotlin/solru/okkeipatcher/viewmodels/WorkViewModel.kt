@@ -75,6 +75,7 @@ abstract class WorkViewModel(
 					}
 					WorkState.Succeeded -> {
 						_buttonText.value = LocalizedString.resource(R.string.dialog_button_ok)
+						_status.value = LocalizedString.resource(R.string.status_succeeded)
 						_workSucceeded.emit(Unit)
 						clearNotificationsUseCase()
 					}

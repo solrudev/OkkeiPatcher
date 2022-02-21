@@ -1,12 +1,10 @@
 package solru.okkeipatcher.domain.services
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.shareIn
-import kotlinx.coroutines.withContext
 import solru.okkeipatcher.R
 import solru.okkeipatcher.data.LocalizedString
 import solru.okkeipatcher.domain.AppKey
@@ -14,7 +12,6 @@ import solru.okkeipatcher.domain.OkkeiStorage
 import solru.okkeipatcher.domain.strategy.GameFileStrategy
 import solru.okkeipatcher.exceptions.OkkeiException
 import solru.okkeipatcher.utils.Preferences
-import solru.okkeipatcher.utils.extensions.reset
 import javax.inject.Inject
 import kotlin.coroutines.EmptyCoroutineContext
 
@@ -61,13 +58,8 @@ class RestoreService @Inject constructor(private val strategy: GameFileStrategy)
 			apk.deleteBackup()
 			obb.deleteBackup()
 			Preferences.set(AppKey.is_patched.name, false)
-			mutableStatus.emit(LocalizedString.resource(R.string.status_restore_success))
-		} catch (e: Throwable) {
-			withContext(NonCancellable) { mutableStatus.emit(LocalizedString.resource(R.string.status_aborted)) }
-			throw e
 		} finally {
 			strategy.close()
-			withContext(NonCancellable) { progressPublisher.mutableProgress.reset() }
 			sharingScope.cancel()
 		}
 	}
