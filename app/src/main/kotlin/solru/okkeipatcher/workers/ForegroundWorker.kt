@@ -1,4 +1,4 @@
-package solru.okkeipatcher.domain.workers
+package solru.okkeipatcher.workers
 
 import android.app.NotificationManager
 import android.app.PendingIntent

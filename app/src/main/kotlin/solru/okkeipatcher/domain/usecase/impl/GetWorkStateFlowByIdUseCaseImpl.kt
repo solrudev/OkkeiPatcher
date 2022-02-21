@@ -11,8 +11,8 @@ import solru.okkeipatcher.data.LocalizedString
 import solru.okkeipatcher.data.ProgressData
 import solru.okkeipatcher.data.WorkState
 import solru.okkeipatcher.domain.usecase.GetWorkStateFlowByIdUseCase
-import solru.okkeipatcher.domain.workers.ForegroundWorker
 import solru.okkeipatcher.utils.extensions.getSerializable
+import solru.okkeipatcher.workers.ForegroundWorker
 import java.util.*
 import javax.inject.Inject
 

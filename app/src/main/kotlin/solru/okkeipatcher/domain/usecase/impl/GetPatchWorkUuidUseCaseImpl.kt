@@ -3,7 +3,7 @@ package solru.okkeipatcher.domain.usecase.impl
 import androidx.work.WorkManager
 import solru.okkeipatcher.OkkeiApplication
 import solru.okkeipatcher.domain.usecase.GetPatchWorkUuidUseCase
-import solru.okkeipatcher.domain.workers.PatchWorker
+import solru.okkeipatcher.workers.PatchWorker
 import javax.inject.Inject
 
 class GetPatchWorkUuidUseCaseImpl @Inject constructor() : GetPatchWorkUuidUseCase {

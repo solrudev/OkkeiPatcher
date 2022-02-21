@@ -5,7 +5,7 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import solru.okkeipatcher.OkkeiApplication
 import solru.okkeipatcher.domain.usecase.StartPatchWorkUseCase
-import solru.okkeipatcher.domain.workers.PatchWorker
+import solru.okkeipatcher.workers.PatchWorker
 import java.util.*
 import javax.inject.Inject
 
