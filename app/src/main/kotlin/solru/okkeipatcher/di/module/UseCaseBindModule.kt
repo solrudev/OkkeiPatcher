@@ -30,7 +30,7 @@ interface UseCaseBindModule {
 
 	@Binds
 	@Reusable
-	fun bindCancelWorkUseCase(cancelWorkUseCase: CancelWorkUseCaseImpl): CancelWorkUseCase
+	fun bindCancelWorkByIdUseCase(cancelWorkByIdUseCase: CancelWorkByIdUseCaseImpl): CancelWorkByIdUseCase
 
 	@Binds
 	@Reusable

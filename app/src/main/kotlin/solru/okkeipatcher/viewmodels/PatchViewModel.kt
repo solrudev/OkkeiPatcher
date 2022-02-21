@@ -2,7 +2,7 @@ package solru.okkeipatcher.viewmodels
 
 import androidx.lifecycle.LifecycleOwner
 import dagger.hilt.android.lifecycle.HiltViewModel
-import solru.okkeipatcher.domain.usecase.CancelWorkUseCase
+import solru.okkeipatcher.domain.usecase.CancelWorkByIdUseCase
 import solru.okkeipatcher.domain.usecase.GetPatchWorkUuidUseCase
 import solru.okkeipatcher.domain.usecase.GetWorkStateFlowByIdUseCase
 import solru.okkeipatcher.domain.usecase.StartPatchWorkUseCase
@@ -12,7 +12,7 @@ import javax.inject.Inject
 class PatchViewModel @Inject constructor(
 	private val startPatchWorkUseCase: StartPatchWorkUseCase,
 	private val getPatchWorkUuidUseCase: GetPatchWorkUuidUseCase,
-	private val cancelWorkUseCase: CancelWorkUseCase,
+	private val cancelWorkByIdUseCase: CancelWorkByIdUseCase,
 	getWorkStateFlowByIdUseCase: GetWorkStateFlowByIdUseCase
 ) : WorkViewModel(getWorkStateFlowByIdUseCase) {
 
@@ -26,7 +26,7 @@ class PatchViewModel @Inject constructor(
 
 	override fun cancelWork() {
 		getPatchWorkUuidUseCase()?.let {
-			cancelWorkUseCase(it)
+			cancelWorkByIdUseCase(it)
 		}
 	}
 

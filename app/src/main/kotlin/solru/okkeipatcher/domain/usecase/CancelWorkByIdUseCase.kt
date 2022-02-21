@@ -2,6 +2,6 @@ package solru.okkeipatcher.domain.usecase
 
 import java.util.*
 
-interface CancelWorkUseCase {
+interface CancelWorkByIdUseCase {
 	operator fun invoke(workId: UUID)
 }
