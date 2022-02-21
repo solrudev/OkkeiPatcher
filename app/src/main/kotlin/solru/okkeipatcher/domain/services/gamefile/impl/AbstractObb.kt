@@ -22,9 +22,9 @@ abstract class AbstractObb(protected val commonFiles: CommonFiles) : ObservableS
 		progressPublisher._progress
 	)
 
-	override fun canPatch(onFail: (LocalizedString) -> Unit): Boolean {
+	override fun canPatch(onNegative: (LocalizedString) -> Unit): Boolean {
 		if (!commonFiles.obbToPatch.exists && !backupExists) {
-			onFail(LocalizedString.resource(R.string.error_obb_not_found))
+			onNegative(LocalizedString.resource(R.string.error_obb_not_found))
 			return false
 		}
 		return true

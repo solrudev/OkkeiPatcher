@@ -60,7 +60,7 @@ abstract class AbstractApk(
 	private val tempZipFiles = mutableListOf<ZipFile>()
 	private val tempZipFilesMutex = Mutex()
 
-	override fun canPatch(onFail: (LocalizedString) -> Unit): Boolean {
+	override fun canPatch(onNegative: (LocalizedString) -> Unit): Boolean {
 		val canInstallPatchedApk = backupExists && commonFiles.signedApk.exists
 		if (!Apk.isInstalled && canInstallPatchedApk) {
 			return true
@@ -68,7 +68,7 @@ abstract class AbstractApk(
 		return if (Apk.isInstalled) {
 			true
 		} else {
-			onFail(LocalizedString.resource(R.string.error_game_not_found))
+			onNegative(LocalizedString.resource(R.string.error_game_not_found))
 			false
 		}
 	}
