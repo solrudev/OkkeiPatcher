@@ -51,4 +51,8 @@ interface UseCaseBindModule {
 	@Binds
 	@Reusable
 	fun bindGetAppChangelogUseCase(getAppChangelogUseCase: GetAppChangelogUseCaseImpl): GetAppChangelogUseCase
+
+	@Binds
+	@Reusable
+	fun bindClearNotificationsUseCase(clearNotificationsUseCase: ClearNotificationsUseCaseImpl): ClearNotificationsUseCase
 }

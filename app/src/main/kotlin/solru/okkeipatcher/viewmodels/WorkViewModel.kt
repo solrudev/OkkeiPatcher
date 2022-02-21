@@ -10,11 +10,14 @@ import solru.okkeipatcher.data.LocalizedString
 import solru.okkeipatcher.data.Message
 import solru.okkeipatcher.data.ProgressData
 import solru.okkeipatcher.data.WorkState
+import solru.okkeipatcher.domain.usecase.ClearNotificationsUseCase
 import solru.okkeipatcher.domain.usecase.GetWorkStateFlowByIdUseCase
 import java.util.*
 
-abstract class WorkViewModel(private val getWorkStateFlowByIdUseCase: GetWorkStateFlowByIdUseCase) : ViewModel(),
-	DefaultLifecycleObserver {
+abstract class WorkViewModel(
+	private val getWorkStateFlowByIdUseCase: GetWorkStateFlowByIdUseCase,
+	private val clearNotificationsUseCase: ClearNotificationsUseCase
+) : ViewModel(), DefaultLifecycleObserver {
 
 	protected val workObservingScope = CoroutineScope(Dispatchers.Main.immediate)
 	private var isWorkObserved = false
@@ -68,10 +71,12 @@ abstract class WorkViewModel(private val getWorkStateFlowByIdUseCase: GetWorkSta
 							LocalizedString.resource(R.string.exception),
 							LocalizedString.raw(stackTrace)
 						)
+						clearNotificationsUseCase()
 					}
 					WorkState.Succeeded -> {
 						_buttonText.value = LocalizedString.resource(R.string.dialog_button_ok)
 						_workSucceeded.emit(Unit)
+						clearNotificationsUseCase()
 					}
 					WorkState.Canceled -> _workCanceled.emit(Unit)
 					WorkState.Unknown -> {}

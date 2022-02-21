@@ -2,10 +2,7 @@ package solru.okkeipatcher.viewmodels
 
 import androidx.lifecycle.LifecycleOwner
 import dagger.hilt.android.lifecycle.HiltViewModel
-import solru.okkeipatcher.domain.usecase.CancelWorkByIdUseCase
-import solru.okkeipatcher.domain.usecase.GetPatchWorkUuidUseCase
-import solru.okkeipatcher.domain.usecase.GetWorkStateFlowByIdUseCase
-import solru.okkeipatcher.domain.usecase.StartPatchWorkUseCase
+import solru.okkeipatcher.domain.usecase.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -13,8 +10,9 @@ class PatchViewModel @Inject constructor(
 	private val startPatchWorkUseCase: StartPatchWorkUseCase,
 	private val getPatchWorkUuidUseCase: GetPatchWorkUuidUseCase,
 	private val cancelWorkByIdUseCase: CancelWorkByIdUseCase,
-	getWorkStateFlowByIdUseCase: GetWorkStateFlowByIdUseCase
-) : WorkViewModel(getWorkStateFlowByIdUseCase) {
+	getWorkStateFlowByIdUseCase: GetWorkStateFlowByIdUseCase,
+	clearNotificationsUseCase: ClearNotificationsUseCase
+) : WorkViewModel(getWorkStateFlowByIdUseCase, clearNotificationsUseCase) {
 
 	override val isWorkRunning: Boolean
 		get() = getPatchWorkUuidUseCase() != null
