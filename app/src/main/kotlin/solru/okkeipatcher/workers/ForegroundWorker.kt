@@ -57,9 +57,6 @@ abstract class ForegroundWorker(
 				observeJob.cancel()
 			}
 		} catch (e: Throwable) {
-			shownMessageNotifications.forEach {
-				notificationManager?.cancel(it)
-			}
 			if (e is CancellationException) {
 				throw e
 			}
@@ -73,6 +70,10 @@ abstract class ForegroundWorker(
 					.putSerializable(KEY_FAILURE_CAUSE, e)
 					.build()
 			)
+		} finally {
+			shownMessageNotifications.forEach {
+				notificationManager?.cancel(it)
+			}
 		}
 		val successMessage = Message(
 			LocalizedString.resource(R.string.notification_title_work_finished),
