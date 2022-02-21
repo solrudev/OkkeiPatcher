@@ -32,7 +32,7 @@ abstract class VerifiableFile(private val fileImplementation: File) : File by fi
 		if (file.exists) {
 			coroutineScope {
 				val progressJob = launch {
-					progressPublisher.mutableProgress.emitAll(file.progress)
+					progressPublisher._progress.emitAll(file.progress)
 				}
 				hashToCompare = file.computeHash()
 				progressJob.cancel()

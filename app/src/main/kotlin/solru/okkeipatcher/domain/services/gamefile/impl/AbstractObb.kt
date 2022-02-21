@@ -19,7 +19,7 @@ abstract class AbstractObb(protected val commonFiles: CommonFiles) : ObservableS
 	override val progress = merge(
 		commonFiles.backupObb.progress,
 		commonFiles.obbToBackup.progress,
-		progressPublisher.mutableProgress
+		progressPublisher._progress
 	)
 
 	override fun canPatch(onFail: (LocalizedString) -> Unit): Boolean {
@@ -33,16 +33,16 @@ abstract class AbstractObb(protected val commonFiles: CommonFiles) : ObservableS
 	override fun deleteBackup() = commonFiles.backupObb.delete()
 
 	override suspend fun backup() {
-		progressPublisher.mutableProgress.reset()
-		mutableStatus.emit(LocalizedString.resource(R.string.status_comparing_obb))
+		progressPublisher._progress.reset()
+		_status.emit(LocalizedString.resource(R.string.status_comparing_obb))
 		if (verifyBackupIntegrity()) return
 		try {
 			if (!commonFiles.obbToBackup.exists) {
 				throw OkkeiException(LocalizedString.resource(R.string.error_obb_not_found))
 			}
-			mutableStatus.emit(LocalizedString.resource(R.string.status_backing_up_obb))
+			_status.emit(LocalizedString.resource(R.string.status_backing_up_obb))
 			val hash = commonFiles.obbToBackup.copyTo(commonFiles.backupObb, hashing = true)
-			mutableStatus.emit(LocalizedString.resource(R.string.status_writing_obb_hash))
+			_status.emit(LocalizedString.resource(R.string.status_writing_obb_hash))
 			Preferences.set(CommonFileHashKey.backup_obb_hash.name, hash)
 		} catch (e: Throwable) {
 			commonFiles.backupObb.delete()
@@ -52,11 +52,11 @@ abstract class AbstractObb(protected val commonFiles: CommonFiles) : ObservableS
 
 	override suspend fun restore() {
 		try {
-			progressPublisher.mutableProgress.reset()
+			progressPublisher._progress.reset()
 			if (!commonFiles.backupObb.exists) {
 				throw OkkeiException(LocalizedString.resource(R.string.error_obb_not_found))
 			}
-			mutableStatus.emit(LocalizedString.resource(R.string.status_restoring_obb))
+			_status.emit(LocalizedString.resource(R.string.status_restoring_obb))
 			commonFiles.backupObb.copyTo(commonFiles.obbToBackup)
 		} catch (e: Throwable) {
 			commonFiles.obbToBackup.delete()

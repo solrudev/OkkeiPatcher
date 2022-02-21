@@ -133,10 +133,9 @@ abstract class ForegroundWorker(
 	}
 
 	private fun CoroutineScope.collectWarnings() = launch {
-		service.messages
-			.collect {
-				displayMessageNotification(it)
-			}
+		service.messages.collect {
+			displayMessageNotification(it)
+		}
 	}
 
 	private suspend fun displayMessageNotification(message: Message) {

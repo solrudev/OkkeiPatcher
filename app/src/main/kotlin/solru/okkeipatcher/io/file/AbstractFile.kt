@@ -12,7 +12,7 @@ abstract class AbstractFile(
 
 	override suspend fun computeHash() = createInputStream().use {
 		streamCopier.copy(it, BlackholeOutputStream(), length, hashing = true) { progressData ->
-			progressPublisher.mutableProgress.emit(progressData)
+			progressPublisher._progress.emit(progressData)
 		}
 	}
 
@@ -22,7 +22,7 @@ abstract class AbstractFile(
 		createInputStream().use { inputFile ->
 			destinationFile.createOutputStream().use { outputFile ->
 				return streamCopier.copy(inputFile, outputFile, length, hashing) { progressData ->
-					progressPublisher.mutableProgress.emit(progressData)
+					progressPublisher._progress.emit(progressData)
 				}
 			}
 		}

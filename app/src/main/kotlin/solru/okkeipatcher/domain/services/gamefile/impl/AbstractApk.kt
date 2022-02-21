@@ -54,7 +54,7 @@ abstract class AbstractApk(
 		commonFiles.tempApk.progress,
 		commonFiles.signedApk.progress,
 		PackageInstaller.progress.map { ProgressData(it.progress, it.max, it.isIndeterminate) },
-		progressPublisher.mutableProgress
+		progressPublisher._progress
 	)
 
 	private val tempZipFiles = mutableListOf<ZipFile>()
@@ -76,16 +76,16 @@ abstract class AbstractApk(
 	override fun deleteBackup() = commonFiles.backupApk.delete()
 
 	override suspend fun backup() {
-		progressPublisher.mutableProgress.reset()
-		mutableStatus.emit(LocalizedString.resource(R.string.status_comparing_apk))
+		progressPublisher._progress.reset()
+		_status.emit(LocalizedString.resource(R.string.status_comparing_apk))
 		if (verifyBackupIntegrity()) return
 		try {
 			if (!Apk.isInstalled) {
 				throw OkkeiException(LocalizedString.resource(R.string.error_game_not_found))
 			}
-			mutableStatus.emit(LocalizedString.resource(R.string.status_backing_up_apk))
+			_status.emit(LocalizedString.resource(R.string.status_backing_up_apk))
 			val hash = copyInstalledApkTo(commonFiles.backupApk, hashing = true)
-			mutableStatus.emit(LocalizedString.resource(R.string.status_writing_apk_hash))
+			_status.emit(LocalizedString.resource(R.string.status_writing_apk_hash))
 			Preferences.set(CommonFileHashKey.backup_apk_hash.name, hash)
 		} catch (e: Throwable) {
 			commonFiles.backupApk.delete()
@@ -94,15 +94,15 @@ abstract class AbstractApk(
 	}
 
 	override suspend fun restore() {
-		progressPublisher.mutableProgress.reset()
+		progressPublisher._progress.reset()
 		if (!commonFiles.backupApk.exists) {
 			throw OkkeiException(LocalizedString.resource(R.string.error_apk_not_found))
 		}
-		mutableStatus.emit(LocalizedString.resource(R.string.status_comparing_apk))
+		_status.emit(LocalizedString.resource(R.string.status_comparing_apk))
 		if (!commonFiles.backupApk.verify()) {
 			throw OkkeiException(LocalizedString.resource(R.string.error_not_trustworthy_apk))
 		}
-		mutableStatus.emit(LocalizedString.empty())
+		_status.emit(LocalizedString.empty())
 		if (Apk.isInstalled) {
 			uninstall()
 		}
@@ -148,8 +148,8 @@ abstract class AbstractApk(
 
 	@Suppress("BlockingMethodInNonBlockingContext")
 	suspend fun sign() {
-		mutableStatus.emit(LocalizedString.resource(R.string.status_signing_apk))
-		progressPublisher.mutableProgress.makeIndeterminate()
+		_status.emit(LocalizedString.resource(R.string.status_signing_apk))
+		progressPublisher._progress.makeIndeterminate()
 		val certificate = getSigningCertificate()
 		val privateKey = getSigningPrivateKey()
 		val signerConfig = ApkSigner.SignerConfig.Builder(
@@ -167,7 +167,7 @@ abstract class AbstractApk(
 		withContext(ioDispatcher) {
 			apkSigner.sign()
 		}
-		mutableStatus.emit(LocalizedString.resource(R.string.status_writing_patched_apk_hash))
+		_status.emit(LocalizedString.resource(R.string.status_writing_patched_apk_hash))
 		Preferences.set(
 			CommonFileHashKey.signed_apk_hash.name,
 			commonFiles.signedApk.computeHash()
@@ -176,10 +176,10 @@ abstract class AbstractApk(
 
 	suspend fun removeSignature() {
 		asZipFile().use { zipFile ->
-			mutableStatus.emit(LocalizedString.resource(R.string.status_removing_signature))
+			_status.emit(LocalizedString.resource(R.string.status_removing_signature))
 			zipFile.removeFile("META-INF/")
 			zipFile.progressMonitor.observe { progressData ->
-				progressPublisher.mutableProgress.emit(progressData)
+				progressPublisher._progress.emit(progressData)
 			}
 		}
 	}
@@ -188,7 +188,7 @@ abstract class AbstractApk(
 		if (!commonFiles.signedApk.exists) {
 			throw OkkeiException(LocalizedString.resource(R.string.error_apk_not_found))
 		}
-		mutableStatus.emit(LocalizedString.resource(R.string.status_comparing_apk))
+		_status.emit(LocalizedString.resource(R.string.status_comparing_apk))
 		if (!commonFiles.signedApk.verify()) {
 			commonFiles.signedApk.delete()
 			throw OkkeiException(LocalizedString.resource(R.string.error_not_trustworthy_apk))
@@ -196,8 +196,8 @@ abstract class AbstractApk(
 		if (!updating && Apk.isInstalled) {
 			uninstall()
 		}
-		progressPublisher.mutableProgress.makeIndeterminate()
-		mutableStatus.emit(LocalizedString.resource(R.string.status_installing))
+		progressPublisher._progress.makeIndeterminate()
+		_status.emit(LocalizedString.resource(R.string.status_installing))
 		val installResult = PackageInstaller.installPackage(File(commonFiles.signedApk.fullPath))
 		if (installResult is InstallResult.Failure) {
 			throw OkkeiException(
@@ -221,10 +221,10 @@ abstract class AbstractApk(
 		if (!Apk.isInstalled) {
 			throw OkkeiException(LocalizedString.resource(R.string.error_game_not_found))
 		}
-		mutableStatus.emit(LocalizedString.resource(R.string.status_copying_apk))
+		_status.emit(LocalizedString.resource(R.string.status_copying_apk))
 		val originalApk = JavaFile(File(getPackagePublicSourceDir(Apk.PACKAGE_NAME)), streamCopier)
 		val progressJob = launch {
-			progressPublisher.mutableProgress.emitAll(originalApk.progress)
+			progressPublisher._progress.emitAll(originalApk.progress)
 		}
 		val hash = originalApk.copyTo(destinationFile, hashing)
 		progressJob.cancel()
@@ -232,8 +232,8 @@ abstract class AbstractApk(
 	}
 
 	private suspend inline fun uninstall() {
-		mutableStatus.emit(LocalizedString.resource(R.string.status_uninstalling))
-		progressPublisher.mutableProgress.makeIndeterminate()
+		_status.emit(LocalizedString.resource(R.string.status_uninstalling))
+		progressPublisher._progress.makeIndeterminate()
 		val uninstallResult = PackageUninstaller.uninstallPackage(Apk.PACKAGE_NAME)
 		if (!uninstallResult) {
 			throw OkkeiException(LocalizedString.resource(R.string.error_uninstall))
@@ -241,7 +241,7 @@ abstract class AbstractApk(
 	}
 
 	private suspend inline fun installBackup() {
-		mutableStatus.emit(LocalizedString.resource(R.string.status_installing))
+		_status.emit(LocalizedString.resource(R.string.status_installing))
 		val installResult = PackageInstaller.installPackage(File(commonFiles.backupApk.fullPath))
 		if (installResult is InstallResult.Failure) {
 			throw OkkeiException(

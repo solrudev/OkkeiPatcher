@@ -8,10 +8,10 @@ import solru.okkeipatcher.data.ProgressData
 
 class ProgressPublisherImpl : ProgressPublisher {
 
-	val mutableProgress = MutableSharedFlow<ProgressData>(
+	val _progress = MutableSharedFlow<ProgressData>(
 		extraBufferCapacity = 1,
 		onBufferOverflow = BufferOverflow.DROP_OLDEST
 	)
 
-	override val progress: Flow<ProgressData> = mutableProgress.asSharedFlow()
+	override val progress: Flow<ProgressData> = _progress.asSharedFlow()
 }

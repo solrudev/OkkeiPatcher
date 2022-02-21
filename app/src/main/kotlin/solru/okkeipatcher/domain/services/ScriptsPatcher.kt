@@ -47,12 +47,12 @@ class ScriptsPatcher @AssistedInject constructor(
 	}
 
 	private suspend inline fun downloadScripts() {
-		mutableStatus.emit(LocalizedString.resource(R.string.status_comparing_scripts))
+		_status.emit(LocalizedString.resource(R.string.status_comparing_scripts))
 		if (scriptsFile.verify()) {
 			return
 		}
-		progressPublisher.mutableProgress.reset()
-		mutableStatus.emit(LocalizedString.resource(R.string.status_downloading_scripts))
+		progressPublisher._progress.reset()
+		_status.emit(LocalizedString.resource(R.string.status_downloading_scripts))
 		val scriptsData = scriptsDataRepository.getScriptsData()
 		val scriptsHash: String
 		try {
@@ -60,29 +60,29 @@ class ScriptsPatcher @AssistedInject constructor(
 			scriptsFile.create()
 			val outputStream = scriptsFile.createOutputStream()
 			scriptsHash = httpDownloader.download(scriptsData.url, outputStream, hashing = true) { progressData ->
-				progressPublisher.mutableProgress.emit(progressData)
+				progressPublisher._progress.emit(progressData)
 			}
 		} catch (e: Throwable) {
 			scriptsFile.delete()
 			throw OkkeiException(LocalizedString.resource(R.string.error_http_file_download), cause = e)
 		}
-		mutableStatus.emit(LocalizedString.resource(R.string.status_comparing_scripts))
+		_status.emit(LocalizedString.resource(R.string.status_comparing_scripts))
 		if (scriptsHash != scriptsData.hash) {
 			throw OkkeiException(LocalizedString.resource(R.string.error_hash_scripts_mismatch))
 		}
-		mutableStatus.emit(LocalizedString.resource(R.string.status_writing_scripts_hash))
+		_status.emit(LocalizedString.resource(R.string.status_writing_scripts_hash))
 		Preferences.set(PatchFileHashKey.scripts_hash.name, scriptsHash)
 		Preferences.set(PatchFileVersionKey.scripts_version.name, scriptsData.version)
 	}
 
 	private suspend inline fun extractScripts(): File {
-		mutableStatus.emit(LocalizedString.resource(R.string.status_extracting_scripts))
+		_status.emit(LocalizedString.resource(R.string.status_extracting_scripts))
 		val extractedScriptsDirectory = File(OkkeiStorage.external, "script")
 		val scriptsZip = ZipFile(scriptsFile.fullPath).apply { isRunInThread = true }
 		scriptsZip.use {
 			it.extractAll(extractedScriptsDirectory.absolutePath)
 			it.progressMonitor.observe { progressData ->
-				progressPublisher.mutableProgress.emit(progressData)
+				progressPublisher._progress.emit(progressData)
 			}
 		}
 		return extractedScriptsDirectory
@@ -90,7 +90,7 @@ class ScriptsPatcher @AssistedInject constructor(
 
 	@Suppress("BlockingMethodInNonBlockingContext")
 	private suspend inline fun ZipFile.replaceScripts(scriptsDirectory: File) {
-		mutableStatus.emit(LocalizedString.resource(R.string.status_replacing_scripts))
+		_status.emit(LocalizedString.resource(R.string.status_replacing_scripts))
 		val parameters = ZipParameters().apply { rootFolderNameInZip = "assets/script/" }
 		val scriptsList = scriptsDirectory.listFiles()!!.filter { it.isFile }
 		val apkSize = file.length().toInt()
@@ -99,11 +99,11 @@ class ScriptsPatcher @AssistedInject constructor(
 		val apkScriptsList = scriptsList.map { "${parameters.rootFolderNameInZip}${it.name}" }
 		removeFiles(apkScriptsList)
 		progressMonitor.observe { progressData ->
-			progressPublisher.mutableProgress.emit(progressData.progress, progressMax)
+			progressPublisher._progress.emit(progressData.progress, progressMax)
 		}
 		addFiles(scriptsList, parameters)
 		progressMonitor.observe { progressData ->
-			progressPublisher.mutableProgress.emit(progressData.progress + apkSize, progressMax)
+			progressPublisher._progress.emit(progressData.progress + apkSize, progressMax)
 		}
 		scriptsDirectory.deleteRecursively()
 	}

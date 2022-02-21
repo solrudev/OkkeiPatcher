@@ -36,18 +36,18 @@ class OkkeiPatcherRepositoryImpl @Inject constructor(
 			return updateFile
 		}
 		isUpdateDownloaded = false
-		mutableStatus.emit(LocalizedString.resource(R.string.status_update_app_downloading))
+		_status.emit(LocalizedString.resource(R.string.status_update_app_downloading))
 		try {
 			val updateData = okkeiPatcherService.getOkkeiPatcherData()
 			val updateHash: String
 			try {
 				updateHash = httpDownloader.download(updateData.url, updateFile, hashing = true) { progressData ->
-					progressPublisher.mutableProgress.emit(progressData)
+					progressPublisher._progress.emit(progressData)
 				}
 			} catch (e: Throwable) {
 				throw OkkeiException(LocalizedString.resource(R.string.error_http_file_download), cause = e)
 			}
-			mutableStatus.emit(LocalizedString.resource(R.string.status_comparing_apk))
+			_status.emit(LocalizedString.resource(R.string.status_comparing_apk))
 			if (updateHash != updateData.hash) {
 				throw OkkeiException(LocalizedString.resource(R.string.error_update_app_corrupted))
 			}

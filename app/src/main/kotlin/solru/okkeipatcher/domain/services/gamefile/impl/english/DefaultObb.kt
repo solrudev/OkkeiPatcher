@@ -22,14 +22,14 @@ class DefaultObb @Inject constructor(
 	override val messages = merge(super.messages, obbDownloader.messages)
 
 	override suspend fun patch() {
-		progressPublisher.mutableProgress.reset()
-		mutableStatus.emit(LocalizedString.resource(R.string.status_comparing_obb))
+		progressPublisher._progress.reset()
+		_status.emit(LocalizedString.resource(R.string.status_comparing_obb))
 		if (commonFiles.obbToPatch.verify()) return
 		obbDownloader.download()
 	}
 
 	override suspend fun update() {
-		progressPublisher.mutableProgress.reset()
+		progressPublisher._progress.reset()
 		commonFiles.obbToPatch.delete()
 		obbDownloader.download()
 	}

@@ -18,7 +18,7 @@ class SaveDataImpl @Inject constructor(private val commonFiles: CommonFiles) : O
 		commonFiles.backupSaveData.progress,
 		commonFiles.originalSaveData.progress,
 		commonFiles.tempSaveData.progress,
-		progressPublisher.mutableProgress
+		progressPublisher._progress
 	)
 
 	override val backupExists: Boolean
@@ -27,10 +27,10 @@ class SaveDataImpl @Inject constructor(private val commonFiles: CommonFiles) : O
 	override fun deleteBackup() = commonFiles.backupSaveData.delete()
 
 	override suspend fun backup() {
-		progressPublisher.mutableProgress.reset()
+		progressPublisher._progress.reset()
 		if (commonFiles.originalSaveData.exists) {
 			if (commonFiles.originalSaveData.verify()) return
-			mutableStatus.emit(LocalizedString.resource(R.string.status_backing_up_save_data))
+			_status.emit(LocalizedString.resource(R.string.status_backing_up_save_data))
 			commonFiles.originalSaveData.copyTo(commonFiles.tempSaveData)
 			return
 		}
@@ -38,10 +38,10 @@ class SaveDataImpl @Inject constructor(private val commonFiles: CommonFiles) : O
 	}
 
 	override suspend fun restore() {
-		progressPublisher.mutableProgress.reset()
-		mutableStatus.emit(LocalizedString.resource(R.string.status_comparing_saves))
+		progressPublisher._progress.reset()
+		_status.emit(LocalizedString.resource(R.string.status_comparing_saves))
 		if (verifyBackupIntegrity()) {
-			mutableStatus.emit(LocalizedString.resource(R.string.status_restoring_saves))
+			_status.emit(LocalizedString.resource(R.string.status_restoring_saves))
 			commonFiles.backupSaveData.copyTo(commonFiles.originalSaveData)
 		} else {
 			commonFiles.backupSaveData.delete()
@@ -52,7 +52,7 @@ class SaveDataImpl @Inject constructor(private val commonFiles: CommonFiles) : O
 			commonFiles.tempSaveData.renameTo(commonFiles.backupSaveData.name)
 		}
 		if (!commonFiles.backupSaveData.exists) return
-		mutableStatus.emit(LocalizedString.resource(R.string.status_writing_save_data_hash))
+		_status.emit(LocalizedString.resource(R.string.status_writing_save_data_hash))
 		Preferences.set(
 			CommonFileHashKey.save_data_hash.name,
 			commonFiles.backupSaveData.computeHash()
@@ -67,6 +67,6 @@ class SaveDataImpl @Inject constructor(private val commonFiles: CommonFiles) : O
 			LocalizedString.resource(R.string.warning),
 			LocalizedString.resource(message)
 		)
-		mutableMessages.emit(warningMessage)
+		_messages.emit(warningMessage)
 	}
 }

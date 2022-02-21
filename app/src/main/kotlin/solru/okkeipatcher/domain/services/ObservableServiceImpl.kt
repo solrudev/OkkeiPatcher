@@ -13,13 +13,13 @@ open class ObservableServiceImpl(
 	protected val progressPublisher: ProgressPublisherImpl = ProgressPublisherImpl()
 ) : ObservableService, ProgressPublisher by progressPublisher {
 
-	protected val mutableStatus = MutableSharedFlow<LocalizedString>()
+	protected val _status = MutableSharedFlow<LocalizedString>()
 
-	protected val mutableMessages = MutableSharedFlow<Message>(
+	protected val _messages = MutableSharedFlow<Message>(
 		extraBufferCapacity = 1,
 		onBufferOverflow = BufferOverflow.DROP_OLDEST
 	)
 
-	override val status: Flow<LocalizedString> = mutableStatus.asSharedFlow()
-	override val messages: Flow<Message> = mutableMessages.asSharedFlow()
+	override val status: Flow<LocalizedString> = _status.asSharedFlow()
+	override val messages: Flow<Message> = _messages.asSharedFlow()
 }

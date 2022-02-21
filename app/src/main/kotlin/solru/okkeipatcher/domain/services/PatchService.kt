@@ -21,7 +21,7 @@ class PatchService @Inject constructor(private val strategy: GameFileStrategy) :
 	private val sharingScope = CoroutineScope(EmptyCoroutineContext)
 
 	override val progress = with(strategy) {
-		merge(apk.progress, obb.progress, saveData.progress, progressPublisher.mutableProgress).shareIn(
+		merge(apk.progress, obb.progress, saveData.progress, progressPublisher._progress).shareIn(
 			sharingScope,
 			SharingStarted.Eagerly,
 			replay = 1
@@ -29,7 +29,7 @@ class PatchService @Inject constructor(private val strategy: GameFileStrategy) :
 	}
 
 	override val status = with(strategy) {
-		merge(apk.status, obb.status, saveData.status, mutableStatus).shareIn(
+		merge(apk.status, obb.status, saveData.status, _status).shareIn(
 			sharingScope,
 			SharingStarted.Eagerly,
 			replay = 1
@@ -37,7 +37,7 @@ class PatchService @Inject constructor(private val strategy: GameFileStrategy) :
 	}
 
 	override val messages = with(strategy) {
-		merge(apk.messages, obb.messages, saveData.messages, mutableMessages)
+		merge(apk.messages, obb.messages, saveData.messages, _messages)
 	}
 
 	suspend fun patch(processSaveData: Boolean, patchUpdates: PatchUpdates) = try {

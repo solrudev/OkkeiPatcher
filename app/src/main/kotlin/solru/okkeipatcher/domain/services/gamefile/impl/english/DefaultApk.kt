@@ -29,8 +29,8 @@ class DefaultApk @Inject constructor(
 	override val messages = merge(super.messages, scriptsPatcher.messages)
 
 	override suspend fun patch() {
-		progressPublisher.mutableProgress.reset()
-		mutableStatus.emit(LocalizedString.resource(R.string.status_comparing_apk))
+		progressPublisher._progress.reset()
+		_status.emit(LocalizedString.resource(R.string.status_comparing_apk))
 		if (verifyBackupIntegrity() && commonFiles.signedApk.verify()) {
 			installPatched(updating = false)
 			return
@@ -40,7 +40,7 @@ class DefaultApk @Inject constructor(
 	}
 
 	override suspend fun update() {
-		progressPublisher.mutableProgress.reset()
+		progressPublisher._progress.reset()
 		commonFiles.tempApk.delete()
 		commonFiles.signedApk.delete()
 		scriptsPatcher.patch()

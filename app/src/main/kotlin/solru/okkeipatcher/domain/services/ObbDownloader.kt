@@ -24,7 +24,7 @@ class ObbDownloader @AssistedInject constructor(
 	suspend fun download() {
 		val obb = commonFiles.obbToPatch
 		try {
-			mutableStatus.emit(LocalizedString.resource(R.string.status_downloading_obb))
+			_status.emit(LocalizedString.resource(R.string.status_downloading_obb))
 			val obbData = obbDataRepository.getObbData()
 			val obbHash: String
 			try {
@@ -32,13 +32,13 @@ class ObbDownloader @AssistedInject constructor(
 				obb.create()
 				val outputStream = obb.createOutputStream()
 				obbHash = httpDownloader.download(obbData.url, outputStream, hashing = true) { progressData ->
-					progressPublisher.mutableProgress.emit(progressData)
+					progressPublisher._progress.emit(progressData)
 				}
 			} catch (e: Throwable) {
 				obb.delete()
 				throw OkkeiException(LocalizedString.resource(R.string.error_http_file_download), cause = e)
 			}
-			mutableStatus.emit(LocalizedString.resource(R.string.status_writing_obb_hash))
+			_status.emit(LocalizedString.resource(R.string.status_writing_obb_hash))
 			if (obbHash != obbData.hash) {
 				throw OkkeiException(LocalizedString.resource(R.string.error_hash_obb_mismatch))
 			}
