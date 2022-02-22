@@ -19,16 +19,16 @@ import solru.okkeipatcher.R
 import solru.okkeipatcher.databinding.OkkeiNavHostBinding
 
 @AndroidEntryPoint
-class OkkeiActivity : AppCompatActivity() {
+class OkkeiActivity : AppCompatActivity(R.layout.okkei_nav_host) {
 
-	private val binding by viewBinding(OkkeiNavHostBinding::bind)
+	private val binding by viewBinding(OkkeiNavHostBinding::bind, R.id.okkei_nav_host_container)
 	private lateinit var appBarConfiguration: AppBarConfiguration
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		setContentView(R.layout.okkei_nav_host)
+		setContentView(binding.root)
 		setSupportActionBar(binding.toolbar)
-		val navController = binding.navHostContent.getFragment<NavHostFragment>().navController
+		val navController = binding.okkeiNavHostContent.getFragment<NavHostFragment>().navController
 		appBarConfiguration = AppBarConfiguration(navController.graph)
 		setupActionBarWithNavController(navController, appBarConfiguration)
 
@@ -44,7 +44,7 @@ class OkkeiActivity : AppCompatActivity() {
 	}
 
 	override fun onSupportNavigateUp(): Boolean {
-		val navController = findNavController(R.id.nav_host_content)
+		val navController = findNavController(R.id.okkei_nav_host_content)
 		return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
 	}
 
@@ -54,7 +54,7 @@ class OkkeiActivity : AppCompatActivity() {
 	}
 
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
-		val navController = findNavController(R.id.nav_host_content)
+		val navController = findNavController(R.id.okkei_nav_host_content)
 		return item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
 	}
 }

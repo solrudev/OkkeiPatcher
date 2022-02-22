@@ -4,6 +4,7 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
+	android:id="@+id/okkei_nav_host_container"
 	android:splitMotionEvents="false">
 
 	<androidx.appcompat.widget.Toolbar
@@ -17,7 +18,7 @@
 		app:layout_constraintTop_toTopOf="parent" />
 
 	<androidx.fragment.app.FragmentContainerView
-		android:id="@+id/nav_host_content"
+		android:id="@+id/okkei_nav_host_content"
 		android:name="androidx.navigation.fragment.NavHostFragment"
 		android:layout_width="0dp"
 		android:layout_height="0dp"
