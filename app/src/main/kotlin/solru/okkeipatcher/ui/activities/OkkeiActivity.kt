@@ -27,9 +27,7 @@ class OkkeiActivity : AppCompatActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.okkei_nav_host)
-
 		setSupportActionBar(binding.toolbar)
-
 		val navController = binding.navHostContent.getFragment<NavHostFragment>().navController
 		appBarConfiguration = AppBarConfiguration(navController.graph)
 		setupActionBarWithNavController(navController, appBarConfiguration)
