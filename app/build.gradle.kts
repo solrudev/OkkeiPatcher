@@ -90,7 +90,6 @@ android {
 }
 
 dependencies {
-	implementation("androidx.preference:preference:1.2.0")
 	val retrofitVersion = "2.9.0"
 	val moshiVersion = "1.13.0"
 
