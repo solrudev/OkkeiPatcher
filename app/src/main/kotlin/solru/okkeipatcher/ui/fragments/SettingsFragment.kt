@@ -26,7 +26,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 	}
 
 	override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-		setPreferencesFromResource(R.xml.root_preferences, rootKey)
+		setPreferencesFromResource(R.xml.okkei_preferences, rootKey)
 		findPreference<Preference>("clear_data")?.setOnPreferenceClickListener {
 			// TODO
 			true

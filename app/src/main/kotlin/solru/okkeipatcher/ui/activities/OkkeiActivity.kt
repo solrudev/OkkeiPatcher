@@ -49,7 +49,7 @@ class OkkeiActivity : AppCompatActivity(R.layout.okkei_nav_host) {
 	}
 
 	override fun onCreateOptionsMenu(menu: Menu): Boolean {
-		menuInflater.inflate(R.menu.menu_main, menu)
+		menuInflater.inflate(R.menu.okkei_menu, menu)
 		return true
 	}
 
