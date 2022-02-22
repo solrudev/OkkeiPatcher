@@ -73,14 +73,14 @@ abstract class WorkViewModel(
 						)
 						clearNotificationsUseCase()
 					}
-					WorkState.Succeeded -> {
+					is WorkState.Succeeded -> {
 						_buttonText.value = LocalizedString.resource(R.string.dialog_button_ok)
 						_status.value = LocalizedString.resource(R.string.status_succeeded)
 						_workSucceeded.emit(Unit)
 						clearNotificationsUseCase()
 					}
-					WorkState.Canceled -> _workCanceled.emit(Unit)
-					WorkState.Unknown -> {}
+					is WorkState.Canceled -> _workCanceled.emit(Unit)
+					is WorkState.Unknown -> {}
 				}
 			}
 	}
