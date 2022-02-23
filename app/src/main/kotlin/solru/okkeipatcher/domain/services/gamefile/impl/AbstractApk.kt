@@ -4,6 +4,7 @@ import com.android.apksig.ApkSigner
 import io.github.solrudev.simpleinstaller.PackageInstaller
 import io.github.solrudev.simpleinstaller.PackageUninstaller
 import io.github.solrudev.simpleinstaller.data.InstallResult
+import io.github.solrudev.simpleinstaller.installPackage
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.map
