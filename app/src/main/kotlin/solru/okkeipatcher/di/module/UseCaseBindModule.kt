@@ -22,11 +22,11 @@ interface UseCaseBindModule {
 
 	@Binds
 	@Reusable
-	fun bindGetPatchWorkUuidUseCase(getPatchWorkUuidUseCase: GetPatchWorkUuidUseCaseImpl): GetPatchWorkUuidUseCase
+	fun bindGetPatchWorkIdUseCase(getPatchWorkIdUseCase: GetPatchWorkIdUseCaseImpl): GetPatchWorkIdUseCase
 
 	@Binds
 	@Reusable
-	fun bindGetRestoreWorkUuidUseCase(getRestoreWorkUuidUseCase: GetRestoreWorkUuidUseCaseImpl): GetRestoreWorkUuidUseCase
+	fun bindGetRestoreWorkIdUseCase(getRestoreWorkIdUseCase: GetRestoreWorkIdUseCaseImpl): GetRestoreWorkIdUseCase
 
 	@Binds
 	@Reusable

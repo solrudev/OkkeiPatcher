@@ -8,14 +8,14 @@ import javax.inject.Inject
 @HiltViewModel
 class RestoreViewModel @Inject constructor(
 	private val startRestoreWorkUseCase: StartRestoreWorkUseCase,
-	private val getRestoreWorkUuidUseCase: GetRestoreWorkUuidUseCase,
+	private val getRestoreWorkIdUseCase: GetRestoreWorkIdUseCase,
 	private val cancelWorkByIdUseCase: CancelWorkByIdUseCase,
 	getWorkStateFlowByIdUseCase: GetWorkStateFlowByIdUseCase,
 	clearNotificationsUseCase: ClearNotificationsUseCase
 ) : WorkViewModel(getWorkStateFlowByIdUseCase, clearNotificationsUseCase) {
 
 	override val isWorkRunning: Boolean
-		get() = getRestoreWorkUuidUseCase() != null
+		get() = getRestoreWorkIdUseCase() != null
 
 	override fun startWork() {
 		val restoreWorkId = startRestoreWorkUseCase()
@@ -23,13 +23,13 @@ class RestoreViewModel @Inject constructor(
 	}
 
 	override fun cancelWork() {
-		getRestoreWorkUuidUseCase()?.let {
+		getRestoreWorkIdUseCase()?.let {
 			cancelWorkByIdUseCase(it)
 		}
 	}
 
 	override fun onStart(owner: LifecycleOwner) {
-		getRestoreWorkUuidUseCase()?.let {
+		getRestoreWorkIdUseCase()?.let {
 			workObservingScope.observeWork(it)
 		}
 	}

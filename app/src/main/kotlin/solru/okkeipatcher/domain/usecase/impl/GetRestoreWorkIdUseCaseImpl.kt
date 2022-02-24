@@ -2,14 +2,14 @@ package solru.okkeipatcher.domain.usecase.impl
 
 import androidx.work.WorkManager
 import solru.okkeipatcher.OkkeiApplication
-import solru.okkeipatcher.domain.usecase.GetPatchWorkUuidUseCase
-import solru.okkeipatcher.workers.PatchWorker
+import solru.okkeipatcher.domain.usecase.GetRestoreWorkIdUseCase
+import solru.okkeipatcher.workers.RestoreWorker
 import javax.inject.Inject
 
-class GetPatchWorkUuidUseCaseImpl @Inject constructor() : GetPatchWorkUuidUseCase {
+class GetRestoreWorkIdUseCaseImpl @Inject constructor() : GetRestoreWorkIdUseCase {
 
 	override fun invoke() = WorkManager.getInstance(OkkeiApplication.context)
-		.getWorkInfosForUniqueWork(PatchWorker.WORK_NAME)
+		.getWorkInfosForUniqueWork(RestoreWorker.WORK_NAME)
 		.get()
 		.firstOrNull()
 		?.id

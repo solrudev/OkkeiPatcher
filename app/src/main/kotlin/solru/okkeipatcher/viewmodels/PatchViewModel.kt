@@ -8,14 +8,14 @@ import javax.inject.Inject
 @HiltViewModel
 class PatchViewModel @Inject constructor(
 	private val startPatchWorkUseCase: StartPatchWorkUseCase,
-	private val getPatchWorkUuidUseCase: GetPatchWorkUuidUseCase,
+	private val getPatchWorkIdUseCase: GetPatchWorkIdUseCase,
 	private val cancelWorkByIdUseCase: CancelWorkByIdUseCase,
 	getWorkStateFlowByIdUseCase: GetWorkStateFlowByIdUseCase,
 	clearNotificationsUseCase: ClearNotificationsUseCase
 ) : WorkViewModel(getWorkStateFlowByIdUseCase, clearNotificationsUseCase) {
 
 	override val isWorkRunning: Boolean
-		get() = getPatchWorkUuidUseCase() != null
+		get() = getPatchWorkIdUseCase() != null
 
 	override fun startWork() {
 		val patchWorkId = startPatchWorkUseCase()
@@ -23,13 +23,13 @@ class PatchViewModel @Inject constructor(
 	}
 
 	override fun cancelWork() {
-		getPatchWorkUuidUseCase()?.let {
+		getPatchWorkIdUseCase()?.let {
 			cancelWorkByIdUseCase(it)
 		}
 	}
 
 	override fun onStart(owner: LifecycleOwner) {
-		getPatchWorkUuidUseCase()?.let {
+		getPatchWorkIdUseCase()?.let {
 			workObservingScope.observeWork(it)
 		}
 	}
