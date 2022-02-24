@@ -11,6 +11,7 @@ import solru.okkeipatcher.data.LocalizedString
 import solru.okkeipatcher.data.ProgressData
 import solru.okkeipatcher.data.WorkState
 import solru.okkeipatcher.domain.usecase.GetWorkStateFlowByIdUseCase
+import solru.okkeipatcher.utils.extensions.getParcelable
 import solru.okkeipatcher.utils.extensions.getSerializable
 import solru.okkeipatcher.workers.ForegroundWorker
 import java.util.*
@@ -32,7 +33,7 @@ class GetWorkStateFlowByIdUseCaseImpl @Inject constructor() : GetWorkStateFlowBy
 						WorkInfo.State.RUNNING -> with(workInfo.progress) {
 							val status =
 								getSerializable<LocalizedString>(ForegroundWorker.KEY_STATUS) ?: LocalizedString.empty()
-							val progressData = getSerializable(ForegroundWorker.KEY_PROGRESS_DATA) ?: ProgressData()
+							val progressData = getParcelable(ForegroundWorker.KEY_PROGRESS_DATA) ?: ProgressData()
 							emit(WorkState.Running(status, progressData))
 						}
 						WorkInfo.State.FAILED -> {

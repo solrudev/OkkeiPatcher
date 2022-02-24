@@ -19,6 +19,7 @@ import solru.okkeipatcher.data.LocalizedString
 import solru.okkeipatcher.data.Message
 import solru.okkeipatcher.domain.services.ObservableService
 import solru.okkeipatcher.utils.extensions.empty
+import solru.okkeipatcher.utils.extensions.putParcelable
 import solru.okkeipatcher.utils.extensions.putSerializable
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -97,10 +98,11 @@ abstract class ForegroundWorker(
 		) { status, progressData -> status to progressData }
 			.conflate()
 			.collect {
+				val (status, progressData) = it
 				setProgress(
 					Data.Builder()
-						.putSerializable(KEY_STATUS, it.first)
-						.putSerializable(KEY_PROGRESS_DATA, it.second)
+						.putSerializable(KEY_STATUS, status)
+						.putParcelable(KEY_PROGRESS_DATA, progressData)
 						.build()
 				)
 			}

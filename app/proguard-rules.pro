@@ -60,3 +60,8 @@
 #### ApkSigner
 -keep @com.android.apksig.internal.asn1.Asn1Class class *
 -keepclassmembers class * { @com.android.apksig.internal.asn1.Asn1Field <fields>; }
+
+#### Parcelable
+-keepclassmembers class * implements android.os.Parcelable {
+  public static final android.os.Parcelable$Creator CREATOR;
+}
