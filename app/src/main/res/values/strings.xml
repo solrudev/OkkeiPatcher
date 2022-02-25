@@ -17,9 +17,7 @@
 	<string name="update">Update</string>
 
 	<!--Dialogs-->
-	<string name="dialog_button_cancel">Cancel</string>
 	<string name="dialog_button_copy_to_clipboard">Copy to clipboard</string>
-	<string name="dialog_button_ok" translatable="false">OK</string>
 
 	<!--Errors-->
 	<string name="error">Error</string>

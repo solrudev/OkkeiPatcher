@@ -12,7 +12,6 @@
 	<string name="update">Обновление</string>
 
 	<!--Dialogs-->
-	<string name="dialog_button_cancel">Отмена</string>
 	<string name="dialog_button_copy_to_clipboard">Копировать в буфер обмена</string>
 
 	<!--Errors-->

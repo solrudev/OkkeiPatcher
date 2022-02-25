@@ -74,7 +74,7 @@ abstract class WorkViewModel(
 						clearNotificationsUseCase()
 					}
 					is WorkState.Succeeded -> {
-						_buttonText.value = LocalizedString.resource(R.string.dialog_button_ok)
+						_buttonText.value = LocalizedString.resource(android.R.string.ok)
 						_status.value = LocalizedString.resource(R.string.status_succeeded)
 						_workSucceeded.emit(Unit)
 						clearNotificationsUseCase()
