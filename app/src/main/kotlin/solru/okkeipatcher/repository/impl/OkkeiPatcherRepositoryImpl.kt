@@ -11,6 +11,7 @@ import solru.okkeipatcher.io.services.HttpDownloader
 import solru.okkeipatcher.io.utils.extensions.download
 import solru.okkeipatcher.repository.OkkeiPatcherRepository
 import solru.okkeipatcher.utils.appVersionCode
+import solru.okkeipatcher.utils.extensions.round
 import java.io.File
 import java.util.*
 import javax.inject.Inject
@@ -29,7 +30,7 @@ class OkkeiPatcherRepositoryImpl @Inject constructor(
 		okkeiPatcherService.getOkkeiPatcherData().version > appVersionCode
 
 	override suspend fun getUpdateSizeInMb() =
-		"%.2f".format(okkeiPatcherService.getOkkeiPatcherData().size / 1_048_576.0).toDouble()
+		(okkeiPatcherService.getOkkeiPatcherData().size / 1_048_576.0).round(2)
 
 	override suspend fun getUpdateFile(): File {
 		if (isUpdateDownloaded && updateFile.exists()) {

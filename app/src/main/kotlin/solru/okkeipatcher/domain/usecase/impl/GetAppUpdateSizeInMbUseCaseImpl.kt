@@ -7,5 +7,9 @@ import javax.inject.Inject
 class GetAppUpdateSizeInMbUseCaseImpl @Inject constructor(private val okkeiPatcherRepository: OkkeiPatcherRepository) :
 	GetAppUpdateSizeInMbUseCase {
 
-	override suspend fun invoke() = okkeiPatcherRepository.getUpdateSizeInMb()
+	override suspend fun invoke() = try {
+		okkeiPatcherRepository.getUpdateSizeInMb()
+	} catch (t: Throwable) {
+		-1.0
+	}
 }
