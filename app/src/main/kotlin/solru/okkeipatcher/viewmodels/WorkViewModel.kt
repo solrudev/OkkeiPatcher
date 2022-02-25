@@ -22,15 +22,29 @@ abstract class WorkViewModel(
 	protected val workObservingScope = CoroutineScope(Dispatchers.Main.immediate)
 	private var isWorkObserved = false
 
+	protected val _startWorkMessage = MutableStateFlow(Message.empty)
+	private val _cancelWorkMessage = MutableStateFlow(Message.empty)
+	private val _errorMessage = MutableStateFlow(Message.empty)
 	private val _status = MutableStateFlow<LocalizedString>(LocalizedString.empty())
 	private val _progressData = MutableStateFlow(ProgressData())
-	private val _errorMessage = MutableStateFlow(Message.empty)
 	private val _buttonText = MutableStateFlow<LocalizedString>(LocalizedString.resource(R.string.abort))
 	private val _workSucceeded = MutableSharedFlow<Unit>()
 	private val _workCanceled = MutableSharedFlow<Unit>()
+
+	val startWorkMessage = _startWorkMessage
+		.asStateFlow()
+		.filterNot { it == Message.empty }
+
+	val cancelWorkMessage = _cancelWorkMessage
+		.asStateFlow()
+		.filterNot { it == Message.empty }
+
+	val errorMessage = _errorMessage
+		.asStateFlow()
+		.filterNot { it == Message.empty }
+
 	val status = _status.asStateFlow()
 	val progressData = _progressData.asStateFlow()
-	val errorMessage = _errorMessage.asStateFlow()
 	val buttonText = _buttonText.asStateFlow()
 	val workSucceeded = _workSucceeded.asSharedFlow()
 	val workCanceled = _workCanceled.asSharedFlow()
@@ -46,6 +60,20 @@ abstract class WorkViewModel(
 
 	override fun onStop(owner: LifecycleOwner) {
 		workObservingScope.coroutineContext[Job]?.cancelChildren()
+	}
+
+	fun showCancelWarning() {
+		val title = LocalizedString.resource(R.string.warning)
+		val message = LocalizedString.resource(R.string.warning_abort)
+		_cancelWorkMessage.value = Message(title, message)
+	}
+
+	fun closeStartWorkMessage() {
+		_startWorkMessage.value = Message.empty
+	}
+
+	fun closeCancelWorkMessage() {
+		_cancelWorkMessage.value = Message.empty
 	}
 
 	fun closeErrorMessage() {

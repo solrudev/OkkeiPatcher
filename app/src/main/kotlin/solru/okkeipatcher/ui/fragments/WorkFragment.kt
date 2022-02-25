@@ -38,9 +38,6 @@ abstract class WorkFragment : Fragment(R.layout.fragment_work) {
 		setupNavigation()
 		viewLifecycleOwner.lifecycle.addObserver(viewModel)
 		viewLifecycleOwner.lifecycleScope.observeViewModel()
-		if (savedInstanceState == null && !viewModel.isWorkRunning) {
-			viewModel.startWork()
-		}
 	}
 
 	protected abstract fun onSuccess()
@@ -53,7 +50,7 @@ abstract class WorkFragment : Fragment(R.layout.fragment_work) {
 
 	private fun onButtonClick() {
 		if (viewModel.isWorkRunning) {
-			viewModel.cancelWork()
+			viewModel.showCancelWarning()
 		} else {
 			findNavController().popBackStack()
 		}
@@ -61,12 +58,47 @@ abstract class WorkFragment : Fragment(R.layout.fragment_work) {
 
 	private fun CoroutineScope.observeViewModel() = launch {
 		viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+			observeStartWorkMessage()
+			observeCancelWorkMessage()
+			observeErrorMessage()
 			observeStatus()
 			observeProgress()
-			observeErrorMessages()
 			observeButtonText()
 			observeWorkSucceeded()
 			observeWorkCanceled()
+		}
+	}
+
+	private fun CoroutineScope.observeStartWorkMessage() = launch {
+		viewModel.startWorkMessage.collect { startMessage ->
+			createDialogBuilder(startMessage)
+				.setPositiveButton(android.R.string.ok) { _, _ ->
+					viewModel.startWork()
+				}
+				.setNegativeButton(android.R.string.cancel) { _, _ ->
+					findNavController().popBackStack()
+				}
+				.setOnCancelListener {
+					findNavController().popBackStack()
+				}
+				.setOnDismissListener {
+					viewModel.closeStartWorkMessage()
+				}
+				.show()
+		}
+	}
+
+	private fun CoroutineScope.observeCancelWorkMessage() = launch {
+		viewModel.cancelWorkMessage.collect { cancelMessage ->
+			createDialogBuilder(cancelMessage)
+				.setPositiveButton(android.R.string.ok) { _, _ ->
+					viewModel.cancelWork()
+				}
+				.setNegativeButton(android.R.string.cancel, null)
+				.setOnDismissListener {
+					viewModel.closeCancelWorkMessage()
+				}
+				.show()
 		}
 	}
 
@@ -84,17 +116,10 @@ abstract class WorkFragment : Fragment(R.layout.fragment_work) {
 		}
 	}
 
-	private fun CoroutineScope.observeErrorMessages() = launch {
+	private fun CoroutineScope.observeErrorMessage() = launch {
 		viewModel.errorMessage.collectLatest { error ->
-			if (error == Message.empty) {
-				return@collectLatest
-			}
-			val title = error.title.resolve(requireContext())
 			val message = error.message.resolve(requireContext())
-			AlertDialog.Builder(requireContext())
-				.setCancelable(true)
-				.setTitle(title)
-				.setMessage(message)
+			createDialogBuilder(error)
 				.setNeutralButton(R.string.dialog_button_copy_to_clipboard) { _, _ ->
 					requireContext().copyTextToClipboard("Okkei Patcher Exception", message)
 				}
@@ -122,5 +147,14 @@ abstract class WorkFragment : Fragment(R.layout.fragment_work) {
 		viewModel.workCanceled.collect {
 			findNavController().popBackStack()
 		}
+	}
+
+	private fun createDialogBuilder(message: Message): AlertDialog.Builder {
+		val titleString = message.title.resolve(requireContext())
+		val messageString = message.message.resolve(requireContext())
+		return AlertDialog.Builder(requireContext())
+			.setCancelable(true)
+			.setTitle(titleString)
+			.setMessage(messageString)
 	}
 }

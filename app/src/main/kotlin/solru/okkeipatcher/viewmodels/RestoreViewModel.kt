@@ -2,6 +2,9 @@ package solru.okkeipatcher.viewmodels
 
 import androidx.lifecycle.LifecycleOwner
 import dagger.hilt.android.lifecycle.HiltViewModel
+import solru.okkeipatcher.R
+import solru.okkeipatcher.data.LocalizedString
+import solru.okkeipatcher.data.Message
 import solru.okkeipatcher.domain.usecase.*
 import javax.inject.Inject
 
@@ -16,6 +19,14 @@ class RestoreViewModel @Inject constructor(
 
 	override val isWorkRunning: Boolean
 		get() = getRestoreWorkIdUseCase() != null
+
+	init {
+		if (!isWorkRunning) {
+			val title = LocalizedString.resource(R.string.warning)
+			val message = LocalizedString.resource(R.string.warning_start_process)
+			_startWorkMessage.value = Message(title, message)
+		}
+	}
 
 	override fun startWork() {
 		val restoreWorkId = startRestoreWorkUseCase()
