@@ -65,7 +65,7 @@
 	<string name="preference_save_data_summary">Делать копию и восстанавливать сохранения игры</string>
 
 	<!--Statuses-->
-	<string name="status_backing_up_apk">Создание резервной копии AK…</string>
+	<string name="status_backing_up_apk">Создание резервной копии APK…</string>
 	<string name="status_backing_up_obb">Создание резервной копии OBB…</string>
 	<string name="status_backing_up_save_data">Создание копии файла сохранений…</string>
 	<string name="status_checking">Проверка…</string>
