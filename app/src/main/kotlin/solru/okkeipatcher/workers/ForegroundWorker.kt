@@ -160,8 +160,8 @@ abstract class ForegroundWorker(
 		shownMessageNotificationsMutex.withLock {
 			shownMessageNotifications.forEach {
 				notificationManager?.cancel(it)
-				shownMessageNotifications.remove(it)
 			}
+			shownMessageNotifications.clear()
 		}
 	}
 
