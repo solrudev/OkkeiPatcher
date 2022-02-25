@@ -102,8 +102,8 @@
 	<!--Warnings-->
 	<string name="warning">Warning</string>
 	<string name="warning_abort">Are you sure you want to abort the process? Your CHAOS;CHILD installation and/or Okkei Patcher data may be damaged.</string>
-	<string name="warning_download_size">You\'re about to download %1$s MB of data. Ensure that you have stable internet connection. It is recommended to use unmetered internet connection (such as Wi-Fi).</string>
-	<string name="warning_long_process">This process can take quite a long time. If you abort it or close Okkei Patcher your CHAOS;CHILD installation and/or Okkei Patcher data may be damaged. Are you sure you want to start the process?</string>
-	<string name="warning_save_data_backup_not_found_or_corrupted">Save data backup was not found or is corrupted. Okkei Patcher can not restore your save data.</string>
-	<string name="warning_save_data_not_found">Save data was not found. Okkei Patcher can not perform backup of your current save data and will continue.</string>
+	<string name="warning_save_data_backup_not_found_or_corrupted">Game save data backup was not found or is corrupted and won\'t be restored.</string>
+	<string name="warning_save_data_not_found">Game save data was not found. Backup of your current game save data won\'t be created.</string>
+	<string name="warning_start_patch">You\'re about to download %1$s MB of data. If you abort the process your CHAOS;CHILD installation and/or Okkei Patcher data may be damaged.</string>
+	<string name="warning_start_process">If you abort the process your CHAOS;CHILD installation and/or Okkei Patcher data may be damaged.</string>
 </resources>

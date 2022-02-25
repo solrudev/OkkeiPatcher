@@ -66,7 +66,7 @@
 	<string name="preference_save_data_summary">Делать копию и восстанавливать сохранения игры</string>
 
 	<!--Statuses-->
-	<string name="status_backing_up_apk">Создание резервной копии APK…</string>
+	<string name="status_backing_up_apk">Создание резервной копии AK…</string>
 	<string name="status_backing_up_obb">Создание резервной копии OBB…</string>
 	<string name="status_backing_up_save_data">Создание копии файла сохранений…</string>
 	<string name="status_checking">Проверка…</string>
@@ -96,8 +96,8 @@
 	<!--Warnings-->
 	<string name="warning">Предупреждение</string>
 	<string name="warning_abort">Вы уверены, что хотите остановить процесс? Данные установки CHAOS;CHILD и/или данные Okkei Patcher могут быть повреждены.</string>
-	<string name="warning_download_size">Будет загружено %1$s МБ данных. Убедитесь, что у Вас есть стабильное подключение к сети. Рекомендуется использовать безлимитное подключение (как например Wi-Fi).</string>
-	<string name="warning_long_process">Данный процесс может занять длительное время. Если Вы отмените его или закроете Okkei Patcher, данные установки CHAOS;CHILD и/или данные Okkei Patcher могут быть повреждены. Вы уверены, что хотите начать процесс?</string>
-	<string name="warning_save_data_backup_not_found_or_corrupted">Копия файла сохранений не найдена или повреждена. Okkei Patcher не может восстановить старые сохранения.</string>
-	<string name="warning_save_data_not_found">Файл сохранений не найден. Резервная копия файла сохранений не будет создана. Okkei Patcher продолжит процесс.</string>
+	<string name="warning_save_data_backup_not_found_or_corrupted">Резервная копия игровых сохранений не найдена или повреждена и не будет восстановлена.</string>
+	<string name="warning_save_data_not_found">Игровые сохранения не найдены. Резервная копия игровых сохранений не будет создана.</string>
+	<string name="warning_start_patch">Будет загружено %1$s МБ данных. Если Вы отмените процесс, данные установки CHAOS;CHILD и/или данные Okkei Patcher могут быть повреждены.</string>
+	<string name="warning_start_process">Данный процесс может занять длительное время. Если Вы отмените его или закроете Okkei Patcher, данные установки CHAOS;CHILD и/или данные Okkei Patcher могут быть повреждены. Вы уверены, что хотите начать процесс?</string>
 </resources>
