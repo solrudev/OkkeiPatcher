@@ -17,6 +17,7 @@ import solru.okkeipatcher.R
 import solru.okkeipatcher.data.Message
 import solru.okkeipatcher.databinding.FragmentWorkBinding
 import solru.okkeipatcher.utils.extensions.copyTextToClipboard
+import solru.okkeipatcher.utils.extensions.indeterminate
 import solru.okkeipatcher.viewmodels.WorkViewModel
 
 abstract class WorkFragment : Fragment(R.layout.fragment_work) {
@@ -110,9 +111,9 @@ abstract class WorkFragment : Fragment(R.layout.fragment_work) {
 
 	private fun CoroutineScope.observeProgress() = launch {
 		viewModel.progressData.collect {
-			binding.progressbarWork.progress = it.progress
 			binding.progressbarWork.max = it.max
-			binding.progressbarWork.isIndeterminate = it.isIndeterminate
+			binding.progressbarWork.setProgressCompat(it.progress, true)
+			binding.progressbarWork.indeterminate = it.isIndeterminate
 		}
 	}
 

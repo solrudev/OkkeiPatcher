@@ -33,16 +33,19 @@
 		android:id="@+id/textview_work_status"
 		android:layout_width="wrap_content"
 		android:layout_height="0dp"
+		android:layout_marginBottom="8dp"
 		app:layout_constraintBottom_toTopOf="@id/progressbar_work"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent" />
 
-	<ProgressBar
+	<com.google.android.material.progressindicator.LinearProgressIndicator
 		android:id="@+id/progressbar_work"
-		style="?android:attr/progressBarStyleHorizontal"
+		style="?attr/linearProgressIndicatorStyle"
+		android:layout_marginBottom="8dp"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		app:layout_constraintBottom_toTopOf="@id/button_work"
 		app:layout_constraintEnd_toEndOf="@id/button_work"
-		app:layout_constraintStart_toStartOf="@id/button_work" />
+		app:layout_constraintStart_toStartOf="@id/button_work"
+		app:trackCornerRadius="4dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
