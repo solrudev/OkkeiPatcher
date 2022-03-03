@@ -28,7 +28,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 		viewLifecycleOwner.lifecycle.addObserver(viewModel)
 		viewLifecycleOwner.lifecycleScope.observeViewModel()
 		if (savedInstanceState == null) {
-			viewLifecycleOwner.lifecycleScope.checkPatchUpdates()
+			viewModel.checkPatchUpdates()
 		}
 	}
 
@@ -43,18 +43,11 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 		}
 	}
 
-	private fun CoroutineScope.checkPatchUpdates() = launch {
-		if (viewModel.patchUpdatesAvailable()) {
-			view?.let {
-				Snackbar.make(it, R.string.prompt_update_patch_available, Snackbar.LENGTH_LONG).show()
-			}
-		}
-	}
-
 	private fun CoroutineScope.observeViewModel() = launch {
 		viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 			observeIsPatchEnabled()
 			observeIsRestoreEnabled()
+			observePatchUpdatesAvailable()
 		}
 	}
 
@@ -67,6 +60,14 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 	private fun CoroutineScope.observeIsRestoreEnabled() = launch {
 		viewModel.isRestoreEnabled.collect {
 			binding.buttonMainRestore.isEnabled = it
+		}
+	}
+
+	private fun CoroutineScope.observePatchUpdatesAvailable() = launch {
+		viewModel.patchUpdatesAvailable.collect {
+			view?.let {
+				Snackbar.make(it, R.string.prompt_update_patch_available, Snackbar.LENGTH_LONG).show()
+			}
 		}
 	}
 }

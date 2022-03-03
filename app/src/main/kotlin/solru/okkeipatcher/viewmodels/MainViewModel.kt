@@ -2,9 +2,13 @@ package solru.okkeipatcher.viewmodels
 
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import solru.okkeipatcher.domain.AppKey
 import solru.okkeipatcher.domain.usecase.GetPatchUpdatesUseCase
 import solru.okkeipatcher.domain.usecase.IsAppUpdateAvailableUseCase
@@ -20,14 +24,17 @@ class MainViewModel @Inject constructor(
 
 	private val _isPatchEnabled = MutableStateFlow(!isPatched())
 	private val _isRestoreEnabled = MutableStateFlow(isPatched())
+	private val _patchUpdatesAvailable = MutableSharedFlow<Unit>()
 	val isPatchEnabled = _isPatchEnabled.asStateFlow()
 	val isRestoreEnabled = _isRestoreEnabled.asStateFlow()
+	val patchUpdatesAvailable = _patchUpdatesAvailable.asSharedFlow()
 
-	suspend fun patchUpdatesAvailable(): Boolean {
-		val getPatchUpdatesUseCase = getPatchUpdatesUseCaseProvider.get()
-		val updatesAvailable = getPatchUpdatesUseCase().available
-		_isPatchEnabled.value = updatesAvailable || !isPatched()
-		return updatesAvailable
+	fun checkPatchUpdates() {
+		viewModelScope.launch {
+			if (isPatchUpdateAvailable()) {
+				_patchUpdatesAvailable.emit(Unit)
+			}
+		}
 	}
 
 	fun setIsPatched(value: Boolean) {
@@ -35,10 +42,11 @@ class MainViewModel @Inject constructor(
 		_isRestoreEnabled.value = value
 	}
 
-	fun patch() {
-	}
-
-	fun restore() {
+	private suspend fun isPatchUpdateAvailable(): Boolean {
+		val getPatchUpdatesUseCase = getPatchUpdatesUseCaseProvider.get()
+		val updatesAvailable = getPatchUpdatesUseCase().available
+		_isPatchEnabled.value = updatesAvailable || !isPatched()
+		return updatesAvailable
 	}
 
 	private fun isPatched() = Preferences.get(AppKey.is_patched.name, false)
