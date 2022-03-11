@@ -107,18 +107,6 @@ class OkkeiApplication : Application(), Configuration.Provider {
 		private var _isNetworkAvailable = false
 
 		@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-		private val networkCallback = object : ConnectivityManager.NetworkCallback() {
-
-			override fun onAvailable(network: Network) {
-				_isNetworkAvailable = true
-			}
-
-			override fun onLost(network: Network) {
-				_isNetworkAvailable = false
-			}
-		}
-
-		@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 		private fun startNetworkMonitoring() {
 			val networkRequest = NetworkRequest.Builder().apply {
 				addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
@@ -129,6 +117,16 @@ class OkkeiApplication : Application(), Configuration.Provider {
 				addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
 				addTransportType(NetworkCapabilities.TRANSPORT_ETHERNET)
 			}.build()
+			val networkCallback = object : ConnectivityManager.NetworkCallback() {
+
+				override fun onAvailable(network: Network) {
+					_isNetworkAvailable = true
+				}
+
+				override fun onLost(network: Network) {
+					_isNetworkAvailable = false
+				}
+			}
 			connectivityManager?.registerNetworkCallback(networkRequest, networkCallback)
 		}
 
