@@ -23,14 +23,14 @@ base {
 
 android {
 	compileSdk = 31
-	buildToolsVersion = "31.0.0"
+	buildToolsVersion = "32.0.0"
 
 	defaultConfig {
 		applicationId = packageName
 		minSdk = 19
 		targetSdk = 31
 		versionCode = 42
-		versionName = "2.0"
+		versionName = "2.0.0"
 		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 	}
 
