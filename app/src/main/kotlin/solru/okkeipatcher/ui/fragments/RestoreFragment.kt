@@ -7,7 +7,7 @@ import solru.okkeipatcher.viewmodels.MainViewModel
 import solru.okkeipatcher.viewmodels.RestoreViewModel
 
 @AndroidEntryPoint
-class RestoreFragment : WorkFragment() {
+class RestoreFragment : WorkFragment<RestoreViewModel>() {
 
 	override val viewModel: RestoreViewModel by viewModels()
 	private val mainViewModel: MainViewModel by activityViewModels()
