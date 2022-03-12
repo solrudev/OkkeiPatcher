@@ -56,12 +56,12 @@ class HttpDownloaderImpl @Inject constructor(
 			if (httpResponse.status.value != 200) {
 				throw HttpStatusCodeException(httpResponse.status)
 			}
-			val channel: ByteReadChannel = httpResponse.receive()
+			val channel = httpResponse.receive<ByteReadChannel>()
 			val contentLength = httpResponse.contentLength() ?: Int.MAX_VALUE.toLong()
 			val progressRatio = calculateProgressRatio(contentLength, BUFFER_LENGTH)
 			val progressMax = ceil(contentLength.toDouble() / (BUFFER_LENGTH * progressRatio)).toInt()
 			var currentProgress = 0
-			var transferredBytes: Long = 0
+			var transferredBytes = 0L
 			val baseSink = if (outputStream is BlackholeOutputStream) blackholeSink() else outputStream.sink()
 			val sink = if (hashing) sha256(baseSink) else baseSink
 			sink.buffer().use { bufferedSink ->
