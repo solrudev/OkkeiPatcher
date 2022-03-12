@@ -49,6 +49,7 @@ class StreamCopierImpl @Inject constructor(
 						}
 					}
 					bufferedSink.flush()
+					onProgressChanged(ProgressData(progressMax, progressMax))
 					if (sink is HashingSink) sink.hash.hex() else String.empty
 				}
 			}
