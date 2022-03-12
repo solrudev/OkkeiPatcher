@@ -20,9 +20,9 @@ import solru.okkeipatcher.utils.extensions.copyTextToClipboard
 import solru.okkeipatcher.utils.extensions.indeterminate
 import solru.okkeipatcher.viewmodels.WorkViewModel
 
-abstract class WorkFragment : Fragment(R.layout.fragment_work) {
+abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_work) {
 
-	protected abstract val viewModel: WorkViewModel
+	protected abstract val viewModel: VM
 	private val binding by viewBinding(FragmentWorkBinding::bind)
 
 	override fun onCreate(savedInstanceState: Bundle?) {

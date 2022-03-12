@@ -7,7 +7,7 @@ import solru.okkeipatcher.viewmodels.MainViewModel
 import solru.okkeipatcher.viewmodels.PatchViewModel
 
 @AndroidEntryPoint
-class PatchFragment : WorkFragment() {
+class PatchFragment : WorkFragment<PatchViewModel>() {
 
 	override val viewModel: PatchViewModel by viewModels()
 	private val mainViewModel: MainViewModel by activityViewModels()
