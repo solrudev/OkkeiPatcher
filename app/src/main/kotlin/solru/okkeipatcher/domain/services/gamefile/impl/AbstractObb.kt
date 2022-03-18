@@ -7,9 +7,9 @@ import solru.okkeipatcher.domain.model.files.common.CommonFileHashKey
 import solru.okkeipatcher.domain.model.files.common.CommonFiles
 import solru.okkeipatcher.domain.services.ObservableServiceImpl
 import solru.okkeipatcher.domain.services.gamefile.PatchableGameFile
+import solru.okkeipatcher.domain.utils.extensions.reset
 import solru.okkeipatcher.exceptions.OkkeiException
 import solru.okkeipatcher.utils.Preferences
-import solru.okkeipatcher.utils.extensions.reset
 
 abstract class AbstractObb(protected val commonFiles: CommonFiles) : ObservableServiceImpl(), PatchableGameFile {
 

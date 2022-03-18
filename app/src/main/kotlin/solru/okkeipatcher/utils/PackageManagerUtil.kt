@@ -36,9 +36,3 @@ fun isPackageInstalled(packageName: String?): Boolean {
 		false
 	}
 }
-
-fun getPackagePublicSourceDir(packageName: String): String =
-	OkkeiApplication.context.packageManager
-		.getPackageInfo(packageName, 0)
-		.applicationInfo
-		.publicSourceDir

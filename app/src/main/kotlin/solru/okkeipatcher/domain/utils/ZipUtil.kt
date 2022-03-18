@@ -1,4 +1,4 @@
-package solru.okkeipatcher.utils
+package solru.okkeipatcher.domain.utils
 
 import java.io.File
 

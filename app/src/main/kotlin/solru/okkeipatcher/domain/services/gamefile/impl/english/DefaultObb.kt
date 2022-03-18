@@ -6,8 +6,8 @@ import solru.okkeipatcher.data.LocalizedString
 import solru.okkeipatcher.di.factory.ObbDownloaderFactory
 import solru.okkeipatcher.domain.model.files.common.CommonFiles
 import solru.okkeipatcher.domain.services.gamefile.impl.AbstractObb
+import solru.okkeipatcher.domain.utils.extensions.reset
 import solru.okkeipatcher.repository.patch.DefaultPatchRepository
-import solru.okkeipatcher.utils.extensions.reset
 import javax.inject.Inject
 
 class DefaultObb @Inject constructor(

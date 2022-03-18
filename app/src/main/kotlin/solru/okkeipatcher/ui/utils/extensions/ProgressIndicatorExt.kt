@@ -1,4 +1,4 @@
-package solru.okkeipatcher.utils.extensions
+package solru.okkeipatcher.ui.utils.extensions
 
 import com.google.android.material.progressindicator.BaseProgressIndicator
 import com.google.android.material.progressindicator.BaseProgressIndicatorSpec

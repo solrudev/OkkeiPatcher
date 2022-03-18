@@ -1,4 +1,4 @@
-package solru.okkeipatcher.utils.extensions
+package solru.okkeipatcher.domain.utils.extensions
 
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay

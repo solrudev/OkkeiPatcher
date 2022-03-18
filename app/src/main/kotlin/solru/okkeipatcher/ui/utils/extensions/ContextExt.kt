@@ -1,4 +1,4 @@
-package solru.okkeipatcher.utils.extensions
+package solru.okkeipatcher.ui.utils.extensions
 
 import android.content.ClipData
 import android.content.ClipboardManager

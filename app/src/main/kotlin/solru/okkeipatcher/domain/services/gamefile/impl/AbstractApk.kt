@@ -22,16 +22,15 @@ import solru.okkeipatcher.domain.model.files.common.CommonFileHashKey
 import solru.okkeipatcher.domain.model.files.common.CommonFiles
 import solru.okkeipatcher.domain.services.ObservableServiceImpl
 import solru.okkeipatcher.domain.services.gamefile.Apk
+import solru.okkeipatcher.domain.utils.deleteTempZipFiles
+import solru.okkeipatcher.domain.utils.extensions.makeIndeterminate
+import solru.okkeipatcher.domain.utils.extensions.observe
+import solru.okkeipatcher.domain.utils.extensions.reset
+import solru.okkeipatcher.domain.utils.extensions.use
 import solru.okkeipatcher.exceptions.OkkeiException
 import solru.okkeipatcher.io.file.JavaFile
 import solru.okkeipatcher.io.services.StreamCopier
 import solru.okkeipatcher.utils.Preferences
-import solru.okkeipatcher.utils.deleteTempZipFiles
-import solru.okkeipatcher.utils.extensions.makeIndeterminate
-import solru.okkeipatcher.utils.extensions.observe
-import solru.okkeipatcher.utils.extensions.reset
-import solru.okkeipatcher.utils.extensions.use
-import solru.okkeipatcher.utils.getPackagePublicSourceDir
 import java.io.File
 import java.security.KeyFactory
 import java.security.cert.CertificateFactory
@@ -223,11 +222,15 @@ abstract class AbstractApk(
 			throw OkkeiException(LocalizedString.resource(R.string.error_game_not_found))
 		}
 		_status.emit(LocalizedString.resource(R.string.status_copying_apk))
-		val originalApk = JavaFile(File(getPackagePublicSourceDir(Apk.PACKAGE_NAME)), streamCopier)
+		val installedApkPath = OkkeiApplication.context.packageManager
+			.getPackageInfo(Apk.PACKAGE_NAME, 0)
+			.applicationInfo
+			.publicSourceDir
+		val installedApk = JavaFile(File(installedApkPath), streamCopier)
 		val progressJob = launch {
-			progressPublisher._progress.emitAll(originalApk.progress)
+			progressPublisher._progress.emitAll(installedApk.progress)
 		}
-		val hash = originalApk.copyTo(destinationFile, hashing)
+		val hash = installedApk.copyTo(destinationFile, hashing)
 		progressJob.cancel()
 		hash
 	}

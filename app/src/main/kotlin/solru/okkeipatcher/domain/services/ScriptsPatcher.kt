@@ -11,15 +11,15 @@ import solru.okkeipatcher.domain.OkkeiStorage
 import solru.okkeipatcher.domain.model.files.generic.PatchFileHashKey
 import solru.okkeipatcher.domain.services.gamefile.impl.AbstractApk
 import solru.okkeipatcher.domain.strategy.impl.english.PatchFileVersionKey
+import solru.okkeipatcher.domain.utils.extensions.emit
+import solru.okkeipatcher.domain.utils.extensions.observe
+import solru.okkeipatcher.domain.utils.extensions.reset
+import solru.okkeipatcher.domain.utils.extensions.use
 import solru.okkeipatcher.exceptions.OkkeiException
 import solru.okkeipatcher.io.file.VerifiableFile
 import solru.okkeipatcher.io.services.HttpDownloader
 import solru.okkeipatcher.repository.patch.ScriptsDataRepository
 import solru.okkeipatcher.utils.Preferences
-import solru.okkeipatcher.utils.extensions.emit
-import solru.okkeipatcher.utils.extensions.observe
-import solru.okkeipatcher.utils.extensions.reset
-import solru.okkeipatcher.utils.extensions.use
 import java.io.File
 
 class ScriptsPatcher @AssistedInject constructor(

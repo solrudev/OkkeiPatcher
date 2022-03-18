@@ -16,8 +16,9 @@ import kotlinx.coroutines.launch
 import solru.okkeipatcher.R
 import solru.okkeipatcher.data.Message
 import solru.okkeipatcher.databinding.FragmentWorkBinding
-import solru.okkeipatcher.utils.extensions.copyTextToClipboard
-import solru.okkeipatcher.utils.extensions.indeterminate
+import solru.okkeipatcher.ui.utils.extensions.copyTextToClipboard
+import solru.okkeipatcher.ui.utils.extensions.indeterminate
+import solru.okkeipatcher.ui.utils.extensions.showWithLifecycle
 import solru.okkeipatcher.viewmodels.WorkViewModel
 
 abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_work) {
@@ -85,7 +86,7 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 				.setOnDismissListener {
 					viewModel.closeStartWorkMessage()
 				}
-				.show()
+				.showWithLifecycle(viewLifecycleOwner.lifecycle)
 		}
 	}
 
@@ -99,7 +100,7 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 				.setOnDismissListener {
 					viewModel.closeCancelWorkMessage()
 				}
-				.show()
+				.showWithLifecycle(viewLifecycleOwner.lifecycle)
 		}
 	}
 
@@ -128,7 +129,7 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 					viewModel.closeErrorMessage()
 					findNavController().popBackStack()
 				}
-				.show()
+				.showWithLifecycle(viewLifecycleOwner.lifecycle)
 		}
 	}
 
