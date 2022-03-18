@@ -86,7 +86,7 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 				.setOnDismissListener {
 					viewModel.closeStartWorkMessage()
 				}
-				.showWithLifecycle(viewLifecycleOwner.lifecycle)
+				.showWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.Event.ON_STOP)
 		}
 	}
 
@@ -100,7 +100,7 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 				.setOnDismissListener {
 					viewModel.closeCancelWorkMessage()
 				}
-				.showWithLifecycle(viewLifecycleOwner.lifecycle)
+				.showWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.Event.ON_STOP)
 		}
 	}
 
@@ -129,7 +129,7 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 					viewModel.closeErrorMessage()
 					findNavController().popBackStack()
 				}
-				.showWithLifecycle(viewLifecycleOwner.lifecycle)
+				.showWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.Event.ON_STOP)
 		}
 	}
 
