@@ -25,11 +25,4 @@ class LifecycleAwareDialogHolder(
 			source.lifecycle.removeObserver(this)
 		}
 	}
-
-	/**
-	 * Displays the [dialog].
-	 */
-	fun show() {
-		dialog?.show()
-	}
 }

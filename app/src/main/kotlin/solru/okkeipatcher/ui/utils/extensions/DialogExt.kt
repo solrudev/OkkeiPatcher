@@ -13,7 +13,7 @@ import solru.okkeipatcher.ui.utils.LifecycleAwareDialogHolder
 fun Dialog.showWithLifecycle(lifecycle: Lifecycle, dismissEvent: Lifecycle.Event) {
 	val dialogHolder = LifecycleAwareDialogHolder(this, dismissEvent)
 	lifecycle.addObserver(dialogHolder)
-	dialogHolder.show()
+	show()
 }
 
 /**
