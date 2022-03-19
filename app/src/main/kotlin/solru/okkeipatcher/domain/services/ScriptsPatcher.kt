@@ -43,6 +43,7 @@ class ScriptsPatcher @AssistedInject constructor(
 			apk.sign()
 		} finally {
 			extractedScriptsDirectory?.let { if (it.exists()) it.deleteRecursively() }
+			scriptsFile.delete()
 		}
 	}
 
@@ -63,7 +64,6 @@ class ScriptsPatcher @AssistedInject constructor(
 				progressPublisher._progress.emit(progressData)
 			}
 		} catch (e: Throwable) {
-			scriptsFile.delete()
 			throw OkkeiException(LocalizedString.resource(R.string.error_http_file_download), cause = e)
 		}
 		_status.emit(LocalizedString.resource(R.string.status_comparing_scripts))
