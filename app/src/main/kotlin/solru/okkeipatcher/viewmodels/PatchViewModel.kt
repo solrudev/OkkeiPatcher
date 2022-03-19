@@ -29,7 +29,10 @@ class PatchViewModel @Inject constructor(
 				val patchSizeInMb = getPatchSizeInMbUseCase()
 				val title = LocalizedString.resource(R.string.warning)
 				val message = LocalizedString.resource(R.string.warning_start_patch, patchSizeInMb)
-				_startWorkMessage.value = Message(title, message)
+				val startWorkMessage = Message(title, message)
+				updateUiState {
+					copy(startWorkMessage = startWorkMessage)
+				}
 			}
 		}
 	}

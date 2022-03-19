@@ -11,13 +11,12 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import solru.okkeipatcher.R
 import solru.okkeipatcher.data.Message
+import solru.okkeipatcher.data.ProgressData
 import solru.okkeipatcher.databinding.FragmentWorkBinding
 import solru.okkeipatcher.ui.utils.extensions.copyTextToClipboard
-import solru.okkeipatcher.ui.utils.extensions.indeterminate
 import solru.okkeipatcher.ui.utils.extensions.showWithLifecycle
 import solru.okkeipatcher.viewmodels.WorkViewModel
 
@@ -39,7 +38,14 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		setupNavigation()
 		viewLifecycleOwner.lifecycle.addObserver(viewModel)
-		viewLifecycleOwner.lifecycleScope.observeViewModel()
+		viewLifecycleOwner.lifecycleScope.observeUiState()
+	}
+
+	override fun onStop() {
+		super.onStop()
+		viewModel.hideStartWorkMessage()
+		viewModel.hideCancelWorkMessage()
+		viewModel.hideErrorMessage()
 	}
 
 	protected abstract fun onSuccess()
@@ -52,103 +58,92 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 
 	private fun onButtonClick() {
 		if (viewModel.isWorkRunning) {
-			viewModel.showCancelWarning()
+			viewModel.cancel()
 		} else {
 			findNavController().popBackStack()
 		}
 	}
 
-	private fun CoroutineScope.observeViewModel() = launch {
+	private fun CoroutineScope.observeUiState() = launch {
 		viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-			observeStartWorkMessage()
-			observeCancelWorkMessage()
-			observeErrorMessage()
-			observeStatus()
-			observeProgress()
-			observeButtonText()
-			observeWorkSucceeded()
-			observeWorkCanceled()
-		}
-	}
-
-	private fun CoroutineScope.observeStartWorkMessage() = launch {
-		viewModel.startWorkMessage.collect { startMessage ->
-			createDialogBuilder(startMessage)
-				.setPositiveButton(android.R.string.ok) { _, _ ->
-					viewModel.startWork()
+			viewModel.uiState.collect { uiState ->
+				if (uiState.isWorkSuccessful) {
+					binding.buttonWork.setText(android.R.string.ok)
+					onSuccess()
 				}
-				.setNegativeButton(android.R.string.cancel) { _, _ ->
+				if (uiState.isWorkCanceled) {
 					findNavController().popBackStack()
 				}
-				.setOnCancelListener {
-					findNavController().popBackStack()
+				binding.textviewWorkStatus.text = uiState.status.resolve(requireContext())
+				setProgress(uiState.progressData)
+				uiState.startWorkMessage?.let {
+					if (!uiState.isStartWorkMessageVisible) {
+						showStartWorkMessage(it)
+					}
 				}
-				.setOnDismissListener {
-					viewModel.closeStartWorkMessage()
+				uiState.cancelWorkMessage?.let {
+					if (!uiState.isCancelWorkMessageVisible) {
+						showCancelWorkMessage(it)
+					}
 				}
-				.showWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.Event.ON_STOP)
-		}
-	}
-
-	private fun CoroutineScope.observeCancelWorkMessage() = launch {
-		viewModel.cancelWorkMessage.collect { cancelMessage ->
-			createDialogBuilder(cancelMessage)
-				.setPositiveButton(android.R.string.ok) { _, _ ->
-					viewModel.cancelWork()
+				uiState.errorMessage?.let {
+					if (!uiState.isErrorMessageVisible) {
+						showErrorMessage(it)
+					}
 				}
-				.setNegativeButton(android.R.string.cancel, null)
-				.setOnDismissListener {
-					viewModel.closeCancelWorkMessage()
-				}
-				.showWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.Event.ON_STOP)
+			}
 		}
 	}
 
-	private fun CoroutineScope.observeStatus() = launch {
-		viewModel.status.collect {
-			binding.textviewWorkStatus.text = it.resolve(requireContext())
-		}
+	private fun setProgress(progressData: ProgressData) {
+		binding.progressbarWork.max = progressData.max
+		binding.progressbarWork.setProgressCompat(progressData.progress, true)
+		binding.progressbarWork.isIndeterminate = progressData.isIndeterminate
 	}
 
-	private fun CoroutineScope.observeProgress() = launch {
-		viewModel.progressData.collect {
-			binding.progressbarWork.max = it.max
-			binding.progressbarWork.setProgressCompat(it.progress, true)
-			binding.progressbarWork.indeterminate = it.isIndeterminate
-		}
+	private fun showStartWorkMessage(startWorkMessage: Message) {
+		createDialogBuilder(startWorkMessage)
+			.setPositiveButton(android.R.string.ok) { _, _ ->
+				viewModel.startWork()
+			}
+			.setNegativeButton(android.R.string.cancel) { _, _ ->
+				findNavController().popBackStack()
+			}
+			.setOnCancelListener {
+				findNavController().popBackStack()
+			}
+			.setOnDismissListener {
+				viewModel.closeStartWorkMessage()
+			}
+			.showWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.Event.ON_STOP)
+		viewModel.showStartWorkMessage()
 	}
 
-	private fun CoroutineScope.observeErrorMessage() = launch {
-		viewModel.errorMessage.collectLatest { error ->
-			val message = error.message.resolve(requireContext())
-			createDialogBuilder(error)
-				.setNeutralButton(R.string.dialog_button_copy_to_clipboard) { _, _ ->
-					requireContext().copyTextToClipboard("Okkei Patcher Exception", message)
-				}
-				.setOnDismissListener {
-					viewModel.closeErrorMessage()
-					findNavController().popBackStack()
-				}
-				.showWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.Event.ON_STOP)
-		}
+	private fun showCancelWorkMessage(cancelWorkMessage: Message) {
+		createDialogBuilder(cancelWorkMessage)
+			.setPositiveButton(android.R.string.ok) { _, _ ->
+				viewModel.cancelWork()
+			}
+			.setNegativeButton(android.R.string.cancel, null)
+			.setOnDismissListener {
+				viewModel.closeCancelWorkMessage()
+			}
+			.showWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.Event.ON_STOP)
+		viewModel.showCancelWorkMessage()
 	}
 
-	private fun CoroutineScope.observeButtonText() = launch {
-		viewModel.buttonText.collect {
-			binding.buttonWork.text = it.resolve(requireContext())
-		}
-	}
-
-	private fun CoroutineScope.observeWorkSucceeded() = launch {
-		viewModel.workSucceeded.collect {
-			onSuccess()
-		}
-	}
-
-	private fun CoroutineScope.observeWorkCanceled() = launch {
-		viewModel.workCanceled.collect {
-			findNavController().popBackStack()
-		}
+	private fun showErrorMessage(errorMessage: Message) {
+		val message = errorMessage.message.resolve(requireContext())
+		createDialogBuilder(errorMessage)
+			.setNeutralButton(R.string.dialog_button_copy_to_clipboard) { _, _ ->
+				requireContext().copyTextToClipboard("Okkei Patcher Exception", message)
+			}
+			.setOnDismissListener {
+				viewModel.closeErrorMessage()
+				findNavController().popBackStack()
+			}
+			.showWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.Event.ON_STOP)
+		viewModel.showErrorMessage()
 	}
 
 	private fun createDialogBuilder(message: Message): AlertDialog.Builder {

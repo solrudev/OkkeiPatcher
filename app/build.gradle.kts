@@ -107,6 +107,7 @@ dependencies {
 	implementation("androidx.work:work-runtime-ktx:2.7.1")
 	implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
 	implementation("androidx.navigation:navigation-ui-ktx:$navigationVersion")
+	implementation("com.google.android.material:material:1.5.0")
 
 	// I/O
 	val excludeOkHttp = Action<ExternalModuleDependency> {

@@ -24,7 +24,10 @@ class RestoreViewModel @Inject constructor(
 		if (!isWorkRunning) {
 			val title = LocalizedString.resource(R.string.warning)
 			val message = LocalizedString.resource(R.string.warning_start_process)
-			_startWorkMessage.value = Message(title, message)
+			val startWorkMessage = Message(title, message)
+			updateUiState {
+				copy(startWorkMessage = startWorkMessage)
+			}
 		}
 	}
 
