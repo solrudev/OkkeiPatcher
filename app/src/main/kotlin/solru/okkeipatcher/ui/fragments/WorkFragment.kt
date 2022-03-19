@@ -43,9 +43,7 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 
 	override fun onStop() {
 		super.onStop()
-		viewModel.hideStartWorkMessage()
-		viewModel.hideCancelWorkMessage()
-		viewModel.hideErrorMessage()
+		viewModel.hideAllMessages()
 	}
 
 	protected abstract fun onSuccess()
@@ -76,19 +74,19 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 				}
 				binding.textviewWorkStatus.text = uiState.status.resolve(requireContext())
 				setProgress(uiState.progressData)
-				uiState.startWorkMessage?.let {
-					if (!uiState.isStartWorkMessageVisible) {
-						showStartWorkMessage(it)
+				uiState.startWorkMessage.run {
+					if (!isVisible && data != null) {
+						showStartWorkMessage(data)
 					}
 				}
-				uiState.cancelWorkMessage?.let {
-					if (!uiState.isCancelWorkMessageVisible) {
-						showCancelWorkMessage(it)
+				uiState.cancelWorkMessage.run {
+					if (!isVisible && data != null) {
+						showCancelWorkMessage(data)
 					}
 				}
-				uiState.errorMessage?.let {
-					if (!uiState.isErrorMessageVisible) {
-						showErrorMessage(it)
+				uiState.errorMessage.run {
+					if (!isVisible && data != null) {
+						showErrorMessage(data)
 					}
 				}
 			}
@@ -103,7 +101,7 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 
 	private fun showStartWorkMessage(startWorkMessage: Message) {
 		createDialogBuilder(startWorkMessage)
-			.setPositiveButton(android.R.string.ok) { _, _ ->
+			.setPositiveButton(R.string.start) { _, _ ->
 				viewModel.startWork()
 			}
 			.setNegativeButton(android.R.string.cancel) { _, _ ->
@@ -121,7 +119,7 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 
 	private fun showCancelWorkMessage(cancelWorkMessage: Message) {
 		createDialogBuilder(cancelWorkMessage)
-			.setPositiveButton(android.R.string.ok) { _, _ ->
+			.setPositiveButton(R.string.abort) { _, _ ->
 				viewModel.cancelWork()
 			}
 			.setNegativeButton(android.R.string.cancel, null)

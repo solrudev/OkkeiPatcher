@@ -5,9 +5,9 @@
 	<string name="attention">Внимание</string>
 	<string name="exception">Возникло исключение</string>
 	<string name="about_version">Версия %1$s\nby solrudev</string>
-	<string name="not_implemented">Тут пока ничего нет…</string>
 	<string name="patch">Патч</string>
 	<string name="restoring">Восстановление</string>
+	<string name="start">Начать</string>
 	<string name="toast_copied_to_clipboard">Скопировано в буфер обмена</string>
 	<string name="update">Обновление</string>
 
@@ -94,9 +94,11 @@
 
 	<!--Warnings-->
 	<string name="warning">Предупреждение</string>
-	<string name="warning_abort">Вы уверены, что хотите остановить процесс? Данные установки CHAOS;CHILD и/или данные Okkei Patcher могут быть повреждены.</string>
+	<string name="warning_abort_title">Остановить процесс?</string>
+	<string name="warning_abort">Если Вы остановите процесс, данные установки CHAOS;CHILD и/или данные Okkei Patcher могут быть повреждены.</string>
 	<string name="warning_save_data_backup_not_found_or_corrupted">Резервная копия игровых сохранений не найдена или повреждена и не будет восстановлена.</string>
 	<string name="warning_save_data_not_found">Игровые сохранения не найдены. Резервная копия игровых сохранений не будет создана.</string>
-	<string name="warning_start_patch">Будет загружено %1$s МБ данных. Если Вы отмените процесс, данные установки CHAOS;CHILD и/или данные Okkei Patcher могут быть повреждены.</string>
-	<string name="warning_start_process">Данный процесс может занять длительное время. Если Вы отмените его или закроете Okkei Patcher, данные установки CHAOS;CHILD и/или данные Okkei Patcher могут быть повреждены. Вы уверены, что хотите начать процесс?</string>
+	<string name="warning_start_patch_title">Начать применение патча?</string>
+	<string name="warning_start_patch">Будет загружено %1$s МБ данных. Если Вы остановите процесс, данные установки CHAOS;CHILD и/или данные Okkei Patcher могут быть повреждены.</string>
+	<string name="warning_start_restore_title">Начать восстановление?</string>
 </resources>

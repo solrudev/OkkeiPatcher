@@ -13,6 +13,7 @@ import solru.okkeipatcher.data.Message
 import solru.okkeipatcher.data.WorkState
 import solru.okkeipatcher.domain.usecase.ClearNotificationsUseCase
 import solru.okkeipatcher.domain.usecase.GetWorkStateFlowByIdUseCase
+import solru.okkeipatcher.ui.state.UiMessage
 import solru.okkeipatcher.ui.state.WorkUiState
 import java.util.*
 
@@ -23,7 +24,6 @@ abstract class WorkViewModel(
 
 	protected val workObservingScope = CoroutineScope(Dispatchers.Main.immediate)
 	private var isWorkObserved = false
-
 	private val _uiState = MutableStateFlow(WorkUiState())
 	val uiState = _uiState.asStateFlow()
 
@@ -41,56 +41,50 @@ abstract class WorkViewModel(
 	}
 
 	fun cancel() {
-		val title = LocalizedString.resource(R.string.warning)
+		val title = LocalizedString.resource(R.string.warning_abort_title)
 		val message = LocalizedString.resource(R.string.warning_abort)
-		val cancelWorkMessage = Message(title, message)
+		val cancelMessage = Message(title, message)
 		updateUiState {
-			copy(cancelWorkMessage = cancelWorkMessage)
+			val cancelWorkUiMessage = cancelWorkMessage.copy(data = cancelMessage)
+			copy(cancelWorkMessage = cancelWorkUiMessage)
 		}
 	}
 
 	fun showStartWorkMessage() = updateUiState {
-		copy(isStartWorkMessageVisible = true)
+		val startWorkUiMessage = startWorkMessage.copy(isVisible = true)
+		copy(startWorkMessage = startWorkUiMessage)
 	}
 
 	fun showCancelWorkMessage() = updateUiState {
-		copy(isCancelWorkMessageVisible = true)
+		val cancelWorkUiMessage = cancelWorkMessage.copy(isVisible = true)
+		copy(cancelWorkMessage = cancelWorkUiMessage)
 	}
 
 	fun showErrorMessage() = updateUiState {
-		copy(isErrorMessageVisible = true)
-	}
-
-	fun hideStartWorkMessage() = updateUiState {
-		copy(isStartWorkMessageVisible = false)
-	}
-
-	fun hideCancelWorkMessage() = updateUiState {
-		copy(isCancelWorkMessageVisible = false)
-	}
-
-	fun hideErrorMessage() = updateUiState {
-		copy(isErrorMessageVisible = false)
+		val errorUiMessage = errorMessage.copy(isVisible = true)
+		copy(errorMessage = errorUiMessage)
 	}
 
 	fun closeStartWorkMessage() = updateUiState {
-		copy(
-			startWorkMessage = null,
-			isStartWorkMessageVisible = false
-		)
+		copy(startWorkMessage = UiMessage())
 	}
 
 	fun closeCancelWorkMessage() = updateUiState {
-		copy(
-			cancelWorkMessage = null,
-			isCancelWorkMessageVisible = false
-		)
+		copy(cancelWorkMessage = UiMessage())
 	}
 
 	fun closeErrorMessage() = updateUiState {
+		copy(errorMessage = UiMessage())
+	}
+
+	fun hideAllMessages() = updateUiState {
+		val startWorkUiMessage = startWorkMessage.copy(isVisible = false)
+		val cancelWorkUiMessage = cancelWorkMessage.copy(isVisible = false)
+		val errorUiMessage = errorMessage.copy(isVisible = false)
 		copy(
-			errorMessage = null,
-			isErrorMessageVisible = false
+			startWorkMessage = startWorkUiMessage,
+			cancelWorkMessage = cancelWorkUiMessage,
+			errorMessage = errorUiMessage
 		)
 	}
 
@@ -125,12 +119,13 @@ abstract class WorkViewModel(
 
 	private fun onWorkFailed(workState: WorkState.Failed) {
 		val stackTrace = workState.throwable?.stackTraceToString() ?: "null"
-		val errorMessage = Message(
+		val message = Message(
 			LocalizedString.resource(R.string.exception),
 			LocalizedString.raw(stackTrace)
 		)
 		updateUiState {
-			copy(errorMessage = errorMessage)
+			val errorUiMessage = errorMessage.copy(data = message)
+			copy(errorMessage = errorUiMessage)
 		}
 		clearNotificationsUseCase()
 	}
