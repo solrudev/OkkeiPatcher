@@ -10,15 +10,13 @@ import kotlinx.coroutines.flow.onCompletion
 import solru.okkeipatcher.R
 import solru.okkeipatcher.data.LocalizedString
 import solru.okkeipatcher.data.Message
+import solru.okkeipatcher.data.Work
 import solru.okkeipatcher.data.WorkState
 import solru.okkeipatcher.domain.usecase.ClearNotificationsUseCase
-import solru.okkeipatcher.domain.usecase.GetWorkStateFlowByIdUseCase
 import solru.okkeipatcher.ui.state.UiMessage
 import solru.okkeipatcher.ui.state.WorkUiState
-import java.util.*
 
 abstract class WorkViewModel(
-	private val getWorkStateFlowByIdUseCase: GetWorkStateFlowByIdUseCase,
 	private val clearNotificationsUseCase: ClearNotificationsUseCase
 ) : ViewModel(), DefaultLifecycleObserver {
 
@@ -92,12 +90,12 @@ abstract class WorkViewModel(
 		_uiState.value = _uiState.value.reduce()
 	}
 
-	protected fun CoroutineScope.observeWork(workId: UUID) = launch {
+	protected fun CoroutineScope.observeWork(work: Work) = launch {
 		if (isWorkObserved) {
 			return@launch
 		}
 		isWorkObserved = true
-		getWorkStateFlowByIdUseCase(workId)
+		work.state
 			.onCompletion { isWorkObserved = false }
 			.collect { workState ->
 				when (workState) {

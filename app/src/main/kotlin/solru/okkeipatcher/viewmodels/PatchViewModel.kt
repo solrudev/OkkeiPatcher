@@ -7,24 +7,35 @@ import kotlinx.coroutines.launch
 import solru.okkeipatcher.R
 import solru.okkeipatcher.data.LocalizedString
 import solru.okkeipatcher.data.Message
-import solru.okkeipatcher.domain.usecase.*
+import solru.okkeipatcher.data.WorkState
+import solru.okkeipatcher.domain.usecase.ClearNotificationsUseCase
+import solru.okkeipatcher.domain.usecase.GetPatchSizeInMbUseCase
+import solru.okkeipatcher.domain.usecase.GetPatchWorkUseCase
+import solru.okkeipatcher.domain.usecase.StartPatchWorkUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class PatchViewModel @Inject constructor(
 	private val startPatchWorkUseCase: StartPatchWorkUseCase,
-	private val getPatchWorkIdUseCase: GetPatchWorkIdUseCase,
-	private val cancelWorkByIdUseCase: CancelWorkByIdUseCase,
+	private val getPatchWorkUseCase: GetPatchWorkUseCase,
 	private val getPatchSizeInMbUseCase: GetPatchSizeInMbUseCase,
-	getWorkStateFlowByIdUseCase: GetWorkStateFlowByIdUseCase,
 	clearNotificationsUseCase: ClearNotificationsUseCase
-) : WorkViewModel(getWorkStateFlowByIdUseCase, clearNotificationsUseCase) {
+) : WorkViewModel(clearNotificationsUseCase) {
 
 	override val isWorkRunning: Boolean
-		get() = getPatchWorkIdUseCase() != null
+		get() {
+			val work = getPatchWorkUseCase()
+			return work != null && work.currentState is WorkState.Running
+		}
+
+	private val canStartWork: Boolean
+		get() {
+			val work = getPatchWorkUseCase()
+			return work == null || work.currentState is WorkState.Canceled || work.currentState is WorkState.Succeeded
+		}
 
 	init {
-		if (!isWorkRunning) {
+		if (canStartWork) {
 			viewModelScope.launch {
 				val patchSizeInMb = getPatchSizeInMbUseCase()
 				val title = LocalizedString.resource(R.string.warning_start_patch_title)
@@ -39,18 +50,16 @@ class PatchViewModel @Inject constructor(
 	}
 
 	override fun startWork() {
-		val patchWorkId = startPatchWorkUseCase()
-		workObservingScope.observeWork(patchWorkId)
+		val patchWork = startPatchWorkUseCase()
+		workObservingScope.observeWork(patchWork)
 	}
 
 	override fun cancelWork() {
-		getPatchWorkIdUseCase()?.let {
-			cancelWorkByIdUseCase(it)
-		}
+		getPatchWorkUseCase()?.cancel()
 	}
 
 	override fun onStart(owner: LifecycleOwner) {
-		getPatchWorkIdUseCase()?.let {
+		getPatchWorkUseCase()?.let {
 			workObservingScope.observeWork(it)
 		}
 	}

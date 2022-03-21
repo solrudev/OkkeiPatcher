@@ -5,23 +5,33 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import solru.okkeipatcher.R
 import solru.okkeipatcher.data.LocalizedString
 import solru.okkeipatcher.data.Message
-import solru.okkeipatcher.domain.usecase.*
+import solru.okkeipatcher.data.WorkState
+import solru.okkeipatcher.domain.usecase.ClearNotificationsUseCase
+import solru.okkeipatcher.domain.usecase.GetRestoreWorkUseCase
+import solru.okkeipatcher.domain.usecase.StartRestoreWorkUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class RestoreViewModel @Inject constructor(
 	private val startRestoreWorkUseCase: StartRestoreWorkUseCase,
-	private val getRestoreWorkIdUseCase: GetRestoreWorkIdUseCase,
-	private val cancelWorkByIdUseCase: CancelWorkByIdUseCase,
-	getWorkStateFlowByIdUseCase: GetWorkStateFlowByIdUseCase,
+	private val getRestoreWorkUseCase: GetRestoreWorkUseCase,
 	clearNotificationsUseCase: ClearNotificationsUseCase
-) : WorkViewModel(getWorkStateFlowByIdUseCase, clearNotificationsUseCase) {
+) : WorkViewModel(clearNotificationsUseCase) {
 
 	override val isWorkRunning: Boolean
-		get() = getRestoreWorkIdUseCase() != null
+		get() {
+			val work = getRestoreWorkUseCase()
+			return work != null && work.currentState is WorkState.Running
+		}
+
+	private val canStartWork: Boolean
+		get() {
+			val work = getRestoreWorkUseCase()
+			return work == null || work.currentState is WorkState.Canceled || work.currentState is WorkState.Succeeded
+		}
 
 	init {
-		if (!isWorkRunning) {
+		if (canStartWork) {
 			val title = LocalizedString.resource(R.string.warning_start_restore_title)
 			val message = LocalizedString.resource(R.string.warning_abort)
 			val startMessage = Message(title, message)
@@ -33,18 +43,16 @@ class RestoreViewModel @Inject constructor(
 	}
 
 	override fun startWork() {
-		val restoreWorkId = startRestoreWorkUseCase()
-		workObservingScope.observeWork(restoreWorkId)
+		val restoreWork = startRestoreWorkUseCase()
+		workObservingScope.observeWork(restoreWork)
 	}
 
 	override fun cancelWork() {
-		getRestoreWorkIdUseCase()?.let {
-			cancelWorkByIdUseCase(it)
-		}
+		getRestoreWorkUseCase()?.cancel()
 	}
 
 	override fun onStart(owner: LifecycleOwner) {
-		getRestoreWorkIdUseCase()?.let {
+		getRestoreWorkUseCase()?.let {
 			workObservingScope.observeWork(it)
 		}
 	}

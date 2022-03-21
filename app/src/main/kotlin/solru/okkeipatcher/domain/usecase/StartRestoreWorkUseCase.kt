@@ -1,14 +1,13 @@
 package solru.okkeipatcher.domain.usecase
 
-import androidx.work.WorkManager
-import java.util.*
+import solru.okkeipatcher.data.Work
 
 interface StartRestoreWorkUseCase {
 
 	/**
 	 * Starts new restore work.
 	 *
-	 * @return [WorkManager]'s work [UUID].
+	 * @return restore [Work].
 	 */
-	operator fun invoke(): UUID
+	operator fun invoke(): Work
 }
