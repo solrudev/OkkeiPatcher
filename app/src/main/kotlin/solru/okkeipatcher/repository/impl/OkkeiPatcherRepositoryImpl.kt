@@ -1,5 +1,6 @@
 package solru.okkeipatcher.repository.impl
 
+import kotlinx.coroutines.CancellationException
 import solru.okkeipatcher.R
 import solru.okkeipatcher.api.OkkeiPatcherService
 import solru.okkeipatcher.data.LocalizedString
@@ -46,6 +47,9 @@ class OkkeiPatcherRepositoryImpl @Inject constructor(
 					progressPublisher._progress.emit(progressData)
 				}
 			} catch (e: Throwable) {
+				if (e is CancellationException) {
+					throw e
+				}
 				throw OkkeiException(LocalizedString.resource(R.string.error_http_file_download), cause = e)
 			}
 			_status.emit(LocalizedString.resource(R.string.status_comparing_apk))

@@ -2,6 +2,7 @@ package solru.okkeipatcher.domain.services
 
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.merge
 import net.lingala.zip4j.ZipFile
 import net.lingala.zip4j.model.ZipParameters
@@ -64,6 +65,9 @@ class ScriptsPatcher @AssistedInject constructor(
 				progressPublisher._progress.emit(progressData)
 			}
 		} catch (e: Throwable) {
+			if (e is CancellationException) {
+				throw e
+			}
 			throw OkkeiException(LocalizedString.resource(R.string.error_http_file_download), cause = e)
 		}
 		_status.emit(LocalizedString.resource(R.string.status_comparing_scripts))

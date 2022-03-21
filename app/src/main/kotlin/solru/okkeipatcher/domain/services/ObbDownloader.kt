@@ -2,6 +2,7 @@ package solru.okkeipatcher.domain.services
 
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.merge
 import solru.okkeipatcher.R
 import solru.okkeipatcher.data.LocalizedString
@@ -36,6 +37,9 @@ class ObbDownloader @AssistedInject constructor(
 				}
 			} catch (e: Throwable) {
 				obb.delete()
+				if (e is CancellationException) {
+					throw e
+				}
 				throw OkkeiException(LocalizedString.resource(R.string.error_http_file_download), cause = e)
 			}
 			_status.emit(LocalizedString.resource(R.string.status_writing_obb_hash))
