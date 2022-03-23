@@ -8,6 +8,9 @@ import java.util.*
 @Dao
 interface WorkDao : BaseDao<WorkEntity> {
 
+	@Query("UPDATE works SET is_pending = :isPending WHERE id = :id")
+	suspend fun updateIsPending(id: Int, isPending: Boolean)
+
 	@Query("SELECT * FROM works WHERE work_id = :id LIMIT 1")
 	suspend fun getByWorkId(id: UUID): WorkEntity?
 }

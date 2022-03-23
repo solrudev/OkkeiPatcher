@@ -12,8 +12,8 @@ class WorkRepositoryImpl @Inject constructor(private val workDao: WorkDao) : Wor
 		workDao.insert(work)
 	}
 
-	override suspend fun update(work: WorkEntity) {
-		workDao.update(work)
+	override suspend fun updateIsPending(work: WorkEntity, isPending: Boolean) {
+		workDao.updateIsPending(work.id, isPending)
 	}
 
 	override suspend fun getByWorkId(id: UUID) = workDao.getByWorkId(id)

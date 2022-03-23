@@ -5,6 +5,6 @@ import java.util.*
 
 interface WorkRepository {
 	suspend fun add(work: WorkEntity)
-	suspend fun update(work: WorkEntity)
+	suspend fun updateIsPending(work: WorkEntity, isPending: Boolean)
 	suspend fun getByWorkId(id: UUID): WorkEntity?
 }
