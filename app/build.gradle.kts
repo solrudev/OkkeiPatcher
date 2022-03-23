@@ -15,6 +15,7 @@ plugins {
 	id("dagger.hilt.android.plugin")
 	id("androidx.navigation.safeargs.kotlin")
 	id("kotlin-parcelize")
+	id("com.google.devtools.ksp") version "1.6.10-1.0.4"
 }
 
 base {
@@ -93,10 +94,12 @@ android {
 dependencies {
 	val retrofitVersion = "2.9.0"
 	val moshiVersion = "1.13.0"
+	val roomVersion = "2.4.2"
 
 	kapt("com.google.dagger:hilt-compiler:$hiltVersion")
 	kapt("androidx.hilt:hilt-compiler:1.0.0")
-	kapt("com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion")
+	ksp("com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion")
+	ksp("androidx.room:room-compiler:$roomVersion")
 
 	// AndroidX
 	implementation("com.google.dagger:hilt-android:$hiltVersion")
@@ -107,6 +110,7 @@ dependencies {
 	implementation("androidx.work:work-runtime-ktx:2.7.1")
 	implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
 	implementation("androidx.navigation:navigation-ui-ktx:$navigationVersion")
+	implementation("androidx.room:room-ktx:$roomVersion")
 	implementation("com.google.android.material:material:1.5.0")
 
 	// I/O
@@ -124,7 +128,7 @@ dependencies {
 
 	// Miscellaneous
 	implementation("com.android.tools.build:apksig:$androidGradleVersion")
-	implementation("com.anggrayudi:storage:1.1.0")
+	implementation("com.anggrayudi:storage:1.2.1")
 	implementation("net.lingala.zip4j:zip4j:2.9.1")
 	implementation("io.github.solrudev:simpleinstaller:2.0.2")
 	implementation("com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.6")

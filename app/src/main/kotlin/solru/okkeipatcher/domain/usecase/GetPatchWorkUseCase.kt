@@ -5,7 +5,7 @@ import solru.okkeipatcher.data.Work
 interface GetPatchWorkUseCase {
 
 	/**
-	 * @return patch work and `null` if it is not started yet.
+	 * @return patch work and `null` if it has never been started yet.
 	 */
 	operator fun invoke(): Work?
 }

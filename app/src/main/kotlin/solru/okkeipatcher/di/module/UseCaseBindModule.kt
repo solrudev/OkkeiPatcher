@@ -14,11 +14,11 @@ interface UseCaseBindModule {
 
 	@Binds
 	@Reusable
-	fun bindStartPatchWorkUseCase(startPatchWorkUseCase: StartPatchWorkUseCaseImpl): StartPatchWorkUseCase
+	fun bindEnqueuePatchWorkUseCase(enqueuePatchWorkUseCase: EnqueuePatchWorkUseCaseImpl): EnqueuePatchWorkUseCase
 
 	@Binds
 	@Reusable
-	fun bindStartRestoreWorkUseCase(startRestoreWorkUseCase: StartRestoreWorkUseCaseImpl): StartRestoreWorkUseCase
+	fun bindEnqueueRestoreWorkUseCase(enqueueRestoreWorkUseCase: EnqueueRestoreWorkUseCaseImpl): EnqueueRestoreWorkUseCase
 
 	@Binds
 	@Reusable
@@ -27,6 +27,14 @@ interface UseCaseBindModule {
 	@Binds
 	@Reusable
 	fun bindGetRestoreWorkUseCase(getRestoreWorkUseCase: GetRestoreWorkUseCaseImpl): GetRestoreWorkUseCase
+
+	@Binds
+	@Reusable
+	fun bindCompleteWorkUseCase(completeWorkUseCase: CompleteWorkUseCaseImpl): CompleteWorkUseCase
+
+	@Binds
+	@Reusable
+	fun bindGetIsWorkPendingUseCase(getIsWorkPendingUseCase: GetIsWorkPendingUseCaseImpl): GetIsWorkPendingUseCase
 
 	@Binds
 	@Reusable

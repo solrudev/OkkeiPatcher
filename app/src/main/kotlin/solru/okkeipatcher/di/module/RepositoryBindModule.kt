@@ -5,13 +5,15 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import solru.okkeipatcher.repository.OkkeiPatcherRepository
+import solru.okkeipatcher.repository.WorkRepository
 import solru.okkeipatcher.repository.impl.OkkeiPatcherRepositoryImpl
+import solru.okkeipatcher.repository.impl.WorkRepositoryImpl
 import solru.okkeipatcher.repository.patch.DefaultPatchRepository
 import solru.okkeipatcher.repository.patch.impl.DefaultPatchRepositoryImpl
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
-@Module()
+@Module
 interface RepositoryBindModule {
 
 	@Binds
@@ -21,4 +23,8 @@ interface RepositoryBindModule {
 	@Binds
 	@Singleton
 	fun bindDefaultPatchRepository(defaultPatchRepository: DefaultPatchRepositoryImpl): DefaultPatchRepository
+
+	@Binds
+	@Singleton
+	fun bindWorkRepository(workRepository: WorkRepositoryImpl): WorkRepository
 }

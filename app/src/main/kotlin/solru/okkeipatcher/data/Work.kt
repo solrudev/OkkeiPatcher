@@ -30,7 +30,7 @@ data class Work(
 			.asWorkState()
 
 	/**
-	 * A [Flow] of [WorkState] for this work.
+	 * A cold [Flow] of [WorkState] for this work.
 	 */
 	val state: Flow<WorkState>
 		get() = flow {
@@ -42,8 +42,6 @@ data class Work(
 						val workState = workInfo.asWorkState()
 						emit(workState)
 						if (workState.isFinished) {
-							// TODO: don't prune, persist work id and flag if its exception has been viewed
-							WorkManager.getInstance(OkkeiApplication.context).pruneWork()
 							this@supervisorScope.cancel()
 						}
 					}

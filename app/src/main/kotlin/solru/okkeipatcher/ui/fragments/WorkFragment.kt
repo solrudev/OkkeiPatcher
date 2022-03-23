@@ -41,11 +41,6 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 		viewLifecycleOwner.lifecycleScope.observeUiState()
 	}
 
-	override fun onStop() {
-		super.onStop()
-		viewModel.hideAllMessages()
-	}
-
 	protected abstract fun onSuccess()
 
 	private fun setupNavigation() {
@@ -56,7 +51,7 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 
 	private fun onButtonClick() {
 		if (viewModel.isWorkRunning) {
-			viewModel.cancel()
+			viewModel.requestWorkCancel()
 		} else {
 			findNavController().popBackStack()
 		}

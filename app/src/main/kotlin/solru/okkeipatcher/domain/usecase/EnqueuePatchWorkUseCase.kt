@@ -2,12 +2,12 @@ package solru.okkeipatcher.domain.usecase
 
 import solru.okkeipatcher.data.Work
 
-interface StartPatchWorkUseCase {
+interface EnqueuePatchWorkUseCase {
 
 	/**
-	 * Starts new patch work.
+	 * Enqueues new patch work.
 	 *
 	 * @return patch [Work].
 	 */
-	operator fun invoke(): Work
+	suspend operator fun invoke(): Work
 }

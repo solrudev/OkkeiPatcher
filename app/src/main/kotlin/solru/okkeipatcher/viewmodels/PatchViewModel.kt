@@ -1,42 +1,28 @@
 package solru.okkeipatcher.viewmodels
 
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import solru.okkeipatcher.R
 import solru.okkeipatcher.data.LocalizedString
 import solru.okkeipatcher.data.Message
-import solru.okkeipatcher.data.WorkState
-import solru.okkeipatcher.domain.usecase.ClearNotificationsUseCase
-import solru.okkeipatcher.domain.usecase.GetPatchSizeInMbUseCase
-import solru.okkeipatcher.domain.usecase.GetPatchWorkUseCase
-import solru.okkeipatcher.domain.usecase.StartPatchWorkUseCase
+import solru.okkeipatcher.data.Work
+import solru.okkeipatcher.domain.usecase.*
 import javax.inject.Inject
 
 @HiltViewModel
 class PatchViewModel @Inject constructor(
-	private val startPatchWorkUseCase: StartPatchWorkUseCase,
+	private val enqueuePatchWorkUseCase: EnqueuePatchWorkUseCase,
 	private val getPatchWorkUseCase: GetPatchWorkUseCase,
 	private val getPatchSizeInMbUseCase: GetPatchSizeInMbUseCase,
+	completeWorkUseCase: CompleteWorkUseCase,
+	getIsWorkPendingUseCase: GetIsWorkPendingUseCase,
 	clearNotificationsUseCase: ClearNotificationsUseCase
-) : WorkViewModel(clearNotificationsUseCase) {
-
-	override val isWorkRunning: Boolean
-		get() {
-			val work = getPatchWorkUseCase()
-			return work != null && work.currentState is WorkState.Running
-		}
-
-	private val canStartWork: Boolean
-		get() {
-			val work = getPatchWorkUseCase()
-			return work == null || work.currentState is WorkState.Canceled || work.currentState is WorkState.Succeeded
-		}
+) : WorkViewModel(completeWorkUseCase, getIsWorkPendingUseCase, clearNotificationsUseCase) {
 
 	init {
-		if (canStartWork) {
-			viewModelScope.launch {
+		viewModelScope.launch {
+			if (!work.isPending()) {
 				val patchSizeInMb = getPatchSizeInMbUseCase()
 				val title = LocalizedString.resource(R.string.warning_start_patch_title)
 				val message = LocalizedString.resource(R.string.warning_start_patch, patchSizeInMb)
@@ -49,18 +35,8 @@ class PatchViewModel @Inject constructor(
 		}
 	}
 
-	override fun startWork() {
-		val patchWork = startPatchWorkUseCase()
-		workObservingScope.observeWork(patchWork)
-	}
+	override val work: Work?
+		get() = getPatchWorkUseCase()
 
-	override fun cancelWork() {
-		getPatchWorkUseCase()?.cancel()
-	}
-
-	override fun onStart(owner: LifecycleOwner) {
-		getPatchWorkUseCase()?.let {
-			workObservingScope.observeWork(it)
-		}
-	}
+	override suspend fun enqueueWork() = enqueuePatchWorkUseCase()
 }
