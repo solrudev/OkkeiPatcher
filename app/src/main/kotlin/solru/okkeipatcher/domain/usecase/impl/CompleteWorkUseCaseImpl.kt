@@ -16,6 +16,7 @@ class CompleteWorkUseCaseImpl @Inject constructor(private val workRepository: Wo
 			}
 			val completedWorkEntity = workEntity.copy(isPending = false)
 			workRepository.update(completedWorkEntity)
+			return
 		}
 		workRepository.add(WorkEntity(workId = work.id, isPending = false))
 	}
