@@ -8,9 +8,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.supervisorScope
 import solru.okkeipatcher.OkkeiApplication
+import solru.okkeipatcher.domain.util.extension.getParcelable
+import solru.okkeipatcher.domain.util.extension.getSerializable
 import solru.okkeipatcher.domain.worker.ForegroundWorker
-import solru.okkeipatcher.util.extension.getParcelable
-import solru.okkeipatcher.util.extension.getSerializable
 import java.util.*
 
 /**

@@ -18,9 +18,9 @@ import solru.okkeipatcher.R
 import solru.okkeipatcher.domain.base.Observable
 import solru.okkeipatcher.domain.model.LocalizedString
 import solru.okkeipatcher.domain.model.Message
+import solru.okkeipatcher.domain.util.extension.putParcelable
+import solru.okkeipatcher.domain.util.extension.putSerializable
 import solru.okkeipatcher.util.extension.empty
-import solru.okkeipatcher.util.extension.putParcelable
-import solru.okkeipatcher.util.extension.putSerializable
 import java.util.concurrent.atomic.AtomicInteger
 
 private val workerProgressNotificationId = AtomicInteger(813047)

@@ -1,4 +1,4 @@
-package solru.okkeipatcher.util.extension
+package solru.okkeipatcher.domain.util.extension
 
 import android.os.Parcel
 import android.os.Parcelable
