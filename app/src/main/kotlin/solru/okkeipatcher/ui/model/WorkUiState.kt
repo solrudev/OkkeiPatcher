@@ -4,6 +4,7 @@ import solru.okkeipatcher.domain.model.LocalizedString
 import solru.okkeipatcher.domain.model.ProgressData
 
 data class WorkUiState(
+	val isLoading: Boolean = false,
 	val isWorkSuccessful: Boolean = false,
 	val isWorkCanceled: Boolean = false,
 	val status: LocalizedString = LocalizedString.empty(),
