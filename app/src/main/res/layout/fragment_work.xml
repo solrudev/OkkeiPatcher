@@ -50,7 +50,7 @@
 		app:trackCornerRadius="4dp" />
 
 	<com.google.android.material.progressindicator.CircularProgressIndicator
-		android:id="@+id/progressbar_loading_work"
+		android:id="@+id/progressbar_work_loading"
 		style="?attr/circularProgressIndicatorStyle"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"

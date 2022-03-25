@@ -52,7 +52,7 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 	private fun CoroutineScope.observeUiState() = launch {
 		viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 			viewModel.uiState.collect { uiState ->
-				binding.progressbarLoadingWork.isVisible = uiState.isLoading
+				binding.progressbarWorkLoading.isVisible = uiState.isLoading
 				binding.buttonWork.isEnabled = uiState.isButtonEnabled
 				if (uiState.isWorkSuccessful) {
 					onWorkSuccess()
