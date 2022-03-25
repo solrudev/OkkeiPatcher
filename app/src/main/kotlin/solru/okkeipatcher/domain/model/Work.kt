@@ -67,19 +67,17 @@ sealed class WorkState {
 
 fun WorkInfo.asWork() = Work(id)
 
-fun WorkInfo?.asWorkState(): WorkState {
-	return when (this?.state) {
-		WorkInfo.State.RUNNING -> with(progress) {
-			val status = getSerializable<LocalizedString>(ForegroundWorker.KEY_STATUS) ?: LocalizedString.empty()
-			val progressData = getParcelable(ForegroundWorker.KEY_PROGRESS_DATA) ?: ProgressData()
-			WorkState.Running(status, progressData)
-		}
-		WorkInfo.State.FAILED -> {
-			val throwable = outputData.getSerializable<Throwable>(ForegroundWorker.KEY_FAILURE_CAUSE)
-			WorkState.Failed(throwable)
-		}
-		WorkInfo.State.SUCCEEDED -> WorkState.Succeeded
-		WorkInfo.State.CANCELLED -> WorkState.Canceled
-		else -> WorkState.Unknown
+fun WorkInfo?.asWorkState() = when (this?.state) {
+	WorkInfo.State.RUNNING -> with(progress) {
+		val status = getSerializable<LocalizedString>(ForegroundWorker.KEY_STATUS) ?: LocalizedString.empty()
+		val progressData = getParcelable(ForegroundWorker.KEY_PROGRESS_DATA) ?: ProgressData()
+		WorkState.Running(status, progressData)
 	}
+	WorkInfo.State.FAILED -> {
+		val throwable = outputData.getSerializable<Throwable>(ForegroundWorker.KEY_FAILURE_CAUSE)
+		WorkState.Failed(throwable)
+	}
+	WorkInfo.State.SUCCEEDED -> WorkState.Succeeded
+	WorkInfo.State.CANCELLED -> WorkState.Canceled
+	else -> WorkState.Unknown
 }
