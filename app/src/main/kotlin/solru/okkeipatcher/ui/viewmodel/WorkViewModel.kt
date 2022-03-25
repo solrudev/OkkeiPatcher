@@ -38,6 +38,7 @@ abstract class WorkViewModel(
 		viewModelScope.launch {
 			val enqueuedWork = enqueueWork()
 			enqueuedWork.observe()
+			setIsButtonEnabled(true)
 		}
 	}
 
@@ -53,6 +54,7 @@ abstract class WorkViewModel(
 		viewModelScope.launch {
 			if (work.isPending()) {
 				work.observe()
+				setIsButtonEnabled(true)
 			}
 		}
 	}
@@ -107,6 +109,12 @@ abstract class WorkViewModel(
 		_uiState.value = _uiState.value.reduce()
 	}
 
+	private fun setIsButtonEnabled(value: Boolean) {
+		updateUiState {
+			copy(isButtonEnabled = value)
+		}
+	}
+
 	private fun hideAllMessages() = updateUiState {
 		val startWorkUiMessage = startWorkMessage.copy(isVisible = false)
 		val cancelWorkUiMessage = cancelWorkMessage.copy(isVisible = false)
@@ -147,6 +155,7 @@ abstract class WorkViewModel(
 	}
 
 	private fun onWorkFailed(workState: WorkState.Failed) {
+		setIsButtonEnabled(false)
 		val stackTrace = workState.throwable?.stackTraceToString() ?: "null"
 		val message = Message(
 			LocalizedString.resource(R.string.exception),

@@ -50,11 +50,10 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 	private fun CoroutineScope.observeUiState() = launch {
 		viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 			viewModel.uiState.collect { uiState ->
+				binding.progressbarLoadingWork.visibility = if (uiState.isLoading) View.VISIBLE else View.GONE
+				binding.buttonWork.isEnabled = uiState.isButtonEnabled
 				if (uiState.isWorkSuccessful) {
-					binding.buttonWork.setOnClickListener {
-						findNavController().popBackStack()
-					}
-					binding.buttonWork.setText(android.R.string.ok)
+					onWorkSuccess()
 				}
 				if (uiState.isWorkCanceled) {
 					findNavController().popBackStack()
@@ -78,6 +77,13 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 				}
 			}
 		}
+	}
+
+	private fun onWorkSuccess() {
+		binding.buttonWork.setOnClickListener {
+			findNavController().popBackStack()
+		}
+		binding.buttonWork.setText(android.R.string.ok)
 	}
 
 	private fun setProgress(progressData: ProgressData) {

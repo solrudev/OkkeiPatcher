@@ -7,6 +7,7 @@ data class WorkUiState(
 	val isLoading: Boolean = false,
 	val isWorkSuccessful: Boolean = false,
 	val isWorkCanceled: Boolean = false,
+	val isButtonEnabled: Boolean = false,
 	val status: LocalizedString = LocalizedString.empty(),
 	val progressData: ProgressData = ProgressData(),
 	val startWorkMessage: MessageUiState = MessageUiState(),
