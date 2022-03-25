@@ -8,8 +8,5 @@ import javax.inject.Inject
 class GetIsWorkPendingUseCaseImpl @Inject constructor(private val workRepository: WorkRepository) :
 	GetIsWorkPendingUseCase {
 
-	override suspend fun invoke(work: Work): Boolean {
-		val workEntity = workRepository.getByWorkId(work.id)
-		return workEntity?.isPending ?: false
-	}
+	override suspend fun invoke(work: Work) = workRepository.getIsPending(work)
 }

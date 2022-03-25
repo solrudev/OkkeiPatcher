@@ -4,7 +4,6 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import solru.okkeipatcher.OkkeiApplication
-import solru.okkeipatcher.data.database.model.WorkModel
 import solru.okkeipatcher.domain.model.Work
 import solru.okkeipatcher.domain.repository.WorkRepository
 import solru.okkeipatcher.domain.usecase.work.EnqueuePatchWorkUseCase
@@ -21,7 +20,8 @@ class EnqueuePatchWorkUseCaseImpl @Inject constructor(private val workRepository
 			ExistingWorkPolicy.KEEP,
 			workRequest
 		)
-		workRepository.add(WorkModel(workId = workRequest.id))
-		return Work(workRequest.id)
+		val work = Work(workRequest.id)
+		workRepository.add(work)
+		return work
 	}
 }

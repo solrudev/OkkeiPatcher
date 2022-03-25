@@ -8,9 +8,9 @@ import java.util.*
 @Dao
 interface WorkDao : GenericDao<WorkModel> {
 
-	@Query("UPDATE works SET is_pending = :isPending WHERE id = :id")
-	suspend fun updateIsPendingByWorkId(id: Int, isPending: Boolean)
+	@Query("UPDATE works SET is_pending = :isPending WHERE work_id = :id")
+	suspend fun updateIsPendingByWorkId(id: UUID, isPending: Boolean)
 
-	@Query("SELECT * FROM works WHERE work_id = :id LIMIT 1")
-	suspend fun getByWorkId(id: UUID): WorkModel?
+	@Query("SELECT is_pending FROM works WHERE work_id = :id LIMIT 1")
+	suspend fun getIsPendingByWorkId(id: UUID): Boolean?
 }
