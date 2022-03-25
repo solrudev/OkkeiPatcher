@@ -111,7 +111,9 @@ dependencies {
 	implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
 	implementation("androidx.navigation:navigation-ui-ktx:$navigationVersion")
 	implementation("androidx.room:room-ktx:$roomVersion")
-	implementation("com.google.android.material:material:1.5.0")
+	implementation("com.google.android.material:material:1.4.0") {
+		because("changing isIndeterminate of progress indicator works incorrectly in newer version")
+	}
 
 	// I/O
 	val excludeOkHttp = Action<ExternalModuleDependency> {

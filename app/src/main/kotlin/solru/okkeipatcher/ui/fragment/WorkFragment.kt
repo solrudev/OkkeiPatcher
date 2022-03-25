@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -17,6 +18,7 @@ import solru.okkeipatcher.databinding.FragmentWorkBinding
 import solru.okkeipatcher.domain.model.Message
 import solru.okkeipatcher.domain.model.ProgressData
 import solru.okkeipatcher.ui.util.extension.copyTextToClipboard
+import solru.okkeipatcher.ui.util.extension.safeIsIndeterminate
 import solru.okkeipatcher.ui.util.extension.showWithLifecycle
 import solru.okkeipatcher.ui.viewmodel.WorkViewModel
 
@@ -50,7 +52,7 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 	private fun CoroutineScope.observeUiState() = launch {
 		viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 			viewModel.uiState.collect { uiState ->
-				binding.progressbarLoadingWork.visibility = if (uiState.isLoading) View.VISIBLE else View.GONE
+				binding.progressbarLoadingWork.isVisible = uiState.isLoading
 				binding.buttonWork.isEnabled = uiState.isButtonEnabled
 				if (uiState.isWorkSuccessful) {
 					onWorkSuccess()
@@ -89,7 +91,7 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 	private fun setProgress(progressData: ProgressData) {
 		binding.progressbarWork.max = progressData.max
 		binding.progressbarWork.setProgressCompat(progressData.progress, true)
-		binding.progressbarWork.isIndeterminate = progressData.isIndeterminate
+		binding.progressbarWork.safeIsIndeterminate = progressData.isIndeterminate
 	}
 
 	private fun showStartWorkMessage(startWorkMessage: Message) {
