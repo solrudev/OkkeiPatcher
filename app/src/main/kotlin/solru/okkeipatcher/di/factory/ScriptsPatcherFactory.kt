@@ -1,10 +1,10 @@
 package solru.okkeipatcher.di.factory
 
 import dagger.assisted.AssistedFactory
-import solru.okkeipatcher.domain.services.ScriptsPatcher
-import solru.okkeipatcher.domain.services.gamefile.impl.AbstractApk
+import solru.okkeipatcher.domain.gamefile.impl.AbstractApk
+import solru.okkeipatcher.domain.repository.patch.ScriptsDataRepository
+import solru.okkeipatcher.domain.service.ScriptsPatcher
 import solru.okkeipatcher.io.file.VerifiableFile
-import solru.okkeipatcher.repository.patch.ScriptsDataRepository
 
 @AssistedFactory
 interface ScriptsPatcherFactory {

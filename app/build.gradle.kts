@@ -101,7 +101,7 @@ dependencies {
 	ksp("com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion")
 	ksp("androidx.room:room-compiler:$roomVersion")
 
-	// AndroidX
+	// Jetpack
 	implementation("com.google.dagger:hilt-android:$hiltVersion")
 	implementation("androidx.preference:preference-ktx:1.2.0")
 	implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.4.1")

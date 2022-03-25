@@ -3,7 +3,7 @@ package solru.okkeipatcher.io
 import okhttp3.Interceptor
 import okhttp3.Response
 import solru.okkeipatcher.OkkeiApplication
-import solru.okkeipatcher.io.exceptions.NetworkNotAvailableException
+import solru.okkeipatcher.io.exception.NetworkNotAvailableException
 
 class ConnectivityInterceptor : Interceptor {
 

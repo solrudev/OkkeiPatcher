@@ -8,8 +8,8 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import solru.okkeipatcher.api.OkkeiPatcherService
-import solru.okkeipatcher.api.patchdata.DefaultPatchDataService
+import solru.okkeipatcher.data.network.api.OkkeiPatcherApi
+import solru.okkeipatcher.data.network.api.patch.DefaultPatchApi
 import javax.inject.Singleton
 
 private const val BASE_URL = "https://raw.githubusercontent.com/ForrrmerBlack/okkei-patcher/test/"
@@ -28,11 +28,11 @@ object ApiModule {
 
 	@Provides
 	@Singleton
-	fun provideOkkeiPatcherService(retrofit: Retrofit): OkkeiPatcherService =
-		retrofit.create(OkkeiPatcherService::class.java)
+	fun provideOkkeiPatcherService(retrofit: Retrofit): OkkeiPatcherApi =
+		retrofit.create(OkkeiPatcherApi::class.java)
 
 	@Provides
 	@Singleton
-	fun provideDefaultPatchDataService(retrofit: Retrofit): DefaultPatchDataService =
-		retrofit.create(DefaultPatchDataService::class.java)
+	fun provideDefaultPatchDataService(retrofit: Retrofit): DefaultPatchApi =
+		retrofit.create(DefaultPatchApi::class.java)
 }

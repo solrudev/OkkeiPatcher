@@ -5,8 +5,18 @@ import dagger.Module
 import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import solru.okkeipatcher.domain.usecase.*
-import solru.okkeipatcher.domain.usecase.impl.*
+import solru.okkeipatcher.domain.usecase.app.GetAppChangelogUseCase
+import solru.okkeipatcher.domain.usecase.app.GetAppUpdateFileUseCase
+import solru.okkeipatcher.domain.usecase.app.GetAppUpdateSizeInMbUseCase
+import solru.okkeipatcher.domain.usecase.app.GetIsAppUpdateAvailableUseCase
+import solru.okkeipatcher.domain.usecase.app.impl.GetAppChangelogUseCaseImpl
+import solru.okkeipatcher.domain.usecase.app.impl.GetAppUpdateFileUseCaseImpl
+import solru.okkeipatcher.domain.usecase.app.impl.GetAppUpdateSizeInMbUseCaseImpl
+import solru.okkeipatcher.domain.usecase.app.impl.GetIsAppUpdateAvailableUseCaseImpl
+import solru.okkeipatcher.domain.usecase.common.ClearNotificationsUseCase
+import solru.okkeipatcher.domain.usecase.common.impl.ClearNotificationsUseCaseImpl
+import solru.okkeipatcher.domain.usecase.work.*
+import solru.okkeipatcher.domain.usecase.work.impl.*
 
 @InstallIn(SingletonComponent::class)
 @Module
@@ -38,7 +48,7 @@ interface UseCaseBindModule {
 
 	@Binds
 	@Reusable
-	fun bindIsAppUpdateAvailableUseCase(isAppUpdateAvailableUseCase: IsAppUpdateAvailableUseCaseImpl): IsAppUpdateAvailableUseCase
+	fun bindGetIsAppUpdateAvailableUseCase(getIsAppUpdateAvailableUseCase: GetIsAppUpdateAvailableUseCaseImpl): GetIsAppUpdateAvailableUseCase
 
 	@Binds
 	@Reusable

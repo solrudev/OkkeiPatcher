@@ -1,9 +1,9 @@
 package solru.okkeipatcher.io.file
 
-import solru.okkeipatcher.domain.progress.ProgressPublisher
-import solru.okkeipatcher.domain.progress.ProgressPublisherImpl
-import solru.okkeipatcher.io.services.StreamCopier
-import solru.okkeipatcher.io.utils.BlackholeOutputStream
+import solru.okkeipatcher.domain.base.ProgressPublisher
+import solru.okkeipatcher.domain.base.ProgressPublisherImpl
+import solru.okkeipatcher.io.service.StreamCopier
+import solru.okkeipatcher.io.util.BlackholeOutputStream
 
 abstract class AbstractFile(
 	private val streamCopier: StreamCopier,

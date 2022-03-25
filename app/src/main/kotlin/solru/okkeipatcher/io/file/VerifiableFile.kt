@@ -4,10 +4,10 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
-import solru.okkeipatcher.domain.progress.ProgressPublisherImpl
-import solru.okkeipatcher.utils.Preferences
-import solru.okkeipatcher.utils.extensions.empty
-import solru.okkeipatcher.utils.extensions.isEmptyOrBlank
+import solru.okkeipatcher.domain.base.ProgressPublisherImpl
+import solru.okkeipatcher.util.Preferences
+import solru.okkeipatcher.util.extension.empty
+import solru.okkeipatcher.util.extension.isEmptyOrBlank
 
 abstract class VerifiableFile(private val fileImplementation: File) : File by fileImplementation, Verifiable {
 

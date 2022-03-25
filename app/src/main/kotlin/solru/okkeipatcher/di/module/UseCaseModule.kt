@@ -6,11 +6,11 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import solru.okkeipatcher.domain.AppKey
 import solru.okkeipatcher.domain.model.Language
-import solru.okkeipatcher.domain.usecase.GetPatchSizeInMbUseCase
-import solru.okkeipatcher.domain.usecase.GetPatchUpdatesUseCase
-import solru.okkeipatcher.domain.usecase.impl.english.DefaultGetPatchSizeInMbUseCase
-import solru.okkeipatcher.domain.usecase.impl.english.DefaultGetPatchUpdatesUseCase
-import solru.okkeipatcher.utils.Preferences
+import solru.okkeipatcher.domain.usecase.patch.GetPatchSizeInMbUseCase
+import solru.okkeipatcher.domain.usecase.patch.GetPatchUpdatesUseCase
+import solru.okkeipatcher.domain.usecase.patch.impl.english.DefaultGetPatchSizeInMbUseCase
+import solru.okkeipatcher.domain.usecase.patch.impl.english.DefaultGetPatchUpdatesUseCase
+import solru.okkeipatcher.util.Preferences
 import javax.inject.Provider
 
 @InstallIn(SingletonComponent::class)

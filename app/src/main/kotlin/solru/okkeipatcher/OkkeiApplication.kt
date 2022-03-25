@@ -17,7 +17,7 @@ import dagger.hilt.android.HiltAndroidApp
 import io.github.solrudev.simpleinstaller.SimpleInstaller
 import solru.okkeipatcher.domain.AppKey
 import solru.okkeipatcher.domain.model.Language
-import solru.okkeipatcher.utils.Preferences
+import solru.okkeipatcher.util.Preferences
 import javax.inject.Inject
 
 @HiltAndroidApp

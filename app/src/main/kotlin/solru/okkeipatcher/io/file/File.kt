@@ -1,6 +1,6 @@
 package solru.okkeipatcher.io.file
 
-import solru.okkeipatcher.domain.progress.ProgressPublisher
+import solru.okkeipatcher.domain.base.ProgressPublisher
 import java.io.InputStream
 import java.io.OutputStream
 

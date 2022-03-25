@@ -7,7 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import solru.okkeipatcher.data.db.OkkeiDatabase
+import solru.okkeipatcher.data.database.OkkeiDatabase
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
