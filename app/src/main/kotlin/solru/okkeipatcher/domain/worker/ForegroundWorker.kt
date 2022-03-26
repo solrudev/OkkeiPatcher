@@ -12,6 +12,8 @@ import androidx.work.WorkerParameters
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import solru.okkeipatcher.R
@@ -86,58 +88,38 @@ abstract class ForegroundWorker(
 
 	private fun CoroutineScope.observeService() = launch {
 		reportProgress()
-		updateNotificationProgress()
-		updateNotificationStatus()
-		collectWarnings()
+		updateProgressNotification()
+		collectMessages()
 	}
 
-	private fun CoroutineScope.reportProgress() = launch {
-		combine(
-			service.status,
-			service.progress
-		) { status, progressData -> status to progressData }
-			.conflate()
-			.collect {
-				val (status, progressData) = it
-				setProgress(
-					Data.Builder()
-						.putSerializable(KEY_STATUS, status)
-						.putParcelable(KEY_PROGRESS_DATA, progressData)
-						.build()
-				)
-			}
-	}
+	private fun CoroutineScope.reportProgress() = combine(
+		service.status.conflate(),
+		service.progress.conflate()
+	) { status, progressData ->
+		setProgress(
+			Data.Builder()
+				.putSerializable(KEY_STATUS, status)
+				.putParcelable(KEY_PROGRESS_DATA, progressData)
+				.build()
+		)
+	}.launchIn(this)
 
-	private fun CoroutineScope.updateNotificationProgress() = launch {
-		service.progress
-			.conflate()
-			.collect {
-				val notification = progressNotificationBuilder.setProgress(
-					it.max,
-					it.progress,
-					it.isIndeterminate
-				).build()
-				notificationManager?.notify(progressNotificationId, notification)
-				delay(1000)
-			}
-	}
+	private fun CoroutineScope.updateProgressNotification() = combine(
+		service.status.conflate(),
+		service.progress.conflate()
+	) { status, progressData ->
+		val statusString = status.resolve(applicationContext)
+		val notification = progressNotificationBuilder
+			.setContentText(statusString)
+			.setProgress(progressData.max, progressData.progress, progressData.isIndeterminate)
+			.build()
+		notificationManager?.notify(progressNotificationId, notification)
+		delay(500)
+	}.launchIn(this)
 
-	private fun CoroutineScope.updateNotificationStatus() = launch {
-		service.status
-			.conflate()
-			.collect {
-				val statusString = it.resolve(applicationContext)
-				val notification = progressNotificationBuilder.setContentText(statusString).build()
-				notificationManager?.notify(progressNotificationId, notification)
-				delay(500)
-			}
-	}
-
-	private fun CoroutineScope.collectWarnings() = launch {
-		service.messages.collect {
-			displayMessageNotification(it)
-		}
-	}
+	private fun CoroutineScope.collectMessages() = service.messages
+		.onEach { displayMessageNotification(it) }
+		.launchIn(this)
 
 	private suspend fun displayMessageNotification(message: Message) = withContext(NonCancellable) {
 		val titleString = message.title.resolve(applicationContext)
