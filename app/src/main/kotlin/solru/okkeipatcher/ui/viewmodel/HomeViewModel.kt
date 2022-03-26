@@ -27,7 +27,7 @@ class HomeViewModel @Inject constructor(
 
 	override fun onCreate(owner: LifecycleOwner) = updateUiState {
 		copy(
-			isPatchEnabled = !isPatched(),
+			isPatchEnabled = !isPatched() || patchUpdatesAvailable,
 			isRestoreEnabled = isPatched()
 		)
 	}
