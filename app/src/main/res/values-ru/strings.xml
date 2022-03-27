@@ -4,7 +4,7 @@
 	<string name="settings">Настройки</string>
 	<string name="attention">Внимание</string>
 	<string name="exception">Возникло исключение</string>
-	<string name="about_version">Версия %1$s\nby solrudev</string>
+	<string name="about_version">Версия %s\nby solrudev</string>
 	<string name="patch">Патч</string>
 	<string name="restoring">Восстановление</string>
 	<string name="start">Начать</string>
@@ -22,7 +22,7 @@
 	<string name="error_hash_obb_mismatch">Загруженный OBB повреждён.</string>
 	<string name="error_hash_scripts_mismatch">Загруженные скрипты повреждены.</string>
 	<string name="error_http_file_download">Во время загрузки файла произошла ошибка.</string>
-	<string name="error_install">Произошла ошибка при установке APK.\n%1$s</string>
+	<string name="error_install">Произошла ошибка при установке APK.\n%s</string>
 	<string name="error_no_free_space">Недостаточно свободного места. Убедитесь, что на устройстве свободно как минимум 2 ГБ.</string>
 	<string name="error_no_install_permission">Okkei Patcher не может получить разрешение на установку пакетов приложений.</string>
 	<string name="error_no_storage_permission">Okkei Patcher не может получить разрешение на чтение и запись внутренней памяти устройства.</string>
@@ -46,7 +46,7 @@
 
 	<!--Prompts-->
 	<string name="prompt_update_app_install">Сейчас последует запрос на установку обновления Okkei Patcher. Пожалуйста, подтвердите установку. Обратите внимание, что после установки Okkei Patcher будет закрыт, и Вам придётся перезапустить его вручную.</string>
-	<string name="prompt_update_app_available">Доступна новая версия Okkei Patcher!\nТекущая версия: %1$s\nРазмер обновления: %2$s МБ\nСписок изменений:\n%3$s</string>
+	<string name="prompt_update_app_available">Доступна новая версия Okkei Patcher!\nТекущая версия: %1$s\nРазмер обновления: %2$.2f МБ\nСписок изменений:\n%3$s</string>
 	<string name="prompt_update_patch_available">Доступно обновление патча</string>
 
 	<!--Rationales-->
@@ -99,6 +99,6 @@
 	<string name="warning_save_data_backup_not_found_or_corrupted">Резервная копия игровых сохранений не найдена или повреждена и не будет восстановлена.</string>
 	<string name="warning_save_data_not_found">Игровые сохранения не найдены. Резервная копия игровых сохранений не будет создана.</string>
 	<string name="warning_start_patch_title">Начать применение патча?</string>
-	<string name="warning_start_patch">Будет загружено %1$s МБ данных. Если Вы остановите процесс, данные установки CHAOS;CHILD и/или данные Okkei Patcher могут быть повреждены.</string>
+	<string name="warning_start_patch">Будет загружено %.2f МБ данных. Если Вы остановите процесс, данные установки CHAOS;CHILD и/или данные Okkei Patcher могут быть повреждены.</string>
 	<string name="warning_start_restore_title">Начать восстановление?</string>
 </resources>

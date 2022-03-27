@@ -6,7 +6,6 @@ import kotlinx.coroutines.withContext
 import okio.*
 import okio.HashingSink.Companion.sha256
 import solru.okkeipatcher.di.module.IoDispatcher
-import solru.okkeipatcher.domain.model.ProgressData
 import solru.okkeipatcher.io.service.StreamCopier
 import solru.okkeipatcher.io.util.BlackholeOutputStream
 import solru.okkeipatcher.io.util.calculateProgressRatio
@@ -16,6 +15,7 @@ import java.io.OutputStream
 import javax.inject.Inject
 import kotlin.io.use
 import kotlin.math.ceil
+import kotlin.math.roundToInt
 
 private const val BUFFER_LENGTH = 8192L
 
@@ -29,15 +29,15 @@ class StreamCopierImpl @Inject constructor(
 		outputStream: OutputStream,
 		size: Long,
 		hashing: Boolean,
-		onProgressChanged: suspend (ProgressData) -> Unit
+		onProgressDeltaChanged: suspend (Int) -> Unit
 	) = withContext(ioDispatcher) {
-		onProgressChanged(ProgressData())
 		val progressRatio = calculateProgressRatio(size, BUFFER_LENGTH)
 		inputStream.source().buffer().use { source ->
 			val baseSink = if (outputStream is BlackholeOutputStream) blackholeSink() else outputStream.sink()
 			val sink = if (hashing) sha256(baseSink) else baseSink
 			sink.buffer().use { bufferedSink ->
 				val progressMax = ceil(size.toDouble() / (BUFFER_LENGTH * progressRatio)).toInt()
+				val progressDelta = (100.0 / progressMax).roundToInt()
 				var currentProgress = 0
 				Buffer().use { buffer ->
 					while (source.read(buffer, BUFFER_LENGTH) > 0) {
@@ -45,11 +45,11 @@ class StreamCopierImpl @Inject constructor(
 						bufferedSink.write(buffer, buffer.size)
 						currentProgress++
 						if (currentProgress % progressRatio == 0) {
-							onProgressChanged(ProgressData(currentProgress / progressRatio, progressMax))
+							onProgressDeltaChanged(progressDelta)
 						}
 					}
+					onProgressDeltaChanged(100 - currentProgress / progressRatio)
 					bufferedSink.flush()
-					onProgressChanged(ProgressData(progressMax, progressMax))
 					if (sink is HashingSink) sink.hash.hex() else String.empty
 				}
 			}

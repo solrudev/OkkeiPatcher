@@ -1,13 +1,13 @@
 package solru.okkeipatcher.domain.repository
 
 import solru.okkeipatcher.data.network.model.OkkeiPatcherChangelogDto
-import solru.okkeipatcher.domain.base.Observable
+import solru.okkeipatcher.domain.operation.Operation
 import java.io.File
 import java.util.*
 
-interface OkkeiPatcherRepository : Observable {
+interface OkkeiPatcherRepository {
 	suspend fun isUpdateAvailable(): Boolean
 	suspend fun getUpdateSizeInMb(): Double
-	suspend fun getUpdateFile(): File
 	suspend fun getChangelog(locale: Locale): OkkeiPatcherChangelogDto
+	fun getUpdateFile(): Operation<File>
 }

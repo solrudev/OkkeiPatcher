@@ -5,7 +5,8 @@
 	<string name="notification_channel_messages_id" translatable="false">OkkeiPatcher_Messages_NotificationChannel</string>
 	<string name="notification_channel_progress_id" translatable="false">OkkeiPatcher_Progress_NotificationChannel</string>
 	<string name="okkei" translatable="false">Okkei</string>
-	<string name="about_version">Version %1$s\nby solrudev</string>
+	<string name="percent_done" translatable="false">%d%%</string>
+	<string name="about_version">Version %s\nby solrudev</string>
 	<string name="abort">Abort</string>
 	<string name="settings">Settings</string>
 	<string name="attention">Attention</string>
@@ -27,7 +28,7 @@
 	<string name="error_hash_obb_mismatch">Downloaded OBB is corrupted.</string>
 	<string name="error_hash_scripts_mismatch">Downloaded scripts are corrupted.</string>
 	<string name="error_http_file_download">An error occurred while downloading file.</string>
-	<string name="error_install">An error occurred while installing APK.\n%1$s</string>
+	<string name="error_install">An error occurred while installing APK.\n%s</string>
 	<string name="error_no_free_space">Not enough free disk space. Ensure that you have at least 2 GB of free space.</string>
 	<string name="error_no_install_permission">Okkei Patcher can\'t get permission to install packages.</string>
 	<string name="error_no_storage_permission">Okkei Patcher can\'t get permission to read from and write to external storage.</string>
@@ -51,7 +52,7 @@
 
 	<!--Prompts-->
 	<string name="prompt_update_app_install">You will now be prompted to install updated Okkei Patcher. Please confirm the installation. Note that after that Okkei Patcher will be closed and you\'ll have to relaunch it manually.</string>
-	<string name="prompt_update_app_available">A new version of Okkei Patcher is available!\nCurrent version: %1$s\nDownload size: %2$s MB\nChangelog:\n%3$s</string>
+	<string name="prompt_update_app_available">A new version of Okkei Patcher is available!\nCurrent version: %1$s\nDownload size: %2$.2f MB\nChangelog:\n%3$s</string>
 	<string name="prompt_update_patch_available">Patch update is available</string>
 
 	<!--Rationales-->
@@ -104,6 +105,6 @@
 	<string name="warning_save_data_backup_not_found_or_corrupted">Game save data backup was not found or is corrupted and won\'t be restored.</string>
 	<string name="warning_save_data_not_found">Game save data was not found. Backup of your current game save data won\'t be created.</string>
 	<string name="warning_start_patch_title">Start patch?</string>
-	<string name="warning_start_patch">You\'re about to download %1$s MB of data. If you abort the process your CHAOS;CHILD installation and/or Okkei Patcher data may be damaged.</string>
+	<string name="warning_start_patch">You\'re about to download %.2f MB of data. If you abort the process your CHAOS;CHILD installation and/or Okkei Patcher data may be damaged.</string>
 	<string name="warning_start_restore_title">Start restoring?</string>
 </resources>

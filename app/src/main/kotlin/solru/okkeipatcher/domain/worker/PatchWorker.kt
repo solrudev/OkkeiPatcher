@@ -9,8 +9,10 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import solru.okkeipatcher.R
 import solru.okkeipatcher.domain.AppKey
+import solru.okkeipatcher.domain.gamefile.strategy.GameFileStrategy
 import solru.okkeipatcher.domain.model.LocalizedString
-import solru.okkeipatcher.domain.service.PatchService
+import solru.okkeipatcher.domain.operation.Operation
+import solru.okkeipatcher.domain.service.PatchOperation
 import solru.okkeipatcher.domain.usecase.patch.GetPatchUpdatesUseCase
 import solru.okkeipatcher.util.Preferences
 
@@ -18,19 +20,21 @@ import solru.okkeipatcher.util.Preferences
 class PatchWorker @AssistedInject constructor(
 	@Assisted context: Context,
 	@Assisted workerParameters: WorkerParameters,
-	private val patchService: PatchService,
-	private val getPatchUpdatesUseCase: GetPatchUpdatesUseCase
-) : ForegroundWorker(context, workerParameters, patchService) {
+	private val getPatchUpdatesUseCase: GetPatchUpdatesUseCase,
+	private val strategy: GameFileStrategy
+) : ForegroundWorker(context, workerParameters) {
 
 	override val progressNotificationTitle = LocalizedString.resource(R.string.notification_title_patch)
 
-	override suspend fun doServiceWork() {
-		val processSaveData = Preferences.get(
+	override suspend fun getOperation(): Operation<Unit> {
+		val handleSaveData = Preferences.get(
 			AppKey.process_save_data_enabled.name,
 			Build.VERSION.SDK_INT < Build.VERSION_CODES.R
 		)
 		val patchUpdates = getPatchUpdatesUseCase()
-		patchService.patch(processSaveData, patchUpdates)
+		val patchOperation = PatchOperation(strategy, handleSaveData, patchUpdates)
+		patchOperation.checkCanPatch()
+		return patchOperation
 	}
 
 	override fun createPendingIntent() = NavDeepLinkBuilder(applicationContext)

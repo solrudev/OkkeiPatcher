@@ -11,5 +11,5 @@ class TempApk(streamCopier: StreamCopier) : VerifiableFile(
 		File(OkkeiStorage.external.absolutePath, "base.apk"), streamCopier
 	)
 ) {
-	override suspend fun verify() = exists && compareBySharedPreferences(CommonFileHashKey.backup_apk_hash.name)
+	override fun verify() = compareBySharedPreferences(CommonFileHashKey.backup_apk_hash.name)
 }

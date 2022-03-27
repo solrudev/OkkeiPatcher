@@ -1,10 +1,10 @@
 package solru.okkeipatcher.io.file
 
-import solru.okkeipatcher.domain.base.ProgressPublisher
+import solru.okkeipatcher.domain.operation.Operation
 import java.io.InputStream
 import java.io.OutputStream
 
-interface File : ProgressPublisher {
+interface File {
 	val name: String
 	val fullPath: String
 	val exists: Boolean
@@ -14,11 +14,11 @@ interface File : ProgressPublisher {
 	fun renameTo(fileName: String)
 	fun createInputStream(): InputStream
 	fun createOutputStream(): OutputStream
-	suspend fun computeHash(): String
+	fun computeHash(): Operation<String>
 
 	/**
 	 * @param hashing Does output stream need to be hashed. Default is `false`.
 	 * @return File hash. Empty string if [hashing] is `false`.
 	 */
-	suspend fun copyTo(destinationFile: File, hashing: Boolean = false): String
+	fun copyTo(destinationFile: File, hashing: Boolean = false): Operation<String>
 }

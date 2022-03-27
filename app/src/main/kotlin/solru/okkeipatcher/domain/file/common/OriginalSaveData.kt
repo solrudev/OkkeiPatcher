@@ -12,7 +12,7 @@ sealed class OriginalSaveData(
 	private val streamCopier: StreamCopier
 ) : VerifiableFile(implementation) {
 
-	override suspend fun verify() = exists && compareByFile(BackupSaveData(streamCopier))
+	override fun verify() = compareByFile(BackupSaveData(streamCopier))
 
 	class JavaFileImpl(streamCopier: StreamCopier) :
 		OriginalSaveData(JavaFile(java.io.File(filePath, fileName), streamCopier), streamCopier)

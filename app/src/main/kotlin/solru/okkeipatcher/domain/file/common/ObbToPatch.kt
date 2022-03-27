@@ -15,5 +15,5 @@ class ObbToPatch(streamCopier: StreamCopier) : VerifiableFile(
 		), streamCopier
 	)
 ) {
-	override suspend fun verify() = exists && compareBySharedPreferences(CommonFileHashKey.patched_obb_hash.name)
+	override fun verify() = compareBySharedPreferences(CommonFileHashKey.patched_obb_hash.name)
 }

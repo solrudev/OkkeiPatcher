@@ -11,5 +11,5 @@ class SignedApk(streamCopier: StreamCopier) : VerifiableFile(
 		File(OkkeiStorage.external.absolutePath, "signed.apk"), streamCopier
 	)
 ) {
-	override suspend fun verify() = exists && compareBySharedPreferences(CommonFileHashKey.signed_apk_hash.name)
+	override fun verify() = compareBySharedPreferences(CommonFileHashKey.signed_apk_hash.name)
 }

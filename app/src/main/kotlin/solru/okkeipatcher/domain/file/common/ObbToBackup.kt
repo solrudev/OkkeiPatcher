@@ -15,5 +15,5 @@ class ObbToBackup(streamCopier: StreamCopier) : VerifiableFile(
 		), streamCopier
 	)
 ) {
-	override suspend fun verify() = exists && compareBySharedPreferences(CommonFileHashKey.backup_obb_hash.name)
+	override fun verify() = compareBySharedPreferences(CommonFileHashKey.backup_obb_hash.name)
 }

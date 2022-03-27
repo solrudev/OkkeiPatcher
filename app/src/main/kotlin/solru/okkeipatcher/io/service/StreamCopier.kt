@@ -1,6 +1,5 @@
 package solru.okkeipatcher.io.service
 
-import solru.okkeipatcher.domain.model.ProgressData
 import java.io.InputStream
 import java.io.OutputStream
 
@@ -15,6 +14,6 @@ interface StreamCopier {
 		outputStream: OutputStream,
 		size: Long,
 		hashing: Boolean = false,
-		onProgressChanged: suspend (ProgressData) -> Unit
+		onProgressDeltaChanged: suspend (Int) -> Unit
 	): String
 }

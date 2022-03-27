@@ -9,25 +9,29 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import solru.okkeipatcher.R
 import solru.okkeipatcher.domain.AppKey
+import solru.okkeipatcher.domain.gamefile.strategy.GameFileStrategy
 import solru.okkeipatcher.domain.model.LocalizedString
-import solru.okkeipatcher.domain.service.RestoreService
+import solru.okkeipatcher.domain.operation.Operation
+import solru.okkeipatcher.domain.service.RestoreOperation
 import solru.okkeipatcher.util.Preferences
 
 @HiltWorker
 class RestoreWorker @AssistedInject constructor(
 	@Assisted context: Context,
 	@Assisted workerParameters: WorkerParameters,
-	private val restoreService: RestoreService
-) : ForegroundWorker(context, workerParameters, restoreService) {
+	private val strategy: GameFileStrategy
+) : ForegroundWorker(context, workerParameters) {
 
 	override val progressNotificationTitle = LocalizedString.resource(R.string.notification_title_restore)
 
-	override suspend fun doServiceWork() {
-		val processSaveData = Preferences.get(
+	override suspend fun getOperation(): Operation<Unit> {
+		val handleSaveData = Preferences.get(
 			AppKey.process_save_data_enabled.name,
 			Build.VERSION.SDK_INT < Build.VERSION_CODES.R
 		)
-		restoreService.restore(processSaveData)
+		val restoreOperation = RestoreOperation(strategy, handleSaveData)
+		restoreOperation.checkCanRestore()
+		return restoreOperation
 	}
 
 	override fun createPendingIntent() = NavDeepLinkBuilder(applicationContext)

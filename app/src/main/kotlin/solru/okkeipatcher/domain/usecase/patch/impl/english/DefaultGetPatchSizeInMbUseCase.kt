@@ -3,7 +3,6 @@ package solru.okkeipatcher.domain.usecase.patch.impl.english
 import solru.okkeipatcher.domain.repository.patch.DefaultPatchRepository
 import solru.okkeipatcher.domain.usecase.patch.GetPatchSizeInMbUseCase
 import solru.okkeipatcher.domain.usecase.patch.GetPatchUpdatesUseCase
-import solru.okkeipatcher.util.extension.round
 import javax.inject.Inject
 
 class DefaultGetPatchSizeInMbUseCase @Inject constructor(
@@ -17,11 +16,11 @@ class DefaultGetPatchSizeInMbUseCase @Inject constructor(
 			val obbSize = patchRepository.getObbData().size / 1_048_576.0
 			val patchUpdates = getPatchUpdatesUseCase()
 			if (!patchUpdates.available) {
-				return (scriptsSize + obbSize).round(2)
+				return scriptsSize + obbSize
 			}
 			val scriptsUpdateSize = if (patchUpdates.apkUpdatesAvailable) scriptsSize else 0.0
 			val obbUpdateSize = if (patchUpdates.obbUpdatesAvailable) obbSize else 0.0
-			return (scriptsUpdateSize + obbUpdateSize).round(2)
+			return scriptsUpdateSize + obbUpdateSize
 		} catch (t: Throwable) {
 			return -1.0
 		}

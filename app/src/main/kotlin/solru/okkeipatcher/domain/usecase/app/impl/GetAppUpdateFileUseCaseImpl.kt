@@ -7,5 +7,5 @@ import javax.inject.Inject
 class GetAppUpdateFileUseCaseImpl @Inject constructor(private val okkeiPatcherRepository: OkkeiPatcherRepository) :
 	GetAppUpdateFileUseCase {
 
-	override suspend fun invoke() = okkeiPatcherRepository.getUpdateFile()
+	override suspend fun invoke() = okkeiPatcherRepository.getUpdateFile().invoke()
 }

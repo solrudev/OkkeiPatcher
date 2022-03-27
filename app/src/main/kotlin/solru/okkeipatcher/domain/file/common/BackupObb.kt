@@ -11,5 +11,5 @@ class BackupObb(streamCopier: StreamCopier) : VerifiableFile(
 		File(OkkeiStorage.backup.absolutePath, "main.87.com.mages.chaoschild_jp.obb"), streamCopier
 	)
 ) {
-	override suspend fun verify() = exists && compareBySharedPreferences(CommonFileHashKey.backup_obb_hash.name)
+	override fun verify() = compareBySharedPreferences(CommonFileHashKey.backup_obb_hash.name)
 }

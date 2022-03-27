@@ -18,7 +18,6 @@ import solru.okkeipatcher.databinding.FragmentWorkBinding
 import solru.okkeipatcher.domain.model.Message
 import solru.okkeipatcher.domain.model.ProgressData
 import solru.okkeipatcher.ui.util.extension.copyTextToClipboard
-import solru.okkeipatcher.ui.util.extension.safeIsIndeterminate
 import solru.okkeipatcher.ui.util.extension.showWithLifecycle
 import solru.okkeipatcher.ui.viewmodel.WorkViewModel
 
@@ -91,7 +90,8 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 	private fun setProgress(progressData: ProgressData) {
 		binding.progressbarWork.max = progressData.max
 		binding.progressbarWork.setProgressCompat(progressData.progress, true)
-		binding.progressbarWork.safeIsIndeterminate = progressData.isIndeterminate
+		val percentDone = (progressData.progress.toDouble() / progressData.max * 100).toInt()
+		binding.textviewWorkPercentDone.text = getString(R.string.percent_done, percentDone)
 	}
 
 	private fun showStartWorkMessage(startWorkMessage: Message) {

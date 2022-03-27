@@ -18,7 +18,6 @@ import okio.blackholeSink
 import okio.buffer
 import okio.sink
 import solru.okkeipatcher.di.module.IoDispatcher
-import solru.okkeipatcher.domain.model.ProgressData
 import solru.okkeipatcher.io.exception.HttpStatusCodeException
 import solru.okkeipatcher.io.service.HttpDownloader
 import solru.okkeipatcher.io.util.BlackholeOutputStream
@@ -28,6 +27,7 @@ import java.io.OutputStream
 import javax.inject.Inject
 import kotlin.io.use
 import kotlin.math.ceil
+import kotlin.math.roundToInt
 
 private const val BUFFER_LENGTH = 8192L
 
@@ -49,9 +49,8 @@ class HttpDownloaderImpl @Inject constructor(
 		url: String,
 		outputStream: OutputStream,
 		hashing: Boolean,
-		onProgressChanged: suspend (ProgressData) -> Unit
+		onProgressDeltaChanged: suspend (Int) -> Unit
 	) = withContext(ioDispatcher) {
-		onProgressChanged(ProgressData())
 		client.get<HttpStatement>(url).execute { httpResponse ->
 			if (httpResponse.status.value != 200) {
 				throw HttpStatusCodeException(httpResponse.status)
@@ -60,6 +59,7 @@ class HttpDownloaderImpl @Inject constructor(
 			val contentLength = httpResponse.contentLength() ?: Int.MAX_VALUE.toLong()
 			val progressRatio = calculateProgressRatio(contentLength, BUFFER_LENGTH)
 			val progressMax = ceil(contentLength.toDouble() / (BUFFER_LENGTH * progressRatio)).toInt()
+			val progressDelta = (100.0 / progressMax).roundToInt()
 			var currentProgress = 0
 			var transferredBytes = 0L
 			val baseSink = if (outputStream is BlackholeOutputStream) blackholeSink() else outputStream.sink()
@@ -77,12 +77,12 @@ class HttpDownloaderImpl @Inject constructor(
 							currentProgress++
 						}
 						if (currentProgress % progressRatio == 0) {
-							onProgressChanged(ProgressData(currentProgress / progressRatio, progressMax))
+							onProgressDeltaChanged(progressDelta)
 						}
 					}
 				}
+				onProgressDeltaChanged(100 - currentProgress / progressRatio)
 				bufferedSink.flush()
-				onProgressChanged(ProgressData(progressMax, progressMax))
 				if (sink is HashingSink) sink.hash.hex() else String.empty
 			}
 		}

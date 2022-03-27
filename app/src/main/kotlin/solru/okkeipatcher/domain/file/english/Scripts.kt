@@ -11,5 +11,5 @@ class Scripts(streamCopier: StreamCopier) : VerifiableFile(
 		File(OkkeiStorage.external.absolutePath, "scripts.zip"), streamCopier
 	)
 ) {
-	override suspend fun verify() = exists && compareBySharedPreferences(PatchFileHashKey.scripts_hash.name)
+	override fun verify() = compareBySharedPreferences(PatchFileHashKey.scripts_hash.name)
 }

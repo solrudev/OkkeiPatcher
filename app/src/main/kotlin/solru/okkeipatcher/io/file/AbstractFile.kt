@@ -1,28 +1,34 @@
 package solru.okkeipatcher.io.file
 
-import solru.okkeipatcher.domain.base.ProgressPublisher
-import solru.okkeipatcher.domain.base.ProgressPublisherImpl
+import solru.okkeipatcher.domain.operation.AbstractOperation
 import solru.okkeipatcher.io.service.StreamCopier
 import solru.okkeipatcher.io.util.BlackholeOutputStream
 
-abstract class AbstractFile(
-	private val streamCopier: StreamCopier,
-	private val progressPublisher: ProgressPublisherImpl = ProgressPublisherImpl()
-) : File, ProgressPublisher by progressPublisher {
+abstract class AbstractFile(private val streamCopier: StreamCopier) : File {
 
-	override suspend fun computeHash() = createInputStream().use {
-		streamCopier.copy(it, BlackholeOutputStream(), length, hashing = true) { progressData ->
-			progressPublisher._progress.emit(progressData)
+	override fun computeHash() = object : AbstractOperation<String>() {
+
+		override val progressMax = 100
+
+		override suspend fun invoke() = createInputStream().use {
+			streamCopier.copy(it, BlackholeOutputStream(), length, hashing = true) { progressDelta ->
+				_progressDelta.emit(progressDelta)
+			}
 		}
 	}
 
-	override suspend fun copyTo(destinationFile: File, hashing: Boolean): String {
-		destinationFile.delete()
-		destinationFile.create()
-		createInputStream().use { inputFile ->
-			destinationFile.createOutputStream().use { outputFile ->
-				return streamCopier.copy(inputFile, outputFile, length, hashing) { progressData ->
-					progressPublisher._progress.emit(progressData)
+	override fun copyTo(destinationFile: File, hashing: Boolean) = object : AbstractOperation<String>() {
+
+		override val progressMax = 100
+
+		override suspend fun invoke(): String {
+			destinationFile.delete()
+			destinationFile.create()
+			createInputStream().use { inputFile ->
+				destinationFile.createOutputStream().use { outputFile ->
+					return streamCopier.copy(inputFile, outputFile, length, hashing) { progressDelta ->
+						_progressDelta.emit(progressDelta)
+					}
 				}
 			}
 		}

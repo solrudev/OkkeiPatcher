@@ -11,5 +11,5 @@ class BackupSaveData(streamCopier: StreamCopier) : VerifiableFile(
 		File(OkkeiStorage.backup.absolutePath, "SAVEDATA.DAT"), streamCopier
 	)
 ) {
-	override suspend fun verify() = exists && compareBySharedPreferences(CommonFileHashKey.save_data_hash.name)
+	override fun verify() = compareBySharedPreferences(CommonFileHashKey.save_data_hash.name)
 }

@@ -1,6 +1,5 @@
 package solru.okkeipatcher.io.service
 
-import solru.okkeipatcher.domain.model.ProgressData
 import java.io.OutputStream
 
 interface HttpDownloader {
@@ -13,6 +12,6 @@ interface HttpDownloader {
 		url: String,
 		outputStream: OutputStream,
 		hashing: Boolean = false,
-		onProgressChanged: suspend (ProgressData) -> Unit
+		onProgressDeltaChanged: suspend (Int) -> Unit
 	): String
 }

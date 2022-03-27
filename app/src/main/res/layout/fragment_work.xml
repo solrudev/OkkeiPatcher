@@ -34,9 +34,18 @@
 		android:layout_width="wrap_content"
 		android:layout_height="0dp"
 		android:layout_marginBottom="8dp"
+		android:textAlignment="viewStart"
 		app:layout_constraintBottom_toTopOf="@id/progressbar_work"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent" />
+		app:layout_constraintStart_toStartOf="@id/progressbar_work" />
+
+	<TextView
+		android:id="@+id/textview_work_percent_done"
+		android:layout_width="wrap_content"
+		android:layout_height="0dp"
+		android:layout_marginBottom="8dp"
+		android:textAlignment="viewEnd"
+		app:layout_constraintBottom_toTopOf="@id/progressbar_work"
+		app:layout_constraintEnd_toEndOf="@id/progressbar_work" />
 
 	<com.google.android.material.progressindicator.LinearProgressIndicator
 		android:id="@+id/progressbar_work"

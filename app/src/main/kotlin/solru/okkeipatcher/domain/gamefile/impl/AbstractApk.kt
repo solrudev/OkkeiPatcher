@@ -5,28 +5,24 @@ import io.github.solrudev.simpleinstaller.PackageInstaller
 import io.github.solrudev.simpleinstaller.PackageUninstaller
 import io.github.solrudev.simpleinstaller.data.InstallResult
 import io.github.solrudev.simpleinstaller.installPackage
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 import net.lingala.zip4j.ZipFile
 import solru.okkeipatcher.OkkeiApplication
 import solru.okkeipatcher.R
-import solru.okkeipatcher.di.module.IoDispatcher
 import solru.okkeipatcher.domain.OkkeiStorage
-import solru.okkeipatcher.domain.base.ObservableImpl
 import solru.okkeipatcher.domain.exception.LocalizedException
 import solru.okkeipatcher.domain.file.common.CommonFileHashKey
 import solru.okkeipatcher.domain.file.common.CommonFiles
 import solru.okkeipatcher.domain.gamefile.Apk
 import solru.okkeipatcher.domain.model.LocalizedString
-import solru.okkeipatcher.domain.model.ProgressData
+import solru.okkeipatcher.domain.operation.AbstractOperation
 import solru.okkeipatcher.domain.util.deleteTempZipFiles
-import solru.okkeipatcher.domain.util.extension.makeIndeterminate
-import solru.okkeipatcher.domain.util.extension.observe
-import solru.okkeipatcher.domain.util.extension.reset
 import solru.okkeipatcher.domain.util.extension.use
 import solru.okkeipatcher.io.file.JavaFile
 import solru.okkeipatcher.io.service.StreamCopier
@@ -43,19 +39,11 @@ private const val PRIVATE_KEY_FILE_NAME = "testkey.pk8"
 abstract class AbstractApk(
 	protected val commonFiles: CommonFiles,
 	protected val streamCopier: StreamCopier,
-	@IoDispatcher protected val ioDispatcher: CoroutineDispatcher
-) : ObservableImpl(), Apk {
+	protected val ioDispatcher: CoroutineDispatcher
+) : Apk {
 
 	override val backupExists: Boolean
 		get() = commonFiles.backupApk.exists
-
-	override val progress = merge(
-		commonFiles.backupApk.progress,
-		commonFiles.tempApk.progress,
-		commonFiles.signedApk.progress,
-		PackageInstaller.progress.map { ProgressData(it.progress, it.max, it.isIndeterminate) },
-		progressPublisher._progress
-	)
 
 	private val tempZipFiles = mutableListOf<ZipFile>()
 	private val tempZipFilesMutex = Mutex()
@@ -75,41 +63,64 @@ abstract class AbstractApk(
 
 	override fun deleteBackup() = commonFiles.backupApk.delete()
 
-	override suspend fun backup() {
-		progressPublisher._progress.reset()
-		_status.emit(LocalizedString.resource(R.string.status_comparing_apk))
-		if (verifyBackupIntegrity()) return
-		try {
+	override fun backup() = object : AbstractOperation<Unit>() {
+
+		override val progressMax = 100
+
+		override suspend fun invoke() {
+			_status.emit(LocalizedString.resource(R.string.status_comparing_apk))
+			if (commonFiles.backupApk.verify().invoke()) {
+				_progressDelta.emit(progressMax)
+				return
+			}
 			if (!Apk.isInstalled) {
 				throw LocalizedException(LocalizedString.resource(R.string.error_game_not_found))
 			}
-			_status.emit(LocalizedString.resource(R.string.status_backing_up_apk))
-			val hash = copyInstalledApkTo(commonFiles.backupApk, hashing = true)
-			_status.emit(LocalizedString.resource(R.string.status_writing_apk_hash))
-			Preferences.set(CommonFileHashKey.backup_apk_hash.name, hash)
-		} catch (t: Throwable) {
-			commonFiles.backupApk.delete()
-			throw t
+			try {
+				_status.emit(LocalizedString.resource(R.string.status_backing_up_apk))
+				val hash = copyInstalledApkTo(commonFiles.backupApk, hashing = true)
+				_status.emit(LocalizedString.resource(R.string.status_writing_apk_hash))
+				Preferences.set(CommonFileHashKey.backup_apk_hash.name, hash)
+				_progressDelta.emit(progressMax)
+			} catch (t: Throwable) {
+				commonFiles.backupApk.delete()
+				throw t
+			}
 		}
 	}
 
-	override suspend fun restore() {
-		progressPublisher._progress.reset()
-		if (!commonFiles.backupApk.exists) {
-			throw LocalizedException(LocalizedString.resource(R.string.error_apk_not_found))
-		}
-		_status.emit(LocalizedString.resource(R.string.status_comparing_apk))
-		if (!commonFiles.backupApk.verify()) {
-			throw LocalizedException(LocalizedString.resource(R.string.error_not_trustworthy_apk))
-		}
-		_status.emit(LocalizedString.empty())
-		if (Apk.isInstalled) {
-			uninstall()
-		}
-		installBackup()
-	}
+	override fun restore() = object : AbstractOperation<Unit>() {
 
-	override suspend fun verifyBackupIntegrity() = commonFiles.backupApk.verify()
+		private val uninstallOperation = uninstall(updating = false)
+		private val installBackupOperation = install(File(commonFiles.backupApk.fullPath))
+
+		override val status = merge(
+			uninstallOperation.status,
+			installBackupOperation.status,
+			_status
+		)
+
+		override val progressDelta = merge(
+			uninstallOperation.progressDelta,
+			installBackupOperation.progressDelta,
+			_progressDelta
+		)
+
+		override val progressMax = uninstallOperation.progressMax + installBackupOperation.progressMax
+
+		override suspend fun invoke() {
+			_progressDelta.emit(0)
+			if (!commonFiles.backupApk.exists) {
+				throw LocalizedException(LocalizedString.resource(R.string.error_apk_not_found))
+			}
+			_status.emit(LocalizedString.resource(R.string.status_comparing_apk))
+			if (!commonFiles.backupApk.verify().invoke()) {
+				throw LocalizedException(LocalizedString.resource(R.string.error_not_trustworthy_apk))
+			}
+			uninstallOperation()
+			installBackupOperation()
+		}
+	}
 
 	/**
 	 * Closes all [ZipFile] instances gotten from [asZipFile] and deletes temporary files.
@@ -131,14 +142,13 @@ abstract class AbstractApk(
 	/**
 	 * Creates temporary copy of game APK if it doesn't exist.
 	 *
-	 * @return temp copy of game APK represented as [ZipFile]. Has `isRunInThread` set to `true`.
+	 * @return temp copy of game APK represented as [ZipFile].
 	 */
 	suspend fun asZipFile(): ZipFile {
 		if (!commonFiles.tempApk.exists) {
 			copyInstalledApkTo(commonFiles.tempApk)
 		}
 		return ZipFile(commonFiles.tempApk.fullPath)
-			.apply { isRunInThread = true }
 			.also { zipFile ->
 				tempZipFilesMutex.withLock {
 					tempZipFiles.add(zipFile)
@@ -146,68 +156,123 @@ abstract class AbstractApk(
 			}
 	}
 
-	@Suppress("BlockingMethodInNonBlockingContext")
-	suspend fun sign() {
-		_status.emit(LocalizedString.resource(R.string.status_signing_apk))
-		progressPublisher._progress.makeIndeterminate()
-		val certificate = getSigningCertificate()
-		val privateKey = getSigningPrivateKey()
-		val signerConfig = ApkSigner.SignerConfig.Builder(
-			"OKKEI",
-			privateKey,
-			listOf(certificate)
-		).build()
-		val inputApk = File(commonFiles.tempApk.fullPath)
-		val outputApk = File(commonFiles.signedApk.fullPath)
-		val apkSigner = ApkSigner.Builder(listOf(signerConfig))
-			.setCreatedBy("Okkei Patcher")
-			.setInputApk(inputApk)
-			.setOutputApk(outputApk)
-			.build()
-		withContext(ioDispatcher) {
-			apkSigner.sign()
-		}
-		_status.emit(LocalizedString.resource(R.string.status_writing_patched_apk_hash))
-		Preferences.set(
-			CommonFileHashKey.signed_apk_hash.name,
-			commonFiles.signedApk.computeHash()
-		)
-	}
+	fun sign() = object : AbstractOperation<Unit>() {
 
-	suspend fun removeSignature() {
-		asZipFile().use { zipFile ->
-			_status.emit(LocalizedString.resource(R.string.status_removing_signature))
-			zipFile.removeFile("META-INF/")
-			zipFile.progressMonitor.observe { progressData ->
-				progressPublisher._progress.emit(progressData)
+		override val progressMax = 100
+
+		@Suppress("BlockingMethodInNonBlockingContext")
+		override suspend fun invoke() {
+			_status.emit(LocalizedString.resource(R.string.status_signing_apk))
+			val certificate = getSigningCertificate()
+			val privateKey = getSigningPrivateKey()
+			val signerConfig = ApkSigner.SignerConfig.Builder(
+				"OKKEI",
+				privateKey,
+				listOf(certificate)
+			).build()
+			val inputApk = File(commonFiles.tempApk.fullPath)
+			val outputApk = File(commonFiles.signedApk.fullPath)
+			val apkSigner = ApkSigner.Builder(listOf(signerConfig))
+				.setCreatedBy("Okkei Patcher")
+				.setInputApk(inputApk)
+				.setOutputApk(outputApk)
+				.build()
+			withContext(ioDispatcher) {
+				apkSigner.sign()
 			}
+			_status.emit(LocalizedString.resource(R.string.status_writing_patched_apk_hash))
+			Preferences.set(
+				CommonFileHashKey.signed_apk_hash.name,
+				commonFiles.signedApk.computeHash().invoke()
+			)
+			_progressDelta.emit(progressMax)
 		}
 	}
 
-	protected suspend fun installPatched(updating: Boolean) {
-		if (!commonFiles.signedApk.exists) {
-			throw LocalizedException(LocalizedString.resource(R.string.error_apk_not_found))
+	fun removeSignature() = object : AbstractOperation<Unit>() {
+
+		override val progressMax = 100
+
+		override suspend fun invoke() {
+			asZipFile().use { zipFile ->
+				_status.emit(LocalizedString.resource(R.string.status_removing_signature))
+				withContext(ioDispatcher) {
+					zipFile.removeFile("META-INF/")
+				}
+			}
+			_progressDelta.emit(progressMax)
 		}
-		_status.emit(LocalizedString.resource(R.string.status_comparing_apk))
-		if (!commonFiles.signedApk.verify()) {
+	}
+
+	protected fun installPatched(updating: Boolean) = object : AbstractOperation<Unit>() {
+
+		private val uninstallOperation = uninstall(updating)
+		private val installOperation = install(File(commonFiles.signedApk.fullPath))
+
+		override val status = merge(
+			uninstallOperation.status,
+			installOperation.status,
+			_status
+		)
+
+		override val progressDelta = merge(
+			uninstallOperation.progressDelta,
+			installOperation.progressDelta,
+			_progressDelta
+		)
+
+		override val progressMax = uninstallOperation.progressMax + installOperation.progressMax
+
+		override suspend fun invoke() {
+			if (!commonFiles.signedApk.exists) {
+				throw LocalizedException(LocalizedString.resource(R.string.error_apk_not_found))
+			}
+			_status.emit(LocalizedString.resource(R.string.status_comparing_apk))
+			if (!commonFiles.signedApk.verify().invoke()) {
+				commonFiles.signedApk.delete()
+				throw LocalizedException(LocalizedString.resource(R.string.error_not_trustworthy_apk))
+			}
+			uninstallOperation()
+			installOperation()
 			commonFiles.signedApk.delete()
-			throw LocalizedException(LocalizedString.resource(R.string.error_not_trustworthy_apk))
 		}
-		if (!updating && Apk.isInstalled) {
-			uninstall()
+	}
+
+	private fun uninstall(updating: Boolean) = object : AbstractOperation<Unit>() {
+
+		override val progressMax = 100
+
+		override suspend fun invoke() {
+			_status.emit(LocalizedString.resource(R.string.status_uninstalling))
+			if (updating || !Apk.isInstalled) {
+				_progressDelta.emit(progressMax)
+				return
+			}
+			val uninstallResult = PackageUninstaller.uninstallPackage(Apk.PACKAGE_NAME)
+			if (!uninstallResult) {
+				throw LocalizedException(LocalizedString.resource(R.string.error_uninstall))
+			}
+			_progressDelta.emit(progressMax)
 		}
-		progressPublisher._progress.makeIndeterminate()
-		_status.emit(LocalizedString.resource(R.string.status_installing))
-		val installResult = PackageInstaller.installPackage(File(commonFiles.signedApk.fullPath))
-		if (installResult is InstallResult.Failure) {
-			throw LocalizedException(
-				LocalizedString.resource(
-					R.string.error_install,
-					installResult.cause?.message.toString()
+	}
+
+	private fun install(apkFile: File) = object : AbstractOperation<Unit>() {
+
+		override val progressMax = 100
+
+		override suspend fun invoke() {
+			_status.emit(LocalizedString.resource(R.string.status_installing))
+			val installResult = PackageInstaller.installPackage(apkFile)
+			if (installResult is InstallResult.Failure) {
+				throw LocalizedException(
+					LocalizedString.resource(
+						R.string.error_install,
+						installResult.cause?.message.toString()
+					)
 				)
-			)
+			}
+			_progressDelta.emit(progressMax)
 		}
-		commonFiles.signedApk.delete()
 	}
 
 	/**
@@ -221,40 +286,13 @@ abstract class AbstractApk(
 		if (!Apk.isInstalled) {
 			throw LocalizedException(LocalizedString.resource(R.string.error_game_not_found))
 		}
-		_status.emit(LocalizedString.resource(R.string.status_copying_apk))
 		val installedApkPath = OkkeiApplication.context.packageManager
 			.getPackageInfo(Apk.PACKAGE_NAME, 0)
 			.applicationInfo
 			.publicSourceDir
 		val installedApk = JavaFile(File(installedApkPath), streamCopier)
-		val progressJob = launch {
-			progressPublisher._progress.emitAll(installedApk.progress)
-		}
-		val hash = installedApk.copyTo(destinationFile, hashing)
-		progressJob.cancel()
+		val hash = installedApk.copyTo(destinationFile, hashing).invoke()
 		hash
-	}
-
-	private suspend inline fun uninstall() {
-		_status.emit(LocalizedString.resource(R.string.status_uninstalling))
-		progressPublisher._progress.makeIndeterminate()
-		val uninstallResult = PackageUninstaller.uninstallPackage(Apk.PACKAGE_NAME)
-		if (!uninstallResult) {
-			throw LocalizedException(LocalizedString.resource(R.string.error_uninstall))
-		}
-	}
-
-	private suspend inline fun installBackup() {
-		_status.emit(LocalizedString.resource(R.string.status_installing))
-		val installResult = PackageInstaller.installPackage(File(commonFiles.backupApk.fullPath))
-		if (installResult is InstallResult.Failure) {
-			throw LocalizedException(
-				LocalizedString.resource(
-					R.string.error_install,
-					installResult.cause?.message.toString()
-				)
-			)
-		}
 	}
 
 	@Suppress("BlockingMethodInNonBlockingContext")

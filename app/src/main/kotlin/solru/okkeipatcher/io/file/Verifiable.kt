@@ -1,5 +1,7 @@
 package solru.okkeipatcher.io.file
 
+import solru.okkeipatcher.domain.operation.Operation
+
 interface Verifiable {
-	suspend fun verify(): Boolean
+	fun verify(): Operation<Boolean>
 }

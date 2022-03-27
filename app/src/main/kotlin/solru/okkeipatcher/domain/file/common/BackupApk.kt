@@ -11,5 +11,5 @@ class BackupApk(streamCopier: StreamCopier) : VerifiableFile(
 		File(OkkeiStorage.backup.absolutePath, "backup.apk"), streamCopier
 	)
 ) {
-	override suspend fun verify() = exists && compareBySharedPreferences(CommonFileHashKey.backup_apk_hash.name)
+	override fun verify() = compareBySharedPreferences(CommonFileHashKey.backup_apk_hash.name)
 }

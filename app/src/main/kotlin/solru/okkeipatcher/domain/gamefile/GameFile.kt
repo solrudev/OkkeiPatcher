@@ -1,11 +1,10 @@
 package solru.okkeipatcher.domain.gamefile
 
-import solru.okkeipatcher.domain.base.Observable
+import solru.okkeipatcher.domain.operation.Operation
 
-interface GameFile : Observable {
+interface GameFile {
 	val backupExists: Boolean
 	fun deleteBackup()
-	suspend fun backup()
-	suspend fun restore()
-	suspend fun verifyBackupIntegrity(): Boolean
+	fun backup(): Operation<Unit>
+	fun restore(): Operation<Unit>
 }
