@@ -16,6 +16,7 @@ import solru.okkeipatcher.domain.gamefile.strategy.impl.english.PatchFileVersion
 import solru.okkeipatcher.domain.model.LocalizedString
 import solru.okkeipatcher.domain.operation.AbstractOperation
 import solru.okkeipatcher.domain.operation.AggregateOperation
+import solru.okkeipatcher.domain.operation.Operation
 import solru.okkeipatcher.domain.repository.patch.ScriptsDataRepository
 import solru.okkeipatcher.domain.util.extension.use
 import solru.okkeipatcher.io.file.VerifiableFile
@@ -29,7 +30,7 @@ class ScriptsPatchOperation @AssistedInject constructor(
 	@Assisted private val scriptsFile: VerifiableFile,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	private val httpDownloader: HttpDownloader
-) : AbstractOperation<Unit>() {
+) : Operation<Unit> {
 
 	private val operation = AggregateOperation(
 		listOf(
