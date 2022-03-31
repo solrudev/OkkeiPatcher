@@ -111,9 +111,7 @@ dependencies {
 	implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
 	implementation("androidx.navigation:navigation-ui-ktx:$navigationVersion")
 	implementation("androidx.room:room-ktx:$roomVersion")
-	implementation("com.google.android.material:material:1.4.0") {
-		because("changing isIndeterminate of progress indicator works incorrectly in newer version")
-	}
+	implementation("com.google.android.material:material:1.5.0")
 
 	// I/O
 	val excludeOkHttp = Action<ExternalModuleDependency> {
@@ -123,15 +121,15 @@ dependencies {
 	implementation("com.squareup.moshi:moshi:$moshiVersion")
 	implementation("com.squareup.retrofit2:retrofit:$retrofitVersion", excludeOkHttp)
 	implementation("com.squareup.retrofit2:converter-moshi:$retrofitVersion", excludeOkHttp)
-	implementation("io.ktor:ktor-client-okhttp:1.6.3", excludeOkHttp)
+	implementation("io.ktor:ktor-client-okhttp:1.6.8", excludeOkHttp)
 	implementation("com.squareup.okhttp3:okhttp:3.12.13") {
 		because("Android 4.4 support")
 	}
 
 	// Miscellaneous
 	implementation("com.android.tools.build:apksig:$androidGradleVersion")
-	implementation("com.anggrayudi:storage:1.2.1")
-	implementation("net.lingala.zip4j:zip4j:2.9.1")
+	implementation("com.anggrayudi:storage:1.2.2")
+	implementation("net.lingala.zip4j:zip4j:2.10.0")
 	implementation("io.github.solrudev:simpleinstaller:2.0.3")
 	implementation("com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.6")
 
