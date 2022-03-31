@@ -1,4 +1,4 @@
-package solru.okkeipatcher.domain.service
+package solru.okkeipatcher.domain.operation
 
 import solru.okkeipatcher.R
 import solru.okkeipatcher.domain.AppKey
@@ -7,9 +7,6 @@ import solru.okkeipatcher.domain.exception.LocalizedException
 import solru.okkeipatcher.domain.gamefile.strategy.GameFileStrategy
 import solru.okkeipatcher.domain.model.LocalizedString
 import solru.okkeipatcher.domain.model.patchupdates.PatchUpdates
-import solru.okkeipatcher.domain.operation.AggregateOperation
-import solru.okkeipatcher.domain.operation.EmptyOperation
-import solru.okkeipatcher.domain.operation.Operation
 import solru.okkeipatcher.util.Preferences
 
 class PatchOperation(

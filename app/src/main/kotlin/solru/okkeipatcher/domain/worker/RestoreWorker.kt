@@ -12,7 +12,7 @@ import solru.okkeipatcher.domain.AppKey
 import solru.okkeipatcher.domain.gamefile.strategy.GameFileStrategy
 import solru.okkeipatcher.domain.model.LocalizedString
 import solru.okkeipatcher.domain.operation.Operation
-import solru.okkeipatcher.domain.service.RestoreOperation
+import solru.okkeipatcher.domain.operation.RestoreOperation
 import solru.okkeipatcher.util.Preferences
 
 @HiltWorker

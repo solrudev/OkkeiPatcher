@@ -1,4 +1,4 @@
-package solru.okkeipatcher.domain.service
+package solru.okkeipatcher.domain.operation
 
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -9,7 +9,6 @@ import solru.okkeipatcher.domain.file.common.CommonFileHashKey
 import solru.okkeipatcher.domain.file.common.CommonFiles
 import solru.okkeipatcher.domain.gamefile.strategy.impl.english.PatchFileVersionKey
 import solru.okkeipatcher.domain.model.LocalizedString
-import solru.okkeipatcher.domain.operation.AbstractOperation
 import solru.okkeipatcher.domain.repository.patch.ObbDataRepository
 import solru.okkeipatcher.io.service.HttpDownloader
 import solru.okkeipatcher.util.Preferences
