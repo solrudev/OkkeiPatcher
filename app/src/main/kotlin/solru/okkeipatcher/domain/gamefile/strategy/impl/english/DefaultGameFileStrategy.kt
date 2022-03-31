@@ -1,8 +1,8 @@
 package solru.okkeipatcher.domain.gamefile.strategy.impl.english
 
-import solru.okkeipatcher.domain.gamefile.impl.SaveDataImpl
-import solru.okkeipatcher.domain.gamefile.impl.english.DefaultApk
-import solru.okkeipatcher.domain.gamefile.impl.english.DefaultObb
+import solru.okkeipatcher.domain.gamefile.SaveDataImpl
+import solru.okkeipatcher.domain.gamefile.english.DefaultApk
+import solru.okkeipatcher.domain.gamefile.english.DefaultObb
 import solru.okkeipatcher.domain.gamefile.strategy.GameFileStrategy
 import javax.inject.Inject
 

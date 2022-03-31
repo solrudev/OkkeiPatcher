@@ -1,4 +1,4 @@
-package solru.okkeipatcher.domain.gamefile.impl
+package solru.okkeipatcher.domain.gamefile
 
 import com.android.apksig.ApkSigner
 import io.github.solrudev.simpleinstaller.PackageInstaller
@@ -19,7 +19,6 @@ import solru.okkeipatcher.domain.OkkeiStorage
 import solru.okkeipatcher.domain.exception.LocalizedException
 import solru.okkeipatcher.domain.file.common.CommonFileHashKey
 import solru.okkeipatcher.domain.file.common.CommonFiles
-import solru.okkeipatcher.domain.gamefile.Apk
 import solru.okkeipatcher.domain.model.LocalizedString
 import solru.okkeipatcher.domain.operation.AbstractOperation
 import solru.okkeipatcher.domain.util.deleteTempZipFiles

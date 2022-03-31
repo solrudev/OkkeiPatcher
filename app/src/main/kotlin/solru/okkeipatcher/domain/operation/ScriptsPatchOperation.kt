@@ -11,7 +11,7 @@ import solru.okkeipatcher.di.module.IoDispatcher
 import solru.okkeipatcher.domain.OkkeiStorage
 import solru.okkeipatcher.domain.exception.LocalizedException
 import solru.okkeipatcher.domain.file.english.PatchFileHashKey
-import solru.okkeipatcher.domain.gamefile.impl.AbstractApk
+import solru.okkeipatcher.domain.gamefile.AbstractApk
 import solru.okkeipatcher.domain.gamefile.strategy.impl.english.PatchFileVersionKey
 import solru.okkeipatcher.domain.model.LocalizedString
 import solru.okkeipatcher.domain.repository.patch.ScriptsDataRepository

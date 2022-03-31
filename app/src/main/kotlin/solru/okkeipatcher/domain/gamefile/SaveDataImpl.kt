@@ -1,11 +1,10 @@
-package solru.okkeipatcher.domain.gamefile.impl
+package solru.okkeipatcher.domain.gamefile
 
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.merge
 import solru.okkeipatcher.R
 import solru.okkeipatcher.domain.file.common.CommonFileHashKey
 import solru.okkeipatcher.domain.file.common.CommonFiles
-import solru.okkeipatcher.domain.gamefile.SaveData
 import solru.okkeipatcher.domain.model.LocalizedString
 import solru.okkeipatcher.domain.model.Message
 import solru.okkeipatcher.domain.operation.AbstractOperation

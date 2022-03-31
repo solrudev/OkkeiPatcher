@@ -1,4 +1,4 @@
-package solru.okkeipatcher.domain.gamefile.impl.english
+package solru.okkeipatcher.domain.gamefile.english
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.merge
@@ -7,7 +7,7 @@ import solru.okkeipatcher.di.factory.ScriptsPatchOperationFactory
 import solru.okkeipatcher.di.module.IoDispatcher
 import solru.okkeipatcher.domain.file.common.CommonFiles
 import solru.okkeipatcher.domain.file.english.DefaultPatchFiles
-import solru.okkeipatcher.domain.gamefile.impl.AbstractApk
+import solru.okkeipatcher.domain.gamefile.AbstractApk
 import solru.okkeipatcher.domain.model.LocalizedString
 import solru.okkeipatcher.domain.operation.AbstractOperation
 import solru.okkeipatcher.domain.operation.AggregateOperation
