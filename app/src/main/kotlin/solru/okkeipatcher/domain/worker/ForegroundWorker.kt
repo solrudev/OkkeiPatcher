@@ -3,7 +3,6 @@ package solru.okkeipatcher.domain.worker
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.getSystemService
 import androidx.work.CoroutineWorker
@@ -11,7 +10,8 @@ import androidx.work.Data
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import solru.okkeipatcher.R
@@ -94,21 +94,6 @@ abstract class ForegroundWorker(
 		updateProgressNotification(operation)
 		collectMessages(operation)
 	}
-
-	private fun CoroutineScope.log(operation: Operation<Unit>) = combine(
-		operation.status,
-		operation.progressDelta
-			.map { it to "" }
-			.runningReduce { accumulator, value ->
-				accumulator.first + value.first to "delta=${value.first} progress=${accumulator.first} progressMax=${operation.progressMax}"
-			}
-	) { status, progress ->
-		val statusString = status.resolve(applicationContext)
-		"${progress.second} status=$statusString"
-	}
-		.distinctUntilChanged()
-		.onEach { Log.i("ForegroundWorker", it) }
-		.launchIn(this)
 
 	private fun CoroutineScope.reportProgress(operation: Operation<Unit>) = operation
 		.statusAndAccumulatedProgress()
