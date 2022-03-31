@@ -48,7 +48,7 @@ abstract class ForegroundWorker(
 		createNotificationBuilder(progressNotificationTitle, progressNotification = true)
 	}
 
-	protected abstract suspend fun getOperation(): Operation<Unit>
+	protected abstract suspend fun getOperation(): Operation<*>
 	protected abstract fun createPendingIntent(): PendingIntent
 
 	final override suspend fun doWork() = try {
@@ -89,13 +89,13 @@ abstract class ForegroundWorker(
 
 	private fun createForegroundInfo() = ForegroundInfo(progressNotificationId, progressNotificationBuilder.build())
 
-	private fun CoroutineScope.observeOperation(operation: Operation<Unit>) = launch {
+	private fun CoroutineScope.observeOperation(operation: Operation<*>) = launch {
 		reportProgress(operation)
 		updateProgressNotification(operation)
 		collectMessages(operation)
 	}
 
-	private fun CoroutineScope.reportProgress(operation: Operation<Unit>) = operation
+	private fun CoroutineScope.reportProgress(operation: Operation<*>) = operation
 		.statusAndAccumulatedProgress()
 		.onEach { pair ->
 			val (status, progress) = pair
@@ -109,7 +109,7 @@ abstract class ForegroundWorker(
 		}
 		.launchIn(this)
 
-	private fun CoroutineScope.updateProgressNotification(operation: Operation<Unit>) = operation
+	private fun CoroutineScope.updateProgressNotification(operation: Operation<*>) = operation
 		.statusAndAccumulatedProgress()
 		.onEach { pair ->
 			val (status, progress) = pair
@@ -123,7 +123,7 @@ abstract class ForegroundWorker(
 		}
 		.launchIn(this)
 
-	private fun CoroutineScope.collectMessages(operation: Operation<Unit>) = operation.messages
+	private fun CoroutineScope.collectMessages(operation: Operation<*>) = operation.messages
 		.onEach { displayMessageNotification(it) }
 		.launchIn(this)
 
