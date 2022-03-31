@@ -56,6 +56,9 @@ open class AggregateOperation(private val operations: List<Operation<*>>) : Oper
 	protected open suspend fun postInvoke() {}
 }
 
+/**
+ * Base abstract class for operations which has mutable shared flows to emit to.
+ */
 abstract class AbstractOperation<out R> : Operation<R> {
 	protected val _status = MutableSharedFlow<LocalizedString>(replay = 1)
 	protected val _messages = MutableSharedFlow<Message>(replay = 1)
