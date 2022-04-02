@@ -48,7 +48,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 				if (!uiState.checkedForPatchUpdates) {
 					viewModel.checkPatchUpdates()
 				}
-				if (uiState.patchUpdatesAvailable) {
+				if (uiState.patchUpdatesAvailable && !uiState.patchUpdatesMessageShown) {
 					view?.let {
 						Snackbar.make(it, R.string.prompt_update_patch_available, Snackbar.LENGTH_LONG).show()
 					}
