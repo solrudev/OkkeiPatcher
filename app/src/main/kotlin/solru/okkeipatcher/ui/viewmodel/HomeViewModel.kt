@@ -47,7 +47,7 @@ class HomeViewModel @Inject constructor(
 	}
 
 	fun patchUpdatesMessageShown() = updateUiState {
-		copy(patchUpdatesMessageShown = false)
+		copy(patchUpdatesMessageShown = true)
 	}
 
 	private fun updateUiState(reduce: HomeUiState.() -> HomeUiState) {
