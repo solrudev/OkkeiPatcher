@@ -28,11 +28,11 @@ object ApiModule {
 
 	@Provides
 	@Singleton
-	fun provideOkkeiPatcherService(retrofit: Retrofit): OkkeiPatcherApi =
+	fun provideOkkeiPatcherApi(retrofit: Retrofit): OkkeiPatcherApi =
 		retrofit.create(OkkeiPatcherApi::class.java)
 
 	@Provides
 	@Singleton
-	fun provideDefaultPatchDataService(retrofit: Retrofit): DefaultPatchApi =
+	fun provideDefaultPatchApi(retrofit: Retrofit): DefaultPatchApi =
 		retrofit.create(DefaultPatchApi::class.java)
 }
