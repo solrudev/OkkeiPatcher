@@ -46,7 +46,7 @@ class ScriptsPatchOperation @AssistedInject constructor(
 	private val extractedScriptsDirectory = File(OkkeiStorage.external, "script")
 
 	override suspend fun invoke() = try {
-		operation.invoke()
+		operation()
 	} finally {
 		extractedScriptsDirectory.run {
 			if (exists()) deleteRecursively()
@@ -106,7 +106,6 @@ class ScriptsPatchOperation @AssistedInject constructor(
 			withContext(ioDispatcher) {
 				apkZip.removeFiles(apkScriptsList)
 				apkZip.addFiles(scriptsList, parameters)
-				extractedScriptsDirectory.deleteRecursively()
 			}
 			_progressDelta.emit(progressMax)
 		}

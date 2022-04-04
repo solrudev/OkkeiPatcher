@@ -165,7 +165,7 @@ abstract class AbstractApk(
 			val certificate = getSigningCertificate()
 			val privateKey = getSigningPrivateKey()
 			val signerConfig = ApkSigner.SignerConfig.Builder(
-				"OKKEI",
+				"Okkei",
 				privateKey,
 				listOf(certificate)
 			).build()

@@ -119,7 +119,7 @@ abstract class ForegroundWorker(
 				.setProgress(operation.progressMax, progress, false)
 				.build()
 			notificationManager?.notify(progressNotificationId, notification)
-			delay(500)
+			delay(500.milliseconds)
 		}
 		.launchIn(this)
 
