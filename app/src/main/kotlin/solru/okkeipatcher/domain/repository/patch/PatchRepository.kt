@@ -9,3 +9,5 @@ interface ScriptsDataRepository {
 interface ObbDataRepository {
 	suspend fun getObbData(): FileDto
 }
+
+interface DefaultPatchRepository : ScriptsDataRepository, ObbDataRepository
