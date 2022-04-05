@@ -26,9 +26,9 @@ class HomeViewModel @Inject constructor(
 	private val _uiState = MutableStateFlow(HomeUiState())
 	val uiState = _uiState.asStateFlow()
 
-	override fun onCreate(owner: LifecycleOwner) = updateUiState {
-		copy(
-			isPatchEnabled = !isPatched() || patchUpdatesAvailable,
+	override fun onCreate(owner: LifecycleOwner) = _uiState.update {
+		it.copy(
+			isPatchEnabled = !isPatched() || it.patchUpdatesAvailable,
 			isRestoreEnabled = isPatched()
 		)
 	}
@@ -37,8 +37,8 @@ class HomeViewModel @Inject constructor(
 		viewModelScope.launch {
 			val getPatchUpdatesUseCase = getPatchUpdatesUseCaseProvider.get()
 			val updatesAvailable = getPatchUpdatesUseCase().available
-			updateUiState {
-				copy(
+			_uiState.update {
+				it.copy(
 					isPatchEnabled = updatesAvailable || !isPatched(),
 					patchUpdatesAvailable = updatesAvailable,
 					checkedForPatchUpdates = true
@@ -47,12 +47,8 @@ class HomeViewModel @Inject constructor(
 		}
 	}
 
-	fun patchUpdatesMessageShown() = updateUiState {
-		copy(patchUpdatesMessageShown = true)
-	}
-
-	private fun updateUiState(reduce: HomeUiState.() -> HomeUiState) {
-		_uiState.update { it.reduce() }
+	fun patchUpdatesMessageShown() = _uiState.update {
+		it.copy(patchUpdatesMessageShown = true)
 	}
 
 	private fun isPatched() = Preferences.get(AppKey.is_patched.name, false)

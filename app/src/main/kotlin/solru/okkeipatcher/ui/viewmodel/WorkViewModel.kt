@@ -25,11 +25,12 @@ abstract class WorkViewModel(
 	private val getIsWorkPendingUseCase: GetIsWorkPendingUseCase
 ) : ViewModel(), DefaultLifecycleObserver {
 
+	protected val _uiState = MutableStateFlow(WorkUiState())
+	val uiState = _uiState.asStateFlow()
+
 	protected abstract val work: Work?
 	private var isWorkObserved = false
 	private val workObservingScope = CoroutineScope(Dispatchers.Main.immediate)
-	private val _uiState = MutableStateFlow(WorkUiState())
-	val uiState = _uiState.asStateFlow()
 
 	protected abstract suspend fun enqueueWork(): Work
 
@@ -69,61 +70,57 @@ abstract class WorkViewModel(
 		val title = LocalizedString.resource(R.string.warning_abort_title)
 		val message = LocalizedString.resource(R.string.warning_abort)
 		val cancelMessage = Message(title, message)
-		updateUiState {
-			val cancelWorkUiMessage = cancelWorkMessage.copy(data = cancelMessage)
-			copy(cancelWorkMessage = cancelWorkUiMessage)
+		_uiState.update {
+			val cancelWorkMessage = it.cancelWorkMessage.copy(data = cancelMessage)
+			it.copy(cancelWorkMessage = cancelWorkMessage)
 		}
 	}
 
-	fun showStartWorkMessage() = updateUiState {
-		val startWorkUiMessage = startWorkMessage.copy(isVisible = true)
-		copy(startWorkMessage = startWorkUiMessage)
+	fun showStartWorkMessage() = _uiState.update {
+		val startWorkMessage = it.startWorkMessage.copy(isVisible = true)
+		it.copy(startWorkMessage = startWorkMessage)
 	}
 
-	fun showCancelWorkMessage() = updateUiState {
-		val cancelWorkUiMessage = cancelWorkMessage.copy(isVisible = true)
-		copy(cancelWorkMessage = cancelWorkUiMessage)
+	fun showCancelWorkMessage() = _uiState.update {
+		val cancelWorkMessage = it.cancelWorkMessage.copy(isVisible = true)
+		it.copy(cancelWorkMessage = cancelWorkMessage)
 	}
 
-	fun showErrorMessage() = updateUiState {
-		val errorUiMessage = errorMessage.copy(isVisible = true)
-		copy(errorMessage = errorUiMessage)
+	fun showErrorMessage() = _uiState.update {
+		val errorMessage = it.errorMessage.copy(isVisible = true)
+		it.copy(errorMessage = errorMessage)
 	}
 
-	fun closeStartWorkMessage() = updateUiState {
-		copy(startWorkMessage = MessageUiState())
+	fun closeStartWorkMessage() = _uiState.update {
+		it.copy(startWorkMessage = MessageUiState())
 	}
 
-	fun closeCancelWorkMessage() = updateUiState {
-		copy(cancelWorkMessage = MessageUiState())
+	fun closeCancelWorkMessage() = _uiState.update {
+		it.copy(cancelWorkMessage = MessageUiState())
 	}
 
-	fun closeErrorMessage() = updateUiState {
-		copy(errorMessage = MessageUiState())
+	fun closeErrorMessage() = _uiState.update {
+		it.copy(errorMessage = MessageUiState())
 	}
 
 	protected suspend fun Work?.isPending() = this?.let {
 		getIsWorkPendingUseCase(it)
 	} ?: false
 
-	protected fun updateUiState(reduce: WorkUiState.() -> WorkUiState) {
-		_uiState.update { it.reduce() }
-	}
-
 	private fun setIsButtonEnabled(value: Boolean) {
-		updateUiState {
-			copy(isButtonEnabled = value)
+		_uiState.update {
+			it.copy(isButtonEnabled = value)
 		}
 	}
 
-	private fun hideAllMessages() = updateUiState {
-		val startWorkUiMessage = startWorkMessage.copy(isVisible = false)
-		val cancelWorkUiMessage = cancelWorkMessage.copy(isVisible = false)
-		val errorUiMessage = errorMessage.copy(isVisible = false)
-		copy(
-			startWorkMessage = startWorkUiMessage,
-			cancelWorkMessage = cancelWorkUiMessage,
-			errorMessage = errorUiMessage
+	private fun hideAllMessages() = _uiState.update {
+		val startWorkMessage = it.startWorkMessage.copy(isVisible = false)
+		val cancelWorkMessage = it.cancelWorkMessage.copy(isVisible = false)
+		val errorMessage = it.errorMessage.copy(isVisible = false)
+		it.copy(
+			startWorkMessage = startWorkMessage,
+			cancelWorkMessage = cancelWorkMessage,
+			errorMessage = errorMessage
 		)
 	}
 
@@ -148,8 +145,8 @@ abstract class WorkViewModel(
 		}
 	}
 
-	private fun onWorkRunning(workState: WorkState.Running) = updateUiState {
-		copy(
+	private fun onWorkRunning(workState: WorkState.Running) = _uiState.update {
+		it.copy(
 			status = workState.status,
 			progressData = workState.progressData
 		)
@@ -162,16 +159,16 @@ abstract class WorkViewModel(
 			LocalizedString.resource(R.string.exception),
 			LocalizedString.raw(stackTrace)
 		)
-		updateUiState {
-			val errorUiMessage = errorMessage.copy(data = message)
-			copy(errorMessage = errorUiMessage)
+		_uiState.update {
+			val errorMessage = it.errorMessage.copy(data = message)
+			it.copy(errorMessage = errorMessage)
 		}
 	}
 
 	private fun onWorkSucceeded() {
-		updateUiState {
-			val maxProgress = progressData.copy(progress = progressData.max)
-			copy(
+		_uiState.update {
+			val maxProgress = it.progressData.copy(progress = it.progressData.max)
+			it.copy(
 				status = LocalizedString.resource(R.string.status_succeeded),
 				progressData = maxProgress,
 				isWorkSuccessful = true
@@ -179,7 +176,7 @@ abstract class WorkViewModel(
 		}
 	}
 
-	private fun onWorkCanceled() = updateUiState {
-		copy(isWorkCanceled = true)
+	private fun onWorkCanceled() = _uiState.update {
+		it.copy(isWorkCanceled = true)
 	}
 }

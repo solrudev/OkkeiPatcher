@@ -2,6 +2,7 @@ package solru.okkeipatcher.ui.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import solru.okkeipatcher.R
 import solru.okkeipatcher.domain.model.LocalizedString
@@ -26,9 +27,9 @@ class RestoreViewModel @Inject constructor(
 				val title = LocalizedString.resource(R.string.warning_start_restore_title)
 				val message = LocalizedString.resource(R.string.warning_abort)
 				val startMessage = Message(title, message)
-				updateUiState {
-					val startWorkUiMessage = startWorkMessage.copy(data = startMessage)
-					copy(startWorkMessage = startWorkUiMessage)
+				_uiState.update {
+					val startWorkMessage = it.startWorkMessage.copy(data = startMessage)
+					it.copy(startWorkMessage = startWorkMessage)
 				}
 			}
 		}
