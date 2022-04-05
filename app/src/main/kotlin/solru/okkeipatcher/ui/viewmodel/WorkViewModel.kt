@@ -5,10 +5,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.*
 import solru.okkeipatcher.R
 import solru.okkeipatcher.domain.model.LocalizedString
 import solru.okkeipatcher.domain.model.Message
@@ -110,7 +107,7 @@ abstract class WorkViewModel(
 	} ?: false
 
 	protected fun updateUiState(reduce: WorkUiState.() -> WorkUiState) {
-		_uiState.value = _uiState.value.reduce()
+		_uiState.update { it.reduce() }
 	}
 
 	private fun setIsButtonEnabled(value: Boolean) {

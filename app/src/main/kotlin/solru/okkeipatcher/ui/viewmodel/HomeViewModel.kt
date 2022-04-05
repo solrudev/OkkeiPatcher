@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import solru.okkeipatcher.domain.AppKey
 import solru.okkeipatcher.domain.usecase.app.GetIsAppUpdateAvailableUseCase
@@ -51,7 +52,7 @@ class HomeViewModel @Inject constructor(
 	}
 
 	private fun updateUiState(reduce: HomeUiState.() -> HomeUiState) {
-		_uiState.value = _uiState.value.reduce()
+		_uiState.update { it.reduce() }
 	}
 
 	private fun isPatched() = Preferences.get(AppKey.is_patched.name, false)
