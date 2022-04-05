@@ -1,4 +1,4 @@
-package solru.okkeipatcher.data.repository
+package solru.okkeipatcher.data.repository.app
 
 import solru.okkeipatcher.R
 import solru.okkeipatcher.data.network.api.OkkeiPatcherApi
@@ -7,7 +7,7 @@ import solru.okkeipatcher.domain.OkkeiStorage
 import solru.okkeipatcher.domain.exception.LocalizedException
 import solru.okkeipatcher.domain.model.LocalizedString
 import solru.okkeipatcher.domain.operation.AbstractOperation
-import solru.okkeipatcher.domain.repository.OkkeiPatcherRepository
+import solru.okkeipatcher.domain.repository.app.OkkeiPatcherRepository
 import solru.okkeipatcher.io.service.HttpDownloader
 import solru.okkeipatcher.io.util.extension.download
 import solru.okkeipatcher.util.appVersionCode

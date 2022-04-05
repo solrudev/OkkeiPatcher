@@ -14,16 +14,18 @@ import solru.okkeipatcher.domain.model.LocalizedString
 import solru.okkeipatcher.domain.model.Message
 import solru.okkeipatcher.domain.model.Work
 import solru.okkeipatcher.domain.model.WorkState
-import solru.okkeipatcher.domain.usecase.common.ClearNotificationsUseCase
+import solru.okkeipatcher.domain.usecase.work.CancelWorkUseCase
 import solru.okkeipatcher.domain.usecase.work.CompleteWorkUseCase
 import solru.okkeipatcher.domain.usecase.work.GetIsWorkPendingUseCase
+import solru.okkeipatcher.domain.usecase.work.GetWorkStateFlowUseCase
 import solru.okkeipatcher.ui.model.MessageUiState
 import solru.okkeipatcher.ui.model.WorkUiState
 
 abstract class WorkViewModel(
+	private val getWorkStateFlowUseCase: GetWorkStateFlowUseCase,
+	private val cancelWorkUseCase: CancelWorkUseCase,
 	private val completeWorkUseCase: CompleteWorkUseCase,
-	private val getIsWorkPendingUseCase: GetIsWorkPendingUseCase,
-	private val clearNotificationsUseCase: ClearNotificationsUseCase
+	private val getIsWorkPendingUseCase: GetIsWorkPendingUseCase
 ) : ViewModel(), DefaultLifecycleObserver {
 
 	protected abstract val work: Work?
@@ -43,7 +45,9 @@ abstract class WorkViewModel(
 	}
 
 	fun cancelWork() {
-		work?.cancel()
+		work?.let {
+			cancelWorkUseCase(it)
+		}
 	}
 
 	override fun onCleared() {
@@ -126,25 +130,25 @@ abstract class WorkViewModel(
 		)
 	}
 
-	private fun Work?.observe() = workObservingScope.launch {
-		this@observe?.state
-			?.takeUnless { isWorkObserved }
-			?.onStart { isWorkObserved = true }
-			?.onCompletion { isWorkObserved = false }
-			?.collect { workState ->
-				if (workState.isFinished) {
-					work?.let {
-						completeWorkUseCase(it)
+	private fun Work?.observe() = this?.let { work ->
+		workObservingScope.launch {
+			getWorkStateFlowUseCase(work)
+				.takeUnless { isWorkObserved }
+				?.onStart { isWorkObserved = true }
+				?.onCompletion { isWorkObserved = false }
+				?.collect { workState ->
+					if (workState.isFinished) {
+						completeWorkUseCase(work)
+					}
+					when (workState) {
+						is WorkState.Running -> onWorkRunning(workState)
+						is WorkState.Failed -> onWorkFailed(workState)
+						is WorkState.Succeeded -> onWorkSucceeded()
+						is WorkState.Canceled -> onWorkCanceled()
+						is WorkState.Unknown -> {}
 					}
 				}
-				when (workState) {
-					is WorkState.Running -> onWorkRunning(workState)
-					is WorkState.Failed -> onWorkFailed(workState)
-					is WorkState.Succeeded -> onWorkSucceeded()
-					is WorkState.Canceled -> onWorkCanceled()
-					is WorkState.Unknown -> {}
-				}
-			}
+		}
 	}
 
 	private fun onWorkRunning(workState: WorkState.Running) = updateUiState {
@@ -165,7 +169,6 @@ abstract class WorkViewModel(
 			val errorUiMessage = errorMessage.copy(data = message)
 			copy(errorMessage = errorUiMessage)
 		}
-		clearNotificationsUseCase()
 	}
 
 	private fun onWorkSucceeded() {
@@ -177,7 +180,6 @@ abstract class WorkViewModel(
 				isWorkSuccessful = true
 			)
 		}
-		clearNotificationsUseCase()
 	}
 
 	private fun onWorkCanceled() = updateUiState {

@@ -1,9 +1,11 @@
 package solru.okkeipatcher.ui.fragment
 
+import android.app.NotificationManager
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.getSystemService
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -17,6 +19,7 @@ import solru.okkeipatcher.R
 import solru.okkeipatcher.databinding.FragmentWorkBinding
 import solru.okkeipatcher.domain.model.Message
 import solru.okkeipatcher.domain.model.ProgressData
+import solru.okkeipatcher.ui.model.isWorkFinished
 import solru.okkeipatcher.ui.util.extension.copyTextToClipboard
 import solru.okkeipatcher.ui.util.extension.showWithLifecycle
 import solru.okkeipatcher.ui.viewmodel.WorkViewModel
@@ -51,6 +54,9 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 	private fun CoroutineScope.observeUiState() = launch {
 		viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 			viewModel.uiState.collect { uiState ->
+				if (uiState.isWorkFinished) {
+					clearNotifications()
+				}
 				binding.progressbarWorkLoading.isVisible = uiState.isLoading
 				binding.buttonWork.isEnabled = uiState.isButtonEnabled
 				if (uiState.isWorkSuccessful) {
@@ -78,6 +84,11 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 				}
 			}
 		}
+	}
+
+	private fun clearNotifications() {
+		val notificationManager = requireContext().getSystemService<NotificationManager>()
+		notificationManager?.cancelAll()
 	}
 
 	private fun onWorkSuccess() {

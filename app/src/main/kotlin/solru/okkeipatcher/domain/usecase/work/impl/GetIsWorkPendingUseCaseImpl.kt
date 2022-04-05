@@ -1,7 +1,7 @@
 package solru.okkeipatcher.domain.usecase.work.impl
 
 import solru.okkeipatcher.domain.model.Work
-import solru.okkeipatcher.domain.repository.WorkRepository
+import solru.okkeipatcher.domain.repository.work.WorkRepository
 import solru.okkeipatcher.domain.usecase.work.GetIsWorkPendingUseCase
 import javax.inject.Inject
 

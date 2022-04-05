@@ -1,4 +1,4 @@
-package solru.okkeipatcher.domain.repository
+package solru.okkeipatcher.domain.repository.app
 
 import solru.okkeipatcher.data.network.model.OkkeiPatcherChangelogDto
 import solru.okkeipatcher.domain.operation.Operation

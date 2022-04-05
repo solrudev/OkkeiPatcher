@@ -7,21 +7,18 @@ import solru.okkeipatcher.R
 import solru.okkeipatcher.domain.model.LocalizedString
 import solru.okkeipatcher.domain.model.Message
 import solru.okkeipatcher.domain.model.Work
-import solru.okkeipatcher.domain.usecase.common.ClearNotificationsUseCase
-import solru.okkeipatcher.domain.usecase.work.CompleteWorkUseCase
-import solru.okkeipatcher.domain.usecase.work.EnqueueRestoreWorkUseCase
-import solru.okkeipatcher.domain.usecase.work.GetIsWorkPendingUseCase
-import solru.okkeipatcher.domain.usecase.work.GetRestoreWorkUseCase
+import solru.okkeipatcher.domain.usecase.work.*
 import javax.inject.Inject
 
 @HiltViewModel
 class RestoreViewModel @Inject constructor(
 	private val enqueueRestoreWorkUseCase: EnqueueRestoreWorkUseCase,
 	private val getRestoreWorkUseCase: GetRestoreWorkUseCase,
+	getWorkStateFlowUseCase: GetWorkStateFlowUseCase,
+	cancelWorkUseCase: CancelWorkUseCase,
 	completeWorkUseCase: CompleteWorkUseCase,
-	getIsWorkPendingUseCase: GetIsWorkPendingUseCase,
-	clearNotificationsUseCase: ClearNotificationsUseCase
-) : WorkViewModel(completeWorkUseCase, getIsWorkPendingUseCase, clearNotificationsUseCase) {
+	getIsWorkPendingUseCase: GetIsWorkPendingUseCase
+) : WorkViewModel(getWorkStateFlowUseCase, cancelWorkUseCase, completeWorkUseCase, getIsWorkPendingUseCase) {
 
 	init {
 		viewModelScope.launch {

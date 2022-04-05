@@ -38,8 +38,4 @@ class RestoreWorker @AssistedInject constructor(
 		.setGraph(R.navigation.okkei_nav_graph)
 		.setDestination(R.id.restore_fragment)
 		.createPendingIntent()
-
-	companion object {
-		const val WORK_NAME = "OKKEI_PATCHER_RESTORE_WORK"
-	}
 }

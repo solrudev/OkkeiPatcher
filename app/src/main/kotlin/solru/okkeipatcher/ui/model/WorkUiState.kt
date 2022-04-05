@@ -14,3 +14,6 @@ data class WorkUiState(
 	val cancelWorkMessage: MessageUiState = MessageUiState(),
 	val errorMessage: MessageUiState = MessageUiState()
 )
+
+val WorkUiState.isWorkFinished: Boolean
+	get() = isWorkSuccessful || isWorkCanceled || errorMessage.data != null

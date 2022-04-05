@@ -7,12 +7,8 @@ import solru.okkeipatcher.R
 import solru.okkeipatcher.domain.model.LocalizedString
 import solru.okkeipatcher.domain.model.Message
 import solru.okkeipatcher.domain.model.Work
-import solru.okkeipatcher.domain.usecase.common.ClearNotificationsUseCase
 import solru.okkeipatcher.domain.usecase.patch.GetPatchSizeInMbUseCase
-import solru.okkeipatcher.domain.usecase.work.CompleteWorkUseCase
-import solru.okkeipatcher.domain.usecase.work.EnqueuePatchWorkUseCase
-import solru.okkeipatcher.domain.usecase.work.GetIsWorkPendingUseCase
-import solru.okkeipatcher.domain.usecase.work.GetPatchWorkUseCase
+import solru.okkeipatcher.domain.usecase.work.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,10 +16,16 @@ class PatchViewModel @Inject constructor(
 	private val enqueuePatchWorkUseCase: EnqueuePatchWorkUseCase,
 	private val getPatchWorkUseCase: GetPatchWorkUseCase,
 	private val getPatchSizeInMbUseCase: GetPatchSizeInMbUseCase,
+	getWorkStateFlowUseCase: GetWorkStateFlowUseCase,
+	cancelWorkUseCase: CancelWorkUseCase,
 	completeWorkUseCase: CompleteWorkUseCase,
-	getIsWorkPendingUseCase: GetIsWorkPendingUseCase,
-	clearNotificationsUseCase: ClearNotificationsUseCase
-) : WorkViewModel(completeWorkUseCase, getIsWorkPendingUseCase, clearNotificationsUseCase) {
+	getIsWorkPendingUseCase: GetIsWorkPendingUseCase
+) : WorkViewModel(
+	getWorkStateFlowUseCase,
+	cancelWorkUseCase,
+	completeWorkUseCase,
+	getIsWorkPendingUseCase
+) {
 
 	init {
 		viewModelScope.launch {

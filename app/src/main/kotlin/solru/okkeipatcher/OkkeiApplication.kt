@@ -52,6 +52,10 @@ class OkkeiApplication : Application(), Configuration.Provider {
 		}
 	}
 
+	override fun getWorkManagerConfiguration() = Configuration.Builder()
+		.setWorkerFactory(workerFactory)
+		.build()
+
 	private fun initIsPatchedPreference() {
 		if (Preferences.containsKey(AppKey.is_patched.name)) return
 		Preferences.set(AppKey.is_patched.name, false)
@@ -85,10 +89,6 @@ class OkkeiApplication : Application(), Configuration.Provider {
 		}
 		createNotificationChannel(channel)
 	}
-
-	override fun getWorkManagerConfiguration() = Configuration.Builder()
-		.setWorkerFactory(workerFactory)
-		.build()
 
 	companion object {
 

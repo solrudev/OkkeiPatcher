@@ -1,13 +1,6 @@
 package solru.okkeipatcher.domain.model
 
-import androidx.lifecycle.asFlow
 import androidx.work.WorkInfo
-import androidx.work.WorkManager
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.supervisorScope
-import solru.okkeipatcher.OkkeiApplication
 import solru.okkeipatcher.domain.util.extension.getParcelable
 import solru.okkeipatcher.domain.util.extension.getSerializable
 import solru.okkeipatcher.domain.worker.ForegroundWorker
@@ -16,36 +9,7 @@ import java.util.*
 /**
  * Represents long-running work.
  */
-data class Work(
-	val id: UUID
-) {
-
-	/**
-	 * A cold [Flow] of [WorkState] for this work.
-	 */
-	val state: Flow<WorkState>
-		get() = flow {
-			supervisorScope {
-				WorkManager.getInstance(OkkeiApplication.context)
-					.getWorkInfoByIdLiveData(id)
-					.asFlow()
-					.collect { workInfo ->
-						val workState = workInfo.asWorkState()
-						emit(workState)
-						if (workState.isFinished) {
-							this@supervisorScope.cancel()
-						}
-					}
-			}
-		}
-
-	/**
-	 * Cancels this work.
-	 */
-	fun cancel() {
-		WorkManager.getInstance(OkkeiApplication.context).cancelWorkById(id)
-	}
-}
+data class Work(val id: UUID)
 
 /**
  * Represents a [Work] state.

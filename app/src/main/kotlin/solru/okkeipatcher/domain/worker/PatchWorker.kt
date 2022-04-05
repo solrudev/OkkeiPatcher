@@ -41,8 +41,4 @@ class PatchWorker @AssistedInject constructor(
 		.setGraph(R.navigation.okkei_nav_graph)
 		.setDestination(R.id.patch_fragment)
 		.createPendingIntent()
-
-	companion object {
-		const val WORK_NAME = "OKKEI_PATCHER_PATCH_WORK"
-	}
 }

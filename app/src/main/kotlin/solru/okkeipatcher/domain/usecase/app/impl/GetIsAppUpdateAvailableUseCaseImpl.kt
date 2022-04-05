@@ -1,6 +1,6 @@
 package solru.okkeipatcher.domain.usecase.app.impl
 
-import solru.okkeipatcher.domain.repository.OkkeiPatcherRepository
+import solru.okkeipatcher.domain.repository.app.OkkeiPatcherRepository
 import solru.okkeipatcher.domain.usecase.app.GetIsAppUpdateAvailableUseCase
 import solru.okkeipatcher.io.exception.NetworkNotAvailableException
 import javax.inject.Inject
