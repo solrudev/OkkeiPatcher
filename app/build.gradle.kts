@@ -1,7 +1,7 @@
 import java.io.FileInputStream
 import java.util.*
 
-val packageName = "solru.okkeipatcher"
+val packageName = "ru.solrudev.okkeipatcher"
 val androidGradleVersion: String by rootProject.extra
 val hiltVersion: String by rootProject.extra
 val ktorVersion: String by rootProject.extra
