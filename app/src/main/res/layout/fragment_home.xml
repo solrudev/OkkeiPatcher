@@ -16,7 +16,7 @@
 		app:layout_constraintTop_toTopOf="parent"
 		app:srcCompat="@drawable/okkei" />
 
-	<com.google.android.material.button.MaterialButton
+	<Button
 		android:id="@+id/button_main_patch"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
@@ -27,7 +27,7 @@
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@id/imageview_main_okkei" />
 
-	<com.google.android.material.button.MaterialButton
+	<Button
 		android:id="@+id/button_main_restore"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"

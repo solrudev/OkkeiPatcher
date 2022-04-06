@@ -16,7 +16,7 @@
 		app:layout_constraintTop_toTopOf="parent"
 		app:srcCompat="@drawable/okkei" />
 
-	<com.google.android.material.button.MaterialButton
+	<Button
 		android:id="@+id/button_work"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent" />
 
-	<com.google.android.material.textview.MaterialTextView
+	<TextView
 		android:id="@+id/textview_work_status"
 		android:layout_width="wrap_content"
 		android:layout_height="0dp"
@@ -37,7 +37,7 @@
 		app:layout_constraintBottom_toTopOf="@id/progressbar_work"
 		app:layout_constraintStart_toStartOf="@id/progressbar_work" />
 
-	<com.google.android.material.textview.MaterialTextView
+	<TextView
 		android:id="@+id/textview_work_percent_done"
 		android:layout_width="wrap_content"
 		android:layout_height="0dp"
