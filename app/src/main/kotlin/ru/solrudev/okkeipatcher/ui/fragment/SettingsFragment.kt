@@ -16,7 +16,7 @@ import ru.solrudev.okkeipatcher.ui.viewmodel.SettingsViewModel
 @AndroidEntryPoint
 class SettingsFragment : PreferenceFragmentCompat() {
 
-	private val settingsViewModel: SettingsViewModel by viewModels()
+	private val viewModel by viewModels<SettingsViewModel>()
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)

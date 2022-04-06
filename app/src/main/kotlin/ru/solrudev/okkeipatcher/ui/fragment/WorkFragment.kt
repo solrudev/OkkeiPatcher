@@ -56,9 +56,6 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 	private fun CoroutineScope.observeUiState() = launch {
 		viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 			viewModel.uiState.collect { uiState ->
-				if (uiState.isWorkFinished) {
-					clearNotifications()
-				}
 				binding.progressbarWorkLoading.isVisible = uiState.isLoading
 				binding.buttonWork.isEnabled = uiState.isButtonEnabled
 				if (uiState.isWorkSuccessful) {
@@ -83,6 +80,9 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 					if (!isVisible && data != null) {
 						showErrorMessage(data)
 					}
+				}
+				if (uiState.isWorkFinished) {
+					clearNotifications()
 				}
 			}
 		}

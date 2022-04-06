@@ -6,5 +6,5 @@ import ru.solrudev.okkeipatcher.ui.viewmodel.PatchViewModel
 
 @AndroidEntryPoint
 class PatchFragment : WorkFragment<PatchViewModel>() {
-	override val viewModel: PatchViewModel by viewModels()
+	override val viewModel by viewModels<PatchViewModel>()
 }

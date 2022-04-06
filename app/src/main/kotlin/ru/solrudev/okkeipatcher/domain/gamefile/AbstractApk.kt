@@ -290,8 +290,7 @@ abstract class AbstractApk(
 			.applicationInfo
 			.publicSourceDir
 		val installedApk = JavaFile(File(installedApkPath), streamCopier)
-		val hash = installedApk.copyTo(destinationFile, hashing).invoke()
-		hash
+		installedApk.copyTo(destinationFile, hashing).invoke()
 	}
 
 	@Suppress("BlockingMethodInNonBlockingContext")

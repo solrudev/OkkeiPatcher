@@ -118,11 +118,9 @@ class OkkeiApplication : Application(), Configuration.Provider {
 				addTransportType(NetworkCapabilities.TRANSPORT_ETHERNET)
 			}.build()
 			val networkCallback = object : ConnectivityManager.NetworkCallback() {
-
 				override fun onAvailable(network: Network) {
 					_isNetworkAvailable = true
 				}
-
 				override fun onLost(network: Network) {
 					_isNetworkAvailable = false
 				}

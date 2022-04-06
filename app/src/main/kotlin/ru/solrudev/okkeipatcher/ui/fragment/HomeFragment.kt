@@ -21,7 +21,7 @@ import ru.solrudev.okkeipatcher.ui.viewmodel.HomeViewModel
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
-	private val viewModel: HomeViewModel by viewModels()
+	private val viewModel by viewModels<HomeViewModel>()
 	private val binding by viewBinding(FragmentHomeBinding::bind)
 
 	override fun onCreate(savedInstanceState: Bundle?) {

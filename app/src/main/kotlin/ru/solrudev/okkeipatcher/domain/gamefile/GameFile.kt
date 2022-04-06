@@ -20,9 +20,13 @@ interface Patchable {
 interface PatchableGameFile : GameFile, Patchable
 
 interface Apk : PatchableGameFile, AutoCloseable {
+
 	companion object {
+
 		const val PACKAGE_NAME = "com.mages.chaoschild_jp"
-		val isInstalled get() = isPackageInstalled(PACKAGE_NAME)
+
+		val isInstalled: Boolean
+			get() = isPackageInstalled(PACKAGE_NAME)
 	}
 }
 

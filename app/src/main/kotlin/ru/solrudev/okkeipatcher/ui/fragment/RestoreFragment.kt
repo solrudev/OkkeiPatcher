@@ -6,5 +6,5 @@ import ru.solrudev.okkeipatcher.ui.viewmodel.RestoreViewModel
 
 @AndroidEntryPoint
 class RestoreFragment : WorkFragment<RestoreViewModel>() {
-	override val viewModel: RestoreViewModel by viewModels()
+	override val viewModel by viewModels<RestoreViewModel>()
 }
