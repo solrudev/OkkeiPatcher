@@ -33,6 +33,7 @@ android {
 		versionCode = 42
 		versionName = "2.0.0"
 		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+		vectorDrawables.useSupportLibrary = true
 	}
 
 	signingConfigs {

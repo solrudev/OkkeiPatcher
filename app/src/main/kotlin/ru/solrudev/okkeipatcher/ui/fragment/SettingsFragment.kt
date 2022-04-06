@@ -2,12 +2,15 @@ package ru.solrudev.okkeipatcher.ui.fragment
 
 import android.os.Bundle
 import android.view.Menu
+import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import com.google.android.material.color.MaterialColors
 import dagger.hilt.android.AndroidEntryPoint
 import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.ui.util.extension.setupTransitions
 import ru.solrudev.okkeipatcher.ui.viewmodel.SettingsViewModel
 
 @AndroidEntryPoint
@@ -18,6 +21,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setHasOptionsMenu(true)
+		setupTransitions()
+	}
+
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		super.onViewCreated(view, savedInstanceState)
+		// Workaround for a bug in transition
+		val colorBackground = MaterialColors.getColor(view, android.R.attr.colorBackground)
+		view.setBackgroundColor(colorBackground)
 	}
 
 	override fun onPrepareOptionsMenu(menu: Menu) {

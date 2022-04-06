@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import by.kirich1409.viewbindingdelegate.viewBinding
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.databinding.FragmentAboutBinding
+import ru.solrudev.okkeipatcher.ui.util.extension.setupTransitions
 import ru.solrudev.okkeipatcher.util.appVersionCode
 import ru.solrudev.okkeipatcher.util.appVersionString
 
@@ -17,6 +18,7 @@ class AboutFragment : Fragment(R.layout.fragment_about) {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setHasOptionsMenu(true)
+		setupTransitions()
 	}
 
 	override fun onPrepareOptionsMenu(menu: Menu) {

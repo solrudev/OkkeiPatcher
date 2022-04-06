@@ -15,19 +15,18 @@
 		app:layout_constraintStart_toStartOf="parent"
 		app:srcCompat="@mipmap/ic_launcher" />
 
-	<TextView
+	<com.google.android.material.textview.MaterialTextView
 		android:id="@+id/textview_about_app_name"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:text="@string/app_name"
-		android:textColor="@color/white"
 		android:textSize="28sp"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent" />
 
-	<TextView
+	<com.google.android.material.textview.MaterialTextView
 		android:id="@+id/textview_about_version"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"

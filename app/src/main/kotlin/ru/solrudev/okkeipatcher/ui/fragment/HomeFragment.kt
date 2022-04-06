@@ -15,6 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.databinding.FragmentHomeBinding
+import ru.solrudev.okkeipatcher.ui.util.extension.setupTransitions
 import ru.solrudev.okkeipatcher.ui.viewmodel.HomeViewModel
 
 @AndroidEntryPoint
@@ -22,6 +23,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
 	private val viewModel: HomeViewModel by viewModels()
 	private val binding by viewBinding(FragmentHomeBinding::bind)
+
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		setupTransitions()
+	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		setupNavigation()

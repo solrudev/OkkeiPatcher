@@ -4,7 +4,6 @@ import android.app.NotificationManager
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.getSystemService
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -13,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import ru.solrudev.okkeipatcher.R
@@ -21,6 +21,7 @@ import ru.solrudev.okkeipatcher.domain.model.Message
 import ru.solrudev.okkeipatcher.domain.model.ProgressData
 import ru.solrudev.okkeipatcher.ui.model.isWorkFinished
 import ru.solrudev.okkeipatcher.ui.util.extension.copyTextToClipboard
+import ru.solrudev.okkeipatcher.ui.util.extension.setupTransitions
 import ru.solrudev.okkeipatcher.ui.util.extension.showWithLifecycle
 import ru.solrudev.okkeipatcher.ui.viewmodel.WorkViewModel
 
@@ -32,6 +33,7 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setHasOptionsMenu(true)
+		setupTransitions()
 	}
 
 	override fun onPrepareOptionsMenu(menu: Menu) {
@@ -150,10 +152,10 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 		viewModel.showErrorMessage()
 	}
 
-	private fun createDialogBuilder(message: Message): AlertDialog.Builder {
+	private fun createDialogBuilder(message: Message): MaterialAlertDialogBuilder {
 		val titleString = message.title.resolve(requireContext())
 		val messageString = message.message.resolve(requireContext())
-		return AlertDialog.Builder(requireContext())
+		return MaterialAlertDialogBuilder(requireContext())
 			.setCancelable(true)
 			.setTitle(titleString)
 			.setMessage(messageString)

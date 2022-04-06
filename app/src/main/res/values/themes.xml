@@ -1,89 +1,41 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-	<!-- Base application theme. -->
-	<style name="Theme.OkkeiPatcher" parent="Theme.MaterialComponents">
-		<!-- Primary brand color. -->
-		<item name="colorPrimary">@color/colorPrimary</item>
-		<item name="colorPrimaryDark">@color/colorPrimary</item>
-		<item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
-		<item name="colorOnPrimary">@color/colorOnPrimary</item>
-		<!-- Secondary brand color. -->
-		<item name="colorSecondary">@color/colorPrimary</item>
-		<item name="colorSecondaryVariant">@color/colorPrimaryVariant</item>
-		<item name="colorOnSecondary">@color/colorOnPrimary</item>
-		<!-- Status bar color. -->
-		<item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
-		<!-- Customize your theme here. -->
-		<item name="colorOnSurface">@color/colorPrimary</item>
-		<item name="android:colorBackground">@color/background_material_dark</item>
-		<item name="actionBarTheme">@style/ThemeOverlay.App.ActionBar</item>
-		<item name="materialButtonStyle">@style/Widget.App.Button</item>
-		<item name="alertDialogTheme">@style/AlertDialogTheme</item>
-		<item name="snackbarStyle">@style/Widget.App.Snackbar</item>
-		<item name="snackbarTextViewStyle">@style/Widget.App.Snackbar.TextView</item>
-		<item name="toolbarStyle">@style/Widget.App.Toolbar</item>
-		<item name="checkboxStyle">@style/Widget.App.CheckBox</item>
+<resources>
+
+	<style name="Base.V19.Theme.OkkeiPatcher" parent="Theme.Material3.Light">
+		<item name="colorPrimary">@color/md_theme_light_primary</item>
+		<item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
+		<item name="colorPrimaryContainer">@color/md_theme_light_primaryContainer</item>
+		<item name="colorOnPrimaryContainer">@color/md_theme_light_onPrimaryContainer</item>
+		<item name="colorSecondary">@color/md_theme_light_secondary</item>
+		<item name="colorOnSecondary">@color/md_theme_light_onSecondary</item>
+		<item name="colorSecondaryContainer">@color/md_theme_light_secondaryContainer</item>
+		<item name="colorOnSecondaryContainer">@color/md_theme_light_onSecondaryContainer</item>
+		<item name="colorTertiary">@color/md_theme_light_tertiary</item>
+		<item name="colorOnTertiary">@color/md_theme_light_onTertiary</item>
+		<item name="colorTertiaryContainer">@color/md_theme_light_tertiaryContainer</item>
+		<item name="colorOnTertiaryContainer">@color/md_theme_light_onTertiaryContainer</item>
+		<item name="colorError">@color/md_theme_light_error</item>
+		<item name="colorErrorContainer">@color/md_theme_light_errorContainer</item>
+		<item name="colorOnError">@color/md_theme_light_onError</item>
+		<item name="colorOnErrorContainer">@color/md_theme_light_onErrorContainer</item>
+		<item name="android:colorBackground">@color/md_theme_light_background</item>
+		<item name="colorOnBackground">@color/md_theme_light_onBackground</item>
+		<item name="colorSurface">@color/md_theme_light_surface</item>
+		<item name="colorOnSurface">@color/md_theme_light_onSurface</item>
+		<item name="colorSurfaceVariant">@color/md_theme_light_surfaceVariant</item>
+		<item name="colorOnSurfaceVariant">@color/md_theme_light_onSurfaceVariant</item>
+		<item name="colorOutline">@color/md_theme_light_outline</item>
+		<item name="colorOnSurfaceInverse">@color/md_theme_light_inverseOnSurface</item>
+		<item name="colorSurfaceInverse">@color/md_theme_light_inverseSurface</item>
+		<item name="colorPrimaryInverse">@color/md_theme_light_primaryInverse</item>
+		<item name="android:shadowColor">@color/md_theme_light_shadow</item>
 	</style>
+
+	<style name="Base.Theme.OkkeiPatcher" parent="Base.V19.Theme.OkkeiPatcher" />
+
+	<style name="Theme.OkkeiPatcher" parent="Base.Theme.OkkeiPatcher" />
 
 	<style name="Theme.OkkeiPatcher.NoActionBar">
 		<item name="windowActionBar">false</item>
 		<item name="windowNoTitle">true</item>
-	</style>
-
-	<style name="ThemeOverlay.App.ActionBar" parent="ThemeOverlay.MaterialComponents.ActionBar">
-		<item name="android:textColorPrimary">@color/white</item>
-	</style>
-
-	<style name="Widget.App.Button" parent="Widget.MaterialComponents.Button">
-		<item name="backgroundTint">@color/btn_bg_color_selector</item>
-		<item name="android:textColor">@color/btn_text_color_selector</item>
-	</style>
-
-	<style name="AlertDialogTheme" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
-		<item name="buttonBarNeutralButtonStyle">@style/NeutralButtonStyle</item>
-		<item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
-		<item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
-	</style>
-
-	<style name="NeutralButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
-		<item name="android:textColor">@color/colorPrimaryVariant</item>
-	</style>
-
-	<style name="NegativeButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
-		<item name="android:textColor">@color/colorPrimaryVariant</item>
-	</style>
-
-	<style name="PositiveButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
-		<item name="android:textColor">@color/colorPrimaryVariant</item>
-	</style>
-
-	<style name="Widget.App.Snackbar" parent="Widget.MaterialComponents.Snackbar">
-		<item name="materialThemeOverlay">@style/ThemeOverlay.App.Snackbar</item>
-	</style>
-
-	<style name="ThemeOverlay.App.Snackbar" parent="">
-		<item name="colorPrimary">@color/colorPrimaryVariant</item>
-		<item name="colorOnSurface">@color/material_grey_800</item>
-	</style>
-
-	<style name="Widget.App.Snackbar.TextView" parent="Widget.MaterialComponents.Snackbar.TextView">
-		<item name="android:textColor">@android:color/white</item>
-	</style>
-
-	<style name="Widget.App.Toolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
-		<item name="materialThemeOverlay">@style/ThemeOverlay.App.Toolbar</item>
-	</style>
-
-	<style name="ThemeOverlay.App.Toolbar" parent="">
-		<item name="colorPrimary">@color/colorPrimary</item>
-		<item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
-		<item name="colorOnPrimary">@color/colorOnPrimary</item>
-	</style>
-
-	<style name="Widget.App.CheckBox" parent="Widget.MaterialComponents.CompoundButton.CheckBox">
-		<item name="materialThemeOverlay">@style/ThemeOverlay.App.CheckBox</item>
-	</style>
-
-	<style name="ThemeOverlay.App.CheckBox" parent="">
-		<item name="colorOnSurface">@color/colorOnPrimary</item>
 	</style>
 </resources>

@@ -2,20 +2,18 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/okkei_nav_host_container"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:id="@+id/okkei_nav_host_container"
 	android:splitMotionEvents="false">
 
-	<androidx.appcompat.widget.Toolbar
+	<com.google.android.material.appbar.MaterialToolbar
 		android:id="@+id/toolbar"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:background="?attr/colorPrimary"
-		android:minHeight="?attr/actionBarSize"
+		android:layout_height="?attr/actionBarSize"
 		android:splitMotionEvents="false"
-		android:theme="?attr/actionBarTheme"
-		app:layout_constraintTop_toTopOf="parent" />
+		app:layout_constraintTop_toTopOf="parent"
+		app:menu="@menu/okkei_menu" />
 
 	<androidx.fragment.app.FragmentContainerView
 		android:id="@+id/okkei_nav_host_content"
@@ -28,6 +26,6 @@
 		app:layout_constraintRight_toRightOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/toolbar"
 		app:navGraph="@navigation/okkei_nav_graph"
-		tools:layout="@layout/fragment_about" />
+		tools:layout="@layout/fragment_home" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
