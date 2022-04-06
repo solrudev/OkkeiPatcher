@@ -19,7 +19,6 @@ import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.databinding.FragmentWorkBinding
 import ru.solrudev.okkeipatcher.domain.model.Message
 import ru.solrudev.okkeipatcher.domain.model.ProgressData
-import ru.solrudev.okkeipatcher.ui.model.isWorkFinished
 import ru.solrudev.okkeipatcher.ui.util.extension.copyTextToClipboard
 import ru.solrudev.okkeipatcher.ui.util.extension.setupTransitions
 import ru.solrudev.okkeipatcher.ui.util.extension.showWithLifecycle
@@ -81,9 +80,6 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 						showErrorMessage(data)
 					}
 				}
-				if (uiState.isWorkFinished) {
-					clearNotifications()
-				}
 			}
 		}
 	}
@@ -98,6 +94,7 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 			findNavController().popBackStack()
 		}
 		binding.buttonWork.setText(android.R.string.ok)
+		clearNotifications()
 	}
 
 	private fun setProgress(progressData: ProgressData) {
@@ -150,6 +147,7 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 			}
 			.showWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.Event.ON_STOP)
 		viewModel.showErrorMessage()
+		clearNotifications()
 	}
 
 	private fun createDialogBuilder(message: Message): MaterialAlertDialogBuilder {
