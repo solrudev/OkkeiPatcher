@@ -68,6 +68,28 @@ android {
 		}
 	}
 
+	val flavorDimension = "flavor"
+	flavorDimensions.add(flavorDimension)
+
+	productFlavors {
+		create("mock") {
+			dimension = flavorDimension
+			applicationIdSuffix = ".mock"
+			versionNameSuffix = "-mock"
+		}
+		create("prod") {
+			dimension = flavorDimension
+		}
+		sourceSets {
+			named("mock") {
+				kotlin.srcDir("src/mock/kotlin")
+			}
+			named("prod") {
+				kotlin.srcDir("src/prod/kotlin")
+			}
+		}
+	}
+
 	androidResources {
 		noCompress("pem")
 		noCompress("pk8")

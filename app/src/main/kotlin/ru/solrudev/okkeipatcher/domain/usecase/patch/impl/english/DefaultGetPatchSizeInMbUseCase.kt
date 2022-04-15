@@ -26,3 +26,8 @@ class DefaultGetPatchSizeInMbUseCase @Inject constructor(
 		}
 	}
 }
+
+class MockGetPatchSizeInMbUseCase @Inject constructor() : GetPatchSizeInMbUseCase {
+
+	override suspend fun invoke() = 100.0
+}

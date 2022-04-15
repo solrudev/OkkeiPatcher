@@ -42,6 +42,7 @@
 	<string name="notification_message_work_success">Процесс прошёл успешно.</string>
 	<string name="notification_title_patch">Патчинг…</string>
 	<string name="notification_title_restore">Восстановление…</string>
+	<string name="notification_title_test">Тестовый процесс…</string>
 	<string name="notification_title_work_finished">Процесс завершён</string>
 
 	<!--Prompts-->
