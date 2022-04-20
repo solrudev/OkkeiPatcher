@@ -23,7 +23,6 @@ class MockWorker(context: Context, workerParameters: WorkerParameters) : Foregro
 		override val progressMax = stepsCount * 100
 
 		override suspend fun invoke() {
-			_progressDelta.emit(0)
 			repeat(stepsCount) { stepIndex ->
 				val index = stepIndex + 1
 				_status.emit(LocalizedString.raw(index.toString().repeat(10)))
