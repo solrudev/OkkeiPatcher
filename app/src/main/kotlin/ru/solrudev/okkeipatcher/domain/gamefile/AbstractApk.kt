@@ -108,7 +108,6 @@ abstract class AbstractApk(
 		override val progressMax = uninstallOperation.progressMax + installBackupOperation.progressMax
 
 		override suspend fun invoke() {
-			_progressDelta.emit(0)
 			if (!commonFiles.backupApk.exists) {
 				throw LocalizedException(LocalizedString.resource(R.string.error_apk_not_found))
 			}
