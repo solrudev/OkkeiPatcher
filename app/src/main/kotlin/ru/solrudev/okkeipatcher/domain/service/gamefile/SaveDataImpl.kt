@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.domain.gamefile
+package ru.solrudev.okkeipatcher.domain.service.gamefile
 
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.merge

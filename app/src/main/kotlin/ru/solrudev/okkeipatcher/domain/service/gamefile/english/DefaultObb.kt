@@ -1,9 +1,9 @@
-package ru.solrudev.okkeipatcher.domain.gamefile.english
+package ru.solrudev.okkeipatcher.domain.service.gamefile.english
 
 import ru.solrudev.okkeipatcher.di.factory.ObbDownloadOperationFactory
 import ru.solrudev.okkeipatcher.domain.file.common.CommonFiles
-import ru.solrudev.okkeipatcher.domain.gamefile.AbstractObb
 import ru.solrudev.okkeipatcher.domain.repository.patch.DefaultPatchRepository
+import ru.solrudev.okkeipatcher.domain.service.gamefile.AbstractObb
 import javax.inject.Inject
 
 class DefaultObb @Inject constructor(

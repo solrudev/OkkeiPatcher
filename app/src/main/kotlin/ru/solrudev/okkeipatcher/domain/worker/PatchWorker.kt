@@ -9,10 +9,10 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.AppKey
-import ru.solrudev.okkeipatcher.domain.gamefile.strategy.GameFileStrategy
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.operation.Operation
-import ru.solrudev.okkeipatcher.domain.operation.PatchOperation
+import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.GameFileStrategy
+import ru.solrudev.okkeipatcher.domain.service.operation.PatchOperation
 import ru.solrudev.okkeipatcher.domain.usecase.patch.GetPatchUpdatesUseCase
 import ru.solrudev.okkeipatcher.util.Preferences
 

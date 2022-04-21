@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.domain.gamefile
+package ru.solrudev.okkeipatcher.domain.service.gamefile
 
 import com.android.apksig.ApkSigner
 import io.github.solrudev.simpleinstaller.PackageInstaller

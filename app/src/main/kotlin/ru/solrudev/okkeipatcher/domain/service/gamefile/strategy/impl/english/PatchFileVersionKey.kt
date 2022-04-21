@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.domain.gamefile.strategy.impl.english
+package ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.impl.english
 
 @Suppress("EnumEntryName")
 enum class PatchFileVersionKey {

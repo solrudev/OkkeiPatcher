@@ -5,9 +5,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ru.solrudev.okkeipatcher.domain.AppKey
-import ru.solrudev.okkeipatcher.domain.gamefile.strategy.GameFileStrategy
-import ru.solrudev.okkeipatcher.domain.gamefile.strategy.impl.english.DefaultGameFileStrategy
 import ru.solrudev.okkeipatcher.domain.model.Language
+import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.GameFileStrategy
+import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.impl.english.DefaultGameFileStrategy
 import ru.solrudev.okkeipatcher.util.Preferences
 import javax.inject.Provider
 

@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.domain.operation
+package ru.solrudev.okkeipatcher.domain.service.operation
 
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -11,10 +11,13 @@ import ru.solrudev.okkeipatcher.di.module.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.OkkeiStorage
 import ru.solrudev.okkeipatcher.domain.exception.LocalizedException
 import ru.solrudev.okkeipatcher.domain.file.english.PatchFileHashKey
-import ru.solrudev.okkeipatcher.domain.gamefile.AbstractApk
-import ru.solrudev.okkeipatcher.domain.gamefile.strategy.impl.english.PatchFileVersionKey
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
+import ru.solrudev.okkeipatcher.domain.operation.AbstractOperation
+import ru.solrudev.okkeipatcher.domain.operation.AggregateOperation
+import ru.solrudev.okkeipatcher.domain.operation.Operation
 import ru.solrudev.okkeipatcher.domain.repository.patch.ScriptsDataRepository
+import ru.solrudev.okkeipatcher.domain.service.gamefile.AbstractApk
+import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.impl.english.PatchFileVersionKey
 import ru.solrudev.okkeipatcher.domain.util.extension.use
 import ru.solrudev.okkeipatcher.io.file.VerifiableFile
 import ru.solrudev.okkeipatcher.io.service.HttpDownloader

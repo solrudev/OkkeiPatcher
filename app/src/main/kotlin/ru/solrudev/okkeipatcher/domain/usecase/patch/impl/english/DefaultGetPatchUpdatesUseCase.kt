@@ -1,9 +1,9 @@
 package ru.solrudev.okkeipatcher.domain.usecase.patch.impl.english
 
 import ru.solrudev.okkeipatcher.domain.AppKey
-import ru.solrudev.okkeipatcher.domain.gamefile.strategy.impl.english.PatchFileVersionKey
 import ru.solrudev.okkeipatcher.domain.model.patchupdates.DefaultPatchUpdates
 import ru.solrudev.okkeipatcher.domain.repository.patch.DefaultPatchRepository
+import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.impl.english.PatchFileVersionKey
 import ru.solrudev.okkeipatcher.domain.usecase.patch.GetPatchUpdatesUseCase
 import ru.solrudev.okkeipatcher.io.exception.NetworkNotAvailableException
 import ru.solrudev.okkeipatcher.util.Preferences
