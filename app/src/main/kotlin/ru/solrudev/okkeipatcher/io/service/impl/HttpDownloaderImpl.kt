@@ -1,12 +1,10 @@
 package ru.solrudev.okkeipatcher.io.service.impl
 
 import io.ktor.client.*
-import io.ktor.client.call.*
 import io.ktor.client.engine.okhttp.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import io.ktor.utils.io.*
 import io.ktor.utils.io.core.*
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ensureActive
@@ -35,7 +33,7 @@ class HttpDownloaderImpl @Inject constructor(
 	okHttpClient: OkHttpClient
 ) : HttpDownloader {
 
-	private val client: HttpClient by lazy {
+	private val client by lazy {
 		HttpClient(OkHttp) {
 			engine {
 				preconfigured = okHttpClient
@@ -50,11 +48,11 @@ class HttpDownloaderImpl @Inject constructor(
 		hashing: Boolean,
 		onProgressDeltaChanged: suspend (Int) -> Unit
 	) = withContext(ioDispatcher) {
-		client.get<HttpStatement>(url).execute { httpResponse ->
+		client.prepareGet(url).execute { httpResponse ->
 			if (httpResponse.status.value != 200) {
 				throw HttpStatusCodeException(httpResponse.status)
 			}
-			val channel = httpResponse.receive<ByteReadChannel>()
+			val channel = httpResponse.bodyAsChannel()
 			val contentLength = httpResponse.contentLength() ?: Int.MAX_VALUE.toLong()
 			val progressRatio = calculateProgressRatio(contentLength, BUFFER_LENGTH)
 			val progressMax = ceil(contentLength.toDouble() / (BUFFER_LENGTH * progressRatio)).toInt()

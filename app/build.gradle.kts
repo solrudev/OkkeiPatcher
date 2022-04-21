@@ -15,7 +15,7 @@ plugins {
 	id("dagger.hilt.android.plugin")
 	id("androidx.navigation.safeargs.kotlin")
 	id("kotlin-parcelize")
-	id("com.google.devtools.ksp") version "1.6.10-1.0.4"
+	id("com.google.devtools.ksp") version "1.6.21-1.0.5"
 }
 
 base {
@@ -140,18 +140,18 @@ dependencies {
 	val excludeOkHttp = Action<ExternalModuleDependency> {
 		exclude(group = "com.squareup.okhttp3", module = "okhttp")
 	}
-	implementation("com.squareup.okio:okio:3.0.0")
+	implementation("com.squareup.okio:okio:3.1.0")
 	implementation("com.squareup.moshi:moshi:$moshiVersion")
 	implementation("com.squareup.retrofit2:retrofit:$retrofitVersion", excludeOkHttp)
 	implementation("com.squareup.retrofit2:converter-moshi:$retrofitVersion", excludeOkHttp)
-	implementation("io.ktor:ktor-client-okhttp:1.6.8", excludeOkHttp)
+	implementation("io.ktor:ktor-client-okhttp:2.0.0", excludeOkHttp)
 	implementation("com.squareup.okhttp3:okhttp:3.12.13") {
 		because("Android 4.4 support")
 	}
 
 	// Miscellaneous
 	implementation("com.android.tools.build:apksig:$androidGradleVersion")
-	implementation("com.anggrayudi:storage:1.2.2")
+	implementation("com.anggrayudi:storage:1.3.0")
 	implementation("net.lingala.zip4j:zip4j:2.10.0")
 	implementation("io.github.solrudev:simpleinstaller:2.0.3")
 	implementation("com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.6")
