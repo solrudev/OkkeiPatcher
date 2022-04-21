@@ -3,10 +3,10 @@ package ru.solrudev.okkeipatcher.domain.service.gamefile
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.domain.exception.LocalizedException
 import ru.solrudev.okkeipatcher.domain.file.common.CommonFileHashKey
 import ru.solrudev.okkeipatcher.domain.file.common.CommonFiles
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
+import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
 import ru.solrudev.okkeipatcher.domain.operation.AbstractOperation
 import ru.solrudev.okkeipatcher.util.Preferences
 

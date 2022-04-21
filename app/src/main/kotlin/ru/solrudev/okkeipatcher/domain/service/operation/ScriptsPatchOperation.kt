@@ -9,9 +9,9 @@ import net.lingala.zip4j.model.ZipParameters
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.di.module.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.OkkeiStorage
-import ru.solrudev.okkeipatcher.domain.exception.LocalizedException
 import ru.solrudev.okkeipatcher.domain.file.english.PatchFileHashKey
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
+import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
 import ru.solrudev.okkeipatcher.domain.operation.AbstractOperation
 import ru.solrudev.okkeipatcher.domain.operation.AggregateOperation
 import ru.solrudev.okkeipatcher.domain.operation.Operation

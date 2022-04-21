@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.domain.exception
+package ru.solrudev.okkeipatcher.domain.model.exception
 
 import ru.solrudev.okkeipatcher.OkkeiApplication
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString

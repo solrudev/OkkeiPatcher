@@ -4,10 +4,10 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.map
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.domain.exception.LocalizedException
 import ru.solrudev.okkeipatcher.domain.file.common.CommonFileHashKey
 import ru.solrudev.okkeipatcher.domain.file.common.CommonFiles
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
+import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
 import ru.solrudev.okkeipatcher.domain.operation.AbstractOperation
 import ru.solrudev.okkeipatcher.domain.repository.patch.ObbDataRepository
 import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.impl.english.PatchFileVersionKey

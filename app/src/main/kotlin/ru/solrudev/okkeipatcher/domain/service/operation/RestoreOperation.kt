@@ -3,8 +3,8 @@ package ru.solrudev.okkeipatcher.domain.service.operation
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.AppKey
 import ru.solrudev.okkeipatcher.domain.OkkeiStorage
-import ru.solrudev.okkeipatcher.domain.exception.LocalizedException
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
+import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
 import ru.solrudev.okkeipatcher.domain.operation.AggregateOperation
 import ru.solrudev.okkeipatcher.domain.operation.EmptyOperation
 import ru.solrudev.okkeipatcher.domain.operation.Operation
