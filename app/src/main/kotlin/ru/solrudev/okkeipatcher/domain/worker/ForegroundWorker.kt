@@ -22,7 +22,6 @@ import ru.solrudev.okkeipatcher.domain.operation.Operation
 import ru.solrudev.okkeipatcher.domain.operation.extension.statusAndAccumulatedProgress
 import ru.solrudev.okkeipatcher.domain.util.extension.putParcelable
 import ru.solrudev.okkeipatcher.domain.util.extension.putSerializable
-import ru.solrudev.okkeipatcher.util.extension.empty
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -166,7 +165,7 @@ abstract class ForegroundWorker(
 		}
 		return NotificationCompat.Builder(applicationContext, channelId).apply {
 			setContentTitle(contentTitle)
-			setContentText(String.empty)
+			setContentText("")
 			priority = NotificationCompat.PRIORITY_DEFAULT
 			setSmallIcon(R.mipmap.ic_launcher_foreground)
 			setContentIntent(contentIntent)

@@ -6,8 +6,6 @@ import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.withIndex
 import ru.solrudev.okkeipatcher.domain.operation.AbstractOperation
 import ru.solrudev.okkeipatcher.util.Preferences
-import ru.solrudev.okkeipatcher.util.extension.empty
-import ru.solrudev.okkeipatcher.util.extension.isEmptyOrBlank
 
 abstract class VerifiableFile(private val fileImplementation: File) : File by fileImplementation, Verifiable {
 
@@ -22,8 +20,8 @@ abstract class VerifiableFile(private val fileImplementation: File) : File by fi
 				_progressDelta.emit(progressMax)
 				return false
 			}
-			val hashToCompare = Preferences.get(key, String.empty)
-			if (hashToCompare.isEmptyOrBlank()) {
+			val hashToCompare = Preferences.get(key, "")
+			if (hashToCompare.isEmpty() || hashToCompare.isBlank()) {
 				_progressDelta.emit(progressMax)
 				return false
 			}

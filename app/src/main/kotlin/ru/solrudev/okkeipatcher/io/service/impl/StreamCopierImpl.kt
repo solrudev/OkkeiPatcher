@@ -9,7 +9,6 @@ import ru.solrudev.okkeipatcher.di.module.IoDispatcher
 import ru.solrudev.okkeipatcher.io.service.StreamCopier
 import ru.solrudev.okkeipatcher.io.util.BlackholeOutputStream
 import ru.solrudev.okkeipatcher.io.util.calculateProgressRatio
-import ru.solrudev.okkeipatcher.util.extension.empty
 import java.io.InputStream
 import java.io.OutputStream
 import javax.inject.Inject
@@ -50,7 +49,7 @@ class StreamCopierImpl @Inject constructor(
 					}
 					onProgressDeltaChanged(100 - currentProgress / progressRatio)
 					bufferedSink.flush()
-					if (sink is HashingSink) sink.hash.hex() else String.empty
+					if (sink is HashingSink) sink.hash.hex() else ""
 				}
 			}
 		}

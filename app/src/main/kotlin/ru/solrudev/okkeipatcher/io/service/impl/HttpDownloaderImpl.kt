@@ -22,7 +22,6 @@ import ru.solrudev.okkeipatcher.io.exception.HttpStatusCodeException
 import ru.solrudev.okkeipatcher.io.service.HttpDownloader
 import ru.solrudev.okkeipatcher.io.util.BlackholeOutputStream
 import ru.solrudev.okkeipatcher.io.util.calculateProgressRatio
-import ru.solrudev.okkeipatcher.util.extension.empty
 import java.io.OutputStream
 import javax.inject.Inject
 import kotlin.io.use
@@ -83,7 +82,7 @@ class HttpDownloaderImpl @Inject constructor(
 				}
 				onProgressDeltaChanged(100 - currentProgress / progressRatio)
 				bufferedSink.flush()
-				if (sink is HashingSink) sink.hash.hex() else String.empty
+				if (sink is HashingSink) sink.hash.hex() else ""
 			}
 		}
 	}
