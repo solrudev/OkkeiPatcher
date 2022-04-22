@@ -2,7 +2,6 @@ package ru.solrudev.okkeipatcher.ui.fragment
 
 import android.app.NotificationManager
 import android.os.Bundle
-import android.view.Menu
 import android.view.View
 import androidx.core.content.getSystemService
 import androidx.core.view.isVisible
@@ -20,6 +19,7 @@ import ru.solrudev.okkeipatcher.databinding.FragmentWorkBinding
 import ru.solrudev.okkeipatcher.domain.model.Message
 import ru.solrudev.okkeipatcher.domain.model.ProgressData
 import ru.solrudev.okkeipatcher.ui.util.extension.copyTextToClipboard
+import ru.solrudev.okkeipatcher.ui.util.extension.prepareOptionsMenu
 import ru.solrudev.okkeipatcher.ui.util.extension.setupTransitions
 import ru.solrudev.okkeipatcher.ui.util.extension.showWithLifecycle
 import ru.solrudev.okkeipatcher.ui.viewmodel.WorkViewModel
@@ -31,16 +31,13 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		setHasOptionsMenu(true)
 		setupTransitions()
 	}
 
-	override fun onPrepareOptionsMenu(menu: Menu) {
-		super.onPrepareOptionsMenu(menu)
-		menu.clear()
-	}
-
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		prepareOptionsMenu {
+			clear()
+		}
 		setupNavigation()
 		viewLifecycleOwner.lifecycle.addObserver(viewModel)
 		viewLifecycleOwner.lifecycleScope.observeUiState()

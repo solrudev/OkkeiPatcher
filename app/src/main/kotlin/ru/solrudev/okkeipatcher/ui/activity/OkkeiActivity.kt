@@ -2,8 +2,10 @@ package ru.solrudev.okkeipatcher.ui.activity
 
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -28,6 +30,7 @@ class OkkeiActivity : AppCompatActivity(R.layout.okkei_nav_host) {
 		val navController = binding.okkeiNavHostContent.getFragment<NavHostFragment>().navController
 		appBarConfiguration = AppBarConfiguration(navController.graph)
 		setupActionBarWithNavController(navController, appBarConfiguration)
+		setupOptionsMenu()
 	}
 
 	override fun onSupportNavigateUp(): Boolean {
@@ -35,13 +38,16 @@ class OkkeiActivity : AppCompatActivity(R.layout.okkei_nav_host) {
 		return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
 	}
 
-	override fun onCreateOptionsMenu(menu: Menu): Boolean {
-		menuInflater.inflate(R.menu.okkei_menu, menu)
-		return true
-	}
+	private fun setupOptionsMenu() {
+		addMenuProvider(object : MenuProvider {
+			override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+				menuInflater.inflate(R.menu.okkei_menu, menu)
+			}
 
-	override fun onOptionsItemSelected(item: MenuItem): Boolean {
-		val navController = findNavController(R.id.okkei_nav_host_content)
-		return item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
+			override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+				val navController = findNavController(R.id.okkei_nav_host_content)
+				return menuItem.onNavDestinationSelected(navController)
+			}
+		})
 	}
 }

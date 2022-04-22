@@ -126,6 +126,7 @@ dependencies {
 
 	// Jetpack
 	implementation("com.google.dagger:hilt-android:$hiltVersion")
+	implementation("androidx.activity:activity-ktx:1.4.0")
 	implementation("androidx.preference:preference-ktx:1.2.0")
 	implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.4.1")
 	implementation("androidx.fragment:fragment-ktx:1.4.1")
