@@ -96,8 +96,7 @@ abstract class ForegroundWorker(
 
 	private fun CoroutineScope.reportProgress(operation: Operation<*>) = operation
 		.statusAndAccumulatedProgress()
-		.onEach { pair ->
-			val (status, progress) = pair
+		.onEach { (status, progress) ->
 			val progressData = ProgressData(progress, operation.progressMax)
 			setProgress(
 				Data.Builder()
@@ -110,8 +109,7 @@ abstract class ForegroundWorker(
 
 	private fun CoroutineScope.updateProgressNotification(operation: Operation<*>) = operation
 		.statusAndAccumulatedProgress()
-		.onEach { pair ->
-			val (status, progress) = pair
+		.onEach { (status, progress) ->
 			val statusString = status.resolve(applicationContext)
 			val notification = progressNotificationBuilder
 				.setContentText(statusString)
