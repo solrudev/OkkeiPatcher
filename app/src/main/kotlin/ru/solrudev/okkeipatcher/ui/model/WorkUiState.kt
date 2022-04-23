@@ -12,5 +12,6 @@ data class WorkUiState(
 	val progressData: ProgressData = ProgressData(),
 	val startWorkMessage: MessageUiState = MessageUiState(),
 	val cancelWorkMessage: MessageUiState = MessageUiState(),
-	val errorMessage: MessageUiState = MessageUiState()
+	val errorMessage: MessageUiState = MessageUiState(),
+	val animationsPlayed: Boolean = false
 )

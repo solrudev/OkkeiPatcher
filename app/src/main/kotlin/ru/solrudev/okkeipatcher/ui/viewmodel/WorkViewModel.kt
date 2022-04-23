@@ -103,14 +103,16 @@ abstract class WorkViewModel(
 		it.copy(errorMessage = MessageUiState())
 	}
 
+	fun onAnimationsPlayed() = _uiState.update {
+		it.copy(animationsPlayed = true)
+	}
+
 	protected suspend fun Work?.isPending() = this?.let {
 		getIsWorkPendingUseCase(it)
 	} ?: false
 
-	private fun setIsButtonEnabled(value: Boolean) {
-		_uiState.update {
-			it.copy(isButtonEnabled = value)
-		}
+	private fun setIsButtonEnabled(value: Boolean) = _uiState.update {
+		it.copy(isButtonEnabled = value)
 	}
 
 	private fun hideAllMessages() = _uiState.update {

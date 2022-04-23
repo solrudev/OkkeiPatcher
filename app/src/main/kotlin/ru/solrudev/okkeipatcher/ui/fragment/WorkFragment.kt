@@ -1,5 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.fragment
 
+import android.app.Dialog
 import android.app.NotificationManager
 import android.os.Bundle
 import android.view.View
@@ -28,6 +29,7 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 
 	protected abstract val viewModel: VM
 	private val binding by viewBinding(FragmentWorkBinding::bind)
+	private var currentCancelDialog: Dialog? = null
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -55,7 +57,7 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 				binding.progressbarWorkLoading.isVisible = uiState.isLoading
 				binding.buttonWork.isEnabled = uiState.isButtonEnabled
 				if (uiState.isWorkSuccessful) {
-					onWorkSuccess()
+					onWorkSuccess(playAnimations = !uiState.animationsPlayed)
 				}
 				if (uiState.isWorkCanceled) {
 					findNavController().popBackStack()
@@ -86,12 +88,27 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 		notificationManager?.cancelAll()
 	}
 
-	private fun onWorkSuccess() {
+	private fun onWorkSuccess(playAnimations: Boolean) {
+		if (playAnimations) {
+			startSuccessAnimations()
+		}
 		binding.buttonWork.setOnClickListener {
 			findNavController().popBackStack()
 		}
 		binding.buttonWork.setText(android.R.string.ok)
+		currentCancelDialog?.dismiss()
+		currentCancelDialog = null
 		clearNotifications()
+	}
+
+	private fun startSuccessAnimations() {
+		binding.buttonWork.alpha = 0f
+		binding.buttonWork
+			.animate()
+			.alpha(1f)
+			.setDuration(500)
+			.start()
+		viewModel.onAnimationsPlayed()
 	}
 
 	private fun setProgress(progressData: ProgressData) {
@@ -120,7 +137,7 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 	}
 
 	private fun showCancelWorkMessage(cancelWorkMessage: Message) {
-		createDialogBuilder(cancelWorkMessage)
+		val dialog = createDialogBuilder(cancelWorkMessage)
 			.setPositiveButton(R.string.abort) { _, _ ->
 				viewModel.cancelWork()
 			}
@@ -128,7 +145,9 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 			.setOnDismissListener {
 				viewModel.closeCancelWorkMessage()
 			}
-			.showWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.Event.ON_STOP)
+			.create()
+		currentCancelDialog = dialog
+		dialog.showWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.Event.ON_STOP)
 		viewModel.showCancelWorkMessage()
 	}
 
