@@ -6,7 +6,9 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ru.solrudev.okkeipatcher.data.repository.app.OkkeiPatcherRepositoryImpl
 import ru.solrudev.okkeipatcher.data.repository.patch.DefaultPatchRepositoryImpl
-import ru.solrudev.okkeipatcher.data.repository.work.*
+import ru.solrudev.okkeipatcher.data.repository.work.MockPatchWorkRepositoryImpl
+import ru.solrudev.okkeipatcher.data.repository.work.MockRestoreWorkRepositoryImpl
+import ru.solrudev.okkeipatcher.data.repository.work.WorkRepositoryImpl
 import ru.solrudev.okkeipatcher.domain.repository.app.OkkeiPatcherRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.DefaultPatchRepository
 import ru.solrudev.okkeipatcher.domain.repository.work.PatchWorkRepository

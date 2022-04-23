@@ -6,8 +6,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ru.solrudev.okkeipatcher.domain.usecase.patch.GetPatchSizeInMbUseCase
 import ru.solrudev.okkeipatcher.domain.usecase.patch.GetPatchUpdatesUseCase
-import ru.solrudev.okkeipatcher.domain.usecase.patch.impl.english.MockGetPatchSizeInMbUseCase
-import ru.solrudev.okkeipatcher.domain.usecase.patch.impl.english.MockGetPatchUpdatesUseCase
+import ru.solrudev.okkeipatcher.domain.usecase.patch.MockGetPatchSizeInMbUseCase
+import ru.solrudev.okkeipatcher.domain.usecase.patch.MockGetPatchUpdatesUseCase
 
 @InstallIn(SingletonComponent::class)
 @Module(includes = [UseCaseBindModule::class])

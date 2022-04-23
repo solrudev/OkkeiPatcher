@@ -7,18 +7,18 @@ import ru.solrudev.okkeipatcher.domain.model.Work
 import ru.solrudev.okkeipatcher.domain.model.asWork
 import ru.solrudev.okkeipatcher.domain.repository.work.RestoreWorkRepository
 import ru.solrudev.okkeipatcher.domain.repository.work.WorkRepository
-import ru.solrudev.okkeipatcher.domain.worker.RestoreWorker
+import ru.solrudev.okkeipatcher.domain.worker.MockWorker
 import javax.inject.Inject
 
 private const val RESTORE_WORK_NAME = "RestoreWork"
 
-class RestoreWorkRepositoryImpl @Inject constructor(
+class MockRestoreWorkRepositoryImpl @Inject constructor(
 	private val workRepository: WorkRepository,
 	private val workManager: WorkManager
 ) : RestoreWorkRepository {
 
 	override suspend fun enqueueRestoreWork(): Work {
-		val workRequest = OneTimeWorkRequest.Builder(RestoreWorker::class.java)
+		val workRequest = OneTimeWorkRequest.Builder(MockWorker::class.java)
 			.addTag(RESTORE_WORK_NAME)
 			.build()
 		workManager.enqueueUniqueWork(RESTORE_WORK_NAME, ExistingWorkPolicy.KEEP, workRequest)

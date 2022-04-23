@@ -49,9 +49,3 @@ class DefaultGetPatchUpdatesUseCase @Inject constructor(private val patchReposit
 		return latestObbVersion > currentObbVersion
 	}
 }
-
-class MockGetPatchUpdatesUseCase @Inject constructor(private val patchRepository: DefaultPatchRepository) :
-	GetPatchUpdatesUseCase {
-
-	override suspend fun invoke() = DefaultPatchUpdates()
-}
