@@ -97,7 +97,6 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 		}
 		binding.buttonWork.setText(android.R.string.ok)
 		currentCancelDialog?.dismiss()
-		currentCancelDialog = null
 		clearNotifications()
 	}
 
@@ -144,6 +143,7 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 			.setNegativeButton(android.R.string.cancel, null)
 			.setOnDismissListener {
 				viewModel.closeCancelWorkMessage()
+				currentCancelDialog = null
 			}
 			.create()
 		currentCancelDialog = dialog
