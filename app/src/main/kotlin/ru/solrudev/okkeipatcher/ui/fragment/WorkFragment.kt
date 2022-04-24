@@ -45,6 +45,11 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 		viewLifecycleOwner.lifecycleScope.observeUiState()
 	}
 
+	override fun onStop() {
+		super.onStop()
+		currentCancelDialog = null
+	}
+
 	private fun setupNavigation() {
 		binding.buttonWork.setOnClickListener {
 			viewModel.requestWorkCancel()
