@@ -17,15 +17,16 @@ object IoModule {
 
 	@Provides
 	@Singleton
-	fun provideOkHttpClient(): OkHttpClient = OkHttpClient.Builder().apply {
-		val tlsSocketFactory = TLSSocketFactory()
-		sslSocketFactory(tlsSocketFactory, tlsSocketFactory.trustManager)
-		followRedirects(true)
-		followSslRedirects(true)
-		readTimeout(0, TimeUnit.SECONDS)
-		writeTimeout(0, TimeUnit.SECONDS)
-		addInterceptor(ConnectivityInterceptor())
-	}.build()
+	fun provideOkHttpClient(connectivityInterceptor: ConnectivityInterceptor): OkHttpClient =
+		OkHttpClient.Builder().apply {
+			val tlsSocketFactory = TLSSocketFactory()
+			sslSocketFactory(tlsSocketFactory, tlsSocketFactory.trustManager)
+			followRedirects(true)
+			followSslRedirects(true)
+			readTimeout(0, TimeUnit.SECONDS)
+			writeTimeout(0, TimeUnit.SECONDS)
+			addInterceptor(connectivityInterceptor)
+		}.build()
 
 	@Provides
 	@Singleton

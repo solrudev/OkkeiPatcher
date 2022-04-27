@@ -4,12 +4,9 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.net.ConnectivityManager
-import android.net.Network
-import android.net.NetworkCapabilities
-import android.net.NetworkRequest
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.annotation.StringRes
 import androidx.core.content.getSystemService
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
@@ -17,6 +14,7 @@ import dagger.hilt.android.HiltAndroidApp
 import io.github.solrudev.simpleinstaller.SimpleInstaller
 import ru.solrudev.okkeipatcher.domain.AppKey
 import ru.solrudev.okkeipatcher.domain.model.Language
+import ru.solrudev.okkeipatcher.domain.repository.app.ConnectivityRepository
 import ru.solrudev.okkeipatcher.util.Preferences
 import javax.inject.Inject
 
@@ -26,14 +24,21 @@ class OkkeiApplication : Application(), Configuration.Provider {
 	@Inject
 	lateinit var workerFactory: HiltWorkerFactory
 
+	@Inject
+	lateinit var connectivityRepository: ConnectivityRepository
+
 	override fun onCreate() {
 		super.onCreate()
 		instance = this
-		connectivityManager = getSystemService()
 		SimpleInstaller.initialize(this, R.mipmap.ic_launcher_foreground)
+		connectivityRepository.startNetworkMonitoring()
 		initIsPatchedPreference()
 		initSaveDataPreference()
 		initLanguagePreference()
+		createNotificationChannels()
+	}
+
+	private fun createNotificationChannels() {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			val notificationManager = getSystemService<NotificationManager>()
 			notificationManager?.createNotificationChannel(
@@ -46,9 +51,6 @@ class OkkeiApplication : Application(), Configuration.Provider {
 				R.string.notification_channel_messages_name,
 				R.string.notification_channel_messages_description
 			)
-		}
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			startNetworkMonitoring()
 		}
 	}
 
@@ -76,9 +78,9 @@ class OkkeiApplication : Application(), Configuration.Provider {
 
 	@RequiresApi(Build.VERSION_CODES.O)
 	private fun NotificationManager.createNotificationChannel(
-		channelId: Int,
-		nameId: Int,
-		descriptionId: Int
+		@StringRes channelId: Int,
+		@StringRes nameId: Int,
+		@StringRes descriptionId: Int
 	) {
 		val channelIdString = getString(channelId)
 		val channelName = getString(nameId)
@@ -90,48 +92,16 @@ class OkkeiApplication : Application(), Configuration.Provider {
 		createNotificationChannel(channel)
 	}
 
+	override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
+		super.onConfigurationChanged(newConfig)
+		createNotificationChannels()
+	}
+
 	companion object {
 
 		val context: Context
 			get() = instance.applicationContext
 
-		val isNetworkAvailable: Boolean
-			get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-				_isNetworkAvailable
-			} else {
-				isActiveNetworkConnected()
-			}
-
 		private lateinit var instance: OkkeiApplication
-		private var connectivityManager: ConnectivityManager? = null
-		private var _isNetworkAvailable = false
-
-		@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-		private fun startNetworkMonitoring() {
-			val networkRequest = NetworkRequest.Builder().apply {
-				addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-					addCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
-				}
-				addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-				addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
-				addTransportType(NetworkCapabilities.TRANSPORT_ETHERNET)
-			}.build()
-			val networkCallback = object : ConnectivityManager.NetworkCallback() {
-				override fun onAvailable(network: Network) {
-					_isNetworkAvailable = true
-				}
-				override fun onLost(network: Network) {
-					_isNetworkAvailable = false
-				}
-			}
-			connectivityManager?.registerNetworkCallback(networkRequest, networkCallback)
-		}
-
-		@Suppress("DEPRECATION")
-		private fun isActiveNetworkConnected(): Boolean {
-			val activeNetworkInfo = connectivityManager?.activeNetworkInfo
-			return activeNetworkInfo != null && activeNetworkInfo.isConnected
-		}
 	}
 }
