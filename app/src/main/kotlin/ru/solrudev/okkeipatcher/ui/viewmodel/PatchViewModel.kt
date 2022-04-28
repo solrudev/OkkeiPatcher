@@ -31,14 +31,14 @@ class PatchViewModel @Inject constructor(
 	init {
 		viewModelScope.launch {
 			if (!work.isPending()) {
-				_uiState.update {
+				uiState.update {
 					it.copy(isLoading = true)
 				}
 				val patchSizeInMb = getPatchSizeInMbUseCase()
 				val title = LocalizedString.resource(R.string.warning_start_patch_title)
 				val message = LocalizedString.resource(R.string.warning_start_patch, patchSizeInMb)
 				val startMessage = Message(title, message)
-				_uiState.update {
+				uiState.update {
 					val startWorkUiMessage = it.startWorkMessage.copy(data = startMessage)
 					it.copy(
 						isLoading = false,

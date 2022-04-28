@@ -48,7 +48,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
 	private fun CoroutineScope.observeUiState() = launch {
 		viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-			viewModel.uiState.collect { uiState ->
+			viewModel.collect { uiState ->
 				binding.buttonMainPatch.isEnabled = uiState.isPatchEnabled
 				binding.buttonMainRestore.isEnabled = uiState.isRestoreEnabled
 				if (!uiState.checkedForPatchUpdates) {

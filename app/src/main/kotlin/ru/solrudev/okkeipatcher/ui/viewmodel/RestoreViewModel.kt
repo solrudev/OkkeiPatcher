@@ -27,7 +27,7 @@ class RestoreViewModel @Inject constructor(
 				val title = LocalizedString.resource(R.string.warning_start_restore_title)
 				val message = LocalizedString.resource(R.string.warning_abort)
 				val startMessage = Message(title, message)
-				_uiState.update {
+				uiState.update {
 					val startWorkMessage = it.startWorkMessage.copy(data = startMessage)
 					it.copy(startWorkMessage = startWorkMessage)
 				}

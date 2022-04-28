@@ -5,8 +5,9 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.solrudev.okkeipatcher.domain.AppKey
@@ -21,12 +22,13 @@ import javax.inject.Provider
 class HomeViewModel @Inject constructor(
 	private val getGetIsAppUpdateAvailableUseCase: GetIsAppUpdateAvailableUseCase,
 	private val getPatchUpdatesUseCaseProvider: Provider<GetPatchUpdatesUseCase>
-) : ViewModel(), DefaultLifecycleObserver {
+) : ViewModel(), Flow<HomeUiState>, DefaultLifecycleObserver {
 
-	private val _uiState = MutableStateFlow(HomeUiState())
-	val uiState = _uiState.asStateFlow()
+	private val uiState = MutableStateFlow(HomeUiState())
 
-	override fun onCreate(owner: LifecycleOwner) = _uiState.update {
+	override suspend fun collect(collector: FlowCollector<HomeUiState>) = uiState.collect(collector)
+
+	override fun onCreate(owner: LifecycleOwner) = uiState.update {
 		it.copy(
 			isPatchEnabled = !isPatched() || it.patchUpdatesAvailable,
 			isRestoreEnabled = isPatched()
@@ -37,7 +39,7 @@ class HomeViewModel @Inject constructor(
 		viewModelScope.launch {
 			val getPatchUpdatesUseCase = getPatchUpdatesUseCaseProvider.get()
 			val updatesAvailable = getPatchUpdatesUseCase().available
-			_uiState.update {
+			uiState.update {
 				it.copy(
 					isPatchEnabled = updatesAvailable || !isPatched(),
 					patchUpdatesAvailable = updatesAvailable,
@@ -47,7 +49,7 @@ class HomeViewModel @Inject constructor(
 		}
 	}
 
-	fun patchUpdatesMessageShown() = _uiState.update {
+	fun patchUpdatesMessageShown() = uiState.update {
 		it.copy(patchUpdatesMessageShown = true)
 	}
 
