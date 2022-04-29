@@ -1,21 +1,31 @@
 package ru.solrudev.okkeipatcher.di.module
 
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import dagger.multibindings.IntoMap
+import ru.solrudev.okkeipatcher.domain.model.Language
 import ru.solrudev.okkeipatcher.domain.usecase.patch.GetPatchSizeInMbUseCase
 import ru.solrudev.okkeipatcher.domain.usecase.patch.GetPatchUpdatesUseCase
 import ru.solrudev.okkeipatcher.domain.usecase.patch.MockGetPatchSizeInMbUseCase
 import ru.solrudev.okkeipatcher.domain.usecase.patch.MockGetPatchUpdatesUseCase
 
 @InstallIn(SingletonComponent::class)
-@Module(includes = [UseCaseBindModule::class])
-object UseCaseModule {
+@Module
+interface UseCaseFlavorModule {
 
-	@Provides
-	fun provideGetPatchUpdatesUseCase(mock: MockGetPatchUpdatesUseCase): GetPatchUpdatesUseCase = mock
+	@Binds
+	@IntoMap
+	@LanguageKey(Language.English)
+	fun provideGetPatchUpdatesUseCase(
+		mockGetPatchUpdatesUseCase: MockGetPatchUpdatesUseCase
+	): GetPatchUpdatesUseCase
 
-	@Provides
-	fun provideGetPatchSizeInMbUseCase(mock: MockGetPatchSizeInMbUseCase): GetPatchSizeInMbUseCase = mock
+	@Binds
+	@IntoMap
+	@LanguageKey(Language.English)
+	fun provideGetPatchSizeInMbUseCase(
+		mockGetPatchSizeInMbUseCase: MockGetPatchSizeInMbUseCase
+	): GetPatchSizeInMbUseCase
 }

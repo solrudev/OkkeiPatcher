@@ -12,10 +12,7 @@ import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import dagger.hilt.android.HiltAndroidApp
 import io.github.solrudev.simpleinstaller.SimpleInstaller
-import ru.solrudev.okkeipatcher.domain.AppKey
-import ru.solrudev.okkeipatcher.domain.model.Language
 import ru.solrudev.okkeipatcher.domain.repository.app.ConnectivityRepository
-import ru.solrudev.okkeipatcher.util.Preferences
 import javax.inject.Inject
 
 @HiltAndroidApp
@@ -32,9 +29,6 @@ class OkkeiApplication : Application(), Configuration.Provider {
 		instance = this
 		SimpleInstaller.initialize(this, R.mipmap.ic_launcher_foreground)
 		connectivityRepository.startNetworkMonitoring()
-		initIsPatchedPreference()
-		initSaveDataPreference()
-		initLanguagePreference()
 		createNotificationChannels()
 	}
 
@@ -57,24 +51,6 @@ class OkkeiApplication : Application(), Configuration.Provider {
 	override fun getWorkManagerConfiguration() = Configuration.Builder()
 		.setWorkerFactory(workerFactory)
 		.build()
-
-	private fun initIsPatchedPreference() {
-		if (Preferences.containsKey(AppKey.is_patched.name)) return
-		Preferences.set(AppKey.is_patched.name, false)
-	}
-
-	private fun initSaveDataPreference() {
-		if (Preferences.containsKey(AppKey.process_save_data_enabled.name)) return
-		Preferences.set(
-			AppKey.process_save_data_enabled.name,
-			Build.VERSION.SDK_INT < Build.VERSION_CODES.R
-		)
-	}
-
-	private fun initLanguagePreference() {
-		if (Preferences.containsKey(AppKey.patch_language.name)) return
-		Preferences.set(AppKey.patch_language.name, Language.English.name)
-	}
 
 	@RequiresApi(Build.VERSION_CODES.O)
 	private fun NotificationManager.createNotificationChannel(

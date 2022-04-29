@@ -2,11 +2,10 @@ package ru.solrudev.okkeipatcher.domain.usecase.patch.impl.english
 
 import ru.solrudev.okkeipatcher.domain.repository.patch.DefaultPatchRepository
 import ru.solrudev.okkeipatcher.domain.usecase.patch.GetPatchSizeInMbUseCase
-import ru.solrudev.okkeipatcher.domain.usecase.patch.GetPatchUpdatesUseCase
 import javax.inject.Inject
 
 class DefaultGetPatchSizeInMbUseCase @Inject constructor(
-	private val getPatchUpdatesUseCase: GetPatchUpdatesUseCase,
+	private val getPatchUpdatesUseCase: DefaultGetPatchUpdatesUseCase,
 	private val patchRepository: DefaultPatchRepository
 ) : GetPatchSizeInMbUseCase {
 

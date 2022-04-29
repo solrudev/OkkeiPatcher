@@ -2,17 +2,24 @@ package ru.solrudev.okkeipatcher.domain.worker
 
 import android.app.PendingIntent
 import android.content.Context
+import androidx.hilt.work.HiltWorker
 import androidx.navigation.NavDeepLinkBuilder
 import androidx.work.WorkerParameters
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.delay
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.domain.AppKey
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.operation.AbstractOperation
-import ru.solrudev.okkeipatcher.util.Preferences
+import ru.solrudev.okkeipatcher.domain.repository.app.PreferencesRepository
 import kotlin.time.Duration.Companion.seconds
 
-class MockWorker(context: Context, workerParameters: WorkerParameters) : ForegroundWorker(context, workerParameters) {
+@HiltWorker
+class MockWorker @AssistedInject constructor(
+	@Assisted context: Context,
+	@Assisted workerParameters: WorkerParameters,
+	private val preferencesRepository: PreferencesRepository
+) : ForegroundWorker(context, workerParameters) {
 
 	override val progressNotificationTitle: LocalizedString
 		get() = LocalizedString.resource(R.string.notification_title_test)
@@ -29,7 +36,7 @@ class MockWorker(context: Context, workerParameters: WorkerParameters) : Foregro
 				delay(1.seconds)
 				_progressDelta.emit(100)
 			}
-			Preferences.set(AppKey.is_patched.name, tags.contains("PatchWork"))
+			preferencesRepository.setIsPatched(tags.contains("PatchWork"))
 		}
 	}
 

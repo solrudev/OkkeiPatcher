@@ -3,21 +3,15 @@ package ru.solrudev.okkeipatcher.di.module
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
-import ru.solrudev.okkeipatcher.domain.usecase.app.GetAppChangelogUseCase
-import ru.solrudev.okkeipatcher.domain.usecase.app.GetAppUpdateFileUseCase
-import ru.solrudev.okkeipatcher.domain.usecase.app.GetAppUpdateSizeInMbUseCase
-import ru.solrudev.okkeipatcher.domain.usecase.app.GetIsAppUpdateAvailableUseCase
-import ru.solrudev.okkeipatcher.domain.usecase.app.impl.GetAppChangelogUseCaseImpl
-import ru.solrudev.okkeipatcher.domain.usecase.app.impl.GetAppUpdateFileUseCaseImpl
-import ru.solrudev.okkeipatcher.domain.usecase.app.impl.GetAppUpdateSizeInMbUseCaseImpl
-import ru.solrudev.okkeipatcher.domain.usecase.app.impl.GetIsAppUpdateAvailableUseCaseImpl
+import dagger.hilt.components.SingletonComponent
+import ru.solrudev.okkeipatcher.domain.usecase.app.*
+import ru.solrudev.okkeipatcher.domain.usecase.app.impl.*
 import ru.solrudev.okkeipatcher.domain.usecase.work.*
 import ru.solrudev.okkeipatcher.domain.usecase.work.impl.*
 
-@InstallIn(ViewModelComponent::class)
-@Module
-interface UseCaseBindModule {
+@InstallIn(SingletonComponent::class)
+@Module(includes = [UseCaseFlavorModule::class])
+interface UseCaseModule {
 
 	@Binds
 	fun bindEnqueuePatchWorkUseCase(enqueuePatchWorkUseCase: EnqueuePatchWorkUseCaseImpl): EnqueuePatchWorkUseCase
@@ -54,4 +48,10 @@ interface UseCaseBindModule {
 
 	@Binds
 	fun bindGetAppChangelogUseCase(getAppChangelogUseCase: GetAppChangelogUseCaseImpl): GetAppChangelogUseCase
+
+	@Binds
+	fun bindGetIsPatchedUseCase(getIsPatchedUseCase: GetIsPatchedUseCaseImpl): GetIsPatchedUseCase
+
+	@Binds
+	fun bindGetPatchLanguageUseCase(getPatchLanguageUseCase: GetPatchLanguageUseCaseImpl): GetPatchLanguageUseCase
 }

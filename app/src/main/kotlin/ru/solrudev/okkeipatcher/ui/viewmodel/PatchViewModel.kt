@@ -5,18 +5,22 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.domain.model.Language
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.Message
 import ru.solrudev.okkeipatcher.domain.model.Work
+import ru.solrudev.okkeipatcher.domain.usecase.app.GetPatchLanguageUseCase
 import ru.solrudev.okkeipatcher.domain.usecase.patch.GetPatchSizeInMbUseCase
 import ru.solrudev.okkeipatcher.domain.usecase.work.*
 import javax.inject.Inject
+import javax.inject.Provider
 
 @HiltViewModel
 class PatchViewModel @Inject constructor(
 	private val enqueuePatchWorkUseCase: EnqueuePatchWorkUseCase,
 	private val getPatchWorkUseCase: GetPatchWorkUseCase,
-	private val getPatchSizeInMbUseCase: GetPatchSizeInMbUseCase,
+	private val getPatchLanguageUseCase: GetPatchLanguageUseCase,
+	private val getPatchSizeInMbUseCases: Map<Language, @JvmSuppressWildcards Provider<GetPatchSizeInMbUseCase>>,
 	getWorkStateFlowUseCase: GetWorkStateFlowUseCase,
 	cancelWorkUseCase: CancelWorkUseCase,
 	completeWorkUseCase: CompleteWorkUseCase,
@@ -34,6 +38,8 @@ class PatchViewModel @Inject constructor(
 				uiState.update {
 					it.copy(isLoading = true)
 				}
+				val patchLanguage = getPatchLanguageUseCase()
+				val getPatchSizeInMbUseCase = getPatchSizeInMbUseCases.getValue(patchLanguage).get()
 				val patchSizeInMb = getPatchSizeInMbUseCase()
 				val title = LocalizedString.resource(R.string.warning_start_patch_title)
 				val message = LocalizedString.resource(R.string.warning_start_patch, patchSizeInMb)

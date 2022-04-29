@@ -1,7 +1,7 @@
 package ru.solrudev.okkeipatcher.domain.usecase.patch.impl.english
 
-import ru.solrudev.okkeipatcher.domain.AppKey
 import ru.solrudev.okkeipatcher.domain.model.patchupdates.DefaultPatchUpdates
+import ru.solrudev.okkeipatcher.domain.repository.app.PreferencesRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.DefaultPatchRepository
 import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.impl.english.PatchFileVersionKey
 import ru.solrudev.okkeipatcher.domain.usecase.patch.GetPatchUpdatesUseCase
@@ -9,8 +9,10 @@ import ru.solrudev.okkeipatcher.io.exception.NetworkNotAvailableException
 import ru.solrudev.okkeipatcher.util.Preferences
 import javax.inject.Inject
 
-class DefaultGetPatchUpdatesUseCase @Inject constructor(private val patchRepository: DefaultPatchRepository) :
-	GetPatchUpdatesUseCase {
+class DefaultGetPatchUpdatesUseCase @Inject constructor(
+	private val patchRepository: DefaultPatchRepository,
+	private val preferencesRepository: PreferencesRepository
+) : GetPatchUpdatesUseCase {
 
 	override suspend fun invoke() = DefaultPatchUpdates(
 		isScriptsUpdateAvailable(),
@@ -18,7 +20,8 @@ class DefaultGetPatchUpdatesUseCase @Inject constructor(private val patchReposit
 	)
 
 	private suspend inline fun isScriptsUpdateAvailable(): Boolean {
-		if (!Preferences.get(AppKey.is_patched.name, false)) {
+		val isPatched = preferencesRepository.getIsPatched()
+		if (!isPatched) {
 			return false
 		}
 		if (!Preferences.containsKey(PatchFileVersionKey.scripts_version.name)) {
@@ -34,7 +37,8 @@ class DefaultGetPatchUpdatesUseCase @Inject constructor(private val patchReposit
 	}
 
 	private suspend inline fun isObbUpdateAvailable(): Boolean {
-		if (!Preferences.get(AppKey.is_patched.name, false)) {
+		val isPatched = preferencesRepository.getIsPatched()
+		if (!isPatched) {
 			return false
 		}
 		if (!Preferences.containsKey(PatchFileVersionKey.obb_version.name)) {

@@ -1,7 +1,6 @@
 package ru.solrudev.okkeipatcher.domain.service.operation
 
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.domain.AppKey
 import ru.solrudev.okkeipatcher.domain.OkkeiStorage
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
@@ -9,13 +8,14 @@ import ru.solrudev.okkeipatcher.domain.model.patchupdates.PatchUpdates
 import ru.solrudev.okkeipatcher.domain.operation.AggregateOperation
 import ru.solrudev.okkeipatcher.domain.operation.EmptyOperation
 import ru.solrudev.okkeipatcher.domain.operation.Operation
+import ru.solrudev.okkeipatcher.domain.repository.app.PreferencesRepository
 import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.GameFileStrategy
-import ru.solrudev.okkeipatcher.util.Preferences
 
 class PatchOperation(
 	private val strategy: GameFileStrategy,
 	private val handleSaveData: Boolean,
-	private val patchUpdates: PatchUpdates
+	private val patchUpdates: PatchUpdates,
+	private val preferencesRepository: PreferencesRepository
 ) : Operation<Unit> {
 
 	private val operation = if (patchUpdates.available) update() else patch()
@@ -29,8 +29,8 @@ class PatchOperation(
 	/**
 	 * Throws an exception if conditions for patch are not met.
 	 */
-	fun checkCanPatch() = with(strategy) {
-		val isPatched = Preferences.get(AppKey.is_patched.name, false)
+	suspend fun checkCanPatch() = with(strategy) {
+		val isPatched = preferencesRepository.getIsPatched()
 		if (isPatched && !patchUpdates.available) {
 			throw LocalizedException(LocalizedString.resource(R.string.error_patched))
 		}
@@ -57,9 +57,7 @@ class PatchOperation(
 			)
 		}
 	) {
-		override suspend fun postInvoke() {
-			Preferences.set(AppKey.is_patched.name, true)
-		}
+		override suspend fun postInvoke() = preferencesRepository.setIsPatched(true)
 	}
 
 	private fun update() = AggregateOperation(
