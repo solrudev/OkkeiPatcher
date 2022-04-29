@@ -30,8 +30,8 @@ class PatchWorker @AssistedInject constructor(
 	override suspend fun getOperation(): Operation<Unit> {
 		val handleSaveData = preferencesRepository.getHandleSaveData()
 		val patchLanguage = preferencesRepository.getPatchLanguage()
-		val patchUpdatesUseCase = getPatchUpdatesUseCases.getValue(patchLanguage).get()
-		val patchUpdates = patchUpdatesUseCase()
+		val getPatchUpdatesUseCase = getPatchUpdatesUseCases.getValue(patchLanguage).get()
+		val patchUpdates = getPatchUpdatesUseCase()
 		val strategy = strategies.getValue(patchLanguage).get()
 		val patchOperation = PatchOperation(strategy, handleSaveData, patchUpdates, preferencesRepository)
 		patchOperation.checkCanPatch()
