@@ -9,4 +9,5 @@ interface PreferencesRepository {
 	suspend fun setIsPatched(isPatched: Boolean)
 	suspend fun setHandleSaveData(handleSaveData: Boolean)
 	suspend fun setPatchLanguage(language: Language)
+	suspend fun reset()
 }

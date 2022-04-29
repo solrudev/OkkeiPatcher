@@ -52,4 +52,10 @@ class PreferencesRepositoryImpl @Inject constructor(@ApplicationContext applicat
 			it[PATCH_LANGUAGE] = language.name
 		}
 	}
+
+	override suspend fun reset() {
+		preferences.edit {
+			it.clear()
+		}
+	}
 }
