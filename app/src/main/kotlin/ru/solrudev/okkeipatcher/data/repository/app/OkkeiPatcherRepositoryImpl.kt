@@ -1,5 +1,7 @@
 package ru.solrudev.okkeipatcher.data.repository.app
 
+import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.network.api.OkkeiPatcherApi
 import ru.solrudev.okkeipatcher.data.network.model.OkkeiPatcherChangelogDto
@@ -8,9 +10,9 @@ import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
 import ru.solrudev.okkeipatcher.domain.operation.AbstractOperation
 import ru.solrudev.okkeipatcher.domain.repository.app.OkkeiPatcherRepository
+import ru.solrudev.okkeipatcher.domain.util.extension.versionCode
 import ru.solrudev.okkeipatcher.io.service.HttpDownloader
 import ru.solrudev.okkeipatcher.io.util.extension.download
-import ru.solrudev.okkeipatcher.util.appVersionCode
 import java.io.File
 import java.util.*
 import javax.inject.Inject
@@ -18,6 +20,7 @@ import javax.inject.Inject
 private const val APP_UPDATE_FILE_NAME = "OkkeiPatcher.apk"
 
 class OkkeiPatcherRepositoryImpl @Inject constructor(
+	@ApplicationContext private val applicationContext: Context,
 	private val httpDownloader: HttpDownloader,
 	private val okkeiPatcherApi: OkkeiPatcherApi
 ) : OkkeiPatcherRepository {
@@ -26,7 +29,7 @@ class OkkeiPatcherRepositoryImpl @Inject constructor(
 	private var isUpdateDownloaded = false
 
 	override suspend fun isUpdateAvailable() =
-		okkeiPatcherApi.getOkkeiPatcherData().version > appVersionCode
+		okkeiPatcherApi.getOkkeiPatcherData().version > applicationContext.versionCode
 
 	override suspend fun getUpdateSizeInMb() = okkeiPatcherApi.getOkkeiPatcherData().size / 1_048_576.0
 

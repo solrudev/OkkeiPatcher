@@ -1,5 +1,6 @@
 package ru.solrudev.okkeipatcher.domain.service.gamefile
 
+import android.content.Context
 import com.android.apksig.ApkSigner
 import io.github.solrudev.simpleinstaller.PackageInstaller
 import io.github.solrudev.simpleinstaller.PackageUninstaller
@@ -13,7 +14,6 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import net.lingala.zip4j.ZipFile
-import ru.solrudev.okkeipatcher.OkkeiApplication
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.OkkeiStorage
 import ru.solrudev.okkeipatcher.domain.file.common.CommonFileHashKey
@@ -22,6 +22,7 @@ import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
 import ru.solrudev.okkeipatcher.domain.operation.AbstractOperation
 import ru.solrudev.okkeipatcher.domain.util.deleteTempZipFiles
+import ru.solrudev.okkeipatcher.domain.util.extension.isPackageInstalled
 import ru.solrudev.okkeipatcher.domain.util.extension.use
 import ru.solrudev.okkeipatcher.io.file.JavaFile
 import ru.solrudev.okkeipatcher.io.service.StreamCopier
@@ -34,11 +35,13 @@ import java.security.spec.PKCS8EncodedKeySpec
 
 private const val CERTIFICATE_FILE_NAME = "testkey.x509.pem"
 private const val PRIVATE_KEY_FILE_NAME = "testkey.pk8"
+private const val PACKAGE_NAME = "com.mages.chaoschild_jp"
 
 abstract class AbstractApk(
 	protected val commonFiles: CommonFiles,
 	protected val streamCopier: StreamCopier,
-	protected val ioDispatcher: CoroutineDispatcher
+	protected val ioDispatcher: CoroutineDispatcher,
+	private val applicationContext: Context
 ) : Apk {
 
 	override val backupExists: Boolean
@@ -49,10 +52,10 @@ abstract class AbstractApk(
 
 	override fun canPatch(onNegative: (LocalizedString) -> Unit): Boolean {
 		val canInstallPatchedApk = backupExists && commonFiles.signedApk.exists
-		if (!Apk.isInstalled && canInstallPatchedApk) {
+		if (!isInstalled() && canInstallPatchedApk) {
 			return true
 		}
-		return if (Apk.isInstalled) {
+		return if (isInstalled()) {
 			true
 		} else {
 			onNegative(LocalizedString.resource(R.string.error_game_not_found))
@@ -72,7 +75,7 @@ abstract class AbstractApk(
 				_progressDelta.emit(progressMax)
 				return
 			}
-			if (!Apk.isInstalled) {
+			if (!isInstalled()) {
 				throw LocalizedException(LocalizedString.resource(R.string.error_game_not_found))
 			}
 			try {
@@ -242,11 +245,11 @@ abstract class AbstractApk(
 
 		override suspend fun invoke() {
 			_status.emit(LocalizedString.resource(R.string.status_uninstalling))
-			if (updating || !Apk.isInstalled) {
+			if (updating || !isInstalled()) {
 				_progressDelta.emit(progressMax)
 				return
 			}
-			val uninstallResult = PackageUninstaller.uninstallPackage(Apk.PACKAGE_NAME)
+			val uninstallResult = PackageUninstaller.uninstallPackage(PACKAGE_NAME)
 			if (!uninstallResult) {
 				throw LocalizedException(LocalizedString.resource(R.string.error_uninstall))
 			}
@@ -281,11 +284,11 @@ abstract class AbstractApk(
 		destinationFile: ru.solrudev.okkeipatcher.io.file.File,
 		hashing: Boolean = false
 	) = coroutineScope {
-		if (!Apk.isInstalled) {
+		if (!isInstalled()) {
 			throw LocalizedException(LocalizedString.resource(R.string.error_game_not_found))
 		}
-		val installedApkPath = OkkeiApplication.context.packageManager
-			.getPackageInfo(Apk.PACKAGE_NAME, 0)
+		val installedApkPath = applicationContext.packageManager
+			.getPackageInfo(PACKAGE_NAME, 0)
 			.applicationInfo
 			.publicSourceDir
 		val installedApk = JavaFile(File(installedApkPath), streamCopier)
@@ -294,7 +297,7 @@ abstract class AbstractApk(
 
 	@Suppress("BlockingMethodInNonBlockingContext")
 	private suspend inline fun getSigningCertificate() = withContext(ioDispatcher) {
-		val assets = OkkeiApplication.context.assets
+		val assets = applicationContext.assets
 		assets.open(CERTIFICATE_FILE_NAME).use { certificateStream ->
 			val certificateFactory = CertificateFactory.getInstance("X.509")
 			certificateFactory.generateCertificate(certificateStream) as X509Certificate
@@ -303,7 +306,7 @@ abstract class AbstractApk(
 
 	@Suppress("BlockingMethodInNonBlockingContext")
 	private suspend inline fun getSigningPrivateKey() = withContext(ioDispatcher) {
-		val assets = OkkeiApplication.context.assets
+		val assets = applicationContext.assets
 		assets.openFd(PRIVATE_KEY_FILE_NAME).use { keyFd ->
 			val keyByteArray = ByteArray(keyFd.declaredLength.toInt())
 			keyFd.createInputStream().use {
@@ -314,4 +317,6 @@ abstract class AbstractApk(
 			keyFactory.generatePrivate(keySpec)
 		}
 	}
+
+	private fun isInstalled() = applicationContext.isPackageInstalled(PACKAGE_NAME)
 }

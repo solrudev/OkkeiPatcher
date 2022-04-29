@@ -1,5 +1,7 @@
 package ru.solrudev.okkeipatcher.domain.service.gamefile.english
 
+import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.merge
 import ru.solrudev.okkeipatcher.R
@@ -21,8 +23,9 @@ class DefaultApk @Inject constructor(
 	patchFiles: DefaultPatchFiles,
 	commonFiles: CommonFiles,
 	streamCopier: StreamCopier,
-	@IoDispatcher ioDispatcher: CoroutineDispatcher
-) : AbstractApk(commonFiles, streamCopier, ioDispatcher) {
+	@IoDispatcher ioDispatcher: CoroutineDispatcher,
+	@ApplicationContext applicationContext: Context
+) : AbstractApk(commonFiles, streamCopier, ioDispatcher, applicationContext) {
 
 	private val scriptsPatchOperation = scriptsPatchOperationFactory.create(
 		this,

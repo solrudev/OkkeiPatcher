@@ -2,7 +2,6 @@ package ru.solrudev.okkeipatcher.domain.service.gamefile
 
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.operation.Operation
-import ru.solrudev.okkeipatcher.util.isPackageInstalled
 
 interface GameFile {
 	val backupExists: Boolean
@@ -18,16 +17,5 @@ interface Patchable {
 }
 
 interface PatchableGameFile : GameFile, Patchable
-
-interface Apk : PatchableGameFile, AutoCloseable {
-
-	companion object {
-
-		const val PACKAGE_NAME = "com.mages.chaoschild_jp"
-
-		val isInstalled: Boolean
-			get() = isPackageInstalled(PACKAGE_NAME)
-	}
-}
-
+interface Apk : PatchableGameFile, AutoCloseable
 interface SaveData : GameFile, AutoCloseable
