@@ -13,7 +13,7 @@ import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.GameFileStrateg
 class RestoreOperation(
 	private val strategy: GameFileStrategy,
 	private val handleSaveData: Boolean,
-	private val preferencesRepository: PreferencesRepository
+	private val preferencesRepository: PreferencesRepository // TODO: see PatchOperation
 ) : Operation<Unit> {
 
 	private val operation = object : AggregateOperation(

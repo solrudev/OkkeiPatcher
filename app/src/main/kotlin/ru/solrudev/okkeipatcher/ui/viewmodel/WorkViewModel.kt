@@ -18,6 +18,8 @@ import ru.solrudev.okkeipatcher.domain.usecase.work.GetWorkStateFlowUseCase
 import ru.solrudev.okkeipatcher.ui.model.MessageUiState
 import ru.solrudev.okkeipatcher.ui.model.WorkUiState
 
+// TODO: think about how to merge patch and restore screens into a universal one
+//  This probably will require making substantial changes in data layer
 abstract class WorkViewModel(
 	private val getWorkStateFlowUseCase: GetWorkStateFlowUseCase,
 	private val cancelWorkUseCase: CancelWorkUseCase,

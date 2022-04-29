@@ -15,6 +15,9 @@ class PatchOperation(
 	private val strategy: GameFileStrategy,
 	private val handleSaveData: Boolean,
 	private val patchUpdates: PatchUpdates,
+
+	// TODO: accept interface which gives access only to the patch state instead of the whole repository
+	//  Related to segregation of PreferencesRepository
 	private val preferencesRepository: PreferencesRepository
 ) : Operation<Unit> {
 

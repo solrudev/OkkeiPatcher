@@ -1,10 +1,10 @@
-package ru.solrudev.okkeipatcher.domain.worker
+package ru.solrudev.okkeipatcher.data.worker
 
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
 import androidx.core.app.NotificationCompat
 import androidx.core.content.getSystemService
+import androidx.navigation.NavDeepLinkBuilder
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.ForegroundInfo
@@ -33,7 +33,12 @@ abstract class ForegroundWorker(
 	workerParameters: WorkerParameters
 ) : CoroutineWorker(context, workerParameters) {
 
-	protected abstract val progressNotificationTitle: LocalizedString
+	protected abstract val workTitle: LocalizedString // TODO: inject it or pass through input data
+
+	// TODO: worker should not know anything about presentation layer
+	//  Related to merging work screens
+	protected abstract val destinationScreen: Int
+
 	private val notificationManager = context.getSystemService<NotificationManager>()
 	private val progressNotificationId = workerProgressNotificationId.incrementAndGet()
 	private val shownMessageNotifications = mutableListOf<Int>()
@@ -44,11 +49,16 @@ abstract class ForegroundWorker(
 	}
 
 	private val progressNotificationBuilder by lazy {
-		createNotificationBuilder(progressNotificationTitle, progressNotification = true)
+		createNotificationBuilder(workTitle, progressNotification = true)
 	}
 
+	// TODO: inject work operation factory instead which should be in domain layer
 	protected abstract suspend fun getOperation(): Operation<*>
-	protected abstract fun createPendingIntent(): PendingIntent
+
+	private fun createPendingIntent() = NavDeepLinkBuilder(applicationContext)
+		.setGraph(R.navigation.okkei_nav_graph)
+		.setDestination(destinationScreen)
+		.createPendingIntent()
 
 	final override suspend fun doWork() = try {
 		setForeground(createForegroundInfo())

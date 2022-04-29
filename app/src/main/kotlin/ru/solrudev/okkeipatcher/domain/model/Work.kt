@@ -1,9 +1,9 @@
 package ru.solrudev.okkeipatcher.domain.model
 
 import androidx.work.WorkInfo
+import ru.solrudev.okkeipatcher.data.worker.ForegroundWorker
 import ru.solrudev.okkeipatcher.domain.util.extension.getParcelable
 import ru.solrudev.okkeipatcher.domain.util.extension.getSerializable
-import ru.solrudev.okkeipatcher.domain.worker.ForegroundWorker
 import java.util.*
 
 /**
@@ -31,6 +31,7 @@ sealed class WorkState {
 
 fun WorkInfo.asWork() = Work(id)
 
+// TODO: make a mapper interface for WorkState instead of static extension
 fun WorkInfo?.asWorkState() = when (this?.state) {
 	WorkInfo.State.RUNNING -> with(progress) {
 		val status = getSerializable<LocalizedString>(ForegroundWorker.KEY_STATUS) ?: LocalizedString.empty()
