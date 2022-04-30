@@ -3,7 +3,6 @@ package ru.solrudev.okkeipatcher.domain.service.gamefile.english
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.merge
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.di.factory.ScriptsPatchOperationFactory
 import ru.solrudev.okkeipatcher.di.module.IoDispatcher
@@ -37,24 +36,22 @@ class DefaultApk @Inject constructor(
 
 		private val installPatchedOperation = installPatched(updating = false)
 
-		override val status = merge(
+		override val status = addStatusFlows(
 			scriptsPatchOperation.status,
-			installPatchedOperation.status,
-			_status
+			installPatchedOperation.status
 		)
 
-		override val progressDelta = merge(
+		override val progressDelta = addProgressDeltaFlows(
 			scriptsPatchOperation.progressDelta,
 			installPatchedOperation.progressDelta,
-			_progressDelta
 		)
 
 		override val progressMax = installPatchedOperation.progressMax + scriptsPatchOperation.progressMax
 
 		override suspend fun invoke() {
-			_status.emit(LocalizedString.resource(R.string.status_comparing_apk))
+			emitStatus(LocalizedString.resource(R.string.status_comparing_apk))
 			if (commonFiles.signedApk.verify().invoke()) {
-				_progressDelta.emit(scriptsPatchOperation.progressMax)
+				emitProgressDelta(scriptsPatchOperation.progressMax)
 				installPatchedOperation()
 				return
 			}

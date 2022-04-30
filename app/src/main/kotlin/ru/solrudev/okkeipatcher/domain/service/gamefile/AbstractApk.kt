@@ -8,7 +8,6 @@ import io.github.solrudev.simpleinstaller.data.InstallResult
 import io.github.solrudev.simpleinstaller.installPackage
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -70,20 +69,20 @@ abstract class AbstractApk(
 		override val progressMax = 100
 
 		override suspend fun invoke() {
-			_status.emit(LocalizedString.resource(R.string.status_comparing_apk))
+			emitStatus(LocalizedString.resource(R.string.status_comparing_apk))
 			if (commonFiles.backupApk.verify().invoke()) {
-				_progressDelta.emit(progressMax)
+				emitProgressDelta(progressMax)
 				return
 			}
 			if (!isInstalled()) {
 				throw LocalizedException(LocalizedString.resource(R.string.error_game_not_found))
 			}
 			try {
-				_status.emit(LocalizedString.resource(R.string.status_backing_up_apk))
+				emitStatus(LocalizedString.resource(R.string.status_backing_up_apk))
 				val hash = copyInstalledApkTo(commonFiles.backupApk, hashing = true)
-				_status.emit(LocalizedString.resource(R.string.status_writing_apk_hash))
+				emitStatus(LocalizedString.resource(R.string.status_writing_apk_hash))
 				Preferences.set(CommonFileHashKey.backup_apk_hash.name, hash)
-				_progressDelta.emit(progressMax)
+				emitProgressDelta(progressMax)
 			} catch (t: Throwable) {
 				commonFiles.backupApk.delete()
 				throw t
@@ -96,16 +95,14 @@ abstract class AbstractApk(
 		private val uninstallOperation = uninstall(updating = false)
 		private val installBackupOperation = install(File(commonFiles.backupApk.fullPath))
 
-		override val status = merge(
+		override val status = addStatusFlows(
 			uninstallOperation.status,
-			installBackupOperation.status,
-			_status
+			installBackupOperation.status
 		)
 
-		override val progressDelta = merge(
+		override val progressDelta = addProgressDeltaFlows(
 			uninstallOperation.progressDelta,
-			installBackupOperation.progressDelta,
-			_progressDelta
+			installBackupOperation.progressDelta
 		)
 
 		override val progressMax = uninstallOperation.progressMax + installBackupOperation.progressMax
@@ -114,7 +111,7 @@ abstract class AbstractApk(
 			if (!commonFiles.backupApk.exists) {
 				throw LocalizedException(LocalizedString.resource(R.string.error_apk_not_found))
 			}
-			_status.emit(LocalizedString.resource(R.string.status_comparing_apk))
+			emitStatus(LocalizedString.resource(R.string.status_comparing_apk))
 			if (!commonFiles.backupApk.verify().invoke()) {
 				throw LocalizedException(LocalizedString.resource(R.string.error_not_trustworthy_apk))
 			}
@@ -163,7 +160,7 @@ abstract class AbstractApk(
 
 		@Suppress("BlockingMethodInNonBlockingContext")
 		override suspend fun invoke() {
-			_status.emit(LocalizedString.resource(R.string.status_signing_apk))
+			emitStatus(LocalizedString.resource(R.string.status_signing_apk))
 			val certificate = getSigningCertificate()
 			val privateKey = getSigningPrivateKey()
 			val signerConfig = ApkSigner.SignerConfig.Builder(
@@ -181,12 +178,12 @@ abstract class AbstractApk(
 			withContext(ioDispatcher) {
 				apkSigner.sign()
 			}
-			_status.emit(LocalizedString.resource(R.string.status_writing_patched_apk_hash))
+			emitStatus(LocalizedString.resource(R.string.status_writing_patched_apk_hash))
 			Preferences.set(
 				CommonFileHashKey.signed_apk_hash.name,
 				commonFiles.signedApk.computeHash().invoke()
 			)
-			_progressDelta.emit(progressMax)
+			emitProgressDelta(progressMax)
 		}
 	}
 
@@ -196,12 +193,12 @@ abstract class AbstractApk(
 
 		override suspend fun invoke() {
 			asZipFile().use { zipFile ->
-				_status.emit(LocalizedString.resource(R.string.status_removing_signature))
+				emitStatus(LocalizedString.resource(R.string.status_removing_signature))
 				withContext(ioDispatcher) {
 					zipFile.removeFile("META-INF/")
 				}
 			}
-			_progressDelta.emit(progressMax)
+			emitProgressDelta(progressMax)
 		}
 	}
 
@@ -210,16 +207,14 @@ abstract class AbstractApk(
 		private val uninstallOperation = uninstall(updating)
 		private val installOperation = install(File(commonFiles.signedApk.fullPath))
 
-		override val status = merge(
+		override val status = addStatusFlows(
 			uninstallOperation.status,
-			installOperation.status,
-			_status
+			installOperation.status
 		)
 
-		override val progressDelta = merge(
+		override val progressDelta = addProgressDeltaFlows(
 			uninstallOperation.progressDelta,
-			installOperation.progressDelta,
-			_progressDelta
+			installOperation.progressDelta
 		)
 
 		override val progressMax = uninstallOperation.progressMax + installOperation.progressMax
@@ -228,7 +223,7 @@ abstract class AbstractApk(
 			if (!commonFiles.signedApk.exists) {
 				throw LocalizedException(LocalizedString.resource(R.string.error_apk_not_found))
 			}
-			_status.emit(LocalizedString.resource(R.string.status_comparing_apk))
+			emitStatus(LocalizedString.resource(R.string.status_comparing_apk))
 			if (!commonFiles.signedApk.verify().invoke()) {
 				commonFiles.signedApk.delete()
 				throw LocalizedException(LocalizedString.resource(R.string.error_not_trustworthy_apk))
@@ -244,16 +239,16 @@ abstract class AbstractApk(
 		override val progressMax = 100
 
 		override suspend fun invoke() {
-			_status.emit(LocalizedString.resource(R.string.status_uninstalling))
+			emitStatus(LocalizedString.resource(R.string.status_uninstalling))
 			if (updating || !isInstalled()) {
-				_progressDelta.emit(progressMax)
+				emitProgressDelta(progressMax)
 				return
 			}
 			val uninstallResult = PackageUninstaller.uninstallPackage(PACKAGE_NAME)
 			if (!uninstallResult) {
 				throw LocalizedException(LocalizedString.resource(R.string.error_uninstall))
 			}
-			_progressDelta.emit(progressMax)
+			emitProgressDelta(progressMax)
 		}
 	}
 
@@ -262,7 +257,7 @@ abstract class AbstractApk(
 		override val progressMax = 100
 
 		override suspend fun invoke() {
-			_status.emit(LocalizedString.resource(R.string.status_installing))
+			emitStatus(LocalizedString.resource(R.string.status_installing))
 			val installResult = PackageInstaller.installPackage(apkFile)
 			if (installResult is InstallResult.Failure) {
 				throw LocalizedException(
@@ -272,7 +267,7 @@ abstract class AbstractApk(
 					)
 				)
 			}
-			_progressDelta.emit(progressMax)
+			emitProgressDelta(progressMax)
 		}
 	}
 

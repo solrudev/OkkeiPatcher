@@ -1,7 +1,5 @@
 package ru.solrudev.okkeipatcher.domain.service.gamefile
 
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.merge
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.file.common.CommonFileHashKey
 import ru.solrudev.okkeipatcher.domain.file.common.CommonFiles
@@ -21,39 +19,39 @@ class SaveDataImpl @Inject constructor(private val commonFiles: CommonFiles) : S
 	override fun backup() = object : AbstractOperation<Unit>() {
 
 		private val backupSaveDataOperation = commonFiles.originalSaveData.copyTo(commonFiles.tempSaveData)
-		override val progressDelta = merge(backupSaveDataOperation.progressDelta, _progressDelta)
+		override val progressDelta = addProgressDeltaFlows(backupSaveDataOperation.progressDelta)
 		override val progressMax = 100
 
 		override suspend fun invoke() {
 			if (commonFiles.originalSaveData.exists) {
 				if (commonFiles.originalSaveData.verify().invoke()) {
-					_progressDelta.emit(progressMax)
+					emitProgressDelta(progressMax)
 					return
 				}
-				_status.emit(LocalizedString.resource(R.string.status_backing_up_save_data))
+				emitStatus(LocalizedString.resource(R.string.status_backing_up_save_data))
 				backupSaveDataOperation()
 				return
 			}
-			_messages.sendWarning(R.string.warning_save_data_not_found)
-			_progressDelta.emit(progressMax)
+			emitMessage(createWarning(R.string.warning_save_data_not_found))
+			emitProgressDelta(progressMax)
 		}
 	}
 
 	override fun restore() = object : AbstractOperation<Unit>() {
 
 		private val restoreSaveDataOperation = commonFiles.backupSaveData.copyTo(commonFiles.originalSaveData)
-		override val progressDelta = merge(restoreSaveDataOperation.progressDelta, _progressDelta)
+		override val progressDelta = addProgressDeltaFlows(restoreSaveDataOperation.progressDelta)
 		override val progressMax = restoreSaveDataOperation.progressMax
 
 		override suspend fun invoke() {
-			_status.emit(LocalizedString.resource(R.string.status_comparing_saves))
+			emitStatus(LocalizedString.resource(R.string.status_comparing_saves))
 			if (commonFiles.backupSaveData.verify().invoke()) {
-				_status.emit(LocalizedString.resource(R.string.status_restoring_saves))
+				emitStatus(LocalizedString.resource(R.string.status_restoring_saves))
 				restoreSaveDataOperation()
 			} else {
 				commonFiles.backupSaveData.delete()
-				_messages.sendWarning(R.string.warning_save_data_backup_not_found_or_corrupted)
-				_progressDelta.emit(progressMax)
+				emitMessage(createWarning(R.string.warning_save_data_backup_not_found_or_corrupted))
+				emitProgressDelta(progressMax)
 			}
 			if (commonFiles.tempSaveData.exists) {
 				commonFiles.backupSaveData.delete()
@@ -62,22 +60,19 @@ class SaveDataImpl @Inject constructor(private val commonFiles: CommonFiles) : S
 			if (!commonFiles.backupSaveData.exists) {
 				return
 			}
-			_status.emit(LocalizedString.resource(R.string.status_writing_save_data_hash))
+			emitStatus(LocalizedString.resource(R.string.status_writing_save_data_hash))
 			Preferences.set(
 				CommonFileHashKey.save_data_hash.name,
 				commonFiles.backupSaveData.computeHash().invoke()
 			)
-			_progressDelta.emit(progressMax)
+			emitProgressDelta(progressMax)
 		}
 	}
 
 	override fun close() = commonFiles.tempSaveData.delete()
 
-	private suspend inline fun MutableSharedFlow<Message>.sendWarning(message: Int) {
-		val warningMessage = Message(
-			LocalizedString.resource(R.string.warning),
-			LocalizedString.resource(message)
-		)
-		emit(warningMessage)
-	}
+	private fun createWarning(message: Int) = Message(
+		LocalizedString.resource(R.string.warning),
+		LocalizedString.resource(message)
+	)
 }
