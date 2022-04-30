@@ -19,7 +19,7 @@ class SaveDataImpl @Inject constructor(private val commonFiles: CommonFiles) : S
 	override fun backup() = object : AbstractOperation<Unit>() {
 
 		private val backupSaveDataOperation = commonFiles.originalSaveData.copyTo(commonFiles.tempSaveData)
-		override val progressDelta = addProgressDeltaFlows(backupSaveDataOperation.progressDelta)
+		override val progressDelta = withProgressDeltaFlows(backupSaveDataOperation.progressDelta)
 		override val progressMax = 100
 
 		override suspend fun invoke() {
@@ -40,7 +40,7 @@ class SaveDataImpl @Inject constructor(private val commonFiles: CommonFiles) : S
 	override fun restore() = object : AbstractOperation<Unit>() {
 
 		private val restoreSaveDataOperation = commonFiles.backupSaveData.copyTo(commonFiles.originalSaveData)
-		override val progressDelta = addProgressDeltaFlows(restoreSaveDataOperation.progressDelta)
+		override val progressDelta = withProgressDeltaFlows(restoreSaveDataOperation.progressDelta)
 		override val progressMax = restoreSaveDataOperation.progressMax
 
 		override suspend fun invoke() {

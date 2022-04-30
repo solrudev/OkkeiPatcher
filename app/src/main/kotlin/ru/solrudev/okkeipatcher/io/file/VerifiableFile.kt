@@ -11,7 +11,7 @@ abstract class VerifiableFile(private val fileImplementation: File) : File by fi
 	protected fun compareBySharedPreferences(key: String) = object : AbstractOperation<Boolean>() {
 
 		private val computeHashOperation = computeHash()
-		override val progressDelta = addProgressDeltaFlows(computeHashOperation.progressDelta)
+		override val progressDelta = withProgressDeltaFlows(computeHashOperation.progressDelta)
 		override val progressMax = 100
 
 		override suspend fun invoke(): Boolean {
@@ -34,7 +34,7 @@ abstract class VerifiableFile(private val fileImplementation: File) : File by fi
 		private val computeHashOperation = computeHash()
 		private val computeHashToCompareOperation = file.computeHash()
 
-		override val progressDelta = addProgressDeltaFlows(
+		override val progressDelta = withProgressDeltaFlows(
 			computeHashOperation.progressDelta
 				.withIndex()
 				.filter { indexedValue -> indexedValue.index % 2 == 0 }

@@ -95,12 +95,12 @@ abstract class AbstractApk(
 		private val uninstallOperation = uninstall(updating = false)
 		private val installBackupOperation = install(File(commonFiles.backupApk.fullPath))
 
-		override val status = addStatusFlows(
+		override val status = withStatusFlows(
 			uninstallOperation.status,
 			installBackupOperation.status
 		)
 
-		override val progressDelta = addProgressDeltaFlows(
+		override val progressDelta = withProgressDeltaFlows(
 			uninstallOperation.progressDelta,
 			installBackupOperation.progressDelta
 		)
@@ -207,12 +207,12 @@ abstract class AbstractApk(
 		private val uninstallOperation = uninstall(updating)
 		private val installOperation = install(File(commonFiles.signedApk.fullPath))
 
-		override val status = addStatusFlows(
+		override val status = withStatusFlows(
 			uninstallOperation.status,
 			installOperation.status
 		)
 
-		override val progressDelta = addProgressDeltaFlows(
+		override val progressDelta = withProgressDeltaFlows(
 			uninstallOperation.progressDelta,
 			installOperation.progressDelta
 		)

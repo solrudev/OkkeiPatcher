@@ -36,12 +36,12 @@ class DefaultApk @Inject constructor(
 
 		private val installPatchedOperation = installPatched(updating = false)
 
-		override val status = addStatusFlows(
+		override val status = withStatusFlows(
 			scriptsPatchOperation.status,
 			installPatchedOperation.status
 		)
 
-		override val progressDelta = addProgressDeltaFlows(
+		override val progressDelta = withProgressDeltaFlows(
 			scriptsPatchOperation.progressDelta,
 			installPatchedOperation.progressDelta,
 		)
@@ -66,7 +66,7 @@ class DefaultApk @Inject constructor(
 			installPatched(updating = true)
 		)
 	) {
-		override suspend fun preInvoke() {
+		override suspend fun doBefore() {
 			commonFiles.tempApk.delete()
 			commonFiles.signedApk.delete()
 		}

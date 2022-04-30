@@ -26,7 +26,7 @@ class RestoreOperation(
 			)
 		}
 	) {
-		override suspend fun postInvoke() = strategy.run {
+		override suspend fun doAfter() = strategy.run {
 			apk.deleteBackup()
 			obb.deleteBackup()
 			preferencesRepository.setIsPatched(false)

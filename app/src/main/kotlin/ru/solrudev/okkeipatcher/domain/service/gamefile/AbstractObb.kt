@@ -29,7 +29,7 @@ abstract class AbstractObb(protected val commonFiles: CommonFiles) : PatchableGa
 		private val verifyBackupObbOperation = commonFiles.backupObb.verify()
 		private val backupObbOperation = commonFiles.obbToBackup.copyTo(commonFiles.backupObb, hashing = true)
 
-		override val progressDelta = addProgressDeltaFlows(
+		override val progressDelta = withProgressDeltaFlows(
 			verifyBackupObbOperation.progressDelta,
 			backupObbOperation.progressDelta.map { it * 6 }
 		)

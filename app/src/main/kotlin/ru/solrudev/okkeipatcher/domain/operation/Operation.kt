@@ -5,7 +5,7 @@ import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.Message
 
 /**
- * Operation which reports its progress, status and, possibly, messages. Generic type parameter is used
+ * Operation which reports its progress, status and messages. Generic type parameter is used
  * as a return type for [invoke] operator.
  */
 interface Operation<out R> {
@@ -47,13 +47,13 @@ open class AggregateOperation(private val operations: List<Operation<*>>) : Oper
 	final override val progressMax = operations.sumOf { it.progressMax }
 
 	final override suspend fun invoke() {
-		preInvoke()
+		doBefore()
 		operations.forEach { it.invoke() }
-		postInvoke()
+		doAfter()
 	}
 
-	protected open suspend fun preInvoke() {}
-	protected open suspend fun postInvoke() {}
+	protected open suspend fun doBefore() {}
+	protected open suspend fun doAfter() {}
 }
 
 /**
@@ -71,7 +71,22 @@ abstract class AbstractOperation<out R> : Operation<R> {
 	protected suspend fun emitStatus(value: LocalizedString) = _status.emit(value)
 	protected suspend fun emitMessage(value: Message) = _messages.emit(value)
 	protected suspend fun emitProgressDelta(value: Int) = _progressDelta.emit(value)
-	protected fun addStatusFlows(vararg flows: Flow<LocalizedString>) = merge(*flows, _status)
-	protected fun addMessageFlows(vararg flows: Flow<Message>) = merge(*flows, _messages)
-	protected fun addProgressDeltaFlows(vararg flows: Flow<Int>) = merge(*flows, _progressDelta)
+
+	/**
+	 * Merges the given [flows] and this operation's status flow into a single flow.
+	 * @return Merged status flow.
+	 */
+	protected fun withStatusFlows(vararg flows: Flow<LocalizedString>) = merge(*flows, _status)
+
+	/**
+	 * Merges the given [flows] and this operation's messages flow into a single flow.
+	 * @return Merged messages flow.
+	 */
+	protected fun withMessageFlows(vararg flows: Flow<Message>) = merge(*flows, _messages)
+
+	/**
+	 * Merges the given [flows] and this operation's progress delta flow into a single flow.
+	 * @return Merged progress delta flow.
+	 */
+	protected fun withProgressDeltaFlows(vararg flows: Flow<Int>) = merge(*flows, _progressDelta)
 }

@@ -60,7 +60,7 @@ class PatchOperation(
 			)
 		}
 	) {
-		override suspend fun postInvoke() = preferencesRepository.setIsPatched(true)
+		override suspend fun doAfter() = preferencesRepository.setIsPatched(true)
 	}
 
 	private fun update() = AggregateOperation(
