@@ -49,9 +49,9 @@ class DefaultApk @Inject constructor(
 		override val progressMax = installPatchedOperation.progressMax + scriptsPatchOperation.progressMax
 
 		override suspend fun invoke() {
-			emitStatus(LocalizedString.resource(R.string.status_comparing_apk))
+			status(LocalizedString.resource(R.string.status_comparing_apk))
 			if (commonFiles.signedApk.verify().invoke()) {
-				emitProgressDelta(scriptsPatchOperation.progressMax)
+				progressDelta(scriptsPatchOperation.progressMax)
 				installPatchedOperation()
 				return
 			}

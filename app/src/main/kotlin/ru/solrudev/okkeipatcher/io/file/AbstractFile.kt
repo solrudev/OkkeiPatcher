@@ -12,7 +12,7 @@ abstract class AbstractFile(private val streamCopier: StreamCopier) : File {
 
 		override suspend fun invoke() = createInputStream().use {
 			streamCopier.copy(it, BlackholeOutputStream(), length, hashing = true) { progressDelta ->
-				emitProgressDelta(progressDelta)
+				progressDelta(progressDelta)
 			}
 		}
 	}
@@ -27,7 +27,7 @@ abstract class AbstractFile(private val streamCopier: StreamCopier) : File {
 			createInputStream().use { inputFile ->
 				destinationFile.createOutputStream().use { outputFile ->
 					return streamCopier.copy(inputFile, outputFile, length, hashing) { progressDelta ->
-						emitProgressDelta(progressDelta)
+						progressDelta(progressDelta)
 					}
 				}
 			}

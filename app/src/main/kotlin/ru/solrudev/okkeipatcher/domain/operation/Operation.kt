@@ -68,9 +68,9 @@ abstract class AbstractOperation<out R> : Operation<R> {
 	override val messages: Flow<Message> = _messages.asSharedFlow()
 	override val progressDelta: Flow<Int> = _progressDelta.asSharedFlow()
 
-	protected suspend fun emitStatus(value: LocalizedString) = _status.emit(value)
-	protected suspend fun emitMessage(value: Message) = _messages.emit(value)
-	protected suspend fun emitProgressDelta(value: Int) = _progressDelta.emit(value)
+	protected suspend fun status(value: LocalizedString) = _status.emit(value)
+	protected suspend fun message(value: Message) = _messages.emit(value)
+	protected suspend fun progressDelta(value: Int) = _progressDelta.emit(value)
 
 	/**
 	 * Merges the given [flows] and this operation's status flow into a single flow.

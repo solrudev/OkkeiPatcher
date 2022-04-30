@@ -16,12 +16,12 @@ abstract class VerifiableFile(private val fileImplementation: File) : File by fi
 
 		override suspend fun invoke(): Boolean {
 			if (!exists) {
-				emitProgressDelta(progressMax)
+				progressDelta(progressMax)
 				return false
 			}
 			val hashToCompare = Preferences.get(key, "")
 			if (hashToCompare.isEmpty() || hashToCompare.isBlank()) {
-				emitProgressDelta(progressMax)
+				progressDelta(progressMax)
 				return false
 			}
 			val hash = computeHashOperation()
@@ -49,11 +49,11 @@ abstract class VerifiableFile(private val fileImplementation: File) : File by fi
 
 		override suspend fun invoke(): Boolean {
 			if (!exists) {
-				emitProgressDelta(progressMax)
+				progressDelta(progressMax)
 				return false
 			}
 			if (!file.exists) {
-				emitProgressDelta(progressMax)
+				progressDelta(progressMax)
 				return false
 			}
 			val hash = computeHashOperation()

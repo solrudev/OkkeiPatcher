@@ -25,15 +25,15 @@ class SaveDataImpl @Inject constructor(private val commonFiles: CommonFiles) : S
 		override suspend fun invoke() {
 			if (commonFiles.originalSaveData.exists) {
 				if (commonFiles.originalSaveData.verify().invoke()) {
-					emitProgressDelta(progressMax)
+					progressDelta(progressMax)
 					return
 				}
-				emitStatus(LocalizedString.resource(R.string.status_backing_up_save_data))
+				status(LocalizedString.resource(R.string.status_backing_up_save_data))
 				backupSaveDataOperation()
 				return
 			}
-			emitMessage(createWarning(R.string.warning_save_data_not_found))
-			emitProgressDelta(progressMax)
+			message(createWarning(R.string.warning_save_data_not_found))
+			progressDelta(progressMax)
 		}
 	}
 
@@ -44,14 +44,14 @@ class SaveDataImpl @Inject constructor(private val commonFiles: CommonFiles) : S
 		override val progressMax = restoreSaveDataOperation.progressMax
 
 		override suspend fun invoke() {
-			emitStatus(LocalizedString.resource(R.string.status_comparing_saves))
+			status(LocalizedString.resource(R.string.status_comparing_saves))
 			if (commonFiles.backupSaveData.verify().invoke()) {
-				emitStatus(LocalizedString.resource(R.string.status_restoring_saves))
+				status(LocalizedString.resource(R.string.status_restoring_saves))
 				restoreSaveDataOperation()
 			} else {
 				commonFiles.backupSaveData.delete()
-				emitMessage(createWarning(R.string.warning_save_data_backup_not_found_or_corrupted))
-				emitProgressDelta(progressMax)
+				message(createWarning(R.string.warning_save_data_backup_not_found_or_corrupted))
+				progressDelta(progressMax)
 			}
 			if (commonFiles.tempSaveData.exists) {
 				commonFiles.backupSaveData.delete()
@@ -60,12 +60,12 @@ class SaveDataImpl @Inject constructor(private val commonFiles: CommonFiles) : S
 			if (!commonFiles.backupSaveData.exists) {
 				return
 			}
-			emitStatus(LocalizedString.resource(R.string.status_writing_save_data_hash))
+			status(LocalizedString.resource(R.string.status_writing_save_data_hash))
 			Preferences.set(
 				CommonFileHashKey.save_data_hash.name,
 				commonFiles.backupSaveData.computeHash().invoke()
 			)
-			emitProgressDelta(progressMax)
+			progressDelta(progressMax)
 		}
 	}
 

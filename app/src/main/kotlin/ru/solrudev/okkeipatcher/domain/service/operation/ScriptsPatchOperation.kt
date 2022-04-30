@@ -62,19 +62,19 @@ class ScriptsPatchOperation @AssistedInject constructor(
 		override val progressMax = 100
 
 		override suspend fun invoke() {
-			emitStatus(LocalizedString.resource(R.string.status_downloading_scripts))
+			status(LocalizedString.resource(R.string.status_downloading_scripts))
 			val scriptsData = scriptsDataRepository.getScriptsData()
 			scriptsFile.delete()
 			scriptsFile.create()
 			val outputStream = scriptsFile.createOutputStream()
 			val scriptsHash = httpDownloader.download(scriptsData.url, outputStream, hashing = true) { progressDelta ->
-				emitProgressDelta(progressDelta)
+				progressDelta(progressDelta)
 			}
-			emitStatus(LocalizedString.resource(R.string.status_comparing_scripts))
+			status(LocalizedString.resource(R.string.status_comparing_scripts))
 			if (scriptsHash != scriptsData.hash) {
 				throw LocalizedException(LocalizedString.resource(R.string.error_hash_scripts_mismatch))
 			}
-			emitStatus(LocalizedString.resource(R.string.status_writing_scripts_hash))
+			status(LocalizedString.resource(R.string.status_writing_scripts_hash))
 			Preferences.set(PatchFileHashKey.scripts_hash.name, scriptsHash)
 			Preferences.set(PatchFileVersionKey.scripts_version.name, scriptsData.version)
 		}
@@ -85,13 +85,13 @@ class ScriptsPatchOperation @AssistedInject constructor(
 		override val progressMax = 100
 
 		override suspend fun invoke() {
-			emitStatus(LocalizedString.resource(R.string.status_extracting_scripts))
+			status(LocalizedString.resource(R.string.status_extracting_scripts))
 			val scriptsZip = ZipFile(scriptsFile.fullPath)
 			scriptsZip.use {
 				withContext(ioDispatcher) {
 					it.extractAll(extractedScriptsDirectory.absolutePath)
 				}
-				emitProgressDelta(progressMax)
+				progressDelta(progressMax)
 			}
 		}
 	}
@@ -102,7 +102,7 @@ class ScriptsPatchOperation @AssistedInject constructor(
 
 		@Suppress("BlockingMethodInNonBlockingContext")
 		override suspend fun invoke() = apk.asZipFile().use { apkZip ->
-			emitStatus(LocalizedString.resource(R.string.status_replacing_scripts))
+			status(LocalizedString.resource(R.string.status_replacing_scripts))
 			val parameters = ZipParameters().apply { rootFolderNameInZip = "assets/script/" }
 			val scriptsList = extractedScriptsDirectory.listFiles()!!.filter { it.isFile }
 			val apkScriptsList = scriptsList.map { "${parameters.rootFolderNameInZip}${it.name}" }
@@ -110,7 +110,7 @@ class ScriptsPatchOperation @AssistedInject constructor(
 				apkZip.removeFiles(apkScriptsList)
 				apkZip.addFiles(scriptsList, parameters)
 			}
-			emitProgressDelta(progressMax)
+			progressDelta(progressMax)
 		}
 	}
 }

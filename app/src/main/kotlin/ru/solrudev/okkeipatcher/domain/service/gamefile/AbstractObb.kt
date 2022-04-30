@@ -37,18 +37,18 @@ abstract class AbstractObb(protected val commonFiles: CommonFiles) : PatchableGa
 		override val progressMax = verifyBackupObbOperation.progressMax + backupObbOperation.progressMax * 6
 
 		override suspend fun invoke() {
-			emitStatus(LocalizedString.resource(R.string.status_comparing_obb))
+			status(LocalizedString.resource(R.string.status_comparing_obb))
 			if (verifyBackupObbOperation()) {
-				emitProgressDelta(progressMax - verifyBackupObbOperation.progressMax)
+				progressDelta(progressMax - verifyBackupObbOperation.progressMax)
 				return
 			}
 			try {
 				if (!commonFiles.obbToBackup.exists) {
 					throw LocalizedException(LocalizedString.resource(R.string.error_obb_not_found))
 				}
-				emitStatus(LocalizedString.resource(R.string.status_backing_up_obb))
+				status(LocalizedString.resource(R.string.status_backing_up_obb))
 				val hash = backupObbOperation()
-				emitStatus(LocalizedString.resource(R.string.status_writing_obb_hash))
+				status(LocalizedString.resource(R.string.status_writing_obb_hash))
 				Preferences.set(CommonFileHashKey.backup_obb_hash.name, hash)
 			} catch (t: Throwable) {
 				commonFiles.backupObb.delete()
@@ -68,7 +68,7 @@ abstract class AbstractObb(protected val commonFiles: CommonFiles) : PatchableGa
 				if (!commonFiles.backupObb.exists) {
 					throw LocalizedException(LocalizedString.resource(R.string.error_obb_not_found))
 				}
-				emitStatus(LocalizedString.resource(R.string.status_restoring_obb))
+				status(LocalizedString.resource(R.string.status_restoring_obb))
 				restoreObbOperation()
 			} catch (t: Throwable) {
 				commonFiles.obbToBackup.delete()

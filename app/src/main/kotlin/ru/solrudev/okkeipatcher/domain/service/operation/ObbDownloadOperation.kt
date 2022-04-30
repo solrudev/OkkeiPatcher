@@ -26,15 +26,15 @@ class ObbDownloadOperation @AssistedInject constructor(
 	override suspend fun invoke() {
 		val obb = commonFiles.obbToPatch
 		try {
-			emitStatus(LocalizedString.resource(R.string.status_downloading_obb))
+			status(LocalizedString.resource(R.string.status_downloading_obb))
 			val obbData = obbDataRepository.getObbData()
 			obb.delete()
 			obb.create()
 			val outputStream = obb.createOutputStream()
 			val obbHash = httpDownloader.download(obbData.url, outputStream, hashing = true) { progressDelta ->
-				emitProgressDelta(progressDelta)
+				progressDelta(progressDelta)
 			}
-			emitStatus(LocalizedString.resource(R.string.status_writing_obb_hash))
+			status(LocalizedString.resource(R.string.status_writing_obb_hash))
 			if (obbHash != obbData.hash) {
 				throw LocalizedException(LocalizedString.resource(R.string.error_hash_obb_mismatch))
 			}
