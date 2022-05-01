@@ -2,7 +2,6 @@ package ru.solrudev.okkeipatcher.domain.service.operation
 
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.flow.map
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.file.common.CommonFileHashKey
 import ru.solrudev.okkeipatcher.domain.file.common.CommonFiles
@@ -20,8 +19,8 @@ class ObbDownloadOperation @AssistedInject constructor(
 	private val httpDownloader: HttpDownloader
 ) : AbstractOperation<Unit>() {
 
-	override val progressDelta = super.progressDelta.map { it * 10 }
-	override val progressMax = 100 * 10
+	private val progressMultiplier = 10
+	override val progressMax = 100 * progressMultiplier
 
 	override suspend fun invoke() {
 		val obb = commonFiles.obbToPatch
@@ -32,7 +31,7 @@ class ObbDownloadOperation @AssistedInject constructor(
 			obb.create()
 			val outputStream = obb.createOutputStream()
 			val obbHash = httpDownloader.download(obbData.url, outputStream, hashing = true) { progressDelta ->
-				progressDelta(progressDelta)
+				progressDelta(progressDelta * progressMultiplier)
 			}
 			status(LocalizedString.resource(R.string.status_writing_obb_hash))
 			if (obbHash != obbData.hash) {

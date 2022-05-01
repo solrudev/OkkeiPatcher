@@ -28,13 +28,15 @@ abstract class Obb(protected val commonFiles: CommonFiles) : PatchableGameFile {
 
 		private val verifyBackupObbOperation = commonFiles.backupObb.verify()
 		private val backupObbOperation = commonFiles.obbToBackup.copyTo(commonFiles.backupObb, hashing = true)
+		private val backupObbProgressMultiplier = 6
 
 		override val progressDelta = withProgressDeltaFlows(
 			verifyBackupObbOperation.progressDelta,
-			backupObbOperation.progressDelta.map { it * 6 }
+			backupObbOperation.progressDelta.map { it * backupObbProgressMultiplier }
 		)
 
-		override val progressMax = verifyBackupObbOperation.progressMax + backupObbOperation.progressMax * 6
+		override val progressMax =
+			verifyBackupObbOperation.progressMax + backupObbOperation.progressMax * backupObbProgressMultiplier
 
 		override suspend fun invoke() {
 			status(LocalizedString.resource(R.string.status_comparing_obb))
@@ -60,8 +62,9 @@ abstract class Obb(protected val commonFiles: CommonFiles) : PatchableGameFile {
 	override fun restore() = object : AbstractOperation<Unit>() {
 
 		private val restoreObbOperation = commonFiles.backupObb.copyTo(commonFiles.obbToBackup)
-		override val progressDelta = restoreObbOperation.progressDelta.map { it * 3 }
-		override val progressMax = restoreObbOperation.progressMax * 3
+		private val progressMultiplier = 3
+		override val progressDelta = restoreObbOperation.progressDelta.map { it * progressMultiplier }
+		override val progressMax = restoreObbOperation.progressMax * progressMultiplier
 
 		override suspend fun invoke() {
 			try {
