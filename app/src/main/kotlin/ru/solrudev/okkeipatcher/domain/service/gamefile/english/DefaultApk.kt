@@ -12,7 +12,7 @@ import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.operation.AbstractOperation
 import ru.solrudev.okkeipatcher.domain.operation.AggregateOperation
 import ru.solrudev.okkeipatcher.domain.repository.patch.DefaultPatchRepository
-import ru.solrudev.okkeipatcher.domain.service.gamefile.AbstractApk
+import ru.solrudev.okkeipatcher.domain.service.gamefile.Apk
 import ru.solrudev.okkeipatcher.io.service.StreamCopier
 import javax.inject.Inject
 
@@ -24,7 +24,7 @@ class DefaultApk @Inject constructor(
 	streamCopier: StreamCopier,
 	@IoDispatcher ioDispatcher: CoroutineDispatcher,
 	@ApplicationContext applicationContext: Context
-) : AbstractApk(commonFiles, streamCopier, ioDispatcher, applicationContext) {
+) : Apk(commonFiles, streamCopier, ioDispatcher, applicationContext) {
 
 	private val scriptsPatchOperation = scriptsPatchOperationFactory.create(
 		this,

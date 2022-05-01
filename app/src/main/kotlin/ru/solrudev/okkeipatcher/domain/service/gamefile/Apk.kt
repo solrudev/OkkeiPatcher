@@ -36,12 +36,12 @@ private const val CERTIFICATE_FILE_NAME = "testkey.x509.pem"
 private const val PRIVATE_KEY_FILE_NAME = "testkey.pk8"
 private const val PACKAGE_NAME = "com.mages.chaoschild_jp"
 
-abstract class AbstractApk(
+abstract class Apk(
 	protected val commonFiles: CommonFiles,
 	protected val streamCopier: StreamCopier,
 	protected val ioDispatcher: CoroutineDispatcher,
 	private val applicationContext: Context
-) : Apk {
+) : PatchableGameFile {
 
 	override val backupExists: Boolean
 		get() = commonFiles.backupApk.exists

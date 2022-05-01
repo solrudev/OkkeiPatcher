@@ -9,7 +9,7 @@ import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
 import ru.solrudev.okkeipatcher.domain.operation.AbstractOperation
 import ru.solrudev.okkeipatcher.util.Preferences
 
-abstract class AbstractObb(protected val commonFiles: CommonFiles) : PatchableGameFile {
+abstract class Obb(protected val commonFiles: CommonFiles) : PatchableGameFile {
 
 	override val backupExists: Boolean
 		get() = commonFiles.backupObb.exists
@@ -76,4 +76,6 @@ abstract class AbstractObb(protected val commonFiles: CommonFiles) : PatchableGa
 			}
 		}
 	}
+
+	override fun close() {}
 }

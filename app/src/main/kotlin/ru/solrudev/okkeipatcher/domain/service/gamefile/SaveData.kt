@@ -9,7 +9,7 @@ import ru.solrudev.okkeipatcher.domain.operation.AbstractOperation
 import ru.solrudev.okkeipatcher.util.Preferences
 import javax.inject.Inject
 
-class SaveDataImpl @Inject constructor(private val commonFiles: CommonFiles) : SaveData {
+class SaveData @Inject constructor(private val commonFiles: CommonFiles) : GameFile {
 
 	override val backupExists: Boolean
 		get() = commonFiles.backupSaveData.exists

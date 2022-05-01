@@ -8,10 +8,10 @@ import ru.solrudev.okkeipatcher.domain.operation.AggregateOperation
 import ru.solrudev.okkeipatcher.domain.operation.EmptyOperation
 import ru.solrudev.okkeipatcher.domain.operation.Operation
 import ru.solrudev.okkeipatcher.domain.repository.app.PreferencesRepository
-import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.GameFileStrategy
+import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.RestoreStrategy
 
 class RestoreOperation(
-	private val strategy: GameFileStrategy,
+	private val strategy: RestoreStrategy,
 	private val handleSaveData: Boolean,
 	private val preferencesRepository: PreferencesRepository // TODO: see PatchOperation
 ) : Operation<Unit> {

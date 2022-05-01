@@ -3,7 +3,7 @@ package ru.solrudev.okkeipatcher.domain.service.gamefile
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.operation.Operation
 
-interface GameFile {
+interface GameFile : AutoCloseable {
 	val backupExists: Boolean
 	fun deleteBackup()
 	fun backup(): Operation<Unit>
@@ -17,5 +17,3 @@ interface Patchable {
 }
 
 interface PatchableGameFile : GameFile, Patchable
-interface Apk : PatchableGameFile, AutoCloseable
-interface SaveData : GameFile, AutoCloseable

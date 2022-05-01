@@ -16,7 +16,7 @@ import ru.solrudev.okkeipatcher.domain.operation.AbstractOperation
 import ru.solrudev.okkeipatcher.domain.operation.AggregateOperation
 import ru.solrudev.okkeipatcher.domain.operation.Operation
 import ru.solrudev.okkeipatcher.domain.repository.patch.ScriptsDataRepository
-import ru.solrudev.okkeipatcher.domain.service.gamefile.AbstractApk
+import ru.solrudev.okkeipatcher.domain.service.gamefile.Apk
 import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.impl.english.PatchFileVersionKey
 import ru.solrudev.okkeipatcher.domain.util.extension.use
 import ru.solrudev.okkeipatcher.io.file.VerifiableFile
@@ -25,7 +25,7 @@ import ru.solrudev.okkeipatcher.util.Preferences
 import java.io.File
 
 class ScriptsPatchOperation @AssistedInject constructor(
-	@Assisted private val apk: AbstractApk,
+	@Assisted private val apk: Apk,
 	@Assisted private val scriptsDataRepository: ScriptsDataRepository,
 	@Assisted private val scriptsFile: VerifiableFile,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
