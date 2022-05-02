@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.domain.file.common
+package ru.solrudev.okkeipatcher.domain.file
 
 import android.os.Build
 import ru.solrudev.okkeipatcher.io.file.VerifiableFile

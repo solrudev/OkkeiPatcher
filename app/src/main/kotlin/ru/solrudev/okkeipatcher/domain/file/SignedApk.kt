@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.domain.file.common
+package ru.solrudev.okkeipatcher.domain.file
 
 import ru.solrudev.okkeipatcher.domain.OkkeiStorage
 import ru.solrudev.okkeipatcher.io.file.JavaFile

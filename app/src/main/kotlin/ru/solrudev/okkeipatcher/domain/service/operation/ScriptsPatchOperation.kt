@@ -9,7 +9,6 @@ import net.lingala.zip4j.model.ZipParameters
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.di.module.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.OkkeiStorage
-import ru.solrudev.okkeipatcher.domain.file.english.PatchFileHashKey
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
 import ru.solrudev.okkeipatcher.domain.operation.AbstractOperation
@@ -19,7 +18,6 @@ import ru.solrudev.okkeipatcher.domain.repository.patch.ScriptsDataRepository
 import ru.solrudev.okkeipatcher.domain.service.gamefile.Apk
 import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.impl.english.PatchFileVersionKey
 import ru.solrudev.okkeipatcher.domain.util.extension.use
-import ru.solrudev.okkeipatcher.io.file.VerifiableFile
 import ru.solrudev.okkeipatcher.io.service.HttpDownloader
 import ru.solrudev.okkeipatcher.util.Preferences
 import java.io.File
@@ -27,10 +25,11 @@ import java.io.File
 class ScriptsPatchOperation @AssistedInject constructor(
 	@Assisted private val apk: Apk,
 	@Assisted private val scriptsDataRepository: ScriptsDataRepository,
-	@Assisted private val scriptsFile: VerifiableFile,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	private val httpDownloader: HttpDownloader
 ) : Operation<Unit> {
+
+	private val scriptsFile = File(OkkeiStorage.external.absolutePath, "scripts.zip")
 
 	private val operation = AggregateOperation(
 		listOf(
@@ -65,8 +64,9 @@ class ScriptsPatchOperation @AssistedInject constructor(
 			status(LocalizedString.resource(R.string.status_downloading_scripts))
 			val scriptsData = scriptsDataRepository.getScriptsData()
 			scriptsFile.delete()
-			scriptsFile.create()
-			val outputStream = scriptsFile.createOutputStream()
+			scriptsFile.parentFile?.mkdirs()
+			scriptsFile.createNewFile()
+			val outputStream = scriptsFile.outputStream()
 			val scriptsHash = httpDownloader.download(scriptsData.url, outputStream, hashing = true) { progressDelta ->
 				progressDelta(progressDelta)
 			}
@@ -75,7 +75,6 @@ class ScriptsPatchOperation @AssistedInject constructor(
 				throw LocalizedException(LocalizedString.resource(R.string.error_hash_scripts_mismatch))
 			}
 			status(LocalizedString.resource(R.string.status_writing_scripts_hash))
-			Preferences.set(PatchFileHashKey.scripts_hash.name, scriptsHash)
 			Preferences.set(PatchFileVersionKey.scripts_version.name, scriptsData.version)
 		}
 	}
@@ -86,7 +85,7 @@ class ScriptsPatchOperation @AssistedInject constructor(
 
 		override suspend fun invoke() {
 			status(LocalizedString.resource(R.string.status_extracting_scripts))
-			val scriptsZip = ZipFile(scriptsFile.fullPath)
+			val scriptsZip = ZipFile(scriptsFile)
 			scriptsZip.use {
 				withContext(ioDispatcher) {
 					it.extractAll(extractedScriptsDirectory.absolutePath)

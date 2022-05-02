@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.domain.file.common
+package ru.solrudev.okkeipatcher.domain.file
 
 import android.os.Environment
 import ru.solrudev.okkeipatcher.io.file.JavaFile
@@ -6,7 +6,7 @@ import ru.solrudev.okkeipatcher.io.file.VerifiableFile
 import ru.solrudev.okkeipatcher.io.service.StreamCopier
 import java.io.File
 
-class ObbToBackup(streamCopier: StreamCopier) : VerifiableFile(
+class ObbToPatch(streamCopier: StreamCopier) : VerifiableFile(
 	@Suppress("DEPRECATION")
 	JavaFile(
 		File(
@@ -15,5 +15,5 @@ class ObbToBackup(streamCopier: StreamCopier) : VerifiableFile(
 		), streamCopier
 	)
 ) {
-	override fun verify() = compareBySharedPreferences(CommonFileHashKey.backup_obb_hash.name)
+	override fun verify() = compareBySharedPreferences(CommonFileHashKey.patched_obb_hash.name)
 }

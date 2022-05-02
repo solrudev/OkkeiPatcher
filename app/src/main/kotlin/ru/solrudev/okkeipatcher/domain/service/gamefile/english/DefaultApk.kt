@@ -6,8 +6,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.di.factory.ScriptsPatchOperationFactory
 import ru.solrudev.okkeipatcher.di.module.IoDispatcher
-import ru.solrudev.okkeipatcher.domain.file.common.CommonFiles
-import ru.solrudev.okkeipatcher.domain.file.english.DefaultPatchFiles
+import ru.solrudev.okkeipatcher.domain.file.CommonFiles
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.operation.AbstractOperation
 import ru.solrudev.okkeipatcher.domain.operation.AggregateOperation
@@ -19,18 +18,13 @@ import javax.inject.Inject
 class DefaultApk @Inject constructor(
 	patchRepository: DefaultPatchRepository,
 	scriptsPatchOperationFactory: ScriptsPatchOperationFactory,
-	patchFiles: DefaultPatchFiles,
 	commonFiles: CommonFiles,
 	streamCopier: StreamCopier,
 	@IoDispatcher ioDispatcher: CoroutineDispatcher,
 	@ApplicationContext applicationContext: Context
 ) : Apk(commonFiles, streamCopier, ioDispatcher, applicationContext) {
 
-	private val scriptsPatchOperation = scriptsPatchOperationFactory.create(
-		this,
-		patchRepository,
-		patchFiles.scripts
-	)
+	private val scriptsPatchOperation = scriptsPatchOperationFactory.create(this, patchRepository)
 
 	override fun patch() = object : AbstractOperation<Unit>() {
 

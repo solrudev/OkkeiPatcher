@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.domain.file.common
+package ru.solrudev.okkeipatcher.domain.file
 
 @Suppress("EnumEntryName")
 enum class CommonFileHashKey {
