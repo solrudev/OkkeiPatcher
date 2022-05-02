@@ -7,5 +7,5 @@ import javax.inject.Inject
 class GetIsPatchedUseCaseImpl @Inject constructor(private val preferencesRepository: PreferencesRepository) :
 	GetIsPatchedUseCase {
 
-	override suspend fun invoke() = preferencesRepository.getIsPatched()
+	override suspend fun invoke() = preferencesRepository.isPatchedDao.retrieve()
 }

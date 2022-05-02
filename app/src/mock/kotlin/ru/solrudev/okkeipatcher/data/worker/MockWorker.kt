@@ -1,9 +1,7 @@
-package ru.solrudev.okkeipatcher.domain.worker
+package ru.solrudev.okkeipatcher.data.worker
 
-import android.app.PendingIntent
 import android.content.Context
 import androidx.hilt.work.HiltWorker
-import androidx.navigation.NavDeepLinkBuilder
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -21,8 +19,18 @@ class MockWorker @AssistedInject constructor(
 	private val preferencesRepository: PreferencesRepository
 ) : ForegroundWorker(context, workerParameters) {
 
-	override val progressNotificationTitle: LocalizedString
-		get() = LocalizedString.resource(R.string.notification_title_test)
+	override val workTitle = LocalizedString.resource(R.string.notification_title_test)
+
+	override val destinationScreen: Int
+		get() {
+			if (tags.contains("PatchWork")) {
+				return R.id.patch_fragment
+			}
+			if (tags.contains("RestoreWork")) {
+				return R.id.restore_fragment
+			}
+			return R.id.home_fragment
+		}
 
 	override suspend fun getOperation() = object : AbstractOperation<Unit>() {
 
@@ -31,30 +39,12 @@ class MockWorker @AssistedInject constructor(
 
 		override suspend fun invoke() {
 			repeat(stepsCount) { stepIndex ->
-				val index = stepIndex + 1
-				_status.emit(LocalizedString.raw(index.toString().repeat(10)))
+				val step = stepIndex + 1
+				status(LocalizedString.raw(step.toString().repeat(10)))
 				delay(1.seconds)
-				_progressDelta.emit(100)
+				progressDelta(100)
 			}
-			preferencesRepository.setIsPatched(tags.contains("PatchWork"))
+			preferencesRepository.isPatchedDao.persist(tags.contains("PatchWork"))
 		}
-	}
-
-	override fun createPendingIntent(): PendingIntent {
-		val navDeepLinkBuilder = NavDeepLinkBuilder(applicationContext)
-			.setGraph(R.navigation.okkei_nav_graph)
-		if (tags.contains("PatchWork")) {
-			return navDeepLinkBuilder
-				.setDestination(R.id.patch_fragment)
-				.createPendingIntent()
-		}
-		if (tags.contains("RestoreWork")) {
-			return navDeepLinkBuilder
-				.setDestination(R.id.restore_fragment)
-				.createPendingIntent()
-		}
-		return navDeepLinkBuilder
-			.setDestination(R.id.home_fragment)
-			.createPendingIntent()
 	}
 }

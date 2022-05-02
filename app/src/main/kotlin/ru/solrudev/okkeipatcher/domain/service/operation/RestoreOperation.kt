@@ -7,13 +7,13 @@ import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
 import ru.solrudev.okkeipatcher.domain.operation.AggregateOperation
 import ru.solrudev.okkeipatcher.domain.operation.EmptyOperation
 import ru.solrudev.okkeipatcher.domain.operation.Operation
-import ru.solrudev.okkeipatcher.domain.repository.app.PreferencesRepository
+import ru.solrudev.okkeipatcher.domain.persistence.Dao
 import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.RestoreStrategy
 
 class RestoreOperation(
 	private val strategy: RestoreStrategy,
 	private val handleSaveData: Boolean,
-	private val preferencesRepository: PreferencesRepository // TODO: see PatchOperation
+	private val isPatchedDao: Dao<Boolean>
 ) : Operation<Unit> {
 
 	private val operation = object : AggregateOperation(
@@ -29,7 +29,7 @@ class RestoreOperation(
 		override suspend fun doAfter() = strategy.run {
 			apk.deleteBackup()
 			obb.deleteBackup()
-			preferencesRepository.setIsPatched(false)
+			isPatchedDao.persist(false)
 		}
 	}
 
@@ -44,7 +44,7 @@ class RestoreOperation(
 	 * Throws an exception if conditions for restoring are not met.
 	 */
 	suspend fun checkCanRestore() {
-		val isPatched = preferencesRepository.getIsPatched()
+		val isPatched = isPatchedDao.retrieve()
 		if (!isPatched) {
 			throw LocalizedException(LocalizedString.resource(R.string.error_not_patched))
 		}

@@ -26,10 +26,10 @@ class RestoreWorker @AssistedInject constructor(
 	override val destinationScreen = R.id.restore_fragment
 
 	override suspend fun getOperation(): Operation<Unit> {
-		val handleSaveData = preferencesRepository.getHandleSaveData()
-		val patchLanguage = preferencesRepository.getPatchLanguage()
+		val handleSaveData = preferencesRepository.handleSaveDataDao.retrieve()
+		val patchLanguage = preferencesRepository.patchLanguageDao.retrieve()
 		val strategy = strategies.getValue(patchLanguage).get()
-		val restoreOperation = RestoreOperation(strategy, handleSaveData, preferencesRepository)
+		val restoreOperation = RestoreOperation(strategy, handleSaveData, preferencesRepository.isPatchedDao)
 		restoreOperation.checkCanRestore()
 		return restoreOperation
 	}

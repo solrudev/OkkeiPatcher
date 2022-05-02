@@ -20,7 +20,7 @@ class DefaultGetPatchUpdatesUseCase @Inject constructor(
 	)
 
 	private suspend inline fun isScriptsUpdateAvailable(): Boolean {
-		val isPatched = preferencesRepository.getIsPatched()
+		val isPatched = preferencesRepository.isPatchedDao.retrieve()
 		if (!isPatched) {
 			return false
 		}
@@ -37,7 +37,7 @@ class DefaultGetPatchUpdatesUseCase @Inject constructor(
 	}
 
 	private suspend inline fun isObbUpdateAvailable(): Boolean {
-		val isPatched = preferencesRepository.getIsPatched()
+		val isPatched = preferencesRepository.isPatchedDao.retrieve()
 		if (!isPatched) {
 			return false
 		}

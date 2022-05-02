@@ -7,5 +7,5 @@ import javax.inject.Inject
 class GetPatchLanguageUseCaseImpl @Inject constructor(private val preferencesRepository: PreferencesRepository) :
 	GetPatchLanguageUseCase {
 
-	override suspend fun invoke() = preferencesRepository.getPatchLanguage()
+	override suspend fun invoke() = preferencesRepository.patchLanguageDao.retrieve()
 }

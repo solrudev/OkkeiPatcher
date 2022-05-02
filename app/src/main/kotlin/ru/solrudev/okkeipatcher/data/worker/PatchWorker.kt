@@ -28,12 +28,12 @@ class PatchWorker @AssistedInject constructor(
 	override val destinationScreen = R.id.patch_fragment
 
 	override suspend fun getOperation(): Operation<Unit> {
-		val handleSaveData = preferencesRepository.getHandleSaveData()
-		val patchLanguage = preferencesRepository.getPatchLanguage()
+		val handleSaveData = preferencesRepository.handleSaveDataDao.retrieve()
+		val patchLanguage = preferencesRepository.patchLanguageDao.retrieve()
 		val getPatchUpdatesUseCase = getPatchUpdatesUseCases.getValue(patchLanguage).get()
 		val patchUpdates = getPatchUpdatesUseCase()
 		val strategy = strategies.getValue(patchLanguage).get()
-		val patchOperation = PatchOperation(strategy, handleSaveData, patchUpdates, preferencesRepository)
+		val patchOperation = PatchOperation(strategy, handleSaveData, patchUpdates, preferencesRepository.isPatchedDao)
 		patchOperation.checkCanPatch()
 		return patchOperation
 	}

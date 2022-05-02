@@ -3,11 +3,11 @@ package ru.solrudev.okkeipatcher.data.repository.work
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
+import ru.solrudev.okkeipatcher.data.worker.MockWorker
 import ru.solrudev.okkeipatcher.domain.model.Work
 import ru.solrudev.okkeipatcher.domain.model.asWork
 import ru.solrudev.okkeipatcher.domain.repository.work.RestoreWorkRepository
 import ru.solrudev.okkeipatcher.domain.repository.work.WorkRepository
-import ru.solrudev.okkeipatcher.domain.worker.MockWorker
 import javax.inject.Inject
 
 private const val RESTORE_WORK_NAME = "RestoreWork"

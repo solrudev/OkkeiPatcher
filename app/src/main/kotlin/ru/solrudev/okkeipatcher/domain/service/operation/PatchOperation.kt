@@ -8,17 +8,14 @@ import ru.solrudev.okkeipatcher.domain.model.patchupdates.PatchUpdates
 import ru.solrudev.okkeipatcher.domain.operation.AggregateOperation
 import ru.solrudev.okkeipatcher.domain.operation.EmptyOperation
 import ru.solrudev.okkeipatcher.domain.operation.Operation
-import ru.solrudev.okkeipatcher.domain.repository.app.PreferencesRepository
+import ru.solrudev.okkeipatcher.domain.persistence.Dao
 import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.PatchStrategy
 
 class PatchOperation(
 	private val strategy: PatchStrategy,
 	private val handleSaveData: Boolean,
 	private val patchUpdates: PatchUpdates,
-
-	// TODO: accept interface which gives access only to the patch state instead of the whole repository
-	//  Related to segregation of PreferencesRepository
-	private val preferencesRepository: PreferencesRepository
+	private val isPatchedDao: Dao<Boolean>
 ) : Operation<Unit> {
 
 	private val operation = if (patchUpdates.available) update() else patch()
@@ -33,7 +30,7 @@ class PatchOperation(
 	 * Throws an exception if conditions for patch are not met.
 	 */
 	suspend fun checkCanPatch() = with(strategy) {
-		val isPatched = preferencesRepository.getIsPatched()
+		val isPatched = isPatchedDao.retrieve()
 		if (isPatched && !patchUpdates.available) {
 			throw LocalizedException(LocalizedString.resource(R.string.error_patched))
 		}
@@ -60,7 +57,7 @@ class PatchOperation(
 			)
 		}
 	) {
-		override suspend fun doAfter() = preferencesRepository.setIsPatched(true)
+		override suspend fun doAfter() = isPatchedDao.persist(true)
 	}
 
 	private fun update() = AggregateOperation(
