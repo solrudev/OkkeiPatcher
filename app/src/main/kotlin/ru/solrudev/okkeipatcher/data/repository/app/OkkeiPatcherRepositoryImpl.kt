@@ -49,7 +49,7 @@ class OkkeiPatcherRepositoryImpl @Inject constructor(
 			try {
 				val updateData = okkeiPatcherApi.getOkkeiPatcherData()
 				val updateHash = httpDownloader.download(updateData.url, updateFile, hashing = true) { progressDelta ->
-					_progressDelta.emit(progressDelta)
+					progressDelta(progressDelta)
 				}
 				if (updateHash != updateData.hash) {
 					throw LocalizedException(LocalizedString.resource(R.string.error_update_app_corrupted))
