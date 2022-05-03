@@ -20,6 +20,7 @@ import ru.solrudev.okkeipatcher.domain.model.Message
 import ru.solrudev.okkeipatcher.domain.model.ProgressData
 import ru.solrudev.okkeipatcher.domain.operation.Operation
 import ru.solrudev.okkeipatcher.domain.operation.extension.statusAndAccumulatedProgress
+import ru.solrudev.okkeipatcher.domain.service.operation.factory.OperationFactory
 import ru.solrudev.okkeipatcher.domain.util.extension.putParcelable
 import ru.solrudev.okkeipatcher.domain.util.extension.putSerializable
 import java.util.concurrent.atomic.AtomicInteger
@@ -30,10 +31,11 @@ private val workerMessageNotificationId = AtomicInteger(49725)
 
 abstract class ForegroundWorker(
 	context: Context,
-	workerParameters: WorkerParameters
+	workerParameters: WorkerParameters,
+	private val operationFactory: OperationFactory<*>
 ) : CoroutineWorker(context, workerParameters) {
 
-	protected abstract val workTitle: LocalizedString // TODO: inject it or pass through input data
+	protected abstract val workTitle: LocalizedString
 
 	// TODO: worker should not know anything about presentation layer
 	//  Related to merging work screens
@@ -52,9 +54,6 @@ abstract class ForegroundWorker(
 		createNotificationBuilder(workTitle, progressNotification = true)
 	}
 
-	// TODO: inject work operation factory instead which should be in domain layer
-	protected abstract suspend fun getOperation(): Operation<*>
-
 	private fun createPendingIntent() = NavDeepLinkBuilder(applicationContext)
 		.setGraph(R.navigation.okkei_nav_graph)
 		.setDestination(destinationScreen)
@@ -63,7 +62,7 @@ abstract class ForegroundWorker(
 	final override suspend fun doWork() = try {
 		setForeground(createForegroundInfo())
 		coroutineScope {
-			val operation = getOperation()
+			val operation = operationFactory.create()
 			val observeJob = observeOperation(operation)
 			operation()
 			observeJob.cancel()
