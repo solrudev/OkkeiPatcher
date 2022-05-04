@@ -9,7 +9,7 @@ import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
 import ru.solrudev.okkeipatcher.domain.operation.AbstractOperation
 import ru.solrudev.okkeipatcher.domain.repository.patch.ObbDataRepository
-import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.impl.english.PatchFileVersionKey
+import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.english.PatchFileVersionKey
 import ru.solrudev.okkeipatcher.io.service.HttpDownloader
 import ru.solrudev.okkeipatcher.util.Preferences
 

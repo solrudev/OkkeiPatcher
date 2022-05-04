@@ -1,26 +1,23 @@
 package ru.solrudev.okkeipatcher.domain.service.operation.factory
 
-import ru.solrudev.okkeipatcher.domain.model.Language
 import ru.solrudev.okkeipatcher.domain.operation.Operation
 import ru.solrudev.okkeipatcher.domain.repository.app.PreferencesRepository
-import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.GameFileStrategy
+import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.factory.GameFileStrategyFactory
 import ru.solrudev.okkeipatcher.domain.service.operation.PatchOperation
-import ru.solrudev.okkeipatcher.domain.usecase.patch.GetPatchUpdatesUseCase
+import ru.solrudev.okkeipatcher.domain.usecase.patch.factory.GetPatchUpdatesUseCaseFactory
 import javax.inject.Inject
-import javax.inject.Provider
 
 class PatchOperationFactory @Inject constructor(
 	private val preferencesRepository: PreferencesRepository,
-	private val getPatchUpdatesUseCases: Map<Language, @JvmSuppressWildcards Provider<GetPatchUpdatesUseCase>>,
-	private val strategies: Map<Language, @JvmSuppressWildcards Provider<GameFileStrategy>>
+	private val getPatchUpdatesUseCaseFactory: GetPatchUpdatesUseCaseFactory,
+	private val strategyFactory: GameFileStrategyFactory
 ) : OperationFactory<Unit> {
 
 	override suspend fun create(): Operation<Unit> {
+		val strategy = strategyFactory.create()
 		val handleSaveData = preferencesRepository.handleSaveDataDao.retrieve()
-		val patchLanguage = preferencesRepository.patchLanguageDao.retrieve()
-		val getPatchUpdatesUseCase = getPatchUpdatesUseCases.getValue(patchLanguage).get()
+		val getPatchUpdatesUseCase = getPatchUpdatesUseCaseFactory.create()
 		val patchUpdates = getPatchUpdatesUseCase()
-		val strategy = strategies.getValue(patchLanguage).get()
 		val patchOperation = PatchOperation(
 			strategy,
 			handleSaveData,

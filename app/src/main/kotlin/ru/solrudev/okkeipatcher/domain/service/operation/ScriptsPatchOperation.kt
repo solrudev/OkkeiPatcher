@@ -7,7 +7,7 @@ import kotlinx.coroutines.withContext
 import net.lingala.zip4j.ZipFile
 import net.lingala.zip4j.model.ZipParameters
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.di.module.IoDispatcher
+import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.OkkeiStorage
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
@@ -16,7 +16,7 @@ import ru.solrudev.okkeipatcher.domain.operation.AggregateOperation
 import ru.solrudev.okkeipatcher.domain.operation.Operation
 import ru.solrudev.okkeipatcher.domain.repository.patch.ScriptsDataRepository
 import ru.solrudev.okkeipatcher.domain.service.gamefile.Apk
-import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.impl.english.PatchFileVersionKey
+import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.english.PatchFileVersionKey
 import ru.solrudev.okkeipatcher.domain.util.extension.use
 import ru.solrudev.okkeipatcher.io.service.HttpDownloader
 import ru.solrudev.okkeipatcher.util.Preferences

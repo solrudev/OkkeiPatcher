@@ -4,8 +4,7 @@ import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.di.factory.ScriptsPatchOperationFactory
-import ru.solrudev.okkeipatcher.di.module.IoDispatcher
+import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.file.CommonFiles
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.operation.AbstractOperation
@@ -13,6 +12,7 @@ import ru.solrudev.okkeipatcher.domain.operation.AggregateOperation
 import ru.solrudev.okkeipatcher.domain.repository.patch.DefaultPatchRepository
 import ru.solrudev.okkeipatcher.domain.service.PackageInstallerFacade
 import ru.solrudev.okkeipatcher.domain.service.gamefile.Apk
+import ru.solrudev.okkeipatcher.domain.service.operation.factory.ScriptsPatchOperationFactory
 import ru.solrudev.okkeipatcher.io.service.StreamCopier
 import javax.inject.Inject
 
