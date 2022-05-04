@@ -155,7 +155,7 @@ dependencies {
 	implementation("com.android.tools.build:apksig:$androidGradleVersion")
 	implementation("com.anggrayudi:storage:1.3.0")
 	implementation("net.lingala.zip4j:zip4j:2.10.0")
-	implementation("io.github.solrudev:simpleinstaller:2.0.4")
+	implementation("io.github.solrudev:simpleinstaller:3.0.1")
 	implementation("com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.6")
 
 	debugImplementation("androidx.multidex:multidex:2.0.1")

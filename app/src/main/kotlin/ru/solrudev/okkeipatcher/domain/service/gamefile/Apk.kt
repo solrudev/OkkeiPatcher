@@ -2,10 +2,7 @@ package ru.solrudev.okkeipatcher.domain.service.gamefile
 
 import android.content.Context
 import com.android.apksig.ApkSigner
-import io.github.solrudev.simpleinstaller.PackageInstaller
-import io.github.solrudev.simpleinstaller.PackageUninstaller
 import io.github.solrudev.simpleinstaller.data.InstallResult
-import io.github.solrudev.simpleinstaller.installPackage
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
@@ -20,6 +17,7 @@ import ru.solrudev.okkeipatcher.domain.file.CommonFiles
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
 import ru.solrudev.okkeipatcher.domain.operation.AbstractOperation
+import ru.solrudev.okkeipatcher.domain.service.PackageInstallerFacade
 import ru.solrudev.okkeipatcher.domain.util.deleteTempZipFiles
 import ru.solrudev.okkeipatcher.domain.util.extension.isPackageInstalled
 import ru.solrudev.okkeipatcher.domain.util.extension.use
@@ -40,7 +38,8 @@ abstract class Apk(
 	protected val commonFiles: CommonFiles,
 	protected val streamCopier: StreamCopier,
 	protected val ioDispatcher: CoroutineDispatcher,
-	private val applicationContext: Context
+	private val applicationContext: Context,
+	private val packageInstaller: PackageInstallerFacade
 ) : PatchableGameFile {
 
 	override val backupExists: Boolean
@@ -244,7 +243,7 @@ abstract class Apk(
 				progressDelta(progressMax)
 				return
 			}
-			val uninstallResult = PackageUninstaller.uninstallPackage(PACKAGE_NAME)
+			val uninstallResult = packageInstaller.uninstallPackage(PACKAGE_NAME)
 			if (!uninstallResult) {
 				throw LocalizedException(LocalizedString.resource(R.string.error_uninstall))
 			}
@@ -258,7 +257,7 @@ abstract class Apk(
 
 		override suspend fun invoke() {
 			status(LocalizedString.resource(R.string.status_installing))
-			val installResult = PackageInstaller.installPackage(apkFile)
+			val installResult = packageInstaller.installPackage(apkFile)
 			if (installResult is InstallResult.Failure) {
 				throw LocalizedException(
 					LocalizedString.resource(
