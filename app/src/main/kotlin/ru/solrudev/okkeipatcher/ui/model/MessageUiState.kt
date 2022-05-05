@@ -4,5 +4,8 @@ import ru.solrudev.okkeipatcher.domain.model.Message
 
 data class MessageUiState(
 	val isVisible: Boolean = false,
-	val data: Message? = null
+	val data: Message = Message.empty
 )
+
+val MessageUiState.shouldShow: Boolean
+	get() = !isVisible && data != Message.empty

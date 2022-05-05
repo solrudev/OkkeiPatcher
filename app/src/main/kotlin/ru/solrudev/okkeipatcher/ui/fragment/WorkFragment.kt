@@ -19,6 +19,7 @@ import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.databinding.FragmentWorkBinding
 import ru.solrudev.okkeipatcher.domain.model.Message
 import ru.solrudev.okkeipatcher.domain.model.ProgressData
+import ru.solrudev.okkeipatcher.ui.model.shouldShow
 import ru.solrudev.okkeipatcher.ui.util.extension.copyTextToClipboard
 import ru.solrudev.okkeipatcher.ui.util.extension.prepareOptionsMenu
 import ru.solrudev.okkeipatcher.ui.util.extension.setupTransitions
@@ -69,20 +70,14 @@ abstract class WorkFragment<VM : WorkViewModel> : Fragment(R.layout.fragment_wor
 				}
 				binding.textviewWorkStatus.text = uiState.status.resolve(requireContext())
 				setProgress(uiState.progressData)
-				uiState.startWorkMessage.run {
-					if (!isVisible && data != null) {
-						showStartWorkMessage(data)
-					}
+				if (uiState.startWorkMessage.shouldShow) {
+					showStartWorkMessage(uiState.startWorkMessage.data)
 				}
-				uiState.cancelWorkMessage.run {
-					if (!isVisible && data != null) {
-						showCancelWorkMessage(data)
-					}
+				if (uiState.cancelWorkMessage.shouldShow) {
+					showCancelWorkMessage(uiState.cancelWorkMessage.data)
 				}
-				uiState.errorMessage.run {
-					if (!isVisible && data != null) {
-						showErrorMessage(data)
-					}
+				if (uiState.errorMessage.shouldShow) {
+					showErrorMessage(uiState.errorMessage.data)
 				}
 			}
 		}
