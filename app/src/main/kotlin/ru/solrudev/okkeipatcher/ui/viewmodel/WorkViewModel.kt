@@ -4,8 +4,14 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.Message
@@ -13,62 +19,47 @@ import ru.solrudev.okkeipatcher.domain.model.Work
 import ru.solrudev.okkeipatcher.domain.model.WorkState
 import ru.solrudev.okkeipatcher.domain.usecase.work.CancelWorkUseCase
 import ru.solrudev.okkeipatcher.domain.usecase.work.CompleteWorkUseCase
-import ru.solrudev.okkeipatcher.domain.usecase.work.GetIsWorkPendingUseCase
 import ru.solrudev.okkeipatcher.domain.usecase.work.GetWorkStateFlowUseCase
 import ru.solrudev.okkeipatcher.ui.model.MessageUiState
 import ru.solrudev.okkeipatcher.ui.model.WorkUiState
+import javax.inject.Inject
 
-// TODO: think about how to merge patch and restore screens into a universal one
-//  This probably will require making substantial changes in data layer
-abstract class WorkViewModel(
+@HiltViewModel
+class WorkViewModel @Inject constructor(
 	private val getWorkStateFlowUseCase: GetWorkStateFlowUseCase,
 	private val cancelWorkUseCase: CancelWorkUseCase,
-	private val completeWorkUseCase: CompleteWorkUseCase,
-	private val getIsWorkPendingUseCase: GetIsWorkPendingUseCase
+	private val completeWorkUseCase: CompleteWorkUseCase
 ) : ViewModel(), Flow<WorkUiState>, DefaultLifecycleObserver {
 
-	private var isWorkObserved = false
-	private val workObservingScope = CoroutineScope(Dispatchers.Main.immediate)
-	protected abstract val work: Work?
-	protected val uiState = MutableStateFlow(WorkUiState())
-
-	protected abstract suspend fun enqueueWork(): Work
-
-	fun startWork() {
-		viewModelScope.launch {
-			val enqueuedWork = enqueueWork()
-			enqueuedWork.observe()
-			setIsButtonEnabled(true)
-		}
-	}
-
-	fun cancelWork() {
-		work?.let {
-			cancelWorkUseCase(it)
-		}
-	}
-
-	override fun onCleared() {
-		workObservingScope.cancel()
-	}
+	private val uiState = MutableStateFlow(WorkUiState())
 
 	override suspend fun collect(collector: FlowCollector<WorkUiState>) = uiState.collect(collector)
 
-	override fun onStart(owner: LifecycleOwner) {
+	override fun onStop(owner: LifecycleOwner) {
+		hideAllMessages()
+		viewModelScope.coroutineContext[Job]?.cancelChildren()
+	}
+
+	fun observeWork(work: Work) {
 		viewModelScope.launch {
-			if (work.isPending()) {
-				work.observe()
-				setIsButtonEnabled(true)
+			getWorkStateFlowUseCase(work).collect { workState ->
+				if (workState.isFinished) {
+					completeWorkUseCase(work)
+				}
+				when (workState) {
+					is WorkState.Running -> onWorkRunning(workState)
+					is WorkState.Failed -> onWorkFailed(workState)
+					is WorkState.Succeeded -> onWorkSucceeded()
+					is WorkState.Canceled -> onWorkCanceled()
+					is WorkState.Unknown -> {}
+				}
 			}
 		}
 	}
 
-	override fun onStop(owner: LifecycleOwner) {
-		hideAllMessages()
-		workObservingScope.coroutineContext[Job]?.cancelChildren()
-	}
+	fun cancelWork(work: Work) = cancelWorkUseCase(work)
 
-	fun requestWorkCancel() {
+	fun promptCancelWork() {
 		val title = LocalizedString.resource(R.string.warning_abort_title)
 		val message = LocalizedString.resource(R.string.warning_abort)
 		val cancelMessage = Message(title, message)
@@ -76,11 +67,6 @@ abstract class WorkViewModel(
 			val cancelWorkMessage = it.cancelWorkMessage.copy(data = cancelMessage)
 			it.copy(cancelWorkMessage = cancelWorkMessage)
 		}
-	}
-
-	fun showStartWorkMessage() = uiState.update {
-		val startWorkMessage = it.startWorkMessage.copy(isVisible = true)
-		it.copy(startWorkMessage = startWorkMessage)
 	}
 
 	fun showCancelWorkMessage() = uiState.update {
@@ -93,15 +79,11 @@ abstract class WorkViewModel(
 		it.copy(errorMessage = errorMessage)
 	}
 
-	fun closeStartWorkMessage() = uiState.update {
-		it.copy(startWorkMessage = MessageUiState())
-	}
-
-	fun closeCancelWorkMessage() = uiState.update {
+	fun dismissCancelWorkMessage() = uiState.update {
 		it.copy(cancelWorkMessage = MessageUiState())
 	}
 
-	fun closeErrorMessage() = uiState.update {
+	fun dismissErrorMessage() = uiState.update {
 		it.copy(errorMessage = MessageUiState())
 	}
 
@@ -109,44 +91,13 @@ abstract class WorkViewModel(
 		it.copy(animationsPlayed = true)
 	}
 
-	protected suspend fun Work?.isPending() = this?.let {
-		getIsWorkPendingUseCase(it)
-	} ?: false
-
-	private fun setIsButtonEnabled(value: Boolean) = uiState.update {
-		it.copy(isButtonEnabled = value)
-	}
-
 	private fun hideAllMessages() = uiState.update {
-		val startWorkMessage = it.startWorkMessage.copy(isVisible = false)
 		val cancelWorkMessage = it.cancelWorkMessage.copy(isVisible = false)
 		val errorMessage = it.errorMessage.copy(isVisible = false)
 		it.copy(
-			startWorkMessage = startWorkMessage,
 			cancelWorkMessage = cancelWorkMessage,
 			errorMessage = errorMessage
 		)
-	}
-
-	private fun Work?.observe() = this?.let { work ->
-		workObservingScope.launch {
-			getWorkStateFlowUseCase(work)
-				.takeUnless { isWorkObserved }
-				?.onStart { isWorkObserved = true }
-				?.onCompletion { isWorkObserved = false }
-				?.collect { workState ->
-					if (workState.isFinished) {
-						completeWorkUseCase(work)
-					}
-					when (workState) {
-						is WorkState.Running -> onWorkRunning(workState)
-						is WorkState.Failed -> onWorkFailed(workState)
-						is WorkState.Succeeded -> onWorkSucceeded()
-						is WorkState.Canceled -> onWorkCanceled()
-						is WorkState.Unknown -> {}
-					}
-				}
-		}
 	}
 
 	private fun onWorkRunning(workState: WorkState.Running) = uiState.update {
@@ -157,7 +108,6 @@ abstract class WorkViewModel(
 	}
 
 	private fun onWorkFailed(workState: WorkState.Failed) {
-		setIsButtonEnabled(false)
 		val stackTrace = workState.throwable?.stackTraceToString() ?: "null"
 		val message = Message(
 			LocalizedString.resource(R.string.exception),

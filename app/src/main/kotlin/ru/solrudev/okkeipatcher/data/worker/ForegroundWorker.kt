@@ -1,10 +1,12 @@
 package ru.solrudev.okkeipatcher.data.worker
 
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
+import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.content.getSystemService
-import androidx.navigation.NavDeepLinkBuilder
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.ForegroundInfo
@@ -23,6 +25,7 @@ import ru.solrudev.okkeipatcher.domain.operation.extension.statusAndAccumulatedP
 import ru.solrudev.okkeipatcher.domain.service.operation.factory.OperationFactory
 import ru.solrudev.okkeipatcher.domain.util.extension.putParcelable
 import ru.solrudev.okkeipatcher.domain.util.extension.putSerializable
+import ru.solrudev.okkeipatcher.ui.activity.OkkeiActivity
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -32,14 +35,9 @@ private val workerMessageNotificationId = AtomicInteger(49725)
 abstract class ForegroundWorker(
 	context: Context,
 	workerParameters: WorkerParameters,
-	private val operationFactory: OperationFactory<*>
+	private val operationFactory: OperationFactory<*>,
+	private val workLabel: LocalizedString
 ) : CoroutineWorker(context, workerParameters) {
-
-	protected abstract val workTitle: LocalizedString
-
-	// TODO: worker should not know anything about presentation layer
-	//  Related to merging work screens
-	protected abstract val destinationScreen: Int
 
 	private val notificationManager = context.getSystemService<NotificationManager>()
 	private val progressNotificationId = workerProgressNotificationId.incrementAndGet()
@@ -51,13 +49,8 @@ abstract class ForegroundWorker(
 	}
 
 	private val progressNotificationBuilder by lazy {
-		createNotificationBuilder(workTitle, progressNotification = true)
+		createNotificationBuilder(workLabel, progressNotification = true)
 	}
-
-	private fun createPendingIntent() = NavDeepLinkBuilder(applicationContext)
-		.setGraph(R.navigation.okkei_nav_graph)
-		.setDestination(destinationScreen)
-		.createPendingIntent()
 
 	final override suspend fun doWork() = try {
 		setForeground(createForegroundInfo())
@@ -184,6 +177,19 @@ abstract class ForegroundWorker(
 				setAutoCancel(true)
 			}
 		}
+	}
+
+	private fun createPendingIntent(): PendingIntent {
+		val activityIntent = Intent(applicationContext, OkkeiActivity::class.java).apply {
+			flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+		}
+		val flagImmutable = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
+		return PendingIntent.getActivity(
+			applicationContext,
+			0,
+			activityIntent,
+			PendingIntent.FLAG_UPDATE_CURRENT or flagImmutable
+		)
 	}
 
 	companion object {

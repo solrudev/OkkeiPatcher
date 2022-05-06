@@ -40,8 +40,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
 			true
 		}
 		findPreference<Preference>("about")?.setOnPreferenceClickListener {
-			val toAboutFragment = SettingsFragmentDirections.actionSettingsFragmentToAboutFragment()
-			findNavController().navigate(toAboutFragment)
+			val toAboutScreen = SettingsFragmentDirections.actionSettingsFragmentToAboutFragment()
+			findNavController().navigate(toAboutScreen)
 			true
 		}
 		findPreference<Preference>("third_party_notices")?.setOnPreferenceClickListener {

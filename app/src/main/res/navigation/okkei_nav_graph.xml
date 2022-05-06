@@ -11,25 +11,20 @@
 		android:label="@string/app_name"
 		tools:layout="@layout/fragment_home">
 		<action
-			android:id="@+id/action_homeFragment_to_patchFragment"
-			app:destination="@id/patch_fragment" />
-		<action
-			android:id="@+id/action_homeFragment_to_restoreFragment"
-			app:destination="@id/restore_fragment" />
+			android:id="@+id/action_homeFragment_to_workFragment"
+			app:destination="@id/work_fragment" />
 		<action
 			android:id="@+id/action_homeFragment_to_settingsFragment"
 			app:destination="@id/settings_fragment" />
 	</fragment>
 	<fragment
-		android:id="@+id/patch_fragment"
-		android:name="ru.solrudev.okkeipatcher.ui.fragment.PatchFragment"
-		android:label="@string/patch"
-		tools:layout="@layout/fragment_work" />
-	<fragment
-		android:id="@+id/restore_fragment"
-		android:name="ru.solrudev.okkeipatcher.ui.fragment.RestoreFragment"
-		android:label="@string/restoring"
-		tools:layout="@layout/fragment_work" />
+		android:id="@+id/work_fragment"
+		android:name="ru.solrudev.okkeipatcher.ui.fragment.WorkFragment"
+		tools:layout="@layout/fragment_work">
+		<argument
+			android:name="work"
+			app:argType="ru.solrudev.okkeipatcher.domain.model.Work" />
+	</fragment>
 	<fragment
 		android:id="@+id/settings_fragment"
 		android:name="ru.solrudev.okkeipatcher.ui.fragment.SettingsFragment"

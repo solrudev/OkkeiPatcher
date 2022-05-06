@@ -10,6 +10,8 @@ import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.repository.app.PreferencesRepository
 import ru.solrudev.okkeipatcher.domain.service.operation.factory.MockOperationFactory
 
+private val workLabel = LocalizedString.resource(R.string.notification_title_test)
+
 @HiltWorker
 class MockWorker @AssistedInject constructor(
 	@Assisted context: Context,
@@ -18,19 +20,6 @@ class MockWorker @AssistedInject constructor(
 ) : ForegroundWorker(
 	context,
 	workerParameters,
-	MockOperationFactory(preferencesRepository.isPatchedDao, workerParameters.tags)
-) {
-
-	override val workTitle = LocalizedString.resource(R.string.notification_title_test)
-
-	override val destinationScreen: Int
-		get() {
-			if (tags.contains("PatchWork")) {
-				return R.id.patch_fragment
-			}
-			if (tags.contains("RestoreWork")) {
-				return R.id.restore_fragment
-			}
-			return R.id.home_fragment
-		}
-}
+	MockOperationFactory(preferencesRepository.isPatchedDao, workerParameters.tags),
+	workLabel
+)

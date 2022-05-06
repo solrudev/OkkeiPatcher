@@ -3,6 +3,7 @@ package ru.solrudev.okkeipatcher.ui.util.extension
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import androidx.activity.OnBackPressedCallback
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -35,4 +36,16 @@ inline fun Fragment.prepareOptionsMenu(crossinline action: Menu.() -> Unit) {
 			return menuItem.onNavDestinationSelected(navController)
 		}
 	}, viewLifecycleOwner, Lifecycle.State.STARTED)
+}
+
+/**
+ * Installs [OnBackPressedCallback] which finishes hosting activity when back key is pressed.
+ */
+fun Fragment.finishActivityOnBackPressed() {
+	val callback = object : OnBackPressedCallback(true) {
+		override fun handleOnBackPressed() {
+			requireActivity().finish()
+		}
+	}
+	requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
 }

@@ -9,13 +9,11 @@ import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.service.operation.factory.PatchOperationFactory
 
+private val workLabel = LocalizedString.resource(R.string.notification_title_patch)
+
 @HiltWorker
 class PatchWorker @AssistedInject constructor(
 	@Assisted context: Context,
 	@Assisted workerParameters: WorkerParameters,
 	patchOperationFactory: PatchOperationFactory
-) : ForegroundWorker(context, workerParameters, patchOperationFactory) {
-
-	override val workTitle = LocalizedString.resource(R.string.notification_title_patch)
-	override val destinationScreen = R.id.patch_fragment
-}
+) : ForegroundWorker(context, workerParameters, patchOperationFactory, workLabel)

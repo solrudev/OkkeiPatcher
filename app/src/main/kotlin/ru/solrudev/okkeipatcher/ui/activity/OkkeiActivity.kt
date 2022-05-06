@@ -28,7 +28,7 @@ class OkkeiActivity : AppCompatActivity(R.layout.okkei_nav_host) {
 		setContentView(binding.root)
 		setSupportActionBar(binding.toolbar)
 		val navController = binding.okkeiNavHostContent.getFragment<NavHostFragment>().navController
-		appBarConfiguration = AppBarConfiguration(navController.graph)
+		appBarConfiguration = AppBarConfiguration(setOf(R.id.home_fragment, R.id.work_fragment))
 		setupActionBarWithNavController(navController, appBarConfiguration)
 		setupOptionsMenu()
 	}

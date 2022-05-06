@@ -17,7 +17,7 @@ class LifecycleAwareDialogHolder(
 
 	override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
 		if (event == dismissEvent) {
-			dialog?.setOnDismissListener { }
+			dialog?.setOnDismissListener(null)
 			dialog?.dismiss()
 			dialog = null
 		}

@@ -3,7 +3,9 @@ package ru.solrudev.okkeipatcher.data.repository.work
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
+import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.worker.PatchWorker
+import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.Work
 import ru.solrudev.okkeipatcher.domain.model.asWork
 import ru.solrudev.okkeipatcher.domain.repository.work.PatchWorkRepository
@@ -11,6 +13,7 @@ import ru.solrudev.okkeipatcher.domain.repository.work.WorkRepository
 import javax.inject.Inject
 
 private const val PATCH_WORK_NAME = "PatchWork"
+private val workLabel = LocalizedString.resource(R.string.patch)
 
 class PatchWorkRepositoryImpl @Inject constructor(
 	private val workRepository: WorkRepository,
@@ -22,7 +25,7 @@ class PatchWorkRepositoryImpl @Inject constructor(
 			.addTag(PATCH_WORK_NAME)
 			.build()
 		workManager.enqueueUniqueWork(PATCH_WORK_NAME, ExistingWorkPolicy.KEEP, workRequest)
-		val work = Work(workRequest.id)
+		val work = Work(workRequest.id, workLabel)
 		workRepository.add(work)
 		return work
 	}
@@ -31,5 +34,5 @@ class PatchWorkRepositoryImpl @Inject constructor(
 		.getWorkInfosForUniqueWork(PATCH_WORK_NAME)
 		.get()
 		.firstOrNull()
-		?.asWork()
+		?.asWork(workLabel)
 }

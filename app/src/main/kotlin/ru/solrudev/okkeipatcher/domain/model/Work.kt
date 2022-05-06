@@ -1,15 +1,18 @@
 package ru.solrudev.okkeipatcher.domain.model
 
+import androidx.annotation.Keep
 import androidx.work.WorkInfo
 import ru.solrudev.okkeipatcher.data.worker.ForegroundWorker
 import ru.solrudev.okkeipatcher.domain.util.extension.getParcelable
 import ru.solrudev.okkeipatcher.domain.util.extension.getSerializable
+import java.io.Serializable
 import java.util.*
 
 /**
  * Represents long-running work.
  */
-data class Work(val id: UUID)
+@Keep
+data class Work(val id: UUID, val label: LocalizedString) : Serializable
 
 /**
  * Represents a [Work] state.
@@ -29,7 +32,7 @@ sealed class WorkState {
 		get() = this is Failed || this is Succeeded || this is Canceled
 }
 
-fun WorkInfo.asWork() = Work(id)
+fun WorkInfo.asWork(title: LocalizedString) = Work(id, title)
 
 // TODO: make a mapper interface for WorkState instead of static extension
 fun WorkInfo?.asWorkState() = when (this?.state) {

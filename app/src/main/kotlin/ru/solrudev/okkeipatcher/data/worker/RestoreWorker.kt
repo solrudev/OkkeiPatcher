@@ -9,13 +9,11 @@ import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.service.operation.factory.RestoreOperationFactory
 
+private val workLabel = LocalizedString.resource(R.string.notification_title_restore)
+
 @HiltWorker
 class RestoreWorker @AssistedInject constructor(
 	@Assisted context: Context,
 	@Assisted workerParameters: WorkerParameters,
 	restoreOperationFactory: RestoreOperationFactory
-) : ForegroundWorker(context, workerParameters, restoreOperationFactory) {
-
-	override val workTitle = LocalizedString.resource(R.string.notification_title_restore)
-	override val destinationScreen = R.id.restore_fragment
-}
+) : ForegroundWorker(context, workerParameters, restoreOperationFactory, workLabel)

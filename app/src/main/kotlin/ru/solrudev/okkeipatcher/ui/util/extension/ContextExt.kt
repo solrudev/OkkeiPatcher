@@ -5,10 +5,24 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.widget.Toast
 import androidx.core.content.getSystemService
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.domain.model.Message
 
 fun Context.copyTextToClipboard(clipLabel: CharSequence, text: CharSequence) {
 	val clipboard = getSystemService<ClipboardManager>()
 	clipboard?.setPrimaryClip(ClipData.newPlainText(clipLabel, text))
 	Toast.makeText(this, R.string.toast_copied_to_clipboard, Toast.LENGTH_SHORT).show()
+}
+
+/**
+ * Creates a [MaterialAlertDialogBuilder] from a [Message].
+ */
+fun Context.createDialogBuilder(message: Message): MaterialAlertDialogBuilder {
+	val titleString = message.title.resolve(this)
+	val messageString = message.message.resolve(this)
+	return MaterialAlertDialogBuilder(this)
+		.setCancelable(true)
+		.setTitle(titleString)
+		.setMessage(messageString)
 }
