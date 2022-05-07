@@ -7,8 +7,6 @@ import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.content.getSystemService
-import androidx.work.CoroutineWorker
-import androidx.work.Data
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import kotlinx.coroutines.*
@@ -19,12 +17,9 @@ import kotlinx.coroutines.sync.withLock
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.Message
-import ru.solrudev.okkeipatcher.domain.model.ProgressData
 import ru.solrudev.okkeipatcher.domain.operation.Operation
 import ru.solrudev.okkeipatcher.domain.operation.extension.statusAndAccumulatedProgress
 import ru.solrudev.okkeipatcher.domain.service.operation.factory.OperationFactory
-import ru.solrudev.okkeipatcher.domain.util.extension.putParcelable
-import ru.solrudev.okkeipatcher.domain.util.extension.putSerializable
 import ru.solrudev.okkeipatcher.ui.activity.OkkeiActivity
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.time.Duration.Companion.milliseconds
@@ -37,7 +32,7 @@ abstract class ForegroundWorker(
 	workerParameters: WorkerParameters,
 	private val operationFactory: OperationFactory<*>,
 	private val workLabel: LocalizedString
-) : CoroutineWorker(context, workerParameters) {
+) : AbstractWorker(context, workerParameters) {
 
 	private val notificationManager = context.getSystemService<NotificationManager>()
 	private val progressNotificationId = workerProgressNotificationId.incrementAndGet()
@@ -77,11 +72,7 @@ abstract class ForegroundWorker(
 			LocalizedString.resource(R.string.notification_message_work_failed)
 		)
 		displayMessageNotification(failMessage)
-		Result.failure(
-			Data.Builder()
-				.putSerializable(KEY_FAILURE_CAUSE, t)
-				.build()
-		)
+		Result.failure(failureWorkData(t))
 	} finally {
 		withContext(NonCancellable) {
 			delay(250.milliseconds) // for foreground service notification to be canceled before returning
@@ -99,13 +90,7 @@ abstract class ForegroundWorker(
 	private fun CoroutineScope.reportProgress(operation: Operation<*>) = operation
 		.statusAndAccumulatedProgress()
 		.onEach { (status, progress) ->
-			val progressData = ProgressData(progress, operation.progressMax)
-			setProgress(
-				Data.Builder()
-					.putSerializable(KEY_STATUS, status)
-					.putParcelable(KEY_PROGRESS_DATA, progressData)
-					.build()
-			)
+			setProgress(status, progress, operation.progressMax)
 		}
 		.launchIn(this)
 
@@ -190,11 +175,5 @@ abstract class ForegroundWorker(
 			activityIntent,
 			PendingIntent.FLAG_UPDATE_CURRENT or flagImmutable
 		)
-	}
-
-	companion object {
-		const val KEY_PROGRESS_DATA = "PROGRESS_DATA"
-		const val KEY_STATUS = "STATUS"
-		const val KEY_FAILURE_CAUSE = "WORKER_FAILURE_CAUSE"
 	}
 }

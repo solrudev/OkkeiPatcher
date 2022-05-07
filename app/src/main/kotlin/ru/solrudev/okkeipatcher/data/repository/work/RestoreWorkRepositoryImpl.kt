@@ -4,10 +4,10 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.data.repository.work.mapper.asWork
 import ru.solrudev.okkeipatcher.data.worker.RestoreWorker
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.Work
-import ru.solrudev.okkeipatcher.domain.model.asWork
 import ru.solrudev.okkeipatcher.domain.repository.work.RestoreWorkRepository
 import ru.solrudev.okkeipatcher.domain.repository.work.WorkRepository
 import javax.inject.Inject
