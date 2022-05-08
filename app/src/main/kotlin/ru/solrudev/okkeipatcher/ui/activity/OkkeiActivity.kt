@@ -21,14 +21,13 @@ import ru.solrudev.okkeipatcher.databinding.OkkeiNavHostBinding
 class OkkeiActivity : AppCompatActivity(R.layout.okkei_nav_host) {
 
 	private val binding by viewBinding(OkkeiNavHostBinding::bind, R.id.okkei_nav_host_container)
-	private lateinit var appBarConfiguration: AppBarConfiguration
+	private val appBarConfiguration = AppBarConfiguration(setOf(R.id.home_fragment, R.id.work_fragment))
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(binding.root)
 		setSupportActionBar(binding.toolbar)
 		val navController = binding.okkeiNavHostContent.getFragment<NavHostFragment>().navController
-		appBarConfiguration = AppBarConfiguration(setOf(R.id.home_fragment, R.id.work_fragment))
 		setupActionBarWithNavController(navController, appBarConfiguration)
 		setupOptionsMenu()
 	}
