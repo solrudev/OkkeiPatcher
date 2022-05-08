@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.content.getSystemService
+import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import kotlinx.coroutines.*
@@ -15,6 +16,8 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.data.worker.util.failureWorkData
+import ru.solrudev.okkeipatcher.data.worker.util.setProgress
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.Message
 import ru.solrudev.okkeipatcher.domain.operation.Operation
@@ -32,7 +35,7 @@ abstract class ForegroundWorker(
 	workerParameters: WorkerParameters,
 	private val operationFactory: OperationFactory<*>,
 	private val workLabel: LocalizedString
-) : AbstractWorker(context, workerParameters) {
+) : CoroutineWorker(context, workerParameters) {
 
 	private val notificationManager = context.getSystemService<NotificationManager>()
 	private val progressNotificationId = workerProgressNotificationId.incrementAndGet()

@@ -1,10 +1,8 @@
-package ru.solrudev.okkeipatcher.data.worker
+package ru.solrudev.okkeipatcher.data.worker.util
 
-import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.WorkInfo
-import androidx.work.WorkerParameters
 import ru.solrudev.okkeipatcher.data.repository.work.mapper.WorkStateMapper
 import ru.solrudev.okkeipatcher.data.worker.util.extension.getSerializable
 import ru.solrudev.okkeipatcher.data.worker.util.extension.putSerializable
@@ -18,27 +16,21 @@ private const val PROGRESS_MAX = "progress_max"
 private const val STATUS = "status"
 private const val THROWABLE = "throwable"
 
-abstract class AbstractWorker(
-	context: Context,
-	workerParameters: WorkerParameters
-) : CoroutineWorker(context, workerParameters) {
-
-	protected suspend fun setProgress(
-		status: LocalizedString,
-		progress: Int,
-		progressMax: Int
-	) = setProgress(
-		Data.Builder()
-			.putSerializable(STATUS, status)
-			.putInt(PROGRESS, progress)
-			.putInt(PROGRESS_MAX, progressMax)
-			.build()
-	)
-
-	protected fun failureWorkData(exception: Throwable) = Data.Builder()
-		.putSerializable(THROWABLE, exception)
+suspend fun CoroutineWorker.setProgress(
+	status: LocalizedString,
+	progress: Int,
+	progressMax: Int
+) = setProgress(
+	Data.Builder()
+		.putSerializable(STATUS, status)
+		.putInt(PROGRESS, progress)
+		.putInt(PROGRESS_MAX, progressMax)
 		.build()
-}
+)
+
+fun failureWorkData(exception: Throwable) = Data.Builder()
+	.putSerializable(THROWABLE, exception)
+	.build()
 
 class WorkStateMapperImpl @Inject constructor() : WorkStateMapper {
 
