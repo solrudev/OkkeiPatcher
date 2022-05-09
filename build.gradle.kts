@@ -1,5 +1,5 @@
 buildscript {
-	val androidGradleVersion: String by extra("7.1.3")
+	val androidGradleVersion: String by extra("7.2.0")
 	val kotlinVersion: String by extra("1.6.21")
 	val hiltVersion: String by extra("2.41")
 	val navigationVersion: String by extra("2.4.2")
