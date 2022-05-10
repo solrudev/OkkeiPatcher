@@ -18,15 +18,17 @@ class ConnectivityRepositoryImpl @Inject constructor(@ApplicationContext applica
 	private val connectivityManager = applicationContext.getSystemService<ConnectivityManager>()
 	private var isNetworkAvailable = false
 
-	private val networkCallback = @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-	object : ConnectivityManager.NetworkCallback() {
+	private val networkCallback by lazy {
+		@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+		object : ConnectivityManager.NetworkCallback() {
 
-		override fun onAvailable(network: Network) {
-			isNetworkAvailable = true
-		}
+			override fun onAvailable(network: Network) {
+				isNetworkAvailable = true
+			}
 
-		override fun onLost(network: Network) {
-			isNetworkAvailable = false
+			override fun onLost(network: Network) {
+				isNetworkAvailable = false
+			}
 		}
 	}
 
