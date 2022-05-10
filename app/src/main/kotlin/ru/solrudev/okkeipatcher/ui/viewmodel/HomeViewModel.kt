@@ -5,6 +5,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,36 +40,22 @@ class HomeViewModel @Inject constructor(
 
 	init {
 		viewModelScope.launch {
-			val patchWork = getPatchWorkUseCase()
-			val restoreWork = getRestoreWorkUseCase()
-			setWorkIfPending(patchWork)
-			setWorkIfPending(restoreWork)
+			awaitAll(
+				async { checkIsPatched() },
+				async { checkPendingWork() }
+			)
+			checkPatchUpdates()
 		}
 	}
 
 	override suspend fun collect(collector: FlowCollector<HomeUiState>) = uiState.collect(collector)
-
-	override fun onCreate(owner: LifecycleOwner) {
-		viewModelScope.launch {
-			val isPatched = getIsPatchedUseCase()
-			uiState.update {
-				it.copy(
-					isPatchEnabled = !isPatched || it.patchUpdatesAvailable,
-					isRestoreEnabled = isPatched
-				)
-			}
-		}
-	}
-
-	override fun onStop(owner: LifecycleOwner) {
-		hideAllMessages()
-	}
+	override fun onStop(owner: LifecycleOwner) = hideAllMessages()
 
 	fun promptPatch() {
+		uiState.update {
+			it.copy(isPatchSizeLoading = true)
+		}
 		viewModelScope.launch {
-			uiState.update {
-				it.copy(isPatchSizeLoading = true)
-			}
 			val getPatchSizeInMbUseCase = getPatchSizeInMbUseCaseFactory.create()
 			val patchSizeInMb = getPatchSizeInMbUseCase()
 			val title = LocalizedString.resource(R.string.warning_start_patch_title)
@@ -96,37 +84,32 @@ class HomeViewModel @Inject constructor(
 	fun startPatch() {
 		viewModelScope.launch {
 			val patchWork = enqueuePatchWorkUseCase()
-			setWork(patchWork)
+			setPendingWork(patchWork)
 		}
 	}
 
 	fun startRestore() {
 		viewModelScope.launch {
 			val restoreWork = enqueueRestoreWorkUseCase()
-			setWork(restoreWork)
+			setPendingWork(restoreWork)
 		}
 	}
 
-	fun checkPatchUpdates() {
+	fun workSucceeded() {
 		viewModelScope.launch {
-			val getPatchUpdatesUseCase = getPatchUpdatesUseCaseFactory.create()
-			val updatesAvailable = getPatchUpdatesUseCase().available
-			uiState.update {
-				it.copy(
-					isPatchEnabled = updatesAvailable || it.isPatchEnabled,
-					patchUpdatesAvailable = updatesAvailable,
-					checkedForPatchUpdates = true
-				)
-			}
+			checkIsPatched()
 		}
 	}
 
 	fun patchUpdatesMessageShown() = uiState.update {
-		it.copy(patchUpdatesMessageShown = true)
+		it.copy(shouldShowPatchUpdatesMessage = false)
 	}
 
 	fun navigatedToWorkScreen() = uiState.update {
-		it.copy(pendingWork = null)
+		it.copy(
+			pendingWork = null,
+			shouldShowPatchUpdatesMessage = false
+		)
 	}
 
 	fun showStartPatchMessage() = uiState.update {
@@ -147,6 +130,50 @@ class HomeViewModel @Inject constructor(
 		it.copy(startRestoreMessage = MessageUiState())
 	}
 
+	private suspend fun checkPendingWork() {
+		val patchWork = getPatchWorkUseCase()
+		val restoreWork = getRestoreWorkUseCase()
+		val pendingWork = pendingWorkOrNull(patchWork) ?: pendingWorkOrNull(restoreWork)
+		if (pendingWork != null) {
+			setPendingWork(pendingWork)
+		}
+	}
+
+	/**
+	 * Returns [work] if it's pending, `null` otherwise.
+	 */
+	private suspend fun pendingWorkOrNull(work: Work?) =
+		if (work != null && getIsWorkPendingUseCase(work)) {
+			work
+		} else {
+			null
+		}
+
+	private fun setPendingWork(work: Work) = uiState.update {
+		it.copy(pendingWork = work)
+	}
+
+	private suspend fun checkIsPatched() {
+		val isPatched = getIsPatchedUseCase()
+		uiState.update {
+			it.copy(
+				isPatchEnabled = !isPatched,
+				isRestoreEnabled = isPatched
+			)
+		}
+	}
+
+	private suspend fun checkPatchUpdates() {
+		val getPatchUpdatesUseCase = getPatchUpdatesUseCaseFactory.create()
+		val updatesAvailable = getPatchUpdatesUseCase().available
+		uiState.update {
+			it.copy(
+				isPatchEnabled = updatesAvailable || it.isPatchEnabled,
+				patchUpdatesAvailable = updatesAvailable
+			)
+		}
+	}
+
 	private fun hideAllMessages() = uiState.update {
 		val startPatchMessage = it.startPatchMessage.copy(isVisible = false)
 		val startRestoreMessage = it.startRestoreMessage.copy(isVisible = false)
@@ -154,15 +181,5 @@ class HomeViewModel @Inject constructor(
 			startPatchMessage = startPatchMessage,
 			startRestoreMessage = startRestoreMessage
 		)
-	}
-
-	private suspend fun setWorkIfPending(work: Work?) {
-		if (work != null && getIsWorkPendingUseCase(work)) {
-			setWork(work)
-		}
-	}
-
-	private fun setWork(work: Work) = uiState.update {
-		it.copy(pendingWork = work)
 	}
 }

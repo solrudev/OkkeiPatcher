@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.app.NotificationManager
 import android.os.Bundle
 import android.view.View
+import android.view.animation.DecelerateInterpolator
 import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -67,19 +68,19 @@ class WorkFragment : Fragment(R.layout.fragment_work) {
 	private fun CoroutineScope.observeUiState() = launch {
 		viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 			viewModel.collect { uiState ->
-				if (uiState.isWorkSuccessful) {
-					onWorkSuccess(playAnimations = !uiState.animationsPlayed)
-				}
-				if (uiState.isWorkCanceled) {
-					findNavController().popBackStack()
-				}
 				binding.textviewWorkStatus.text = uiState.status.resolve(requireContext())
 				setProgress(uiState.progressData)
+				if (uiState.isWorkSuccessful) {
+					onWorkSucceeded(playAnimations = !uiState.animationsPlayed)
+				}
+				if (uiState.isWorkCanceled) {
+					onWorkCanceled()
+				}
 				if (uiState.cancelWorkMessage.shouldShow) {
 					showCancelWorkMessage(uiState.cancelWorkMessage.data)
 				}
 				if (uiState.errorMessage.shouldShow) {
-					showErrorMessage(uiState.errorMessage.data)
+					onError(uiState.errorMessage.data)
 				}
 			}
 		}
@@ -90,7 +91,8 @@ class WorkFragment : Fragment(R.layout.fragment_work) {
 		notificationManager?.cancelAll()
 	}
 
-	private fun onWorkSuccess(playAnimations: Boolean) {
+	private fun onWorkSucceeded(playAnimations: Boolean) {
+		setResult(true)
 		if (playAnimations) {
 			startSuccessAnimations()
 		}
@@ -102,12 +104,23 @@ class WorkFragment : Fragment(R.layout.fragment_work) {
 		clearNotifications()
 	}
 
+	private fun onWorkCanceled() {
+		setResult(false)
+		findNavController().popBackStack()
+	}
+
+	private fun onError(error: Message) {
+		setResult(false)
+		showErrorMessage(error)
+	}
+
 	private fun startSuccessAnimations() {
 		binding.buttonWork.alpha = 0f
 		binding.buttonWork
 			.animate()
 			.alpha(1f)
 			.setDuration(500)
+			.setInterpolator(DecelerateInterpolator())
 			.start()
 		viewModel.onAnimationsPlayed()
 	}
@@ -150,4 +163,7 @@ class WorkFragment : Fragment(R.layout.fragment_work) {
 		viewModel.showErrorMessage()
 		clearNotifications()
 	}
+
+	private fun setResult(value: Boolean) =
+		findNavController().previousBackStackEntry?.savedStateHandle?.setResult(value)
 }

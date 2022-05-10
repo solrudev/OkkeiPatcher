@@ -20,10 +20,7 @@ import ru.solrudev.okkeipatcher.databinding.FragmentHomeBinding
 import ru.solrudev.okkeipatcher.domain.model.Message
 import ru.solrudev.okkeipatcher.domain.model.Work
 import ru.solrudev.okkeipatcher.ui.model.shouldShow
-import ru.solrudev.okkeipatcher.ui.util.extension.createDialogBuilder
-import ru.solrudev.okkeipatcher.ui.util.extension.setLoading
-import ru.solrudev.okkeipatcher.ui.util.extension.setupTransitions
-import ru.solrudev.okkeipatcher.ui.util.extension.showWithLifecycle
+import ru.solrudev.okkeipatcher.ui.util.extension.*
 import ru.solrudev.okkeipatcher.ui.viewmodel.HomeViewModel
 
 @AndroidEntryPoint
@@ -42,12 +39,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 		viewLifecycleOwner.bindProgressButton(binding.buttonMainPatch)
 		viewLifecycleOwner.lifecycle.addObserver(viewModel)
 		viewLifecycleOwner.lifecycleScope.observeUiState()
+		checkWorkResult()
 	}
 
 	private fun setupNavigation() {
 		binding.buttonMainPatch.attachTextChangeAnimator {
-			fadeInMills = 100
-			fadeOutMills = 100
+			fadeInMills = 150
+			fadeOutMills = 150
 		}
 		binding.buttonMainPatch.setOnClickListener {
 			viewModel.promptPatch()
@@ -57,26 +55,32 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 		}
 	}
 
+	private fun checkWorkResult() {
+		val savedStateHandle = findNavController().currentBackStackEntry?.savedStateHandle ?: return
+		val result = savedStateHandle.getResult() ?: return
+		if (result) {
+			viewModel.workSucceeded()
+		}
+		savedStateHandle.clearResult()
+	}
+
 	private fun CoroutineScope.observeUiState() = launch {
 		viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 			viewModel.collect { uiState ->
+				binding.buttonMainPatch.isEnabled = uiState.isPatchEnabled
+				binding.buttonMainRestore.isEnabled = uiState.isRestoreEnabled
+				binding.buttonMainPatch.setLoading(uiState.isPatchSizeLoading, R.string.patch)
 				if (uiState.pendingWork != null) {
 					navigateToWorkScreen(uiState.pendingWork)
 				}
-				binding.buttonMainPatch.isEnabled = uiState.isPatchEnabled
-				binding.buttonMainRestore.isEnabled = uiState.isRestoreEnabled
-				if (!uiState.checkedForPatchUpdates) {
-					viewModel.checkPatchUpdates()
-				}
-				if (uiState.patchUpdatesAvailable && !uiState.patchUpdatesMessageShown) {
-					showPatchUpdatesSnackbar()
-				}
-				binding.buttonMainPatch.setLoading(uiState.isPatchSizeLoading, R.string.patch)
 				if (uiState.startPatchMessage.shouldShow) {
 					showStartPatchMessage(uiState.startPatchMessage.data)
 				}
 				if (uiState.startRestoreMessage.shouldShow) {
 					showStartRestoreMessage(uiState.startRestoreMessage.data)
+				}
+				if (uiState.patchUpdatesAvailable && uiState.shouldShowPatchUpdatesMessage) {
+					showPatchUpdatesSnackbar()
 				}
 			}
 		}
