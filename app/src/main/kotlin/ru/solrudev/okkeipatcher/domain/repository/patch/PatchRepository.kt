@@ -1,13 +1,8 @@
 package ru.solrudev.okkeipatcher.domain.repository.patch
 
-import ru.solrudev.okkeipatcher.data.network.model.FileDto
+import ru.solrudev.okkeipatcher.domain.model.patchupdates.PatchUpdates
 
-interface ScriptsDataRepository {
-	suspend fun getScriptsData(): FileDto
+interface PatchRepository {
+	suspend fun getPatchUpdates(): PatchUpdates
+	suspend fun getPatchSizeInMb(): Double
 }
-
-interface ObbDataRepository {
-	suspend fun getObbData(): FileDto
-}
-
-interface DefaultPatchRepository : ScriptsDataRepository, ObbDataRepository

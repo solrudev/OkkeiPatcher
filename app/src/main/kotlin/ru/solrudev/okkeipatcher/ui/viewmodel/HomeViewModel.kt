@@ -17,8 +17,8 @@ import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.Message
 import ru.solrudev.okkeipatcher.domain.model.Work
 import ru.solrudev.okkeipatcher.domain.usecase.app.GetIsPatchedUseCase
-import ru.solrudev.okkeipatcher.domain.usecase.patch.factory.GetPatchSizeInMbUseCaseFactory
-import ru.solrudev.okkeipatcher.domain.usecase.patch.factory.GetPatchUpdatesUseCaseFactory
+import ru.solrudev.okkeipatcher.domain.usecase.patch.GetPatchSizeInMbUseCase
+import ru.solrudev.okkeipatcher.domain.usecase.patch.GetPatchUpdatesUseCase
 import ru.solrudev.okkeipatcher.domain.usecase.work.*
 import ru.solrudev.okkeipatcher.ui.model.HomeUiState
 import ru.solrudev.okkeipatcher.ui.model.MessageUiState
@@ -32,8 +32,8 @@ class HomeViewModel @Inject constructor(
 	private val enqueueRestoreWorkUseCase: EnqueueRestoreWorkUseCase,
 	private val getPatchWorkUseCase: GetPatchWorkUseCase,
 	private val getRestoreWorkUseCase: GetRestoreWorkUseCase,
-	private val getPatchSizeInMbUseCaseFactory: GetPatchSizeInMbUseCaseFactory,
-	private val getPatchUpdatesUseCaseFactory: GetPatchUpdatesUseCaseFactory
+	private val getPatchSizeInMbUseCase: GetPatchSizeInMbUseCase,
+	private val getPatchUpdatesUseCase: GetPatchUpdatesUseCase
 ) : ViewModel(), Flow<HomeUiState>, DefaultLifecycleObserver {
 
 	private val uiState = MutableStateFlow(HomeUiState())
@@ -56,7 +56,6 @@ class HomeViewModel @Inject constructor(
 			uiState.update {
 				it.copy(isPatchSizeLoading = true)
 			}
-			val getPatchSizeInMbUseCase = getPatchSizeInMbUseCaseFactory.create()
 			val patchSizeInMb = getPatchSizeInMbUseCase()
 			val title = LocalizedString.resource(R.string.warning_start_patch_title)
 			val message = LocalizedString.resource(R.string.warning_start_patch, patchSizeInMb)
@@ -164,7 +163,6 @@ class HomeViewModel @Inject constructor(
 	}
 
 	private suspend fun checkPatchUpdates() {
-		val getPatchUpdatesUseCase = getPatchUpdatesUseCaseFactory.create()
 		val updatesAvailable = getPatchUpdatesUseCase().available
 		uiState.update {
 			it.copy(

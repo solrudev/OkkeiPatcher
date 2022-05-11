@@ -17,7 +17,7 @@ import ru.solrudev.okkeipatcher.domain.repository.work.WorkRepository
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
-@Module(includes = [RepositoryFlavorModule::class])
+@Module(includes = [RepositoryFlavorModule::class, PatchRepositoryModule::class])
 interface RepositoryModule {
 
 	@Binds

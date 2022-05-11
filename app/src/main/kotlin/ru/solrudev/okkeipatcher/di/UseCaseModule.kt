@@ -3,15 +3,11 @@ package ru.solrudev.okkeipatcher.di
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
+import dagger.hilt.android.components.ViewModelComponent
 import ru.solrudev.okkeipatcher.domain.usecase.app.*
-import ru.solrudev.okkeipatcher.domain.usecase.patch.factory.GetPatchSizeInMbUseCaseFactory
-import ru.solrudev.okkeipatcher.domain.usecase.patch.factory.GetPatchSizeInMbUseCaseFactoryImpl
-import ru.solrudev.okkeipatcher.domain.usecase.patch.factory.GetPatchUpdatesUseCaseFactory
-import ru.solrudev.okkeipatcher.domain.usecase.patch.factory.GetPatchUpdatesUseCaseFactoryImpl
 import ru.solrudev.okkeipatcher.domain.usecase.work.*
 
-@InstallIn(SingletonComponent::class)
+@InstallIn(ViewModelComponent::class)
 @Module(includes = [UseCaseFlavorModule::class])
 interface UseCaseModule {
 
@@ -56,10 +52,4 @@ interface UseCaseModule {
 
 	@Binds
 	fun bindGetPatchLanguageUseCase(getPatchLanguageUseCase: GetPatchLanguageUseCaseImpl): GetPatchLanguageUseCase
-
-	@Binds
-	fun bindGetPatchUpdatesUseCaseFactory(getPatchUpdatesUseCaseFactory: GetPatchUpdatesUseCaseFactoryImpl): GetPatchUpdatesUseCaseFactory
-
-	@Binds
-	fun bindGetPatchSizeInMbUseCaseFactory(getPatchSizeInMbUseCaseFactory: GetPatchSizeInMbUseCaseFactoryImpl): GetPatchSizeInMbUseCaseFactory
 }

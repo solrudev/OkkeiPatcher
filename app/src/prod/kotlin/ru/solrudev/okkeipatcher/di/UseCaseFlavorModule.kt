@@ -3,29 +3,19 @@ package ru.solrudev.okkeipatcher.di
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import dagger.multibindings.IntoMap
-import ru.solrudev.okkeipatcher.domain.model.Language
+import dagger.hilt.android.components.ViewModelComponent
 import ru.solrudev.okkeipatcher.domain.usecase.patch.GetPatchSizeInMbUseCase
+import ru.solrudev.okkeipatcher.domain.usecase.patch.GetPatchSizeInMbUseCaseImpl
 import ru.solrudev.okkeipatcher.domain.usecase.patch.GetPatchUpdatesUseCase
-import ru.solrudev.okkeipatcher.domain.usecase.patch.english.DefaultGetPatchSizeInMbUseCase
-import ru.solrudev.okkeipatcher.domain.usecase.patch.english.DefaultGetPatchUpdatesUseCase
+import ru.solrudev.okkeipatcher.domain.usecase.patch.GetPatchUpdatesUseCaseImpl
 
-@InstallIn(SingletonComponent::class)
+@InstallIn(ViewModelComponent::class)
 @Module
 interface UseCaseFlavorModule {
 
 	@Binds
-	@IntoMap
-	@LanguageKey(Language.English)
-	fun bindGetPatchUpdatesUseCase(
-		defaultGetPatchUpdatesUseCase: DefaultGetPatchUpdatesUseCase
-	): GetPatchUpdatesUseCase
+	fun bindGetPatchUpdatesUseCase(getPatchUpdatesUseCase: GetPatchUpdatesUseCaseImpl): GetPatchUpdatesUseCase
 
 	@Binds
-	@IntoMap
-	@LanguageKey(Language.English)
-	fun bindGetPatchSizeInMbUseCase(
-		defaultGetPatchSizeInMbUseCase: DefaultGetPatchSizeInMbUseCase
-	): GetPatchSizeInMbUseCase
+	fun bindGetPatchSizeInMbUseCase(getPatchSizeInMbUseCase: GetPatchSizeInMbUseCaseImpl): GetPatchSizeInMbUseCase
 }
