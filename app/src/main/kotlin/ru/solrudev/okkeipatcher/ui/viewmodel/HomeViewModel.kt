@@ -52,10 +52,10 @@ class HomeViewModel @Inject constructor(
 	override fun onStop(owner: LifecycleOwner) = hideAllMessages()
 
 	fun promptPatch() {
-		uiState.update {
-			it.copy(isPatchSizeLoading = true)
-		}
 		viewModelScope.launch {
+			uiState.update {
+				it.copy(isPatchSizeLoading = true)
+			}
 			val getPatchSizeInMbUseCase = getPatchSizeInMbUseCaseFactory.create()
 			val patchSizeInMb = getPatchSizeInMbUseCase()
 			val title = LocalizedString.resource(R.string.warning_start_patch_title)
