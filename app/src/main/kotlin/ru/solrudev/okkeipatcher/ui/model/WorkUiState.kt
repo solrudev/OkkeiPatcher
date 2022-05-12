@@ -12,4 +12,4 @@ data class WorkUiState(
 	val cancelWorkMessage: Message = Message.empty,
 	val error: Message = Message.empty,
 	val animationsPlayed: Boolean = false
-)
+) : UiState

@@ -12,4 +12,4 @@ data class HomeUiState(
 	val startRestoreMessage: Message = Message.empty,
 	val patchUpdatesAvailable: Boolean = false,
 	val canShowPatchUpdatesMessage: Boolean = false
-)
+) : UiState

@@ -5,25 +5,23 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.bindProgressButton
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.databinding.FragmentHomeBinding
 import ru.solrudev.okkeipatcher.domain.model.Message
 import ru.solrudev.okkeipatcher.domain.model.Work
+import ru.solrudev.okkeipatcher.ui.model.HomeUiState
+import ru.solrudev.okkeipatcher.ui.model.ReactiveView
 import ru.solrudev.okkeipatcher.ui.util.extension.*
 import ru.solrudev.okkeipatcher.ui.viewmodel.HomeViewModel
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(R.layout.fragment_home) {
+class HomeFragment : Fragment(R.layout.fragment_home), ReactiveView<HomeUiState> {
 
 	private val viewModel by viewModels<HomeViewModel>()
 	private val binding by viewBinding(FragmentHomeBinding::bind)
@@ -36,8 +34,26 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		setupNavigation()
 		viewLifecycleOwner.bindProgressButton(binding.buttonMainPatch)
-		viewLifecycleOwner.lifecycleScope.observeUiState()
+		launchRender(viewModel)
 		checkWorkResult()
+	}
+
+	override fun render(uiState: HomeUiState) {
+		binding.buttonMainPatch.isEnabled = uiState.isPatchEnabled
+		binding.buttonMainRestore.isEnabled = uiState.isRestoreEnabled
+		binding.buttonMainPatch.setLoading(uiState.isPatchSizeLoading, R.string.patch)
+		if (uiState.pendingWork != null) {
+			navigateToWorkScreen(uiState.pendingWork)
+		}
+		if (uiState.startPatchMessage != Message.empty) {
+			showStartPatchMessage(uiState.startPatchMessage)
+		}
+		if (uiState.startRestoreMessage != Message.empty) {
+			showStartRestoreMessage(uiState.startRestoreMessage)
+		}
+		if (uiState.patchUpdatesAvailable && uiState.canShowPatchUpdatesMessage) {
+			showPatchUpdatesSnackbar()
+		}
 	}
 
 	private fun setupNavigation() {
@@ -60,28 +76,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 			viewModel.workSucceeded()
 		}
 		savedStateHandle.clearResult()
-	}
-
-	private fun CoroutineScope.observeUiState() = launch {
-		viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-			viewModel.collect { uiState ->
-				binding.buttonMainPatch.isEnabled = uiState.isPatchEnabled
-				binding.buttonMainRestore.isEnabled = uiState.isRestoreEnabled
-				binding.buttonMainPatch.setLoading(uiState.isPatchSizeLoading, R.string.patch)
-				if (uiState.pendingWork != null) {
-					navigateToWorkScreen(uiState.pendingWork)
-				}
-				if (uiState.startPatchMessage != Message.empty) {
-					showStartPatchMessage(uiState.startPatchMessage)
-				}
-				if (uiState.startRestoreMessage != Message.empty) {
-					showStartRestoreMessage(uiState.startRestoreMessage)
-				}
-				if (uiState.patchUpdatesAvailable && uiState.canShowPatchUpdatesMessage) {
-					showPatchUpdatesSnackbar()
-				}
-			}
-		}
 	}
 
 	private fun navigateToWorkScreen(work: Work) {

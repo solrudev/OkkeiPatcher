@@ -9,23 +9,21 @@ import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.databinding.FragmentWorkBinding
 import ru.solrudev.okkeipatcher.domain.model.Message
 import ru.solrudev.okkeipatcher.domain.model.ProgressData
+import ru.solrudev.okkeipatcher.ui.model.ReactiveView
+import ru.solrudev.okkeipatcher.ui.model.WorkUiState
 import ru.solrudev.okkeipatcher.ui.util.extension.*
 import ru.solrudev.okkeipatcher.ui.viewmodel.WorkViewModel
 
 @AndroidEntryPoint
-class WorkFragment : Fragment(R.layout.fragment_work) {
+class WorkFragment : Fragment(R.layout.fragment_work), ReactiveView<WorkUiState> {
 
 	private val viewModel by viewModels<WorkViewModel>()
 	private val args by navArgs<WorkFragmentArgs>()
@@ -44,7 +42,7 @@ class WorkFragment : Fragment(R.layout.fragment_work) {
 			clear()
 		}
 		setupNavigation()
-		viewLifecycleOwner.lifecycleScope.observeUiState()
+		launchRender(viewModel)
 	}
 
 	override fun onStart() {
@@ -58,30 +56,26 @@ class WorkFragment : Fragment(R.layout.fragment_work) {
 		currentCancelDialog = null
 	}
 
-	private fun setupNavigation() {
-		binding.buttonWork.setOnClickListener {
-			viewModel.promptCancelWork()
+	override fun render(uiState: WorkUiState) {
+		binding.textviewWorkStatus.text = uiState.status.resolve(requireContext())
+		setProgress(uiState.progressData)
+		if (uiState.isWorkSuccessful) {
+			onWorkSucceeded(playAnimations = !uiState.animationsPlayed)
+		}
+		if (uiState.isWorkCanceled) {
+			onWorkCanceled()
+		}
+		if (uiState.cancelWorkMessage != Message.empty) {
+			showCancelWorkMessage(uiState.cancelWorkMessage)
+		}
+		if (uiState.error != Message.empty) {
+			onError(uiState.error)
 		}
 	}
 
-	private fun CoroutineScope.observeUiState() = launch {
-		viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-			viewModel.collect { uiState ->
-				binding.textviewWorkStatus.text = uiState.status.resolve(requireContext())
-				setProgress(uiState.progressData)
-				if (uiState.isWorkSuccessful) {
-					onWorkSucceeded(playAnimations = !uiState.animationsPlayed)
-				}
-				if (uiState.isWorkCanceled) {
-					onWorkCanceled()
-				}
-				if (uiState.cancelWorkMessage != Message.empty) {
-					showCancelWorkMessage(uiState.cancelWorkMessage)
-				}
-				if (uiState.error != Message.empty) {
-					onError(uiState.error)
-				}
-			}
+	private fun setupNavigation() {
+		binding.buttonWork.setOnClickListener {
+			viewModel.promptCancelWork()
 		}
 	}
 
