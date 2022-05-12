@@ -21,6 +21,7 @@ import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.databinding.FragmentWorkBinding
 import ru.solrudev.okkeipatcher.domain.model.Message
 import ru.solrudev.okkeipatcher.domain.model.ProgressData
+import ru.solrudev.okkeipatcher.ui.model.shouldShow
 import ru.solrudev.okkeipatcher.ui.util.extension.*
 import ru.solrudev.okkeipatcher.ui.viewmodel.WorkViewModel
 
@@ -44,6 +45,7 @@ class WorkFragment : Fragment(R.layout.fragment_work) {
 			clear()
 		}
 		setupNavigation()
+		viewLifecycleOwner.lifecycle.addObserver(viewModel)
 		viewLifecycleOwner.lifecycleScope.observeUiState()
 	}
 
@@ -54,7 +56,6 @@ class WorkFragment : Fragment(R.layout.fragment_work) {
 
 	override fun onStop() {
 		super.onStop()
-		viewModel.stopObservingWork()
 		currentCancelDialog = null
 	}
 
@@ -75,11 +76,11 @@ class WorkFragment : Fragment(R.layout.fragment_work) {
 				if (uiState.isWorkCanceled) {
 					onWorkCanceled()
 				}
-				if (uiState.cancelWorkMessage != Message.empty) {
-					showCancelWorkMessage(uiState.cancelWorkMessage)
+				if (uiState.cancelWorkMessage.shouldShow) {
+					showCancelWorkMessage(uiState.cancelWorkMessage.data)
 				}
-				if (uiState.error != Message.empty) {
-					onError(uiState.error)
+				if (uiState.errorMessage.shouldShow) {
+					onError(uiState.errorMessage.data)
 				}
 			}
 		}
@@ -110,9 +111,7 @@ class WorkFragment : Fragment(R.layout.fragment_work) {
 
 	private fun onError(error: Message) {
 		setResult(false)
-		binding.buttonWork.isEnabled = false
 		showErrorMessage(error)
-		clearNotifications()
 	}
 
 	private fun startSuccessAnimations() {
@@ -146,9 +145,11 @@ class WorkFragment : Fragment(R.layout.fragment_work) {
 			.create()
 		currentCancelDialog = dialog
 		dialog.showWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.Event.ON_STOP)
+		viewModel.showCancelWorkMessage()
 	}
 
 	private fun showErrorMessage(errorMessage: Message) {
+		binding.buttonWork.isEnabled = false
 		val message = errorMessage.message.resolve(requireContext())
 		requireContext().createDialogBuilder(errorMessage)
 			.setNeutralButton(R.string.dialog_button_copy_to_clipboard) { _, _ ->
@@ -159,6 +160,8 @@ class WorkFragment : Fragment(R.layout.fragment_work) {
 				findNavController().popBackStack()
 			}
 			.showWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.Event.ON_STOP)
+		viewModel.showErrorMessage()
+		clearNotifications()
 	}
 
 	private fun setResult(value: Boolean) =

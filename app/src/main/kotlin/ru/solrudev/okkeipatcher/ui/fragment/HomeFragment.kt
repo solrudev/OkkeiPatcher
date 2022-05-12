@@ -19,6 +19,7 @@ import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.databinding.FragmentHomeBinding
 import ru.solrudev.okkeipatcher.domain.model.Message
 import ru.solrudev.okkeipatcher.domain.model.Work
+import ru.solrudev.okkeipatcher.ui.model.shouldShow
 import ru.solrudev.okkeipatcher.ui.util.extension.*
 import ru.solrudev.okkeipatcher.ui.viewmodel.HomeViewModel
 
@@ -36,6 +37,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		setupNavigation()
 		viewLifecycleOwner.bindProgressButton(binding.buttonMainPatch)
+		viewLifecycleOwner.lifecycle.addObserver(viewModel)
 		viewLifecycleOwner.lifecycleScope.observeUiState()
 		checkWorkResult()
 	}
@@ -71,13 +73,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 				if (uiState.pendingWork != null) {
 					navigateToWorkScreen(uiState.pendingWork)
 				}
-				if (uiState.startPatchMessage != Message.empty) {
-					showStartPatchMessage(uiState.startPatchMessage)
+				if (uiState.startPatchMessage.shouldShow) {
+					showStartPatchMessage(uiState.startPatchMessage.data)
 				}
-				if (uiState.startRestoreMessage != Message.empty) {
-					showStartRestoreMessage(uiState.startRestoreMessage)
+				if (uiState.startRestoreMessage.shouldShow) {
+					showStartRestoreMessage(uiState.startRestoreMessage.data)
 				}
-				if (uiState.patchUpdatesAvailable && uiState.canShowPatchUpdatesMessage) {
+				if (uiState.patchUpdatesAvailable && uiState.shouldShowPatchUpdatesMessage) {
 					showPatchUpdatesSnackbar()
 				}
 			}
@@ -110,6 +112,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 				viewModel.dismissStartPatchMessage()
 			}
 			.showWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.Event.ON_STOP)
+		viewModel.showStartPatchMessage()
 	}
 
 	private fun showStartRestoreMessage(startRestoreMessage: Message) {
@@ -122,5 +125,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 				viewModel.dismissStartRestoreMessage()
 			}
 			.showWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.Event.ON_STOP)
+		viewModel.showStartRestoreMessage()
 	}
 }
