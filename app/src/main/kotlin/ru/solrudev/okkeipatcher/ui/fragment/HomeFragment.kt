@@ -17,6 +17,7 @@ import ru.solrudev.okkeipatcher.domain.model.Message
 import ru.solrudev.okkeipatcher.domain.model.Work
 import ru.solrudev.okkeipatcher.ui.model.HomeUiState
 import ru.solrudev.okkeipatcher.ui.model.ReactiveView
+import ru.solrudev.okkeipatcher.ui.model.shouldShow
 import ru.solrudev.okkeipatcher.ui.util.extension.*
 import ru.solrudev.okkeipatcher.ui.viewmodel.HomeViewModel
 
@@ -45,13 +46,13 @@ class HomeFragment : Fragment(R.layout.fragment_home), ReactiveView<HomeUiState>
 		if (uiState.pendingWork != null) {
 			navigateToWorkScreen(uiState.pendingWork)
 		}
-		if (uiState.startPatchMessage != Message.empty) {
-			showStartPatchMessage(uiState.startPatchMessage)
+		if (uiState.startPatchMessage.shouldShow) {
+			showStartPatchMessage(uiState.startPatchMessage.data)
 		}
-		if (uiState.startRestoreMessage != Message.empty) {
-			showStartRestoreMessage(uiState.startRestoreMessage)
+		if (uiState.startRestoreMessage.shouldShow) {
+			showStartRestoreMessage(uiState.startRestoreMessage.data)
 		}
-		if (uiState.patchUpdatesAvailable && uiState.canShowPatchUpdatesMessage) {
+		if (uiState.patchUpdatesAvailable && uiState.shouldShowPatchUpdatesMessage) {
 			showPatchUpdatesSnackbar()
 		}
 	}
@@ -104,6 +105,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), ReactiveView<HomeUiState>
 				viewModel.dismissStartPatchMessage()
 			}
 			.showWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.Event.ON_STOP)
+		viewModel.showStartPatchMessage()
 	}
 
 	private fun showStartRestoreMessage(startRestoreMessage: Message) {
@@ -116,5 +118,6 @@ class HomeFragment : Fragment(R.layout.fragment_home), ReactiveView<HomeUiState>
 				viewModel.dismissStartRestoreMessage()
 			}
 			.showWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.Event.ON_STOP)
+		viewModel.showStartRestoreMessage()
 	}
 }

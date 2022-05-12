@@ -1,5 +1,7 @@
 package ru.solrudev.okkeipatcher.ui.viewmodel
 
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,6 +20,7 @@ import ru.solrudev.okkeipatcher.domain.model.WorkState
 import ru.solrudev.okkeipatcher.domain.usecase.work.CancelWorkUseCase
 import ru.solrudev.okkeipatcher.domain.usecase.work.CompleteWorkUseCase
 import ru.solrudev.okkeipatcher.domain.usecase.work.GetWorkStateFlowUseCase
+import ru.solrudev.okkeipatcher.ui.model.MessageUiState
 import ru.solrudev.okkeipatcher.ui.model.WorkUiState
 import javax.inject.Inject
 
@@ -26,11 +29,16 @@ class WorkViewModel @Inject constructor(
 	private val getWorkStateFlowUseCase: GetWorkStateFlowUseCase,
 	private val cancelWorkUseCase: CancelWorkUseCase,
 	private val completeWorkUseCase: CompleteWorkUseCase
-) : ViewModel(), Flow<WorkUiState> {
+) : ViewModel(), Flow<WorkUiState>, DefaultLifecycleObserver {
 
 	private val uiState = MutableStateFlow(WorkUiState())
 
 	override suspend fun collect(collector: FlowCollector<WorkUiState>) = uiState.collect(collector)
+
+	override fun onStop(owner: LifecycleOwner) {
+		hideAllMessages()
+		viewModelScope.coroutineContext[Job]?.cancelChildren()
+	}
 
 	fun observeWork(work: Work) {
 		viewModelScope.launch {
@@ -49,28 +57,47 @@ class WorkViewModel @Inject constructor(
 		}
 	}
 
-	fun stopObservingWork() = viewModelScope.coroutineContext[Job]?.cancelChildren()
 	fun cancelWork(work: Work) = cancelWorkUseCase(work)
 
 	fun promptCancelWork() {
 		val title = LocalizedString.resource(R.string.warning_abort_title)
 		val message = LocalizedString.resource(R.string.warning_abort)
-		val cancelWorkMessage = Message(title, message)
+		val cancelMessage = Message(title, message)
 		uiState.update {
+			val cancelWorkMessage = it.cancelWorkMessage.copy(data = cancelMessage)
 			it.copy(cancelWorkMessage = cancelWorkMessage)
 		}
 	}
 
+	fun showCancelWorkMessage() = uiState.update {
+		val cancelWorkMessage = it.cancelWorkMessage.copy(isVisible = true)
+		it.copy(cancelWorkMessage = cancelWorkMessage)
+	}
+
+	fun showErrorMessage() = uiState.update {
+		val errorMessage = it.errorMessage.copy(isVisible = true)
+		it.copy(errorMessage = errorMessage)
+	}
+
 	fun dismissCancelWorkMessage() = uiState.update {
-		it.copy(cancelWorkMessage = Message.empty)
+		it.copy(cancelWorkMessage = MessageUiState())
 	}
 
 	fun dismissErrorMessage() = uiState.update {
-		it.copy(error = Message.empty)
+		it.copy(errorMessage = MessageUiState())
 	}
 
 	fun onAnimationsPlayed() = uiState.update {
 		it.copy(animationsPlayed = true)
+	}
+
+	private fun hideAllMessages() = uiState.update {
+		val cancelWorkMessage = it.cancelWorkMessage.copy(isVisible = false)
+		val errorMessage = it.errorMessage.copy(isVisible = false)
+		it.copy(
+			cancelWorkMessage = cancelWorkMessage,
+			errorMessage = errorMessage
+		)
 	}
 
 	private fun onWorkRunning(workState: WorkState.Running) = uiState.update {
@@ -82,12 +109,13 @@ class WorkViewModel @Inject constructor(
 
 	private fun onWorkFailed(workState: WorkState.Failed) {
 		val stackTrace = workState.throwable?.stackTraceToString() ?: "null"
-		val errorMessage = Message(
+		val message = Message(
 			LocalizedString.resource(R.string.exception),
 			LocalizedString.raw(stackTrace)
 		)
 		uiState.update {
-			it.copy(error = errorMessage)
+			val errorMessage = it.errorMessage.copy(data = message)
+			it.copy(errorMessage = errorMessage)
 		}
 	}
 

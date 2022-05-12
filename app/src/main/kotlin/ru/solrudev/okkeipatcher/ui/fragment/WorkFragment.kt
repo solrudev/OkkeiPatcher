@@ -19,6 +19,7 @@ import ru.solrudev.okkeipatcher.domain.model.Message
 import ru.solrudev.okkeipatcher.domain.model.ProgressData
 import ru.solrudev.okkeipatcher.ui.model.ReactiveView
 import ru.solrudev.okkeipatcher.ui.model.WorkUiState
+import ru.solrudev.okkeipatcher.ui.model.shouldShow
 import ru.solrudev.okkeipatcher.ui.util.extension.*
 import ru.solrudev.okkeipatcher.ui.viewmodel.WorkViewModel
 
@@ -65,11 +66,11 @@ class WorkFragment : Fragment(R.layout.fragment_work), ReactiveView<WorkUiState>
 		if (uiState.isWorkCanceled) {
 			onWorkCanceled()
 		}
-		if (uiState.cancelWorkMessage != Message.empty) {
-			showCancelWorkMessage(uiState.cancelWorkMessage)
+		if (uiState.cancelWorkMessage.shouldShow) {
+			showCancelWorkMessage(uiState.cancelWorkMessage.data)
 		}
-		if (uiState.error != Message.empty) {
-			onError(uiState.error)
+		if (uiState.errorMessage.shouldShow) {
+			onError(uiState.errorMessage.data)
 		}
 	}
 
@@ -140,9 +141,11 @@ class WorkFragment : Fragment(R.layout.fragment_work), ReactiveView<WorkUiState>
 			.create()
 		currentCancelDialog = dialog
 		dialog.showWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.Event.ON_STOP)
+		viewModel.showCancelWorkMessage()
 	}
 
 	private fun showErrorMessage(errorMessage: Message) {
+		binding.buttonWork.isEnabled = false
 		val message = errorMessage.message.resolve(requireContext())
 		requireContext().createDialogBuilder(errorMessage)
 			.setNeutralButton(R.string.dialog_button_copy_to_clipboard) { _, _ ->
@@ -153,6 +156,7 @@ class WorkFragment : Fragment(R.layout.fragment_work), ReactiveView<WorkUiState>
 				findNavController().popBackStack()
 			}
 			.showWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.Event.ON_STOP)
+		viewModel.showErrorMessage()
 	}
 
 	private fun setResult(value: Boolean) =
