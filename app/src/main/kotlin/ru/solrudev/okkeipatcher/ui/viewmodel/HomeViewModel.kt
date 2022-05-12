@@ -1,7 +1,5 @@
 package ru.solrudev.okkeipatcher.ui.viewmodel
 
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,7 +19,6 @@ import ru.solrudev.okkeipatcher.domain.usecase.patch.GetPatchSizeInMbUseCase
 import ru.solrudev.okkeipatcher.domain.usecase.patch.GetPatchUpdatesUseCase
 import ru.solrudev.okkeipatcher.domain.usecase.work.*
 import ru.solrudev.okkeipatcher.ui.model.HomeUiState
-import ru.solrudev.okkeipatcher.ui.model.MessageUiState
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,7 +31,7 @@ class HomeViewModel @Inject constructor(
 	private val getRestoreWorkUseCase: GetRestoreWorkUseCase,
 	private val getPatchSizeInMbUseCase: GetPatchSizeInMbUseCase,
 	private val getPatchUpdatesUseCase: GetPatchUpdatesUseCase
-) : ViewModel(), Flow<HomeUiState>, DefaultLifecycleObserver {
+) : ViewModel(), Flow<HomeUiState> {
 
 	private val uiState = MutableStateFlow(HomeUiState())
 
@@ -49,7 +46,6 @@ class HomeViewModel @Inject constructor(
 	}
 
 	override suspend fun collect(collector: FlowCollector<HomeUiState>) = uiState.collect(collector)
-	override fun onStop(owner: LifecycleOwner) = hideAllMessages()
 
 	fun promptPatch() {
 		viewModelScope.launch {
@@ -59,9 +55,8 @@ class HomeViewModel @Inject constructor(
 			val patchSizeInMb = getPatchSizeInMbUseCase()
 			val title = LocalizedString.resource(R.string.warning_start_patch_title)
 			val message = LocalizedString.resource(R.string.warning_start_patch, patchSizeInMb)
-			val startMessage = Message(title, message)
+			val startPatchMessage = Message(title, message)
 			uiState.update {
-				val startPatchMessage = it.startPatchMessage.copy(data = startMessage)
 				it.copy(
 					isPatchSizeLoading = false,
 					startPatchMessage = startPatchMessage
@@ -73,9 +68,8 @@ class HomeViewModel @Inject constructor(
 	fun promptRestore() {
 		val title = LocalizedString.resource(R.string.warning_start_restore_title)
 		val message = LocalizedString.resource(R.string.warning_abort)
-		val startMessage = Message(title, message)
+		val startRestoreMessage = Message(title, message)
 		uiState.update {
-			val startRestoreMessage = it.startRestoreMessage.copy(data = startMessage)
 			it.copy(startRestoreMessage = startRestoreMessage)
 		}
 	}
@@ -101,32 +95,22 @@ class HomeViewModel @Inject constructor(
 	}
 
 	fun patchUpdatesMessageShown() = uiState.update {
-		it.copy(shouldShowPatchUpdatesMessage = false)
+		it.copy(canShowPatchUpdatesMessage = false)
 	}
 
 	fun navigatedToWorkScreen() = uiState.update {
 		it.copy(
 			pendingWork = null,
-			shouldShowPatchUpdatesMessage = false
+			canShowPatchUpdatesMessage = false
 		)
 	}
 
-	fun showStartPatchMessage() = uiState.update {
-		val startPatchMessage = it.startPatchMessage.copy(isVisible = true)
-		it.copy(startPatchMessage = startPatchMessage)
-	}
-
-	fun showStartRestoreMessage() = uiState.update {
-		val startRestoreMessage = it.startRestoreMessage.copy(isVisible = true)
-		it.copy(startRestoreMessage = startRestoreMessage)
-	}
-
 	fun dismissStartPatchMessage() = uiState.update {
-		it.copy(startPatchMessage = MessageUiState())
+		it.copy(startPatchMessage = Message.empty)
 	}
 
 	fun dismissStartRestoreMessage() = uiState.update {
-		it.copy(startRestoreMessage = MessageUiState())
+		it.copy(startRestoreMessage = Message.empty)
 	}
 
 	private suspend fun checkPendingWork() {
@@ -170,14 +154,5 @@ class HomeViewModel @Inject constructor(
 				patchUpdatesAvailable = updatesAvailable
 			)
 		}
-	}
-
-	private fun hideAllMessages() = uiState.update {
-		val startPatchMessage = it.startPatchMessage.copy(isVisible = false)
-		val startRestoreMessage = it.startRestoreMessage.copy(isVisible = false)
-		it.copy(
-			startPatchMessage = startPatchMessage,
-			startRestoreMessage = startRestoreMessage
-		)
 	}
 }

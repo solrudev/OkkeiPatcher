@@ -1,6 +1,7 @@
 package ru.solrudev.okkeipatcher.ui.model
 
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
+import ru.solrudev.okkeipatcher.domain.model.Message
 import ru.solrudev.okkeipatcher.domain.model.ProgressData
 
 data class WorkUiState(
@@ -8,7 +9,7 @@ data class WorkUiState(
 	val progressData: ProgressData = ProgressData(),
 	val isWorkSuccessful: Boolean = false,
 	val isWorkCanceled: Boolean = false,
-	val cancelWorkMessage: MessageUiState = MessageUiState(),
-	val errorMessage: MessageUiState = MessageUiState(),
+	val cancelWorkMessage: Message = Message.empty,
+	val error: Message = Message.empty,
 	val animationsPlayed: Boolean = false
 )
