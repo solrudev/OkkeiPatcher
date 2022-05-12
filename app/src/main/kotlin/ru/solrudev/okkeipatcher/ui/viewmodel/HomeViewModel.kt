@@ -101,13 +101,13 @@ class HomeViewModel @Inject constructor(
 	}
 
 	fun patchUpdatesMessageShown() = uiState.update {
-		it.copy(shouldShowPatchUpdatesMessage = false)
+		it.copy(canShowPatchUpdatesMessage = false)
 	}
 
 	fun navigatedToWorkScreen() = uiState.update {
 		it.copy(
 			pendingWork = null,
-			shouldShowPatchUpdatesMessage = false
+			canShowPatchUpdatesMessage = false
 		)
 	}
 

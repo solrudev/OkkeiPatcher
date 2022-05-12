@@ -35,6 +35,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), ReactiveView<HomeUiState>
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		setupNavigation()
 		viewLifecycleOwner.bindProgressButton(binding.buttonMainPatch)
+		viewLifecycleOwner.lifecycle.addObserver(viewModel)
 		launchRender(viewModel)
 		checkWorkResult()
 	}
@@ -52,7 +53,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), ReactiveView<HomeUiState>
 		if (uiState.startRestoreMessage.shouldShow) {
 			showStartRestoreMessage(uiState.startRestoreMessage.data)
 		}
-		if (uiState.patchUpdatesAvailable && uiState.shouldShowPatchUpdatesMessage) {
+		if (uiState.patchUpdatesAvailable && uiState.canShowPatchUpdatesMessage) {
 			showPatchUpdatesSnackbar()
 		}
 	}

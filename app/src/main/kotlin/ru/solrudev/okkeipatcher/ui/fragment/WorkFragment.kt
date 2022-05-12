@@ -42,6 +42,7 @@ class WorkFragment : Fragment(R.layout.fragment_work), ReactiveView<WorkUiState>
 		prepareOptionsMenu {
 			clear()
 		}
+		viewLifecycleOwner.lifecycle.addObserver(viewModel)
 		setupNavigation()
 		launchRender(viewModel)
 	}
@@ -53,7 +54,6 @@ class WorkFragment : Fragment(R.layout.fragment_work), ReactiveView<WorkUiState>
 
 	override fun onStop() {
 		super.onStop()
-		viewModel.stopObservingWork()
 		currentCancelDialog = null
 	}
 
@@ -145,7 +145,6 @@ class WorkFragment : Fragment(R.layout.fragment_work), ReactiveView<WorkUiState>
 	}
 
 	private fun showErrorMessage(errorMessage: Message) {
-		binding.buttonWork.isEnabled = false
 		val message = errorMessage.message.resolve(requireContext())
 		requireContext().createDialogBuilder(errorMessage)
 			.setNeutralButton(R.string.dialog_button_copy_to_clipboard) { _, _ ->
