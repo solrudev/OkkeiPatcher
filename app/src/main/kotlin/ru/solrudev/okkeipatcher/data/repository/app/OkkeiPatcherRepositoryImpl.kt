@@ -8,7 +8,7 @@ import ru.solrudev.okkeipatcher.data.network.model.OkkeiPatcherChangelogDto
 import ru.solrudev.okkeipatcher.domain.OkkeiStorage
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
-import ru.solrudev.okkeipatcher.domain.operation.AbstractOperation
+import ru.solrudev.okkeipatcher.domain.core.operation.AbstractOperation
 import ru.solrudev.okkeipatcher.domain.repository.app.OkkeiPatcherRepository
 import ru.solrudev.okkeipatcher.domain.util.extension.versionCode
 import ru.solrudev.okkeipatcher.io.service.HttpDownloader

@@ -7,8 +7,8 @@ import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.file.CommonFiles
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
-import ru.solrudev.okkeipatcher.domain.operation.AbstractOperation
-import ru.solrudev.okkeipatcher.domain.operation.AggregateOperation
+import ru.solrudev.okkeipatcher.domain.core.operation.AbstractOperation
+import ru.solrudev.okkeipatcher.domain.core.operation.AggregateOperation
 import ru.solrudev.okkeipatcher.domain.repository.patch.DefaultPatchRepository
 import ru.solrudev.okkeipatcher.domain.service.PackageInstallerFacade
 import ru.solrudev.okkeipatcher.domain.service.gamefile.Apk

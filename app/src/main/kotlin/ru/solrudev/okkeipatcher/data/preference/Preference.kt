@@ -5,7 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import ru.solrudev.okkeipatcher.domain.persistence.Dao
+import ru.solrudev.okkeipatcher.domain.core.persistence.Dao
 
 open class MappedPreference<DomainType, DataType>(
 	private val key: Preferences.Key<DataType>,

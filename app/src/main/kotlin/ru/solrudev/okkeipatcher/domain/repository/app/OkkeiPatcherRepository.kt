@@ -1,7 +1,7 @@
 package ru.solrudev.okkeipatcher.domain.repository.app
 
 import ru.solrudev.okkeipatcher.data.network.model.OkkeiPatcherChangelogDto
-import ru.solrudev.okkeipatcher.domain.operation.Operation
+import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import java.io.File
 import java.util.*
 

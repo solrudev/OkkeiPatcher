@@ -1,6 +1,6 @@
 package ru.solrudev.okkeipatcher.io.file
 
-import ru.solrudev.okkeipatcher.domain.operation.Operation
+import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import java.io.InputStream
 import java.io.OutputStream
 

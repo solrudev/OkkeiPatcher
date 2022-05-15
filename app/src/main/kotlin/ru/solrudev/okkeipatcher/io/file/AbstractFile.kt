@@ -1,6 +1,6 @@
 package ru.solrudev.okkeipatcher.io.file
 
-import ru.solrudev.okkeipatcher.domain.operation.AbstractOperation
+import ru.solrudev.okkeipatcher.domain.core.operation.AbstractOperation
 import ru.solrudev.okkeipatcher.io.service.StreamCopier
 import ru.solrudev.okkeipatcher.io.util.BlackholeOutputStream
 

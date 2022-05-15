@@ -4,10 +4,10 @@ import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.OkkeiStorage
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
-import ru.solrudev.okkeipatcher.domain.operation.AggregateOperation
-import ru.solrudev.okkeipatcher.domain.operation.EmptyOperation
-import ru.solrudev.okkeipatcher.domain.operation.Operation
-import ru.solrudev.okkeipatcher.domain.persistence.Dao
+import ru.solrudev.okkeipatcher.domain.core.operation.AggregateOperation
+import ru.solrudev.okkeipatcher.domain.core.operation.EmptyOperation
+import ru.solrudev.okkeipatcher.domain.core.operation.Operation
+import ru.solrudev.okkeipatcher.domain.core.persistence.Dao
 import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.RestoreStrategy
 
 class RestoreOperation(

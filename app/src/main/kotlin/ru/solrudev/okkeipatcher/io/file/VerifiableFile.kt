@@ -3,7 +3,7 @@ package ru.solrudev.okkeipatcher.io.file
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.withIndex
-import ru.solrudev.okkeipatcher.domain.operation.AbstractOperation
+import ru.solrudev.okkeipatcher.domain.core.operation.AbstractOperation
 import ru.solrudev.okkeipatcher.util.Preferences
 
 abstract class VerifiableFile(private val fileImplementation: File) : File by fileImplementation, Verifiable {

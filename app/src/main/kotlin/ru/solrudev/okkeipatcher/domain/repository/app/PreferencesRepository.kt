@@ -1,7 +1,7 @@
 package ru.solrudev.okkeipatcher.domain.repository.app
 
 import ru.solrudev.okkeipatcher.domain.model.Language
-import ru.solrudev.okkeipatcher.domain.persistence.Dao
+import ru.solrudev.okkeipatcher.domain.core.persistence.Dao
 
 interface PreferencesRepository {
 	val isPatchedDao: Dao<Boolean>

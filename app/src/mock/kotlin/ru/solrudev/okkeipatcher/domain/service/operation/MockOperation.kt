@@ -1,9 +1,9 @@
 package ru.solrudev.okkeipatcher.domain.service.operation
 
 import kotlinx.coroutines.delay
+import ru.solrudev.okkeipatcher.domain.core.operation.AbstractOperation
+import ru.solrudev.okkeipatcher.domain.core.persistence.Dao
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
-import ru.solrudev.okkeipatcher.domain.operation.AbstractOperation
-import ru.solrudev.okkeipatcher.domain.persistence.Dao
 import kotlin.time.Duration.Companion.seconds
 
 class MockOperation(

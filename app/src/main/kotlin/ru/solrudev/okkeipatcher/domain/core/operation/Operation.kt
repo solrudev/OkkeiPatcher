@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.domain.operation
+package ru.solrudev.okkeipatcher.domain.core.operation
 
 import kotlinx.coroutines.flow.*
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString

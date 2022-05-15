@@ -20,8 +20,8 @@ import ru.solrudev.okkeipatcher.data.worker.util.failureWorkData
 import ru.solrudev.okkeipatcher.data.worker.util.setProgress
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.Message
-import ru.solrudev.okkeipatcher.domain.operation.Operation
-import ru.solrudev.okkeipatcher.domain.operation.extension.statusAndAccumulatedProgress
+import ru.solrudev.okkeipatcher.domain.core.operation.Operation
+import ru.solrudev.okkeipatcher.domain.core.operation.extension.statusAndAccumulatedProgress
 import ru.solrudev.okkeipatcher.domain.service.operation.factory.OperationFactory
 import ru.solrudev.okkeipatcher.ui.host.OkkeiActivity
 import java.util.concurrent.atomic.AtomicInteger

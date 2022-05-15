@@ -1,6 +1,6 @@
 package ru.solrudev.okkeipatcher.domain.service.operation.factory
 
-import ru.solrudev.okkeipatcher.domain.factory.Factory
-import ru.solrudev.okkeipatcher.domain.operation.Operation
+import ru.solrudev.okkeipatcher.domain.core.factory.SuspendFactory
+import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 
-interface OperationFactory<out R> : Factory<Operation<R>>
+interface OperationFactory<out R> : SuspendFactory<Operation<R>>
