@@ -20,7 +20,7 @@ interface FeatureView<in S : UiState> {
  * new state is emitted.
  * @return [Job] of the flow collection.
  */
-fun <State : UiState, View> Flow<State>.collectIn(featureView: View): Job
+fun <State : UiState, View> Flow<State>.renderBy(featureView: View): Job
 		where View : FeatureView<State>,
 			  View : Fragment {
 	return featureView.viewLifecycleOwner.lifecycleScope.launch {
