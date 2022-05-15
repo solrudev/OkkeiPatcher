@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.ui.fragment
+package ru.solrudev.okkeipatcher.ui.screen.about
 
 import android.content.pm.PackageManager
 import android.os.Bundle

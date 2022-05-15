@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.ui.fragment
+package ru.solrudev.okkeipatcher.ui.screen.home
 
 import android.os.Bundle
 import android.view.View
@@ -15,14 +15,17 @@ import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.databinding.FragmentHomeBinding
 import ru.solrudev.okkeipatcher.domain.model.Message
 import ru.solrudev.okkeipatcher.domain.model.Work
-import ru.solrudev.okkeipatcher.ui.model.HomeUiState
-import ru.solrudev.okkeipatcher.ui.model.ReactiveView
+import ru.solrudev.okkeipatcher.ui.core.FeatureView
+import ru.solrudev.okkeipatcher.ui.core.collectIn
 import ru.solrudev.okkeipatcher.ui.model.shouldShow
+import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeEvent.*
+import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeUiState
+import ru.solrudev.okkeipatcher.ui.screen.home.model.PatchEvent.*
+import ru.solrudev.okkeipatcher.ui.screen.home.model.RestoreEvent.*
 import ru.solrudev.okkeipatcher.ui.util.extension.*
-import ru.solrudev.okkeipatcher.ui.viewmodel.HomeViewModel
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(R.layout.fragment_home), ReactiveView<HomeUiState> {
+class HomeFragment : Fragment(R.layout.fragment_home), FeatureView<HomeUiState> {
 
 	private val viewModel by viewModels<HomeViewModel>()
 	private val binding by viewBinding(FragmentHomeBinding::bind)
@@ -35,9 +38,13 @@ class HomeFragment : Fragment(R.layout.fragment_home), ReactiveView<HomeUiState>
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		setupNavigation()
 		viewLifecycleOwner.bindProgressButton(binding.buttonMainPatch)
-		viewLifecycleOwner.lifecycle.addObserver(viewModel)
-		launchRender(viewModel)
+		viewModel.collectIn(this)
 		checkWorkResult()
+	}
+
+	override fun onStop() {
+		super.onStop()
+		viewModel.dispatchEvent(ViewHidden)
 	}
 
 	override fun render(uiState: HomeUiState) {
@@ -64,19 +71,17 @@ class HomeFragment : Fragment(R.layout.fragment_home), ReactiveView<HomeUiState>
 			fadeOutMills = 150
 		}
 		binding.buttonMainPatch.setOnClickListener {
-			viewModel.promptPatch()
+			viewModel.dispatchEvent(PatchRequested)
 		}
 		binding.buttonMainRestore.setOnClickListener {
-			viewModel.promptRestore()
+			viewModel.dispatchEvent(RestoreRequested)
 		}
 	}
 
 	private fun checkWorkResult() {
 		val savedStateHandle = findNavController().currentBackStackEntry?.savedStateHandle ?: return
 		val result = savedStateHandle.getResult() ?: return
-		if (result) {
-			viewModel.workSucceeded()
-		}
+		viewModel.dispatchEvent(WorkFinished(result))
 		savedStateHandle.clearResult()
 	}
 
@@ -86,39 +91,39 @@ class HomeFragment : Fragment(R.layout.fragment_home), ReactiveView<HomeUiState>
 		workScreen?.label = work.label.resolve(requireContext())
 		val toWorkScreen = HomeFragmentDirections.actionHomeFragmentToWorkFragment(work)
 		navController.navigate(toWorkScreen)
-		viewModel.navigatedToWorkScreen()
+		viewModel.dispatchEvent(NavigatedToWorkScreen)
 	}
 
 	private fun showPatchUpdatesSnackbar() {
 		view?.let {
 			Snackbar.make(it, R.string.prompt_update_patch_available, Snackbar.LENGTH_LONG).show()
 		}
-		viewModel.patchUpdatesMessageShown()
+		viewModel.dispatchEvent(PatchUpdatesMessageShown)
 	}
 
 	private fun showStartPatchMessage(startPatchMessage: Message) {
 		requireContext().createDialogBuilder(startPatchMessage)
 			.setPositiveButton(R.string.start) { _, _ ->
-				viewModel.startPatch()
+				viewModel.dispatchEvent(StartPatch)
 			}
 			.setNegativeButton(android.R.string.cancel, null)
 			.setOnDismissListener {
-				viewModel.dismissStartPatchMessage()
+				viewModel.dispatchEvent(StartPatchMessageDismissed)
 			}
 			.showWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.Event.ON_STOP)
-		viewModel.showStartPatchMessage()
+		viewModel.dispatchEvent(StartPatchMessageShown)
 	}
 
 	private fun showStartRestoreMessage(startRestoreMessage: Message) {
 		requireContext().createDialogBuilder(startRestoreMessage)
 			.setPositiveButton(R.string.start) { _, _ ->
-				viewModel.startRestore()
+				viewModel.dispatchEvent(StartRestore)
 			}
 			.setNegativeButton(android.R.string.cancel, null)
 			.setOnDismissListener {
-				viewModel.dismissStartRestoreMessage()
+				viewModel.dispatchEvent(StartRestoreMessageDismissed)
 			}
 			.showWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.Event.ON_STOP)
-		viewModel.showStartRestoreMessage()
+		viewModel.dispatchEvent(StartRestoreMessageShown)
 	}
 }

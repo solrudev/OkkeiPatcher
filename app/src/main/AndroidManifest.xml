@@ -26,7 +26,7 @@
 		android:theme="@style/Theme.OkkeiPatcher"
 		tools:ignore="UnusedAttribute">
 		<activity
-			android:name=".ui.activity.OkkeiActivity"
+			android:name=".ui.host.OkkeiActivity"
 			android:exported="true"
 			android:theme="@style/Theme.OkkeiPatcher.NoActionBar">
 			<intent-filter>

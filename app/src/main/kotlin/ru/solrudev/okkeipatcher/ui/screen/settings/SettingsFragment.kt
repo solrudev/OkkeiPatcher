@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.ui.fragment
+package ru.solrudev.okkeipatcher.ui.screen.settings
 
 import android.os.Bundle
 import android.view.View
@@ -11,7 +11,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.ui.util.extension.prepareOptionsMenu
 import ru.solrudev.okkeipatcher.ui.util.extension.setupTransitions
-import ru.solrudev.okkeipatcher.ui.viewmodel.SettingsViewModel
 
 @AndroidEntryPoint
 class SettingsFragment : PreferenceFragmentCompat() {

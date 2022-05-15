@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.ui.viewmodel
+package ru.solrudev.okkeipatcher.ui.screen.settings
 
 import androidx.lifecycle.ViewModel
 

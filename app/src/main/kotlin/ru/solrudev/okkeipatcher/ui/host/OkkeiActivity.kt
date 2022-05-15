@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.ui.activity
+package ru.solrudev.okkeipatcher.ui.host
 
 import android.os.Bundle
 import android.view.Menu

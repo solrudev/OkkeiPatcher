@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.ui.fragment
+package ru.solrudev.okkeipatcher.ui.screen.work
 
 import android.app.Dialog
 import android.app.NotificationManager
@@ -17,14 +17,15 @@ import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.databinding.FragmentWorkBinding
 import ru.solrudev.okkeipatcher.domain.model.Message
 import ru.solrudev.okkeipatcher.domain.model.ProgressData
-import ru.solrudev.okkeipatcher.ui.model.ReactiveView
-import ru.solrudev.okkeipatcher.ui.model.WorkUiState
+import ru.solrudev.okkeipatcher.ui.core.FeatureView
+import ru.solrudev.okkeipatcher.ui.core.collectIn
 import ru.solrudev.okkeipatcher.ui.model.shouldShow
+import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEvent.*
+import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkUiState
 import ru.solrudev.okkeipatcher.ui.util.extension.*
-import ru.solrudev.okkeipatcher.ui.viewmodel.WorkViewModel
 
 @AndroidEntryPoint
-class WorkFragment : Fragment(R.layout.fragment_work), ReactiveView<WorkUiState> {
+class WorkFragment : Fragment(R.layout.fragment_work), FeatureView<WorkUiState> {
 
 	private val viewModel by viewModels<WorkViewModel>()
 	private val args by navArgs<WorkFragmentArgs>()
@@ -42,19 +43,19 @@ class WorkFragment : Fragment(R.layout.fragment_work), ReactiveView<WorkUiState>
 		prepareOptionsMenu {
 			clear()
 		}
-		viewLifecycleOwner.lifecycle.addObserver(viewModel)
 		setupNavigation()
-		launchRender(viewModel)
+		viewModel.collectIn(this)
 	}
 
 	override fun onStart() {
 		super.onStart()
-		viewModel.observeWork(args.work)
+		viewModel.dispatchEvent(StartObservingWork(args.work))
 	}
 
 	override fun onStop() {
 		super.onStop()
 		currentCancelDialog = null
+		viewModel.dispatchEvent(ViewHidden)
 	}
 
 	override fun render(uiState: WorkUiState) {
@@ -76,7 +77,7 @@ class WorkFragment : Fragment(R.layout.fragment_work), ReactiveView<WorkUiState>
 
 	private fun setupNavigation() {
 		binding.buttonWork.setOnClickListener {
-			viewModel.promptCancelWork()
+			viewModel.dispatchEvent(CancelRequested)
 		}
 	}
 
@@ -118,7 +119,7 @@ class WorkFragment : Fragment(R.layout.fragment_work), ReactiveView<WorkUiState>
 			.setDuration(500)
 			.setInterpolator(DecelerateInterpolator())
 			.start()
-		viewModel.onAnimationsPlayed()
+		viewModel.dispatchEvent(AnimationsPlayed)
 	}
 
 	private fun setProgress(progressData: ProgressData) {
@@ -131,17 +132,17 @@ class WorkFragment : Fragment(R.layout.fragment_work), ReactiveView<WorkUiState>
 	private fun showCancelWorkMessage(cancelWorkMessage: Message) {
 		val dialog = requireContext().createDialogBuilder(cancelWorkMessage)
 			.setPositiveButton(R.string.abort) { _, _ ->
-				viewModel.cancelWork(args.work)
+				viewModel.dispatchEvent(CancelWork(args.work))
 			}
 			.setNegativeButton(android.R.string.cancel, null)
 			.setOnDismissListener {
-				viewModel.dismissCancelWorkMessage()
+				viewModel.dispatchEvent(CancelMessageDismissed)
 				currentCancelDialog = null
 			}
 			.create()
 		currentCancelDialog = dialog
 		dialog.showWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.Event.ON_STOP)
-		viewModel.showCancelWorkMessage()
+		viewModel.dispatchEvent(CancelMessageShown)
 	}
 
 	private fun showErrorMessage(errorMessage: Message) {
@@ -151,11 +152,11 @@ class WorkFragment : Fragment(R.layout.fragment_work), ReactiveView<WorkUiState>
 				requireContext().copyTextToClipboard("Okkei Patcher Exception", message)
 			}
 			.setOnDismissListener {
-				viewModel.dismissErrorMessage()
+				viewModel.dispatchEvent(ErrorDismissed)
 				findNavController().popBackStack()
 			}
 			.showWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.Event.ON_STOP)
-		viewModel.showErrorMessage()
+		viewModel.dispatchEvent(ErrorShown)
 	}
 
 	private fun setResult(value: Boolean) =

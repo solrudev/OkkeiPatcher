@@ -23,7 +23,7 @@ import ru.solrudev.okkeipatcher.domain.model.Message
 import ru.solrudev.okkeipatcher.domain.operation.Operation
 import ru.solrudev.okkeipatcher.domain.operation.extension.statusAndAccumulatedProgress
 import ru.solrudev.okkeipatcher.domain.service.operation.factory.OperationFactory
-import ru.solrudev.okkeipatcher.ui.activity.OkkeiActivity
+import ru.solrudev.okkeipatcher.ui.host.OkkeiActivity
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.time.Duration.Companion.milliseconds
 
