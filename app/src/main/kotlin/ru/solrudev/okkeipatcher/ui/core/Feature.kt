@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
  * Implements [Flow] of [UiState], so it can be collected to receive UI state updates.
  */
 open class Feature<in E : Event, out S : UiState>(
-	private val middlewares: List<Middleware<E, S>> = emptyList(),
+	private val middlewares: List<Middleware<E>> = emptyList(),
 	private val reducer: Reducer<S, E>,
 	initialUiState: S
 ) : Flow<S> {
@@ -38,7 +38,7 @@ open class Feature<in E : Event, out S : UiState>(
 		}
 		launch {
 			middlewares
-				.map { it.apply(events, uiState) }
+				.map { it.apply(events) }
 				.merge()
 				.collect(events::emit)
 		}

@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.filterIsInstance
 /**
  * Allows to intercept events from a [Feature], perform side effects and emit additional events.
  */
-interface Middleware<E : Event, in S : UiState> {
-	fun apply(events: Flow<E>, state: Flow<S>): Flow<E>
+interface Middleware<E : Event> {
+	fun apply(events: Flow<E>): Flow<E>
 }
 
 /**

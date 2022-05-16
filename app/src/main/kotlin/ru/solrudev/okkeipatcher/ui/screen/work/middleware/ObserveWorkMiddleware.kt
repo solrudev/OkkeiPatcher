@@ -14,15 +14,14 @@ import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEvent
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEvent.StartObservingWork
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEvent.ViewHidden
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkStateEvent.*
-import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkUiState
 import javax.inject.Inject
 
 class ObserveWorkMiddleware @Inject constructor(
 	private val getWorkStateFlowUseCase: GetWorkStateFlowUseCase,
 	private val completeWorkUseCase: CompleteWorkUseCase
-) : Middleware<WorkEvent, WorkUiState> {
+) : Middleware<WorkEvent> {
 
-	override fun apply(events: Flow<WorkEvent>, state: Flow<WorkUiState>) = channelFlow {
+	override fun apply(events: Flow<WorkEvent>) = channelFlow {
 		var shouldCollect = true
 		launch {
 			events

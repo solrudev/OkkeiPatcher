@@ -9,16 +9,15 @@ import ru.solrudev.okkeipatcher.domain.usecase.work.GetRestoreWorkUseCase
 import ru.solrudev.okkeipatcher.ui.core.Middleware
 import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeEvent
 import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeEvent.WorkIsPending
-import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeUiState
 import javax.inject.Inject
 
 class CheckPendingWorksMiddleware @Inject constructor(
 	private val getIsWorkPendingUseCase: GetIsWorkPendingUseCase,
 	private val getPatchWorkUseCase: GetPatchWorkUseCase,
 	private val getRestoreWorkUseCase: GetRestoreWorkUseCase
-) : Middleware<HomeEvent, HomeUiState> {
+) : Middleware<HomeEvent> {
 
-	override fun apply(events: Flow<HomeEvent>, state: Flow<HomeUiState>) = flow {
+	override fun apply(events: Flow<HomeEvent>) = flow {
 		val patchWork = getPatchWorkUseCase()
 		val restoreWork = getRestoreWorkUseCase()
 		val pendingWork = pendingWorkOrNull(patchWork) ?: pendingWorkOrNull(restoreWork)

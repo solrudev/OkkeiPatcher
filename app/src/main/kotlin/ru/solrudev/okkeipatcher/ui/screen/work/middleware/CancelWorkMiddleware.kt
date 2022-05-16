@@ -7,14 +7,13 @@ import ru.solrudev.okkeipatcher.ui.core.Middleware
 import ru.solrudev.okkeipatcher.ui.core.collectEvent
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEvent
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEvent.CancelWork
-import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkUiState
 import javax.inject.Inject
 
 class CancelWorkMiddleware @Inject constructor(
 	private val cancelWorkUseCase: CancelWorkUseCase
-) : Middleware<WorkEvent, WorkUiState> {
+) : Middleware<WorkEvent> {
 
-	override fun apply(events: Flow<WorkEvent>, state: Flow<WorkUiState>) = flow<WorkEvent> {
+	override fun apply(events: Flow<WorkEvent>) = flow<WorkEvent> {
 		events.collectEvent<CancelWork> {
 			cancelWorkUseCase(it.work)
 		}

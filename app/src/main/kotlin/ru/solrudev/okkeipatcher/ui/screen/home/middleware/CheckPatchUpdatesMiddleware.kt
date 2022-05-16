@@ -8,14 +8,13 @@ import ru.solrudev.okkeipatcher.ui.core.collectEvent
 import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeEvent
 import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeEvent.PatchStatusChecked
 import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeEvent.PatchUpdatesAvailable
-import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeUiState
 import javax.inject.Inject
 
 class CheckPatchUpdatesMiddleware @Inject constructor(
 	private val getPatchUpdatesUseCase: GetPatchUpdatesUseCase
-) : Middleware<HomeEvent, HomeUiState> {
+) : Middleware<HomeEvent> {
 
-	override fun apply(events: Flow<HomeEvent>, state: Flow<HomeUiState>) = flow {
+	override fun apply(events: Flow<HomeEvent>) = flow {
 		events.collectEvent<PatchStatusChecked> {
 			if (!it.isPatched) {
 				return@collectEvent
