@@ -15,20 +15,22 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.databinding.OkkeiNavHostBinding
+import ru.solrudev.okkeipatcher.databinding.OkkeiContainerBinding
 
 @AndroidEntryPoint
-class OkkeiActivity : AppCompatActivity(R.layout.okkei_nav_host) {
+class OkkeiActivity : AppCompatActivity(R.layout.okkei_container) {
 
-	private val binding by viewBinding(OkkeiNavHostBinding::bind, R.id.okkei_nav_host_container)
+	private val binding by viewBinding(OkkeiContainerBinding::bind, R.id.okkei_container)
 	private val appBarConfiguration = AppBarConfiguration(setOf(R.id.home_fragment, R.id.work_fragment))
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(binding.root)
-		setSupportActionBar(binding.toolbar)
-		val navController = binding.okkeiNavHostContent.getFragment<NavHostFragment>().navController
-		setupActionBarWithNavController(navController, appBarConfiguration)
+		with(binding.okkeiContent) {
+			setSupportActionBar(toolbar)
+			val navController = okkeiNavHostContent.getFragment<NavHostFragment>().navController
+			setupActionBarWithNavController(navController, appBarConfiguration)
+		}
 		setupOptionsMenu()
 	}
 
