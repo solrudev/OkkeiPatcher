@@ -39,13 +39,11 @@ inline fun Fragment.prepareOptionsMenu(crossinline action: Menu.() -> Unit) {
 }
 
 /**
- * Installs [OnBackPressedCallback] which finishes hosting activity when back key is pressed.
+ * Installs [OnBackPressedCallback] to the host Activity.
  */
-fun Fragment.finishActivityOnBackPressed() {
+inline fun Fragment.onBackPressed(crossinline action: () -> Unit) {
 	val callback = object : OnBackPressedCallback(true) {
-		override fun handleOnBackPressed() {
-			requireActivity().finish()
-		}
+		override fun handleOnBackPressed() = action()
 	}
 	requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
 }

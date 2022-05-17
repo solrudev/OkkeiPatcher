@@ -39,7 +39,9 @@ class WorkFragment : Fragment(R.layout.fragment_work), FeatureView<WorkUiState> 
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		finishActivityOnBackPressed()
+		onBackPressed {
+			requireActivity().finish()
+		}
 		prepareOptionsMenu {
 			clear()
 		}
