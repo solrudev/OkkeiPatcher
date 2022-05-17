@@ -11,6 +11,7 @@ import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.bindProgressButton
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import ru.solrudev.okkeipatcher.OkkeiNavGraphDirections
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.databinding.FragmentHomeBinding
 import ru.solrudev.okkeipatcher.domain.model.Message
@@ -89,7 +90,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), FeatureView<HomeUiState> 
 		val navController = findNavController()
 		val workScreen = navController.findDestination(R.id.work_fragment)
 		workScreen?.label = work.label.resolve(requireContext())
-		val toWorkScreen = HomeFragmentDirections.actionHomeFragmentToWorkFragment(work)
+		val toWorkScreen = OkkeiNavGraphDirections.actionGlobalWork(work)
 		navController.navigate(toWorkScreen)
 		viewModel.dispatchEvent(NavigatedToWorkScreen)
 	}

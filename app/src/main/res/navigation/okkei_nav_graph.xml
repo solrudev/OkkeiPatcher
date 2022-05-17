@@ -5,18 +5,18 @@
 	android:id="@+id/okkei_nav_graph"
 	app:startDestination="@id/home_fragment">
 
+	<action
+		android:id="@+id/action_global_work"
+		app:destination="@id/work_fragment" />
+	<action
+		android:id="@+id/action_global_settings"
+		app:destination="@id/settings_fragment" />
+
 	<fragment
 		android:id="@+id/home_fragment"
 		android:name="ru.solrudev.okkeipatcher.ui.screen.home.HomeFragment"
 		android:label="@string/app_name"
-		tools:layout="@layout/fragment_home">
-		<action
-			android:id="@+id/action_homeFragment_to_workFragment"
-			app:destination="@id/work_fragment" />
-		<action
-			android:id="@+id/action_homeFragment_to_settingsFragment"
-			app:destination="@id/settings_fragment" />
-	</fragment>
+		tools:layout="@layout/fragment_home" />
 	<fragment
 		android:id="@+id/work_fragment"
 		android:name="ru.solrudev.okkeipatcher.ui.screen.work.WorkFragment"
