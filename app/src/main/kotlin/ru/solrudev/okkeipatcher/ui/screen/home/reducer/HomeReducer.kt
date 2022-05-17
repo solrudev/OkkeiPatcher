@@ -18,15 +18,19 @@ class HomeReducer @Inject constructor(
 		is PatchStatusChecked -> state.copy(
 			isPatchEnabled = !event.isPatched,
 			isRestoreEnabled = event.isPatched,
-			canShowPatchUpdatesMessage = true
+			canShowPatchUpdatesMessage = event.isPatched
 		)
 		is PatchUpdatesAvailable -> state.copy(
 			isPatchEnabled = true,
 			patchUpdatesAvailable = true
 		)
-		is PatchUpdatesMessageShown -> state.copy(canShowPatchUpdatesMessage = false)
+		is PatchUpdatesMessageShown -> state.copy(
+			patchUpdatesAvailable = false,
+			canShowPatchUpdatesMessage = false
+		)
 		is NavigatedToWorkScreen -> state.copy(
 			pendingWork = null,
+			patchUpdatesAvailable = false,
 			canShowPatchUpdatesMessage = false
 		)
 		is ViewHidden -> {
