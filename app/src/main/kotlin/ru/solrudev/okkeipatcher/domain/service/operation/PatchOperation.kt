@@ -2,13 +2,13 @@ package ru.solrudev.okkeipatcher.domain.service.operation
 
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.OkkeiStorage
-import ru.solrudev.okkeipatcher.domain.model.LocalizedString
-import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
-import ru.solrudev.okkeipatcher.domain.model.patchupdates.PatchUpdates
 import ru.solrudev.okkeipatcher.domain.core.operation.AggregateOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.EmptyOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.persistence.Dao
+import ru.solrudev.okkeipatcher.domain.model.LocalizedString
+import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
+import ru.solrudev.okkeipatcher.domain.model.patchupdates.PatchUpdates
 import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.PatchStrategy
 
 class PatchOperation(
@@ -45,8 +45,8 @@ class PatchOperation(
 		}
 	}
 
-	private fun patch() = object : AggregateOperation(
-		with(strategy) {
+	private fun patch() = AggregateOperation(
+		operations = with(strategy) {
 			listOf(
 				if (handleSaveData) saveData.backup() else EmptyOperation,
 				obb.backup(),
@@ -55,10 +55,11 @@ class PatchOperation(
 				obb.patch(),
 				if (handleSaveData) saveData.restore() else EmptyOperation
 			)
+		},
+		doAfter = {
+			isPatchedDao.persist(true)
 		}
-	) {
-		override suspend fun doAfter() = isPatchedDao.persist(true)
-	}
+	)
 
 	private fun update() = AggregateOperation(
 		with(strategy) {

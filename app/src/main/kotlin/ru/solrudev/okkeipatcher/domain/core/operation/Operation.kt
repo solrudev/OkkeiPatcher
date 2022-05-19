@@ -30,30 +30,31 @@ object EmptyOperation : Operation<Unit> {
 /**
  * Aggregates other operations and executes them one by one sequentially.
  */
-open class AggregateOperation(private val operations: List<Operation<*>>) : Operation<Unit> {
+class AggregateOperation(
+	private val operations: List<Operation<*>>,
+	private val doBefore: suspend () -> Unit = {},
+	private val doAfter: suspend () -> Unit = {}
+) : Operation<Unit> {
 
-	final override val status = operations
+	override val status = operations
 		.map { it.status }
 		.merge()
 
-	final override val messages = operations
+	override val messages = operations
 		.map { it.messages }
 		.merge()
 
-	final override val progressDelta = operations
+	override val progressDelta = operations
 		.map { it.progressDelta }
 		.merge()
 
-	final override val progressMax = operations.sumOf { it.progressMax }
+	override val progressMax = operations.sumOf { it.progressMax }
 
-	final override suspend fun invoke() {
+	override suspend fun invoke() {
 		doBefore()
 		operations.forEach { it.invoke() }
 		doAfter()
 	}
-
-	protected open suspend fun doBefore() {}
-	protected open suspend fun doAfter() {}
 }
 
 /**

@@ -5,10 +5,10 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.di.IoDispatcher
-import ru.solrudev.okkeipatcher.domain.file.CommonFiles
-import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.operation.AbstractOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.AggregateOperation
+import ru.solrudev.okkeipatcher.domain.file.CommonFiles
+import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.repository.patch.DefaultPatchRepository
 import ru.solrudev.okkeipatcher.domain.service.PackageInstallerFacade
 import ru.solrudev.okkeipatcher.domain.service.gamefile.Apk
@@ -56,15 +56,14 @@ class DefaultApk @Inject constructor(
 		}
 	}
 
-	override fun update() = object : AggregateOperation(
-		listOf(
+	override fun update() = AggregateOperation(
+		operations = listOf(
 			scriptsPatchOperation,
 			installPatched(updating = true)
-		)
-	) {
-		override suspend fun doBefore() {
+		),
+		doBefore = {
 			commonFiles.tempApk.delete()
 			commonFiles.signedApk.delete()
 		}
-	}
+	)
 }
