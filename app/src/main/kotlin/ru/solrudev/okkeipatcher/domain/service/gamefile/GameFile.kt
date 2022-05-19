@@ -1,7 +1,7 @@
 package ru.solrudev.okkeipatcher.domain.service.gamefile
 
-import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
+import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 
 interface GameFile : AutoCloseable {
 	val backupExists: Boolean

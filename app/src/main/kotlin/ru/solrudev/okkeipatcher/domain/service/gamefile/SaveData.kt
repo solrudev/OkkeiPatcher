@@ -1,11 +1,11 @@
 package ru.solrudev.okkeipatcher.domain.service.gamefile
 
 import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.domain.core.operation.AbstractOperation
 import ru.solrudev.okkeipatcher.domain.file.CommonFileHashKey
 import ru.solrudev.okkeipatcher.domain.file.CommonFiles
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.Message
-import ru.solrudev.okkeipatcher.domain.core.operation.AbstractOperation
 import ru.solrudev.okkeipatcher.util.Preferences
 import javax.inject.Inject
 
