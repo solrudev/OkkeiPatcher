@@ -31,17 +31,15 @@ open class Feature<in E : Event, out S : UiState>(
 	 * @return [Job] of the feature.
 	 */
 	fun launchIn(scope: CoroutineScope) = scope.launch {
-		launch {
-			events
-				.combine(uiState) { event, state -> reducer.reduce(state, event) }
-				.collect(uiState::emit)
-		}
-		launch {
-			middlewares
-				.map { it.apply(events) }
-				.merge()
-				.collect(events::emit)
-		}
+		events
+			.combine(uiState) { event, state -> reducer.reduce(state, event) }
+			.onEach(uiState::emit)
+			.launchIn(this)
+		middlewares
+			.map { it.apply(events) }
+			.merge()
+			.onEach(events::emit)
+			.launchIn(this)
 	}
 
 	/**
