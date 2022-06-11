@@ -1,5 +1,6 @@
 package ru.solrudev.okkeipatcher.domain.service.gamefile
 
+import androidx.annotation.StringRes
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.core.operation.AbstractOperation
 import ru.solrudev.okkeipatcher.domain.file.CommonFileHashKey
@@ -71,7 +72,7 @@ class SaveData @Inject constructor(private val commonFiles: CommonFiles) : GameF
 
 	override fun close() = commonFiles.tempSaveData.delete()
 
-	private fun createWarning(message: Int) = Message(
+	private fun createWarning(@StringRes message: Int) = Message(
 		LocalizedString.resource(R.string.warning),
 		LocalizedString.resource(message)
 	)
