@@ -1,5 +1,7 @@
 package ru.solrudev.okkeipatcher.domain.service.operation.factory
 
+import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.repository.app.PreferencesRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.factory.PatchRepositoryFactory
@@ -10,7 +12,8 @@ import javax.inject.Inject
 class PatchOperationFactory @Inject constructor(
 	private val preferencesRepository: PreferencesRepository,
 	private val patchRepositoryFactory: PatchRepositoryFactory,
-	private val strategyFactory: GameFileStrategyFactory
+	private val strategyFactory: GameFileStrategyFactory,
+	@ApplicationContext private val applicationContext: Context
 ) : OperationFactory<Unit> {
 
 	override suspend fun create(): Operation<Unit> {
@@ -22,7 +25,8 @@ class PatchOperationFactory @Inject constructor(
 			strategy,
 			handleSaveData,
 			patchUpdates,
-			preferencesRepository.isPatchedDao
+			preferencesRepository.isPatchedDao,
+			applicationContext
 		)
 		patchOperation.checkCanPatch()
 		return patchOperation

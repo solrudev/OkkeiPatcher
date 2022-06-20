@@ -5,8 +5,9 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.di.IoDispatcher
-import ru.solrudev.okkeipatcher.domain.core.operation.AbstractOperation
-import ru.solrudev.okkeipatcher.domain.core.operation.AggregateOperation
+import ru.solrudev.okkeipatcher.domain.core.operation.Operation
+import ru.solrudev.okkeipatcher.domain.core.operation.aggregateOperation
+import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.file.CommonFiles
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.repository.patch.DefaultPatchRepository
@@ -28,40 +29,24 @@ class DefaultApk @Inject constructor(
 
 	private val scriptsPatchOperation = scriptsPatchOperationFactory.create(this, patchRepository)
 
-	override fun patch() = object : AbstractOperation<Unit>() {
-
-		private val installPatchedOperation = installPatched(updating = false)
-
-		override val status = withStatusFlows(
-			scriptsPatchOperation.status,
-			installPatchedOperation.status
-		)
-
-		override val progressDelta = withProgressDeltaFlows(
-			scriptsPatchOperation.progressDelta,
-			installPatchedOperation.progressDelta,
-		)
-
-		override val progressMax = installPatchedOperation.progressMax + scriptsPatchOperation.progressMax
-
-		override suspend fun invoke() {
+	override fun patch(): Operation<Unit> {
+		val installPatchedOperation = installPatched(updating = false)
+		return operation(scriptsPatchOperation, installPatchedOperation) {
 			status(LocalizedString.resource(R.string.status_comparing_apk))
 			if (commonFiles.signedApk.verify().invoke()) {
 				progressDelta(scriptsPatchOperation.progressMax)
 				installPatchedOperation()
-				return
+				return@operation
 			}
 			scriptsPatchOperation()
 			installPatchedOperation()
 		}
 	}
 
-	override fun update() = AggregateOperation(
-		operations = listOf(
-			scriptsPatchOperation,
-			installPatched(updating = true)
-		),
-		doBefore = {
+	override fun update() = aggregateOperation(
+		scriptsPatchOperation,
+		installPatched(updating = true),
+		operation {
 			commonFiles.tempApk.delete()
 			commonFiles.signedApk.delete()
 		}

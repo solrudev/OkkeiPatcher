@@ -28,6 +28,8 @@ private const val BUFFER_LENGTH = 8192L
 
 interface HttpDownloader {
 
+	val progressMax: Int
+
 	/**
 	 * @param hashing Does output stream need to be hashed. Default is `false`.
 	 * @return Output hash. Empty string if [hashing] is `false`.
@@ -44,6 +46,8 @@ class HttpDownloaderImpl @Inject constructor(
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	okHttpClient: OkHttpClient
 ) : HttpDownloader {
+
+	override val progressMax = 100
 
 	private val client by lazy {
 		HttpClient(OkHttp) {

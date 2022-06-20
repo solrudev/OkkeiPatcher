@@ -18,6 +18,8 @@ private const val BUFFER_LENGTH = 8192L
 
 interface StreamCopier {
 
+	val progressMax: Int
+
 	/**
 	 * @param hashing Does output stream need to be hashed. Default is `false`.
 	 * @return Output hash. Empty string if [hashing] is `false`.
@@ -31,9 +33,17 @@ interface StreamCopier {
 	): String
 }
 
+suspend inline fun StreamCopier.computeHash(
+	inputStream: InputStream,
+	size: Long,
+	noinline onProgressDeltaChanged: suspend (Int) -> Unit = {}
+) = copy(inputStream, BlackholeOutputStream, size, hashing = true, onProgressDeltaChanged)
+
 class StreamCopierImpl @Inject constructor(
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : StreamCopier {
+
+	override val progressMax = 100
 
 	@Suppress("BlockingMethodInNonBlockingContext")
 	override suspend fun copy(

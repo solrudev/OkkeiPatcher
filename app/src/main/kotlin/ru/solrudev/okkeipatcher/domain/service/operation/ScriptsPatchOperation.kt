@@ -1,17 +1,19 @@
 package ru.solrudev.okkeipatcher.domain.service.operation
 
+import android.content.Context
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import net.lingala.zip4j.ZipFile
 import net.lingala.zip4j.model.ZipParameters
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.di.IoDispatcher
-import ru.solrudev.okkeipatcher.domain.OkkeiStorage
-import ru.solrudev.okkeipatcher.domain.core.operation.AbstractOperation
-import ru.solrudev.okkeipatcher.domain.core.operation.AggregateOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
+import ru.solrudev.okkeipatcher.domain.core.operation.aggregateOperation
+import ru.solrudev.okkeipatcher.domain.core.operation.operation
+import ru.solrudev.okkeipatcher.domain.externalDir
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
 import ru.solrudev.okkeipatcher.domain.repository.patch.ScriptsDataRepository
@@ -19,97 +21,85 @@ import ru.solrudev.okkeipatcher.domain.service.gamefile.Apk
 import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.english.PatchFileVersionKey
 import ru.solrudev.okkeipatcher.domain.util.extension.use
 import ru.solrudev.okkeipatcher.io.service.HttpDownloader
+import ru.solrudev.okkeipatcher.io.util.extension.recreate
 import ru.solrudev.okkeipatcher.util.Preferences
 import java.io.File
+
+private val tempZipFilesRegex = Regex("(apk|zip)\\d+")
 
 class ScriptsPatchOperation @AssistedInject constructor(
 	@Assisted private val apk: Apk,
 	@Assisted private val scriptsDataRepository: ScriptsDataRepository,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+	@ApplicationContext private val applicationContext: Context,
 	private val httpDownloader: HttpDownloader
 ) : Operation<Unit> {
 
-	private val scriptsFile = File(OkkeiStorage.external.absolutePath, "scripts.zip")
-
-	private val operation = AggregateOperation(
-		listOf(
-			downloadScripts(),
-			extractScripts(),
-			replaceScripts(),
-			apk.removeSignature(),
-			apk.sign()
-		)
+	private val operation = aggregateOperation(
+		downloadScripts(),
+		extractScripts(),
+		replaceScripts(),
+		apk.removeSignature(),
+		apk.sign()
 	)
 
 	override val status = operation.status
 	override val messages = operation.messages
 	override val progressDelta = operation.progressDelta
 	override val progressMax = operation.progressMax
-	private val extractedScriptsDirectory = File(OkkeiStorage.external, "script")
+	private val scriptsFile = File(applicationContext.externalDir, "scripts.zip")
+	private val extractedScriptsDirectory = File(applicationContext.externalDir, "script")
 
 	override suspend fun invoke() = try {
 		operation()
 	} finally {
-		extractedScriptsDirectory.run {
-			if (exists()) deleteRecursively()
+		deleteTempZipFiles()
+		if (extractedScriptsDirectory.exists()) {
+			extractedScriptsDirectory.deleteRecursively()
 		}
 		scriptsFile.delete()
 	}
 
-	private fun downloadScripts() = object : AbstractOperation<Unit>() {
-
-		override val progressMax = 100
-
-		override suspend fun invoke() {
-			status(LocalizedString.resource(R.string.status_downloading_scripts))
-			val scriptsData = scriptsDataRepository.getScriptsData()
-			scriptsFile.delete()
-			scriptsFile.parentFile?.mkdirs()
-			scriptsFile.createNewFile()
-			val outputStream = scriptsFile.outputStream()
-			val scriptsHash = httpDownloader.download(scriptsData.url, outputStream, hashing = true) { progressDelta ->
-				progressDelta(progressDelta)
-			}
-			status(LocalizedString.resource(R.string.status_comparing_scripts))
-			if (scriptsHash != scriptsData.hash) {
-				throw LocalizedException(LocalizedString.resource(R.string.error_hash_scripts_mismatch))
-			}
-			status(LocalizedString.resource(R.string.status_writing_scripts_hash))
-			Preferences.set(PatchFileVersionKey.scripts_version.name, scriptsData.version)
+	private fun downloadScripts() = operation(progressMax = httpDownloader.progressMax) {
+		status(LocalizedString.resource(R.string.status_downloading_scripts))
+		val scriptsData = scriptsDataRepository.getScriptsData()
+		scriptsFile.recreate()
+		val outputStream = scriptsFile.outputStream()
+		val scriptsHash = httpDownloader.download(scriptsData.url, outputStream, hashing = true) { progressDelta ->
+			progressDelta(progressDelta)
 		}
+		if (scriptsHash != scriptsData.hash) {
+			throw LocalizedException(LocalizedString.resource(R.string.error_hash_scripts_mismatch))
+		}
+		Preferences.set(PatchFileVersionKey.scripts_version.name, scriptsData.version)
 	}
 
-	private fun extractScripts() = object : AbstractOperation<Unit>() {
-
-		override val progressMax = 100
-
-		override suspend fun invoke() {
-			status(LocalizedString.resource(R.string.status_extracting_scripts))
-			val scriptsZip = ZipFile(scriptsFile)
-			scriptsZip.use {
-				withContext(ioDispatcher) {
-					it.extractAll(extractedScriptsDirectory.absolutePath)
-				}
-				progressDelta(progressMax)
-			}
-		}
-	}
-
-	private fun replaceScripts() = object : AbstractOperation<Unit>() {
-
-		override val progressMax = 100
-
-		@Suppress("BlockingMethodInNonBlockingContext")
-		override suspend fun invoke() = apk.asZipFile().use { apkZip ->
-			status(LocalizedString.resource(R.string.status_replacing_scripts))
-			val parameters = ZipParameters().apply { rootFolderNameInZip = "assets/script/" }
-			val scriptsList = extractedScriptsDirectory.listFiles()!!.filter { it.isFile }
-			val apkScriptsList = scriptsList.map { "${parameters.rootFolderNameInZip}${it.name}" }
+	private fun extractScripts() = operation(progressMax = 100) {
+		status(LocalizedString.resource(R.string.status_extracting_scripts))
+		ZipFile(scriptsFile).use {
 			withContext(ioDispatcher) {
-				apkZip.removeFiles(apkScriptsList)
-				apkZip.addFiles(scriptsList, parameters)
+				it.extractAll(extractedScriptsDirectory.absolutePath)
 			}
-			progressDelta(progressMax)
 		}
+	}
+
+	private fun replaceScripts() = operation(progressMax = 100) {
+		status(LocalizedString.resource(R.string.status_replacing_scripts))
+		apk.toZipFile().use { apkZip ->
+			val scriptsFolder = "assets/script/"
+			val parameters = ZipParameters().apply { rootFolderNameInZip = scriptsFolder }
+			val newScripts = extractedScriptsDirectory.listFiles()!!.filter { it.isFile }
+			val oldScripts = newScripts.map { "$scriptsFolder${it.name}" }
+			withContext(ioDispatcher) {
+				apkZip.removeFiles(oldScripts)
+				apkZip.addFiles(newScripts, parameters)
+			}
+		}
+	}
+
+	private fun deleteTempZipFiles() {
+		applicationContext.externalDir.listFiles()
+			?.filter { it.extension.matches(tempZipFilesRegex) }
+			?.forEach { if (it.parentFile?.canWrite() == true) it.delete() }
 	}
 }

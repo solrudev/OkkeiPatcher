@@ -1,64 +1,39 @@
 package ru.solrudev.okkeipatcher.io.file
 
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.withIndex
-import ru.solrudev.okkeipatcher.domain.core.operation.AbstractOperation
+import ru.solrudev.okkeipatcher.domain.core.operation.Operation
+import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.util.Preferences
 
 abstract class VerifiableFile(private val fileImplementation: File) : File by fileImplementation, Verifiable {
 
-	protected fun compareBySharedPreferences(key: String) = object : AbstractOperation<Boolean>() {
-
-		private val computeHashOperation = computeHash()
-		override val progressDelta = withProgressDeltaFlows(computeHashOperation.progressDelta)
-		override val progressMax = 100
-
-		override suspend fun invoke(): Boolean {
+	protected fun compareBySharedPreferences(key: String): Operation<Boolean> {
+		val computeHashOperation = computeHash()
+		return operation(computeHashOperation) {
 			if (!exists) {
-				progressDelta(progressMax)
-				return false
+				return@operation false
 			}
 			val hashToCompare = Preferences.get(key, "")
 			if (hashToCompare.isEmpty() || hashToCompare.isBlank()) {
-				progressDelta(progressMax)
-				return false
+				return@operation false
 			}
 			val hash = computeHashOperation()
-			return hash == hashToCompare
+			hash == hashToCompare
 		}
 	}
 
-	protected fun compareByFile(file: File) = object : AbstractOperation<Boolean>() {
-
-		private val computeHashOperation = computeHash()
-		private val computeHashToCompareOperation = file.computeHash()
-
-		override val progressDelta = withProgressDeltaFlows(
-			computeHashOperation.progressDelta
-				.withIndex()
-				.filter { indexedValue -> indexedValue.index % 2 == 0 }
-				.map { it.value },
-			computeHashToCompareOperation.progressDelta
-				.withIndex()
-				.filter { indexedValue -> indexedValue.index % 2 == 0 }
-				.map { it.value }
-		)
-
-		override val progressMax = 100
-
-		override suspend fun invoke(): Boolean {
+	protected fun compareByFile(file: File): Operation<Boolean> {
+		val computeHashOperation = computeHash()
+		val computeHashToCompareOperation = file.computeHash()
+		return operation(computeHashOperation, computeHashToCompareOperation) {
 			if (!exists) {
-				progressDelta(progressMax)
-				return false
+				return@operation false
 			}
 			if (!file.exists) {
-				progressDelta(progressMax)
-				return false
+				return@operation false
 			}
 			val hash = computeHashOperation()
 			val hashToCompare = computeHashToCompareOperation()
-			return hash == hashToCompare
+			hash == hashToCompare
 		}
 	}
 }

@@ -1,5 +1,7 @@
 package ru.solrudev.okkeipatcher.domain.service.operation.factory
 
+import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.repository.app.PreferencesRepository
 import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.factory.GameFileStrategyFactory
@@ -8,7 +10,8 @@ import javax.inject.Inject
 
 class RestoreOperationFactory @Inject constructor(
 	private val preferencesRepository: PreferencesRepository,
-	private val strategyFactory: GameFileStrategyFactory
+	private val strategyFactory: GameFileStrategyFactory,
+	@ApplicationContext private val applicationContext: Context
 ) : OperationFactory<Unit> {
 
 	override suspend fun create(): Operation<Unit> {
@@ -17,7 +20,8 @@ class RestoreOperationFactory @Inject constructor(
 		val restoreOperation = RestoreOperation(
 			strategy,
 			handleSaveData,
-			preferencesRepository.isPatchedDao
+			preferencesRepository.isPatchedDao,
+			applicationContext
 		)
 		restoreOperation.checkCanRestore()
 		return restoreOperation

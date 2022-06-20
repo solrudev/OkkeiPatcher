@@ -1,11 +1,13 @@
 package ru.solrudev.okkeipatcher.domain.service.operation
 
+import android.content.Context
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.domain.OkkeiStorage
-import ru.solrudev.okkeipatcher.domain.core.operation.AggregateOperation
-import ru.solrudev.okkeipatcher.domain.core.operation.EmptyOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
+import ru.solrudev.okkeipatcher.domain.core.operation.aggregateOperation
+import ru.solrudev.okkeipatcher.domain.core.operation.emptyOperation
+import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.core.persistence.Dao
+import ru.solrudev.okkeipatcher.domain.isEnoughSpace
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
 import ru.solrudev.okkeipatcher.domain.model.patchupdates.PatchUpdates
@@ -15,7 +17,8 @@ class PatchOperation(
 	private val strategy: PatchStrategy,
 	private val handleSaveData: Boolean,
 	private val patchUpdates: PatchUpdates,
-	private val isPatchedDao: Dao<Boolean>
+	private val isPatched: Dao<Boolean>,
+	private val applicationContext: Context
 ) : Operation<Unit> {
 
 	private val operation = if (patchUpdates.available) update() else patch()
@@ -24,13 +27,15 @@ class PatchOperation(
 	override val progressDelta = operation.progressDelta
 	override val progressMax = operation.progressMax
 
-	override suspend fun invoke() = strategy.use { operation() }
+	override suspend fun invoke() = strategy.use {
+		operation()
+	}
 
 	/**
 	 * Throws an exception if conditions for patch are not met.
 	 */
 	suspend fun checkCanPatch() = with(strategy) {
-		val isPatched = isPatchedDao.retrieve()
+		val isPatched = isPatched.retrieve()
 		if (isPatched && !patchUpdates.available) {
 			throw LocalizedException(LocalizedString.resource(R.string.error_patched))
 		}
@@ -40,33 +45,29 @@ class PatchOperation(
 		obb.canPatch { failMessage ->
 			throw LocalizedException(failMessage)
 		}
-		if (!OkkeiStorage.isEnoughSpace) {
+		if (!applicationContext.isEnoughSpace) {
 			throw LocalizedException(LocalizedString.resource(R.string.error_no_free_space))
 		}
 	}
 
-	private fun patch() = AggregateOperation(
-		operations = with(strategy) {
-			listOf(
-				if (handleSaveData) saveData.backup() else EmptyOperation,
-				obb.backup(),
-				apk.backup(),
-				apk.patch(),
-				obb.patch(),
-				if (handleSaveData) saveData.restore() else EmptyOperation
-			)
-		},
-		doAfter = {
-			isPatchedDao.persist(true)
-		}
-	)
+	private fun patch() = with(strategy) {
+		aggregateOperation(
+			if (handleSaveData) saveData.backup() else emptyOperation(),
+			obb.backup(),
+			apk.backup(),
+			apk.patch(),
+			obb.patch(),
+			if (handleSaveData) saveData.restore() else emptyOperation(),
+			operation {
+				isPatched.persist(true)
+			}
+		)
+	}
 
-	private fun update() = AggregateOperation(
-		with(strategy) {
-			listOf(
-				if (patchUpdates.apkUpdatesAvailable) apk.update() else EmptyOperation,
-				if (patchUpdates.obbUpdatesAvailable) obb.update() else EmptyOperation
-			)
-		}
-	)
+	private fun update() = with(strategy) {
+		aggregateOperation(
+			if (patchUpdates.apkUpdatesAvailable) apk.update() else emptyOperation(),
+			if (patchUpdates.obbUpdatesAvailable) obb.update() else emptyOperation()
+		)
+	}
 }

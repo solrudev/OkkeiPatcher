@@ -5,8 +5,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.network.api.OkkeiPatcherApi
 import ru.solrudev.okkeipatcher.data.network.model.OkkeiPatcherChangelogDto
-import ru.solrudev.okkeipatcher.domain.OkkeiStorage
-import ru.solrudev.okkeipatcher.domain.core.operation.AbstractOperation
+import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
 import ru.solrudev.okkeipatcher.domain.repository.app.OkkeiPatcherRepository
@@ -25,7 +24,7 @@ class OkkeiPatcherRepositoryImpl @Inject constructor(
 	private val okkeiPatcherApi: OkkeiPatcherApi
 ) : OkkeiPatcherRepository {
 
-	private val updateFile = File(OkkeiStorage.private, APP_UPDATE_FILE_NAME)
+	private val updateFile = File(applicationContext.filesDir, APP_UPDATE_FILE_NAME)
 	private var isUpdateDownloaded = false
 
 	override suspend fun isUpdateAvailable() =
@@ -37,31 +36,26 @@ class OkkeiPatcherRepositoryImpl @Inject constructor(
 		return okkeiPatcherApi.getChangelog(locale.language)
 	}
 
-	override fun getUpdateFile() = object : AbstractOperation<File>() {
-
-		override val progressMax = 100
-
-		override suspend fun invoke(): File {
-			if (isUpdateDownloaded && updateFile.exists()) {
-				return updateFile
-			}
-			isUpdateDownloaded = false
-			try {
-				val updateData = okkeiPatcherApi.getOkkeiPatcherData()
-				val updateHash = httpDownloader.download(updateData.url, updateFile, hashing = true) { progressDelta ->
-					progressDelta(progressDelta)
-				}
-				if (updateHash != updateData.hash) {
-					throw LocalizedException(LocalizedString.resource(R.string.error_update_app_corrupted))
-				}
-			} catch (t: Throwable) {
-				if (updateFile.exists()) {
-					updateFile.delete()
-				}
-				throw t
-			}
-			isUpdateDownloaded = true
-			return updateFile
+	override fun getUpdateFile() = operation(progressMax = httpDownloader.progressMax) {
+		if (isUpdateDownloaded && updateFile.exists()) {
+			return@operation updateFile
 		}
+		isUpdateDownloaded = false
+		try {
+			val updateData = okkeiPatcherApi.getOkkeiPatcherData()
+			val updateHash = httpDownloader.download(updateData.url, updateFile, hashing = true) { progressDelta ->
+				progressDelta(progressDelta)
+			}
+			if (updateHash != updateData.hash) {
+				throw LocalizedException(LocalizedString.resource(R.string.error_update_app_corrupted))
+			}
+		} catch (t: Throwable) {
+			if (updateFile.exists()) {
+				updateFile.delete()
+			}
+			throw t
+		}
+		isUpdateDownloaded = true
+		return@operation updateFile
 	}
 }

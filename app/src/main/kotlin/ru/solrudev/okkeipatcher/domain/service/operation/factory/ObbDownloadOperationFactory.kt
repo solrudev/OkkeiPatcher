@@ -1,11 +1,20 @@
 package ru.solrudev.okkeipatcher.domain.service.operation.factory
 
-import dagger.assisted.AssistedFactory
-import ru.solrudev.okkeipatcher.domain.file.CommonFiles
+import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.repository.patch.ObbDataRepository
 import ru.solrudev.okkeipatcher.domain.service.operation.ObbDownloadOperation
+import ru.solrudev.okkeipatcher.io.service.HttpDownloader
+import java.io.File
+import javax.inject.Inject
 
-@AssistedFactory
 interface ObbDownloadOperationFactory {
-	fun create(obbDataRepository: ObbDataRepository, commonFiles: CommonFiles): ObbDownloadOperation
+	fun create(obb: File, obbDataRepository: ObbDataRepository): Operation<Unit>
+}
+
+class ObbDownloadOperationFactoryImpl @Inject constructor(
+	private val httpDownloader: HttpDownloader
+) : ObbDownloadOperationFactory {
+
+	override fun create(obb: File, obbDataRepository: ObbDataRepository) =
+		ObbDownloadOperation(obb, obbDataRepository, httpDownloader)
 }

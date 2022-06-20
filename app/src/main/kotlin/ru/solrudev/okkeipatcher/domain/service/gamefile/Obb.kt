@@ -1,8 +1,8 @@
 package ru.solrudev.okkeipatcher.domain.service.gamefile
 
-import kotlinx.coroutines.flow.map
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.domain.core.operation.AbstractOperation
+import ru.solrudev.okkeipatcher.domain.core.operation.Operation
+import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.file.CommonFileHashKey
 import ru.solrudev.okkeipatcher.domain.file.CommonFiles
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
@@ -24,25 +24,13 @@ abstract class Obb(protected val commonFiles: CommonFiles) : PatchableGameFile {
 
 	override fun deleteBackup() = commonFiles.backupObb.delete()
 
-	override fun backup() = object : AbstractOperation<Unit>() {
-
-		private val verifyBackupObbOperation = commonFiles.backupObb.verify()
-		private val backupObbOperation = commonFiles.obbToBackup.copyTo(commonFiles.backupObb, hashing = true)
-		private val backupObbProgressMultiplier = 6
-
-		override val progressDelta = withProgressDeltaFlows(
-			verifyBackupObbOperation.progressDelta,
-			backupObbOperation.progressDelta.map { it * backupObbProgressMultiplier }
-		)
-
-		override val progressMax =
-			verifyBackupObbOperation.progressMax + backupObbOperation.progressMax * backupObbProgressMultiplier
-
-		override suspend fun invoke() {
+	override fun backup(): Operation<Unit> {
+		val verifyBackupObbOperation = commonFiles.backupObb.verify()
+		val backupObbOperation = commonFiles.obbToBackup.copyTo(commonFiles.backupObb, hashing = true)
+		return operation(verifyBackupObbOperation, backupObbOperation) {
 			status(LocalizedString.resource(R.string.status_comparing_obb))
 			if (verifyBackupObbOperation()) {
-				progressDelta(progressMax - verifyBackupObbOperation.progressMax)
-				return
+				return@operation
 			}
 			try {
 				if (!commonFiles.obbToBackup.exists) {
@@ -59,14 +47,9 @@ abstract class Obb(protected val commonFiles: CommonFiles) : PatchableGameFile {
 		}
 	}
 
-	override fun restore() = object : AbstractOperation<Unit>() {
-
-		private val restoreObbOperation = commonFiles.backupObb.copyTo(commonFiles.obbToBackup)
-		private val progressMultiplier = 3
-		override val progressDelta = restoreObbOperation.progressDelta.map { it * progressMultiplier }
-		override val progressMax = restoreObbOperation.progressMax * progressMultiplier
-
-		override suspend fun invoke() {
+	override fun restore(): Operation<Unit> {
+		val restoreObbOperation = commonFiles.backupObb.copyTo(commonFiles.obbToBackup)
+		return operation(restoreObbOperation) {
 			try {
 				if (!commonFiles.backupObb.exists) {
 					throw LocalizedException(LocalizedString.resource(R.string.error_obb_not_found))

@@ -1,24 +1,28 @@
 package ru.solrudev.okkeipatcher.domain
 
+import android.content.Context
 import android.os.Environment
 import ru.solrudev.okkeipatcher.OkkeiApplication
 import java.io.File
 
+private const val TWO_GB: Long = 2_147_483_648
+
 object OkkeiStorage {
-
-	private const val TWO_GB: Long = 2_147_483_648
-
-	val external: File =
-		if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED
-			&& OkkeiApplication.context.getExternalFilesDir(null) != null
-		) {
-			OkkeiApplication.context.getExternalFilesDir(null)!!
-		} else OkkeiApplication.context.filesDir
-
-	val backup = File(external, "backup")
-
-	val private: File = OkkeiApplication.context.filesDir
-
-	val isEnoughSpace: Boolean
-		get() = external.usableSpace >= TWO_GB
+	val backup = OkkeiApplication.context.backupDir
 }
+
+val Context.externalDir: File
+	get() {
+		val externalFilesDir = getExternalFilesDir(null)
+		return if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED && externalFilesDir != null) {
+			externalFilesDir
+		} else {
+			filesDir
+		}
+	}
+
+val Context.backupDir: File
+	get() = File(externalDir, "backup")
+
+val Context.isEnoughSpace: Boolean
+	get() = externalDir.usableSpace >= TWO_GB

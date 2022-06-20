@@ -19,8 +19,8 @@
 	<string name="error_apk_not_found">APK для установки не найден.</string>
 	<string name="error_backup_not_found">Резервная копия CHAOS;CHILD не найдена.</string>
 	<string name="error_game_not_found">CHAOS;CHILD не найден на этом устройстве.</string>
-	<string name="error_hash_obb_mismatch">Загруженный OBB повреждён.</string>
-	<string name="error_hash_scripts_mismatch">Загруженные скрипты повреждены.</string>
+	<string name="error_hash_obb_mismatch">OBB повреждён.</string>
+	<string name="error_hash_scripts_mismatch">Скрипты повреждены.</string>
 	<string name="error_http_file_download">Во время загрузки файла произошла ошибка.</string>
 	<string name="error_install">Произошла ошибка при установке APK.\n%s</string>
 	<string name="error_no_free_space">Недостаточно свободного места. Убедитесь, что на устройстве свободно как минимум 2 ГБ.</string>
