@@ -1,16 +1,15 @@
 package ru.solrudev.okkeipatcher.domain.service.operation
 
-import android.content.Context
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.aggregateOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.emptyOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.core.persistence.Dao
-import ru.solrudev.okkeipatcher.domain.isEnoughSpace
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
 import ru.solrudev.okkeipatcher.domain.model.patchupdates.PatchUpdates
+import ru.solrudev.okkeipatcher.domain.service.StorageChecker
 import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.PatchStrategy
 
 class PatchOperation(
@@ -18,7 +17,7 @@ class PatchOperation(
 	private val handleSaveData: Boolean,
 	private val patchUpdates: PatchUpdates,
 	private val isPatched: Dao<Boolean>,
-	private val applicationContext: Context
+	private val storageChecker: StorageChecker
 ) : Operation<Unit> {
 
 	private val operation = if (patchUpdates.available) update() else patch()
@@ -45,7 +44,7 @@ class PatchOperation(
 		obb.canPatch { failMessage ->
 			throw LocalizedException(failMessage)
 		}
-		if (!applicationContext.isEnoughSpace) {
+		if (!storageChecker.isEnoughSpace()) {
 			throw LocalizedException(LocalizedString.resource(R.string.error_no_free_space))
 		}
 	}

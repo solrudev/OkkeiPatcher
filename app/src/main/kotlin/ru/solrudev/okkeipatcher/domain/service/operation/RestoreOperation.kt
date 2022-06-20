@@ -1,22 +1,21 @@
 package ru.solrudev.okkeipatcher.domain.service.operation
 
-import android.content.Context
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.aggregateOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.emptyOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.core.persistence.Dao
-import ru.solrudev.okkeipatcher.domain.isEnoughSpace
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
+import ru.solrudev.okkeipatcher.domain.service.StorageChecker
 import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.RestoreStrategy
 
 class RestoreOperation(
 	private val strategy: RestoreStrategy,
 	private val handleSaveData: Boolean,
 	private val isPatched: Dao<Boolean>,
-	private val applicationContext: Context
+	private val storageChecker: StorageChecker
 ) : Operation<Unit> {
 
 	private val operation = with(strategy) {
@@ -53,7 +52,7 @@ class RestoreOperation(
 		if (!isBackupAvailable()) {
 			throw LocalizedException(LocalizedString.resource(R.string.error_backup_not_found))
 		}
-		if (!applicationContext.isEnoughSpace) {
+		if (!storageChecker.isEnoughSpace()) {
 			throw LocalizedException(LocalizedString.resource(R.string.error_no_free_space))
 		}
 	}
