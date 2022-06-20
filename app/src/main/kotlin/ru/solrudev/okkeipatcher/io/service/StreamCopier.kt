@@ -29,7 +29,7 @@ interface StreamCopier {
 		outputStream: OutputStream,
 		size: Long,
 		hashing: Boolean = false,
-		onProgressDeltaChanged: suspend (Int) -> Unit
+		onProgressDeltaChanged: suspend (Int) -> Unit = {}
 	): String
 }
 

@@ -23,15 +23,15 @@ class PreferencesRepositoryImpl @Inject constructor(@ApplicationContext applicat
 	private val Context.dataStore by preferencesDataStore(name = "okkei_preferences")
 	private val preferences = applicationContext.dataStore
 
-	override val isPatchedDao = Preference(key = IS_PATCHED, defaultValue = false, preferences)
+	override val isPatched = Preference(key = IS_PATCHED, defaultValue = false, preferences)
 
-	override val handleSaveDataDao = Preference(
+	override val handleSaveData = Preference(
 		key = HANDLE_SAVE_DATA,
 		defaultValue = Build.VERSION.SDK_INT < Build.VERSION_CODES.R,
 		preferences
 	)
 
-	override val patchLanguageDao = MappedPreference(
+	override val patchLanguage = MappedPreference(
 		key = PATCH_LANGUAGE,
 		toDataType = { language -> language.name },
 		toDomainType = { name -> Language.fromString(name) },

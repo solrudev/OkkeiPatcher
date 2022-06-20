@@ -8,7 +8,7 @@ import io.github.solrudev.simpleinstaller.PackageInstaller
 import io.github.solrudev.simpleinstaller.PackageUninstaller
 
 @InstallIn(SingletonComponent::class)
-@Module(includes = [PackageInstallerBindModule::class])
+@Module
 object PackageInstallerModule {
 
 	@Provides

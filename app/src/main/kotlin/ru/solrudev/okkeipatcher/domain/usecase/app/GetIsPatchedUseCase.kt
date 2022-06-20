@@ -10,5 +10,5 @@ interface GetIsPatchedUseCase {
 class GetIsPatchedUseCaseImpl @Inject constructor(private val preferencesRepository: PreferencesRepository) :
 	GetIsPatchedUseCase {
 
-	override suspend fun invoke() = preferencesRepository.isPatchedDao.retrieve()
+	override suspend fun invoke() = preferencesRepository.isPatched.retrieve()
 }

@@ -16,11 +16,11 @@ class RestoreOperationFactory @Inject constructor(
 
 	override suspend fun create(): Operation<Unit> {
 		val strategy = strategyFactory.create()
-		val handleSaveData = preferencesRepository.handleSaveDataDao.retrieve()
+		val handleSaveData = preferencesRepository.handleSaveData.retrieve()
 		val restoreOperation = RestoreOperation(
 			strategy,
 			handleSaveData,
-			preferencesRepository.isPatchedDao,
+			preferencesRepository.isPatched,
 			applicationContext
 		)
 		restoreOperation.checkCanRestore()

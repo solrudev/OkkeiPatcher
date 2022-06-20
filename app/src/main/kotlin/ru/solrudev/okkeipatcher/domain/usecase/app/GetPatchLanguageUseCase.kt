@@ -11,5 +11,5 @@ interface GetPatchLanguageUseCase {
 class GetPatchLanguageUseCaseImpl @Inject constructor(private val preferencesRepository: PreferencesRepository) :
 	GetPatchLanguageUseCase {
 
-	override suspend fun invoke() = preferencesRepository.patchLanguageDao.retrieve()
+	override suspend fun invoke() = preferencesRepository.patchLanguage.retrieve()
 }

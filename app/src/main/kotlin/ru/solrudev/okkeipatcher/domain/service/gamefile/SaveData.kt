@@ -20,7 +20,7 @@ class SaveData @Inject constructor(private val commonFiles: CommonFiles) : GameF
 
 	override fun backup(): Operation<Unit> {
 		val backupSaveDataOperation = commonFiles.originalSaveData.copyTo(commonFiles.tempSaveData)
-		return operation(backupSaveDataOperation) {
+		return operation(progressMax = 100) {
 			if (commonFiles.originalSaveData.exists) {
 				if (commonFiles.originalSaveData.verify().invoke()) {
 					return@operation
@@ -35,7 +35,7 @@ class SaveData @Inject constructor(private val commonFiles: CommonFiles) : GameF
 
 	override fun restore(): Operation<Unit> {
 		val restoreSaveDataOperation = commonFiles.backupSaveData.copyTo(commonFiles.originalSaveData)
-		return operation(restoreSaveDataOperation) {
+		return operation(progressMax = 100) {
 			status(LocalizedString.resource(R.string.status_comparing_saves))
 			if (commonFiles.backupSaveData.verify().invoke()) {
 				status(LocalizedString.resource(R.string.status_restoring_saves))

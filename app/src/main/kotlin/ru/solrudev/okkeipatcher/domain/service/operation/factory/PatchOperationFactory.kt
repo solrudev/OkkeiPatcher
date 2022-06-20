@@ -18,14 +18,14 @@ class PatchOperationFactory @Inject constructor(
 
 	override suspend fun create(): Operation<Unit> {
 		val strategy = strategyFactory.create()
-		val handleSaveData = preferencesRepository.handleSaveDataDao.retrieve()
+		val handleSaveData = preferencesRepository.handleSaveData.retrieve()
 		val patchRepository = patchRepositoryFactory.create()
 		val patchUpdates = patchRepository.getPatchUpdates()
 		val patchOperation = PatchOperation(
 			strategy,
 			handleSaveData,
 			patchUpdates,
-			preferencesRepository.isPatchedDao,
+			preferencesRepository.isPatched,
 			applicationContext
 		)
 		patchOperation.checkCanPatch()

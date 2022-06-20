@@ -17,7 +17,7 @@ import ru.solrudev.okkeipatcher.domain.externalDir
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
 import ru.solrudev.okkeipatcher.domain.repository.patch.ScriptsDataRepository
-import ru.solrudev.okkeipatcher.domain.service.gamefile.Apk
+import ru.solrudev.okkeipatcher.domain.service.gamefile.ZipPackage
 import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.english.PatchFileVersionKey
 import ru.solrudev.okkeipatcher.domain.util.extension.use
 import ru.solrudev.okkeipatcher.io.service.HttpDownloader
@@ -28,7 +28,7 @@ import java.io.File
 private val tempZipFilesRegex = Regex("(apk|zip)\\d+")
 
 class ScriptsPatchOperation @AssistedInject constructor(
-	@Assisted private val apk: Apk,
+	@Assisted private val apk: ZipPackage,
 	@Assisted private val scriptsDataRepository: ScriptsDataRepository,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	@ApplicationContext private val applicationContext: Context,
@@ -38,9 +38,7 @@ class ScriptsPatchOperation @AssistedInject constructor(
 	private val operation = aggregateOperation(
 		downloadScripts(),
 		extractScripts(),
-		replaceScripts(),
-		apk.removeSignature(),
-		apk.sign()
+		replaceScripts()
 	)
 
 	override val status = operation.status
@@ -95,6 +93,9 @@ class ScriptsPatchOperation @AssistedInject constructor(
 				apkZip.addFiles(newScripts, parameters)
 			}
 		}
+		status(LocalizedString.resource(R.string.status_signing_apk))
+		apk.removeSignature()
+		apk.sign()
 	}
 
 	private fun deleteTempZipFiles() {

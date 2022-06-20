@@ -15,7 +15,7 @@ class GameFileStrategyFactoryImpl @Inject constructor(
 ) : GameFileStrategyFactory {
 
 	override suspend fun create(): GameFileStrategy {
-		val patchLanguage = preferencesRepository.patchLanguageDao.retrieve()
+		val patchLanguage = preferencesRepository.patchLanguage.retrieve()
 		return strategies.getValue(patchLanguage).get()
 	}
 }

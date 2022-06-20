@@ -38,7 +38,7 @@ interface HttpDownloader {
 		url: String,
 		outputStream: OutputStream,
 		hashing: Boolean = false,
-		onProgressDeltaChanged: suspend (Int) -> Unit
+		onProgressDeltaChanged: suspend (Int) -> Unit = {}
 	): String
 }
 

@@ -15,7 +15,7 @@ class PatchRepositoryFactoryImpl @Inject constructor(
 ) : PatchRepositoryFactory {
 
 	override suspend fun create(): PatchRepository {
-		val patchLanguage = preferencesRepository.patchLanguageDao.retrieve()
+		val patchLanguage = preferencesRepository.patchLanguage.retrieve()
 		return patchRepositories.getValue(patchLanguage).get()
 	}
 }
