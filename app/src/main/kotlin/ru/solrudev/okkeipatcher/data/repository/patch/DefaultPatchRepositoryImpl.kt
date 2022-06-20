@@ -52,7 +52,7 @@ class DefaultPatchRepositoryImpl @Inject constructor(
 	}
 
 	private suspend inline fun isScriptsUpdateAvailable(): Boolean {
-		val isPatched = preferencesRepository.isPatched.retrieve()
+		val isPatched = preferencesRepository.patchStatus.retrieve()
 		if (!isPatched) {
 			return false
 		}
@@ -66,7 +66,7 @@ class DefaultPatchRepositoryImpl @Inject constructor(
 	}
 
 	private suspend inline fun isObbUpdateAvailable(): Boolean {
-		val isPatched = preferencesRepository.isPatched.retrieve()
+		val isPatched = preferencesRepository.patchStatus.retrieve()
 		if (!isPatched) {
 			return false
 		}

@@ -16,7 +16,7 @@ class PatchOperation(
 	private val strategy: PatchStrategy,
 	private val handleSaveData: Boolean,
 	private val patchUpdates: PatchUpdates,
-	private val isPatched: Dao<Boolean>,
+	private val patchStatus: Dao<Boolean>,
 	private val storageChecker: StorageChecker
 ) : Operation<Unit> {
 
@@ -34,7 +34,7 @@ class PatchOperation(
 	 * Throws an exception if conditions for patch are not met.
 	 */
 	suspend fun checkCanPatch() = with(strategy) {
-		val isPatched = isPatched.retrieve()
+		val isPatched = patchStatus.retrieve()
 		if (isPatched && !patchUpdates.available) {
 			throw LocalizedException(LocalizedString.resource(R.string.error_patched))
 		}
@@ -58,7 +58,7 @@ class PatchOperation(
 			obb.patch(),
 			if (handleSaveData) saveData.restore() else emptyOperation(),
 			operation {
-				isPatched.persist(true)
+				patchStatus.persist(true)
 			}
 		)
 	}

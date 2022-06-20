@@ -24,7 +24,7 @@ class PatchOperationFactory @Inject constructor(
 			strategy,
 			handleSaveData,
 			patchUpdates,
-			preferencesRepository.isPatched,
+			preferencesRepository.patchStatus,
 			storageChecker
 		)
 		patchOperation.checkCanPatch()

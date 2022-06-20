@@ -7,7 +7,7 @@ import ru.solrudev.okkeipatcher.ui.core.Event
 sealed interface HomeEvent : Event {
 	data class WorkIsPending(val work: Work) : HomeEvent
 	data class WorkFinished(val success: Boolean) : HomeEvent, HomeEffect
-	data class PatchStatusChecked(val isPatched: Boolean) : HomeEvent
+	data class PatchStatusChanged(val isPatched: Boolean) : HomeEvent
 	object PatchUpdatesAvailable : HomeEvent
 	object PatchUpdatesMessageShown : HomeEvent
 	object NavigatedToWorkScreen : HomeEvent

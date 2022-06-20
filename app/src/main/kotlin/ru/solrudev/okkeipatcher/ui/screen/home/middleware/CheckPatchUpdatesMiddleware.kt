@@ -23,7 +23,7 @@ class CheckPatchUpdatesMiddleware @Inject constructor(
 				.isWorkPending()
 				.collect { isWorkPending = it }
 		}
-		events.collectEvent<PatchStatusChecked> {
+		events.collectEvent<PatchStatusChanged> {
 			// To let the coroutine above collect isWorkPending before proceeding
 			yield()
 			if (!it.isPatched || isWorkPending) {

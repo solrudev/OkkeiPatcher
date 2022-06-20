@@ -19,7 +19,7 @@ class RestoreOperationFactory @Inject constructor(
 		val restoreOperation = RestoreOperation(
 			strategy,
 			handleSaveData,
-			preferencesRepository.isPatched,
+			preferencesRepository.patchStatus,
 			storageChecker
 		)
 		restoreOperation.checkCanRestore()

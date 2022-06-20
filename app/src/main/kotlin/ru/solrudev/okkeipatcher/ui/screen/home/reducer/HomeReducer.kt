@@ -15,7 +15,7 @@ class HomeReducer @Inject constructor(
 		is PatchEvent -> patchReducer.reduce(state, event)
 		is RestoreEvent -> restoreReducer.reduce(state, event)
 		is WorkIsPending -> state.copy(pendingWork = event.work)
-		is PatchStatusChecked -> state.copy(
+		is PatchStatusChanged -> state.copy(
 			isPatchEnabled = !event.isPatched,
 			isRestoreEnabled = event.isPatched,
 			canShowPatchUpdatesMessage = event.isPatched

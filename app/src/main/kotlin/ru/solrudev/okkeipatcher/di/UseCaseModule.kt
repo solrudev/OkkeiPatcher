@@ -48,7 +48,7 @@ interface UseCaseModule {
 	fun bindGetAppChangelogUseCase(getAppChangelogUseCase: GetAppChangelogUseCaseImpl): GetAppChangelogUseCase
 
 	@Binds
-	fun bindGetIsPatchedUseCase(getIsPatchedUseCase: GetIsPatchedUseCaseImpl): GetIsPatchedUseCase
+	fun bindGetIsPatchedUseCase(getIsPatchedFlowUseCase: GetPatchStatusFlowUseCaseImpl): GetPatchStatusFlowUseCase
 
 	@Binds
 	fun bindGetPatchLanguageUseCase(getPatchLanguageUseCase: GetPatchLanguageUseCaseImpl): GetPatchLanguageUseCase

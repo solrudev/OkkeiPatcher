@@ -5,20 +5,18 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import ru.solrudev.okkeipatcher.domain.core.persistence.Dao
+import ru.solrudev.okkeipatcher.domain.core.persistence.ReactiveDao
 
 open class MappedPreference<DomainType, DataType>(
 	private val key: Preferences.Key<DataType>,
 	private val toDataType: (DomainType) -> DataType,
 	private val toDomainType: (DataType?) -> DomainType,
 	private val preferences: DataStore<Preferences>
-) : Dao<DomainType> {
+) : ReactiveDao<DomainType> {
 
-	override suspend fun retrieve() = toDomainType(
-		preferences.data
-			.map { it[key] }
-			.first()
-	)
+	override val flow = preferences.data.map { toDomainType(it[key]) }
+
+	override suspend fun retrieve() = flow.first()
 
 	override suspend fun persist(value: DomainType) {
 		preferences.edit {

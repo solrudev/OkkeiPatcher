@@ -23,7 +23,7 @@ class PreferencesRepositoryImpl @Inject constructor(@ApplicationContext applicat
 	private val Context.dataStore by preferencesDataStore(name = "okkei_preferences")
 	private val preferences = applicationContext.dataStore
 
-	override val isPatched = Preference(key = IS_PATCHED, defaultValue = false, preferences)
+	override val patchStatus = Preference(key = IS_PATCHED, defaultValue = false, preferences)
 
 	override val handleSaveData = Preference(
 		key = HANDLE_SAVE_DATA,

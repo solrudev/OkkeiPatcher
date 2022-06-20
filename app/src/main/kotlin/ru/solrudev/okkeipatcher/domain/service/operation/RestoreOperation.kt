@@ -14,7 +14,7 @@ import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.RestoreStrategy
 class RestoreOperation(
 	private val strategy: RestoreStrategy,
 	private val handleSaveData: Boolean,
-	private val isPatched: Dao<Boolean>,
+	private val patchStatus: Dao<Boolean>,
 	private val storageChecker: StorageChecker
 ) : Operation<Unit> {
 
@@ -27,7 +27,7 @@ class RestoreOperation(
 			operation {
 				apk.deleteBackup()
 				obb.deleteBackup()
-				isPatched.persist(false)
+				patchStatus.persist(false)
 			}
 		)
 	}
@@ -45,7 +45,7 @@ class RestoreOperation(
 	 * Throws an exception if conditions for restoring are not met.
 	 */
 	suspend fun checkCanRestore() {
-		val isPatched = isPatched.retrieve()
+		val isPatched = patchStatus.retrieve()
 		if (!isPatched) {
 			throw LocalizedException(LocalizedString.resource(R.string.error_not_patched))
 		}
