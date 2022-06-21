@@ -28,9 +28,14 @@ interface ProgressOperation<out R> {
 fun <R> ProgressOperation<R>.toOperation(): Operation<R> =
 	if (this is Operation) this else ProgressOperationWrapper(this)
 
-private class ProgressOperationWrapper<out R>(
-	progressOperation: ProgressOperation<R>
+@JvmInline
+private value class ProgressOperationWrapper<out R>(
+	private val progressOperation: ProgressOperation<R>
 ) : Operation<R>, ProgressOperation<R> by progressOperation {
-	override val status = emptyFlow<LocalizedString>()
-	override val messages = emptyFlow<Message>()
+
+	override val status: Flow<LocalizedString>
+		get() = emptyFlow()
+
+	override val messages: Flow<Message>
+		get() = emptyFlow()
 }
