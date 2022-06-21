@@ -9,7 +9,7 @@ import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeEvent
 import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeEvent.PatchStatusChanged
 import javax.inject.Inject
 
-class CheckPatchStatusMiddleware @Inject constructor(
+class ObservePatchStatusMiddleware @Inject constructor(
 	private val getPatchStatusFlowUseCase: GetPatchStatusFlowUseCase
 ) : Middleware<HomeEvent> {
 

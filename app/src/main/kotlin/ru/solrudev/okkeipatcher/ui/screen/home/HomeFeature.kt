@@ -8,7 +8,7 @@ import ru.solrudev.okkeipatcher.ui.screen.home.reducer.HomeReducer
 import javax.inject.Inject
 
 class HomeFeature @Inject constructor(
-	checkPatchStatusMiddleware: CheckPatchStatusMiddleware,
+	observePatchStatusMiddleware: ObservePatchStatusMiddleware,
 	checkPatchUpdatesMiddleware: CheckPatchUpdatesMiddleware,
 	checkPendingWorksMiddleware: CheckPendingWorksMiddleware,
 	enqueuePatchWorkMiddleware: EnqueuePatchWorkMiddleware,
@@ -17,7 +17,7 @@ class HomeFeature @Inject constructor(
 	homeReducer: HomeReducer
 ) : Feature<HomeEvent, HomeUiState>(
 	middlewares = listOf(
-		checkPatchStatusMiddleware,
+		observePatchStatusMiddleware,
 		checkPatchUpdatesMiddleware,
 		checkPendingWorksMiddleware,
 		enqueuePatchWorkMiddleware,
