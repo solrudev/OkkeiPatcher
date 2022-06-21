@@ -14,7 +14,7 @@ plugins {
 	kotlin("kapt")
 	id("dagger.hilt.android.plugin")
 	id("androidx.navigation.safeargs.kotlin")
-	id("com.google.devtools.ksp") version "1.6.21-1.0.5"
+	id("com.google.devtools.ksp") version "1.7.0-1.0.6"
 }
 
 base {
@@ -134,7 +134,7 @@ dependencies {
 	implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
 	implementation("androidx.navigation:navigation-ui-ktx:$navigationVersion")
 	implementation("androidx.room:room-ktx:$roomVersion")
-	implementation("com.google.android.material:material:1.6.0")
+	implementation("com.google.android.material:material:1.6.1")
 	implementation("androidx.datastore:datastore-preferences:1.0.0")
 
 	// I/O
@@ -145,7 +145,7 @@ dependencies {
 	implementation("com.squareup.moshi:moshi:$moshiVersion")
 	implementation("com.squareup.retrofit2:retrofit:$retrofitVersion", excludeOkHttp)
 	implementation("com.squareup.retrofit2:converter-moshi:$retrofitVersion", excludeOkHttp)
-	implementation("io.ktor:ktor-client-okhttp:2.0.0", excludeOkHttp)
+	implementation("io.ktor:ktor-client-okhttp:2.0.2", excludeOkHttp)
 	implementation("com.squareup.okhttp3:okhttp:3.12.13") {
 		because("Android 4.4 support")
 	}
@@ -153,7 +153,7 @@ dependencies {
 	// Miscellaneous
 	implementation("com.android.tools.build:apksig:$androidGradleVersion")
 	implementation("com.anggrayudi:storage:1.3.0")
-	implementation("net.lingala.zip4j:zip4j:2.10.0")
+	implementation("net.lingala.zip4j:zip4j:2.11.0")
 	implementation("io.github.solrudev:simpleinstaller:3.0.2")
 	implementation("com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.6")
 	implementation("com.github.razir.progressbutton:progressbutton:2.1.0")
