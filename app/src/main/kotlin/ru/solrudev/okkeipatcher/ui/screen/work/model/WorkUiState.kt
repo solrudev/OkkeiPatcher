@@ -14,3 +14,6 @@ data class WorkUiState(
 	val errorMessage: MessageUiState = MessageUiState(),
 	val animationsPlayed: Boolean = false
 ) : UiState
+
+val WorkUiState.percentDone: Int
+	get() = (progressData.progress.toDouble() / progressData.max * 100).toInt()

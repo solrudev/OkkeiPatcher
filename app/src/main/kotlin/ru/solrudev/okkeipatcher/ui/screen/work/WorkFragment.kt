@@ -22,6 +22,7 @@ import ru.solrudev.okkeipatcher.ui.core.renderBy
 import ru.solrudev.okkeipatcher.ui.model.shouldShow
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEvent.*
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkUiState
+import ru.solrudev.okkeipatcher.ui.screen.work.model.percentDone
 import ru.solrudev.okkeipatcher.ui.util.extension.*
 
 @AndroidEntryPoint
@@ -62,6 +63,7 @@ class WorkFragment : Fragment(R.layout.fragment_work), FeatureView<WorkUiState> 
 
 	override fun render(uiState: WorkUiState) {
 		binding.textviewWorkStatus.text = uiState.status.resolve(requireContext())
+		binding.textviewWorkPercentDone.text = getString(R.string.percent_done, uiState.percentDone)
 		setProgress(uiState.progressData)
 		if (uiState.isWorkSuccessful) {
 			onWorkSucceeded(playAnimations = !uiState.animationsPlayed)
@@ -127,8 +129,6 @@ class WorkFragment : Fragment(R.layout.fragment_work), FeatureView<WorkUiState> 
 	private fun setProgress(progressData: ProgressData) {
 		binding.progressbarWork.max = progressData.max
 		binding.progressbarWork.setProgressCompat(progressData.progress, true)
-		val percentDone = (progressData.progress.toDouble() / progressData.max * 100).toInt()
-		binding.textviewWorkPercentDone.text = getString(R.string.percent_done, percentDone)
 	}
 
 	private fun showCancelWorkMessage(cancelWorkMessage: Message) {
