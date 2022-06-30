@@ -5,6 +5,7 @@ import androidx.core.os.ConfigurationCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
 import ru.solrudev.okkeipatcher.data.network.model.OkkeiPatcherChangelogDto
 import ru.solrudev.okkeipatcher.domain.repository.app.OkkeiPatcherRepository
+import java.util.*
 import javax.inject.Inject
 
 interface GetAppChangelogUseCase {
@@ -18,6 +19,6 @@ class GetAppChangelogUseCaseImpl @Inject constructor(
 
 	override suspend fun invoke(): OkkeiPatcherChangelogDto {
 		val locale = ConfigurationCompat.getLocales(applicationContext.resources.configuration)[0]
-		return okkeiPatcherRepository.getChangelog(locale)
+		return okkeiPatcherRepository.getChangelog(locale ?: Locale.ENGLISH)
 	}
 }

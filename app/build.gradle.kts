@@ -23,7 +23,7 @@ base {
 
 android {
 	compileSdk = 32
-	buildToolsVersion = "32.0.0"
+	buildToolsVersion = "33.0.0"
 
 	defaultConfig {
 		applicationId = packageName
@@ -125,10 +125,10 @@ dependencies {
 
 	// Jetpack
 	implementation("com.google.dagger:hilt-android:$hiltVersion")
-	implementation("androidx.activity:activity-ktx:1.4.0")
+	implementation("androidx.activity:activity-ktx:1.5.0")
 	implementation("androidx.preference:preference-ktx:1.2.0")
-	implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.4.1")
-	implementation("androidx.fragment:fragment-ktx:1.4.1")
+	implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.5.0")
+	implementation("androidx.fragment:fragment-ktx:1.5.0")
 	implementation("androidx.hilt:hilt-work:1.0.0")
 	implementation("androidx.work:work-runtime-ktx:2.7.1")
 	implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
