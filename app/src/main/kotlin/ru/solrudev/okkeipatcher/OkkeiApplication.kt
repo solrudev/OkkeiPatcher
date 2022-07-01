@@ -27,7 +27,7 @@ class OkkeiApplication : Application(), Configuration.Provider {
 	override fun onCreate() {
 		super.onCreate()
 		instance = this
-		SimpleInstaller.initialize(this, R.mipmap.ic_launcher_foreground)
+		SimpleInstaller.setNotificationIcon(R.mipmap.ic_launcher_foreground)
 		connectivityRepository.startNetworkMonitoring()
 		createNotificationChannels()
 	}
