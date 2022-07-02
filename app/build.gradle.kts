@@ -141,11 +141,11 @@ dependencies {
 	val excludeOkHttp = Action<ExternalModuleDependency> {
 		exclude(group = "com.squareup.okhttp3", module = "okhttp")
 	}
-	implementation("com.squareup.okio:okio:3.1.0")
+	implementation("com.squareup.okio:okio:3.2.0")
 	implementation("com.squareup.moshi:moshi:$moshiVersion")
 	implementation("com.squareup.retrofit2:retrofit:$retrofitVersion", excludeOkHttp)
 	implementation("com.squareup.retrofit2:converter-moshi:$retrofitVersion", excludeOkHttp)
-	implementation("io.ktor:ktor-client-okhttp:2.0.2", excludeOkHttp)
+	implementation("io.ktor:ktor-client-okhttp:2.0.3", excludeOkHttp)
 	implementation("com.squareup.okhttp3:okhttp:3.12.13") {
 		because("Android 4.4 support")
 	}
@@ -153,8 +153,8 @@ dependencies {
 	// Miscellaneous
 	implementation("com.android.tools.build:apksig:$androidGradleVersion")
 	implementation("com.anggrayudi:storage:1.3.0")
-	implementation("net.lingala.zip4j:zip4j:2.11.0")
-	implementation("io.github.solrudev:simpleinstaller:3.1.0")
+	implementation("net.lingala.zip4j:zip4j:2.11.1")
+	implementation("io.github.solrudev:simpleinstaller:3.1.1")
 	implementation("com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.6")
 	implementation("com.github.razir.progressbutton:progressbutton:2.1.0")
 
