@@ -16,13 +16,3 @@ interface ApkFile {
 	suspend fun create()
 	suspend fun verify(): Boolean
 }
-
-abstract class AbstractApkFile(override val file: File) : ApkFile {
-
-	override val exists: Boolean
-		get() = file.exists()
-
-	override fun delete() {
-		file.delete()
-	}
-}

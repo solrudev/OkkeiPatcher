@@ -32,3 +32,10 @@ interface Persistable<in T> {
 interface ReactiveRetrievable<out T> {
 	val flow: Flow<T>
 }
+
+/**
+ * [Persistable] which does nothing.
+ */
+object EmptyPersistable : Persistable<Any?> {
+	override suspend fun persist(value: Any?) {}
+}
