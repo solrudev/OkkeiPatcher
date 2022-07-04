@@ -6,7 +6,7 @@ import com.anggrayudi.storage.file.makeFile
 import com.anggrayudi.storage.file.openInputStream
 import com.anggrayudi.storage.file.openOutputStream
 import ru.solrudev.okkeipatcher.OkkeiApplication
-import ru.solrudev.okkeipatcher.io.service.StreamCopier
+import ru.solrudev.okkeipatcher.domain.service.StreamCopier
 import java.io.IOException
 
 class DocumentFile(private val path: String, name: String, streamCopier: StreamCopier) : AbstractFile(streamCopier) {

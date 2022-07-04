@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.domain.util.extension
+package ru.solrudev.okkeipatcher.domain.service.util
 
 import net.lingala.zip4j.ZipFile
 

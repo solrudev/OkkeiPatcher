@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.io.util
+package ru.solrudev.okkeipatcher.domain.service.util
 
 import java.io.OutputStream
 

@@ -1,12 +1,14 @@
-package ru.solrudev.okkeipatcher.io.service
+package ru.solrudev.okkeipatcher.domain.service
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 import okio.*
 import ru.solrudev.okkeipatcher.di.IoDispatcher
-import ru.solrudev.okkeipatcher.io.util.BlackholeOutputStream
-import ru.solrudev.okkeipatcher.io.util.calculateProgressRatio
+import ru.solrudev.okkeipatcher.domain.service.util.BlackholeOutputStream
+import ru.solrudev.okkeipatcher.domain.service.util.calculateProgressRatio
+import ru.solrudev.okkeipatcher.domain.service.util.recreate
+import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
 import javax.inject.Inject
@@ -33,11 +35,26 @@ interface StreamCopier {
 	): String
 }
 
+suspend inline fun StreamCopier.copy(
+	inputFile: File,
+	outputFile: File,
+	hashing: Boolean = false,
+	noinline onProgressDeltaChanged: suspend (Int) -> Unit = {}
+): String {
+	outputFile.recreate()
+	return copy(inputFile.inputStream(), outputFile.outputStream(), inputFile.length(), hashing, onProgressDeltaChanged)
+}
+
 suspend inline fun StreamCopier.computeHash(
 	inputStream: InputStream,
 	size: Long,
 	noinline onProgressDeltaChanged: suspend (Int) -> Unit = {}
 ) = copy(inputStream, BlackholeOutputStream, size, hashing = true, onProgressDeltaChanged)
+
+suspend inline fun StreamCopier.computeHash(
+	file: File,
+	noinline onProgressDeltaChanged: suspend (Int) -> Unit = {}
+) = computeHash(file.inputStream(), file.length(), onProgressDeltaChanged)
 
 class StreamCopierImpl @Inject constructor(
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher

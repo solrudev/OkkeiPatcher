@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.io.service
+package ru.solrudev.okkeipatcher.domain.service
 
 import io.ktor.client.*
 import io.ktor.client.engine.okhttp.*
@@ -15,9 +15,10 @@ import okio.blackholeSink
 import okio.buffer
 import okio.sink
 import ru.solrudev.okkeipatcher.di.IoDispatcher
-import ru.solrudev.okkeipatcher.io.exception.HttpStatusCodeException
-import ru.solrudev.okkeipatcher.io.util.BlackholeOutputStream
-import ru.solrudev.okkeipatcher.io.util.calculateProgressRatio
+import ru.solrudev.okkeipatcher.domain.service.util.BlackholeOutputStream
+import ru.solrudev.okkeipatcher.domain.service.util.calculateProgressRatio
+import ru.solrudev.okkeipatcher.domain.service.util.recreate
+import java.io.File
 import java.io.OutputStream
 import javax.inject.Inject
 import kotlin.io.use
@@ -40,6 +41,22 @@ interface HttpDownloader {
 		hashing: Boolean = false,
 		onProgressDeltaChanged: suspend (Int) -> Unit = {}
 	): String
+}
+
+/**
+ * @param hashing Does output stream need to be hashed. Default is `false`.
+ * @return File hash. Empty string if [hashing] is `false`.
+ */
+suspend inline fun HttpDownloader.download(
+	url: String,
+	outputFile: File,
+	hashing: Boolean = false,
+	noinline onProgressDeltaChanged: suspend (Int) -> Unit
+): String {
+	outputFile.recreate()
+	outputFile.outputStream().use { outputStream ->
+		return download(url, outputStream, hashing, onProgressDeltaChanged)
+	}
 }
 
 class HttpDownloaderImpl @Inject constructor(
@@ -65,9 +82,6 @@ class HttpDownloaderImpl @Inject constructor(
 		onProgressDeltaChanged: suspend (Int) -> Unit
 	) = withContext(ioDispatcher) {
 		client.prepareGet(url).execute { httpResponse ->
-			if (httpResponse.status.value != 200) {
-				throw HttpStatusCodeException(httpResponse.status)
-			}
 			val channel = httpResponse.bodyAsChannel()
 			val contentLength = httpResponse.contentLength() ?: Int.MAX_VALUE.toLong()
 			val progressRatio = calculateProgressRatio(contentLength, BUFFER_LENGTH)

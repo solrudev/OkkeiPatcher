@@ -5,13 +5,13 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.network.api.OkkeiPatcherApi
 import ru.solrudev.okkeipatcher.data.network.model.OkkeiPatcherChangelogDto
+import ru.solrudev.okkeipatcher.data.util.versionCode
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
 import ru.solrudev.okkeipatcher.domain.repository.app.OkkeiPatcherRepository
-import ru.solrudev.okkeipatcher.domain.util.extension.versionCode
-import ru.solrudev.okkeipatcher.io.service.HttpDownloader
-import ru.solrudev.okkeipatcher.io.util.extension.download
+import ru.solrudev.okkeipatcher.domain.service.HttpDownloader
+import ru.solrudev.okkeipatcher.domain.service.download
 import java.io.File
 import java.util.*
 import javax.inject.Inject
@@ -43,9 +43,7 @@ class OkkeiPatcherRepositoryImpl @Inject constructor(
 		isUpdateDownloaded = false
 		try {
 			val updateData = okkeiPatcherApi.getOkkeiPatcherData()
-			val updateHash = httpDownloader.download(updateData.url, updateFile, hashing = true) { progressDelta ->
-				progressDelta(progressDelta)
-			}
+			val updateHash = httpDownloader.download(updateData.url, updateFile, hashing = true, ::progressDelta)
 			if (updateHash != updateData.hash) {
 				throw LocalizedException(LocalizedString.resource(R.string.error_update_app_corrupted))
 			}

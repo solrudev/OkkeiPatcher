@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.domain.util.extension
+package ru.solrudev.okkeipatcher.data.util
 
 import android.content.Context
 import android.os.Build

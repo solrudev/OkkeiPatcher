@@ -12,9 +12,9 @@ import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.AbstractApkFile
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
-import ru.solrudev.okkeipatcher.io.service.StreamCopier
-import ru.solrudev.okkeipatcher.io.service.computeHash
-import ru.solrudev.okkeipatcher.io.util.extension.recreate
+import ru.solrudev.okkeipatcher.domain.service.StreamCopier
+import ru.solrudev.okkeipatcher.domain.service.computeHash
+import ru.solrudev.okkeipatcher.domain.service.copy
 import ru.solrudev.okkeipatcher.util.Preferences
 import java.io.File
 import javax.inject.Inject
@@ -68,7 +68,7 @@ class ApkRepositoryImpl @Inject constructor(
 		if (savedHash.isEmpty() || !file.exists()) {
 			return false
 		}
-		val fileHash = streamCopier.computeHash(file.inputStream(), file.length())
+		val fileHash = streamCopier.computeHash(file)
 		return fileHash == savedHash
 	}
 
@@ -86,10 +86,7 @@ class ApkRepositoryImpl @Inject constructor(
 				.applicationInfo
 				.publicSourceDir
 			val installedApk = File(installedApkPath)
-			val input = installedApk.inputStream()
-			destinationFile.recreate()
-			val output = destinationFile.outputStream()
-			return streamCopier.copy(input, output, installedApk.length(), hashing)
+			return streamCopier.copy(installedApk, destinationFile, hashing)
 		} catch (t: Throwable) {
 			destinationFile.delete()
 			throw t

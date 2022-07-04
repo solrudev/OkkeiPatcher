@@ -1,11 +1,11 @@
 package ru.solrudev.okkeipatcher.domain.file
 
 import android.os.Environment
+import ru.solrudev.okkeipatcher.domain.service.StreamCopier
 import ru.solrudev.okkeipatcher.io.file.DocumentFile
 import ru.solrudev.okkeipatcher.io.file.File
 import ru.solrudev.okkeipatcher.io.file.JavaFile
 import ru.solrudev.okkeipatcher.io.file.VerifiableFile
-import ru.solrudev.okkeipatcher.io.service.StreamCopier
 
 sealed class OriginalSaveData(
 	implementation: File,

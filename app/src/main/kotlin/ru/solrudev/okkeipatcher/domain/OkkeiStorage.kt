@@ -2,14 +2,9 @@ package ru.solrudev.okkeipatcher.domain
 
 import android.content.Context
 import android.os.Environment
-import ru.solrudev.okkeipatcher.OkkeiApplication
 import java.io.File
 
 private const val TWO_GB: Long = 2_147_483_648
-
-object OkkeiStorage {
-	val backup = OkkeiApplication.context.backupDir
-}
 
 val Context.externalDir: File
 	get() {

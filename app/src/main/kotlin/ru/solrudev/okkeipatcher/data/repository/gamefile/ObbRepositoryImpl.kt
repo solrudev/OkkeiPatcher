@@ -11,9 +11,9 @@ import ru.solrudev.okkeipatcher.domain.file.CommonFileHashKey
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbRepository
-import ru.solrudev.okkeipatcher.io.service.StreamCopier
-import ru.solrudev.okkeipatcher.io.service.computeHash
-import ru.solrudev.okkeipatcher.io.util.extension.recreate
+import ru.solrudev.okkeipatcher.domain.service.StreamCopier
+import ru.solrudev.okkeipatcher.domain.service.computeHash
+import ru.solrudev.okkeipatcher.domain.service.copy
 import ru.solrudev.okkeipatcher.util.Preferences
 import java.io.File
 import javax.inject.Inject
@@ -47,13 +47,7 @@ class ObbRepositoryImpl @Inject constructor(
 			throw LocalizedException(LocalizedString.resource(R.string.error_obb_not_found))
 		}
 		try {
-			backup.recreate()
-			val hash = streamCopier.copy(
-				obbFile.inputStream(),
-				backup.outputStream(),
-				obbFile.length(),
-				hashing = true
-			) {
+			val hash = streamCopier.copy(obbFile, backup, hashing = true) {
 				progressDelta(it * 6)
 			}
 			Preferences.set(CommonFileHashKey.backup_obb_hash.name, hash)
@@ -70,8 +64,7 @@ class ObbRepositoryImpl @Inject constructor(
 			throw LocalizedException(LocalizedString.resource(R.string.error_obb_not_found))
 		}
 		try {
-			obbFile.recreate()
-			streamCopier.copy(backup.inputStream(), obbFile.outputStream(), backup.length()) {
+			streamCopier.copy(backup, obbFile) {
 				progressDelta(it * 3)
 			}
 		} catch (t: Throwable) {
@@ -87,9 +80,7 @@ class ObbRepositoryImpl @Inject constructor(
 		if (savedHash.isEmpty() || !backup.exists()) {
 			return@operation false
 		}
-		val fileHash = streamCopier.computeHash(backup.inputStream(), backup.length()) {
-			progressDelta(it)
-		}
+		val fileHash = streamCopier.computeHash(backup, ::progressDelta)
 		fileHash == savedHash
 	}
 }

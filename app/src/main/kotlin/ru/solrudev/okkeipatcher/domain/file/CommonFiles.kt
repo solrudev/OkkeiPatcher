@@ -1,8 +1,8 @@
 package ru.solrudev.okkeipatcher.domain.file
 
 import android.os.Build
+import ru.solrudev.okkeipatcher.domain.service.StreamCopier
 import ru.solrudev.okkeipatcher.io.file.VerifiableFile
-import ru.solrudev.okkeipatcher.io.service.StreamCopier
 import javax.inject.Inject
 
 class CommonFiles @Inject constructor(streamCopier: StreamCopier) {

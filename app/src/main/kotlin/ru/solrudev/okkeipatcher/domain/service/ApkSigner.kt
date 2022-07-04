@@ -7,9 +7,7 @@ import kotlinx.coroutines.withContext
 import net.lingala.zip4j.ZipFile
 import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.file.CommonFileHashKey
-import ru.solrudev.okkeipatcher.domain.util.extension.use
-import ru.solrudev.okkeipatcher.io.service.StreamCopier
-import ru.solrudev.okkeipatcher.io.service.computeHash
+import ru.solrudev.okkeipatcher.domain.service.util.use
 import ru.solrudev.okkeipatcher.util.Preferences
 import java.io.File
 import java.security.KeyFactory
@@ -52,7 +50,7 @@ class ApkSignerImpl @Inject constructor(
 		}
 		Preferences.set(
 			CommonFileHashKey.signed_apk_hash.name,
-			streamCopier.computeHash(outputApk.inputStream(), outputApk.length())
+			streamCopier.computeHash(outputApk)
 		)
 		apk.delete()
 		outputApk.renameTo(apk)

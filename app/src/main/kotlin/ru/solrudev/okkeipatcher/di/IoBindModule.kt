@@ -5,10 +5,10 @@ import dagger.Module
 import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import ru.solrudev.okkeipatcher.io.service.HttpDownloader
-import ru.solrudev.okkeipatcher.io.service.HttpDownloaderImpl
-import ru.solrudev.okkeipatcher.io.service.StreamCopier
-import ru.solrudev.okkeipatcher.io.service.StreamCopierImpl
+import ru.solrudev.okkeipatcher.domain.service.HttpDownloader
+import ru.solrudev.okkeipatcher.domain.service.HttpDownloaderImpl
+import ru.solrudev.okkeipatcher.domain.service.StreamCopier
+import ru.solrudev.okkeipatcher.domain.service.StreamCopierImpl
 
 @InstallIn(SingletonComponent::class)
 @Module

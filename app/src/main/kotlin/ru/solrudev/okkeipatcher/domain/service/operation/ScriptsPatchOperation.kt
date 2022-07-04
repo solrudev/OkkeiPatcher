@@ -17,11 +17,11 @@ import ru.solrudev.okkeipatcher.domain.externalDir
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
 import ru.solrudev.okkeipatcher.domain.repository.patch.ScriptsDataRepository
+import ru.solrudev.okkeipatcher.domain.service.HttpDownloader
+import ru.solrudev.okkeipatcher.domain.service.download
 import ru.solrudev.okkeipatcher.domain.service.gamefile.ZipPackage
 import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.english.PatchFileVersionKey
-import ru.solrudev.okkeipatcher.domain.util.extension.use
-import ru.solrudev.okkeipatcher.io.service.HttpDownloader
-import ru.solrudev.okkeipatcher.io.util.extension.recreate
+import ru.solrudev.okkeipatcher.domain.service.util.use
 import ru.solrudev.okkeipatcher.util.Preferences
 import java.io.File
 
@@ -61,11 +61,7 @@ class ScriptsPatchOperation @AssistedInject constructor(
 	private fun downloadScripts() = operation(progressMax = httpDownloader.progressMax) {
 		status(LocalizedString.resource(R.string.status_downloading_scripts))
 		val scriptsData = scriptsDataRepository.getScriptsData()
-		scriptsFile.recreate()
-		val outputStream = scriptsFile.outputStream()
-		val scriptsHash = httpDownloader.download(scriptsData.url, outputStream, hashing = true) { progressDelta ->
-			progressDelta(progressDelta)
-		}
+		val scriptsHash = httpDownloader.download(scriptsData.url, scriptsFile, hashing = true, ::progressDelta)
 		if (scriptsHash != scriptsData.hash) {
 			throw LocalizedException(LocalizedString.resource(R.string.error_hash_scripts_mismatch))
 		}

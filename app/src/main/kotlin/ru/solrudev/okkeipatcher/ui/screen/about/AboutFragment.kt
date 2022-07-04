@@ -6,8 +6,8 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import by.kirich1409.viewbindingdelegate.viewBinding
 import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.data.util.versionCode
 import ru.solrudev.okkeipatcher.databinding.FragmentAboutBinding
-import ru.solrudev.okkeipatcher.domain.util.extension.versionCode
 import ru.solrudev.okkeipatcher.ui.util.extension.prepareOptionsMenu
 import ru.solrudev.okkeipatcher.ui.util.extension.setupTransitions
 

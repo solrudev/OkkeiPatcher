@@ -1,6 +1,6 @@
 package ru.solrudev.okkeipatcher.io.file
 
-import ru.solrudev.okkeipatcher.io.service.StreamCopier
+import ru.solrudev.okkeipatcher.domain.service.StreamCopier
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
