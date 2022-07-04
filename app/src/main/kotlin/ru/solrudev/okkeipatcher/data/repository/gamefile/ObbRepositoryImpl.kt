@@ -7,14 +7,13 @@ import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.backupDir
 import ru.solrudev.okkeipatcher.domain.core.operation.ProgressOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
-import ru.solrudev.okkeipatcher.domain.file.CommonFileHashKey
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
+import ru.solrudev.okkeipatcher.domain.repository.app.CommonFilesHashRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbRepository
 import ru.solrudev.okkeipatcher.domain.service.StreamCopier
 import ru.solrudev.okkeipatcher.domain.service.computeHash
 import ru.solrudev.okkeipatcher.domain.service.copy
-import ru.solrudev.okkeipatcher.util.Preferences
 import java.io.File
 import javax.inject.Inject
 
@@ -23,6 +22,7 @@ private const val OBB_FILE_NAME = "main.87.com.mages.chaoschild_jp.obb"
 
 class ObbRepositoryImpl @Inject constructor(
 	private val streamCopier: StreamCopier,
+	private val commonFilesHashRepository: CommonFilesHashRepository,
 	@ApplicationContext applicationContext: Context
 ) : ObbRepository {
 
@@ -50,7 +50,7 @@ class ObbRepositoryImpl @Inject constructor(
 			val hash = streamCopier.copy(obbFile, backup, hashing = true) {
 				progressDelta(it * 6)
 			}
-			Preferences.set(CommonFileHashKey.backup_obb_hash.name, hash)
+			commonFilesHashRepository.backupObbHash.persist(hash)
 		} catch (t: Throwable) {
 			backup.delete()
 			throw t
@@ -76,7 +76,7 @@ class ObbRepositoryImpl @Inject constructor(
 	override fun verifyBackup() = operation(
 		progressMax = streamCopier.progressMax
 	) {
-		val savedHash = Preferences.get(CommonFileHashKey.backup_obb_hash.name, "")
+		val savedHash = commonFilesHashRepository.backupObbHash.retrieve()
 		if (savedHash.isEmpty() || !backup.exists()) {
 			return@operation false
 		}

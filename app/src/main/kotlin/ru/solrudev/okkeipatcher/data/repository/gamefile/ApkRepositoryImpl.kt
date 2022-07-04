@@ -7,15 +7,14 @@ import io.github.solrudev.simpleinstaller.PackageUninstaller
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.backupDir
 import ru.solrudev.okkeipatcher.domain.externalDir
-import ru.solrudev.okkeipatcher.domain.file.CommonFileHashKey
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
+import ru.solrudev.okkeipatcher.domain.repository.app.CommonFilesHashRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.AbstractApkFile
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
 import ru.solrudev.okkeipatcher.domain.service.StreamCopier
 import ru.solrudev.okkeipatcher.domain.service.computeHash
 import ru.solrudev.okkeipatcher.domain.service.copy
-import ru.solrudev.okkeipatcher.util.Preferences
 import java.io.File
 import javax.inject.Inject
 
@@ -23,6 +22,7 @@ private const val PACKAGE_NAME = "com.mages.chaoschild_jp"
 
 class ApkRepositoryImpl @Inject constructor(
 	@ApplicationContext private val applicationContext: Context,
+	private val commonFilesHashRepository: CommonFilesHashRepository,
 	private val streamCopier: StreamCopier,
 	private val packageUninstaller: PackageUninstaller
 ) : ApkRepository {
@@ -44,10 +44,13 @@ class ApkRepositoryImpl @Inject constructor(
 
 		override suspend fun create() {
 			val hash = copyInstalledApkTo(file, hashing = true)
-			Preferences.set(CommonFileHashKey.backup_apk_hash.name, hash)
+			commonFilesHashRepository.backupApkHash.persist(hash)
 		}
 
-		override suspend fun verify() = verify(file, CommonFileHashKey.backup_apk_hash.name)
+		override suspend fun verify(): Boolean {
+			val savedHash = commonFilesHashRepository.backupApkHash.retrieve()
+			return compareHash(file, savedHash)
+		}
 	}
 
 	override val tempApk = object : AbstractApkFile(
@@ -58,13 +61,15 @@ class ApkRepositoryImpl @Inject constructor(
 			copyInstalledApkTo(file)
 		}
 
-		override suspend fun verify() = verify(file, CommonFileHashKey.signed_apk_hash.name)
+		override suspend fun verify(): Boolean {
+			val savedHash = commonFilesHashRepository.signedApkHash.retrieve()
+			return compareHash(file, savedHash)
+		}
 	}
 
 	override suspend fun uninstall() = packageUninstaller.uninstallPackage(PACKAGE_NAME)
 
-	private suspend fun verify(file: File, key: String): Boolean {
-		val savedHash = Preferences.get(key, "")
+	private suspend fun compareHash(file: File, savedHash: String): Boolean {
 		if (savedHash.isEmpty() || !file.exists()) {
 			return false
 		}

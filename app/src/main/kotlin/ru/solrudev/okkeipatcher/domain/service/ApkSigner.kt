@@ -6,9 +6,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import net.lingala.zip4j.ZipFile
 import ru.solrudev.okkeipatcher.di.IoDispatcher
-import ru.solrudev.okkeipatcher.domain.file.CommonFileHashKey
+import ru.solrudev.okkeipatcher.domain.repository.app.CommonFilesHashRepository
 import ru.solrudev.okkeipatcher.domain.service.util.use
-import ru.solrudev.okkeipatcher.util.Preferences
 import java.io.File
 import java.security.KeyFactory
 import java.security.cert.CertificateFactory
@@ -27,6 +26,7 @@ interface ApkSigner {
 class ApkSignerImpl @Inject constructor(
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	@ApplicationContext private val applicationContext: Context,
+	private val commonFilesHashRepository: CommonFilesHashRepository,
 	private val streamCopier: StreamCopier
 ) : ApkSigner {
 
@@ -48,10 +48,8 @@ class ApkSignerImpl @Inject constructor(
 		withContext(ioDispatcher) {
 			apkSigner.sign()
 		}
-		Preferences.set(
-			CommonFileHashKey.signed_apk_hash.name,
-			streamCopier.computeHash(outputApk)
-		)
+		val outputApkHash = streamCopier.computeHash(outputApk)
+		commonFilesHashRepository.signedApkHash.persist(outputApkHash)
 		apk.delete()
 		outputApk.renameTo(apk)
 	}
