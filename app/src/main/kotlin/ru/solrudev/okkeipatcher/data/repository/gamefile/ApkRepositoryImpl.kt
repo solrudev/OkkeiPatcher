@@ -77,7 +77,7 @@ private class ApkFileImpl(
 		return compareHash(file, savedHash)
 	}
 
-	private suspend fun compareHash(file: File, savedHash: String): Boolean {
+	private suspend inline fun compareHash(file: File, savedHash: String): Boolean {
 		if (savedHash.isEmpty() || !file.exists()) {
 			return false
 		}
@@ -88,7 +88,7 @@ private class ApkFileImpl(
 	/**
 	 * @return File hash.
 	 */
-	private suspend fun copyInstalledApkTo(destinationFile: File) = try {
+	private suspend inline fun copyInstalledApkTo(destinationFile: File) = try {
 		if (!applicationContext.isPackageInstalled(PACKAGE_NAME)) {
 			throw LocalizedException(LocalizedString.resource(R.string.error_game_not_found))
 		}
