@@ -1,7 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.screen.home.middleware
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import ru.solrudev.okkeipatcher.domain.usecase.app.GetPatchStatusFlowUseCase
 import ru.solrudev.okkeipatcher.ui.core.Middleware
@@ -13,9 +12,5 @@ class ObservePatchStatusMiddleware @Inject constructor(
 	private val getPatchStatusFlowUseCase: GetPatchStatusFlowUseCase
 ) : Middleware<HomeEvent> {
 
-	override fun apply(events: Flow<HomeEvent>) = flow {
-		getPatchStatusFlowUseCase()
-			.map { PatchStatusChanged(it) }
-			.collect(::emit)
-	}
+	override fun apply(events: Flow<HomeEvent>) = getPatchStatusFlowUseCase().map { PatchStatusChanged(it) }
 }

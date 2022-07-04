@@ -5,11 +5,11 @@ import ru.solrudev.okkeipatcher.domain.repository.app.PreferencesRepository
 import javax.inject.Inject
 
 interface GetPatchStatusFlowUseCase {
-	suspend operator fun invoke(): Flow<Boolean>
+	operator fun invoke(): Flow<Boolean>
 }
 
 class GetPatchStatusFlowUseCaseImpl @Inject constructor(private val preferencesRepository: PreferencesRepository) :
 	GetPatchStatusFlowUseCase {
 
-	override suspend fun invoke() = preferencesRepository.patchStatus.flow
+	override fun invoke() = preferencesRepository.patchStatus.flow
 }
