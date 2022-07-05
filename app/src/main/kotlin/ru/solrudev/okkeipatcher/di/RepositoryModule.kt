@@ -10,6 +10,7 @@ import ru.solrudev.okkeipatcher.data.repository.app.OkkeiPatcherRepositoryImpl
 import ru.solrudev.okkeipatcher.data.repository.app.PreferencesRepositoryImpl
 import ru.solrudev.okkeipatcher.data.repository.gamefile.ApkRepositoryImpl
 import ru.solrudev.okkeipatcher.data.repository.gamefile.ObbRepositoryImpl
+import ru.solrudev.okkeipatcher.data.repository.gamefile.SaveDataRepositoryImpl
 import ru.solrudev.okkeipatcher.data.repository.work.WorkRepositoryImpl
 import ru.solrudev.okkeipatcher.domain.repository.app.CommonFilesHashRepository
 import ru.solrudev.okkeipatcher.domain.repository.app.ConnectivityRepository
@@ -17,6 +18,7 @@ import ru.solrudev.okkeipatcher.domain.repository.app.OkkeiPatcherRepository
 import ru.solrudev.okkeipatcher.domain.repository.app.PreferencesRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbRepository
+import ru.solrudev.okkeipatcher.domain.repository.gamefile.SaveDataRepository
 import ru.solrudev.okkeipatcher.domain.repository.work.WorkRepository
 import javax.inject.Singleton
 
@@ -59,6 +61,12 @@ interface RepositoryModule {
 	fun bindObbRepository(
 		obbRepository: ObbRepositoryImpl
 	): ObbRepository
+
+	@Binds
+	@Singleton
+	fun bindSaveDataRepository(
+		saveDataRepository: SaveDataRepositoryImpl
+	): SaveDataRepository
 
 	@Binds
 	@Singleton

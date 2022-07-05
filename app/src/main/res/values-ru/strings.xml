@@ -79,6 +79,7 @@
 	<string name="status_downloading_scripts">Загрузка скриптов…</string>
 	<string name="status_extracting_scripts">Распаковка скриптов…</string>
 	<string name="status_installing">Установка…</string>
+	<string name="status_persisting_save_data">Запись файла сохранений…</string>
 	<string name="status_removing_signature">Удаление старой подписи…</string>
 	<string name="status_replacing_scripts">Замена скриптов…</string>
 	<string name="status_restoring_obb">Восстановление OBB…</string>
@@ -90,15 +91,14 @@
 	<string name="status_writing_apk_hash">Запись хэша APK…</string>
 	<string name="status_writing_obb_hash">Запись хэша OBB…</string>
 	<string name="status_writing_patched_apk_hash">Запись хэша модифицированного APK…</string>
-	<string name="status_writing_save_data_hash">Запись хэша файла сохранений…</string>
 	<string name="status_writing_scripts_hash">Запись хэша скриптов…</string>
 
 	<!--Warnings-->
 	<string name="warning">Предупреждение</string>
 	<string name="warning_abort_title">Остановить процесс?</string>
 	<string name="warning_abort">Если Вы остановите процесс, данные установки CHAOS;CHILD и/или данные Okkei Patcher могут быть повреждены.</string>
+	<string name="warning_could_not_backup_save_data">Не удалось создать резервную копию текущих игровых сохранений.</string>
 	<string name="warning_save_data_backup_not_found_or_corrupted">Резервная копия игровых сохранений не найдена или повреждена и не будет восстановлена.</string>
-	<string name="warning_save_data_not_found">Игровые сохранения не найдены. Резервная копия игровых сохранений не будет создана.</string>
 	<string name="warning_start_patch_title">Начать применение патча?</string>
 	<string name="warning_start_patch">Будет загружено %.2f МБ данных. Если Вы остановите процесс, данные установки CHAOS;CHILD и/или данные Okkei Patcher могут быть повреждены.</string>
 	<string name="warning_start_restore_title">Начать восстановление?</string>

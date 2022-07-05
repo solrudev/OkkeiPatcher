@@ -85,6 +85,7 @@
 	<string name="status_downloading_scripts">Downloading scripts…</string>
 	<string name="status_extracting_scripts">Extracting scripts…</string>
 	<string name="status_installing">Installing…</string>
+	<string name="status_persisting_save_data">Persisting save data…</string>
 	<string name="status_removing_signature">Removing old signature…</string>
 	<string name="status_replacing_scripts">Replacing scripts…</string>
 	<string name="status_restoring_obb">Restoring OBB…</string>
@@ -96,15 +97,14 @@
 	<string name="status_writing_apk_hash">Writing APK checksum…</string>
 	<string name="status_writing_obb_hash">Writing OBB checksum…</string>
 	<string name="status_writing_patched_apk_hash">Writing patched APK checksum…</string>
-	<string name="status_writing_save_data_hash">Writing save data checksum…</string>
 	<string name="status_writing_scripts_hash">Writing scripts checksum…</string>
 
 	<!--Warnings-->
 	<string name="warning">Warning</string>
 	<string name="warning_abort_title">Abort process?</string>
 	<string name="warning_abort">If you abort the process your CHAOS;CHILD installation and/or Okkei Patcher data may be damaged.</string>
+	<string name="warning_could_not_backup_save_data">Could not backup your current game save data.</string>
 	<string name="warning_save_data_backup_not_found_or_corrupted">Game save data backup was not found or is corrupted and won\'t be restored.</string>
-	<string name="warning_save_data_not_found">Game save data was not found. Backup of your current game save data won\'t be created.</string>
 	<string name="warning_start_patch_title">Start patch?</string>
 	<string name="warning_start_patch">You\'re about to download %.2f MB of data. If you abort the process your CHAOS;CHILD installation and/or Okkei Patcher data may be damaged.</string>
 	<string name="warning_start_restore_title">Start restoring?</string>
