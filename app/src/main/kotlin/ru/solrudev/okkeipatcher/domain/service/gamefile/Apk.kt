@@ -82,9 +82,9 @@ abstract class Apk(
 		}
 	}
 
-	private fun install(apkFactory: suspend () -> String) = operation(progressMax = 100) {
+	private fun install(apkPathFactory: suspend () -> String) = operation(progressMax = 100) {
 		status(LocalizedString.resource(R.string.status_installing))
-		val apk = File(apkFactory())
+		val apk = File(apkPathFactory())
 		if (!apk.exists()) {
 			throw LocalizedException(LocalizedString.resource(R.string.error_apk_not_found))
 		}

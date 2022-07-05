@@ -5,6 +5,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import ru.solrudev.okkeipatcher.data.core.InMemoryCache
 import ru.solrudev.okkeipatcher.data.network.api.patch.DefaultPatchApi
+import ru.solrudev.okkeipatcher.data.repository.patch.mapper.toPatchFileData
 import ru.solrudev.okkeipatcher.domain.model.patchupdates.DefaultPatchUpdates
 import ru.solrudev.okkeipatcher.domain.repository.app.PreferencesRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.DefaultPatchRepository
@@ -23,7 +24,7 @@ class DefaultPatchRepositoryImpl @Inject constructor(
 	override val scripts = PatchFileImpl(
 		cache = patchDataCache,
 		name = "scripts",
-		selector = { it.scripts },
+		selector = { it.scripts.toPatchFileData() },
 		patchStatus = preferencesRepository.patchStatus,
 		preferences
 	)
@@ -31,7 +32,7 @@ class DefaultPatchRepositoryImpl @Inject constructor(
 	override val obb = PatchFileImpl(
 		cache = patchDataCache,
 		name = "obb",
-		selector = { it.obb },
+		selector = { it.obb.toPatchFileData() },
 		patchStatus = preferencesRepository.patchStatus,
 		preferences
 	)
