@@ -38,12 +38,8 @@ class PatchOperation(
 		if (isPatched && !patchUpdates.available) {
 			throw LocalizedException(LocalizedString.resource(R.string.error_patched))
 		}
-		apk.canPatch { failMessage ->
-			throw LocalizedException(failMessage)
-		}
-		obb.canPatch { failMessage ->
-			throw LocalizedException(failMessage)
-		}
+		apk.checkCanPatch()
+		obb.checkCanPatch()
 		if (!storageChecker.isEnoughSpace()) {
 			throw LocalizedException(LocalizedString.resource(R.string.error_no_free_space))
 		}

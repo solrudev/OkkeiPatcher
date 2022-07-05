@@ -8,12 +8,11 @@ import com.anggrayudi.storage.file.makeFile
 import com.anggrayudi.storage.file.openInputStream
 import com.anggrayudi.storage.file.openOutputStream
 import dagger.hilt.android.qualifiers.ApplicationContext
-import ru.solrudev.okkeipatcher.OkkeiApplication
-import ru.solrudev.okkeipatcher.domain.backupDir
+import ru.solrudev.okkeipatcher.data.repository.gamefile.util.backupDir
+import ru.solrudev.okkeipatcher.data.service.StreamCopier
+import ru.solrudev.okkeipatcher.data.service.computeHash
 import ru.solrudev.okkeipatcher.domain.repository.app.CommonFilesHashRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.SaveDataRepository
-import ru.solrudev.okkeipatcher.domain.service.StreamCopier
-import ru.solrudev.okkeipatcher.domain.service.computeHash
 import ru.solrudev.okkeipatcher.domain.service.util.recreate
 import java.io.File
 import java.io.InputStream
@@ -117,7 +116,7 @@ private class AndroidFile(
 ) : SaveDataFile {
 
 	private val documentFile = DocumentFileCompat.fromFullPath(
-		OkkeiApplication.context,
+		applicationContext,
 		"$path/$name"
 	)
 

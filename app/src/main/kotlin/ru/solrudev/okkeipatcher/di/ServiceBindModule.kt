@@ -5,7 +5,10 @@ import dagger.Module
 import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import ru.solrudev.okkeipatcher.domain.service.*
+import ru.solrudev.okkeipatcher.data.service.*
+import ru.solrudev.okkeipatcher.domain.service.ApkSigner
+import ru.solrudev.okkeipatcher.domain.service.HttpDownloader
+import ru.solrudev.okkeipatcher.domain.service.StorageChecker
 
 @InstallIn(SingletonComponent::class)
 @Module

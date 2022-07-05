@@ -1,27 +1,35 @@
 package ru.solrudev.okkeipatcher.data.repository.gamefile
 
 import android.content.Context
+import android.content.pm.PackageManager
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.github.solrudev.simpleinstaller.PackageUninstaller
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.data.util.isPackageInstalled
-import ru.solrudev.okkeipatcher.domain.backupDir
+import ru.solrudev.okkeipatcher.data.repository.gamefile.util.backupDir
+import ru.solrudev.okkeipatcher.data.service.StreamCopier
+import ru.solrudev.okkeipatcher.data.service.computeHash
+import ru.solrudev.okkeipatcher.data.service.copy
+import ru.solrudev.okkeipatcher.data.util.externalDir
 import ru.solrudev.okkeipatcher.domain.core.persistence.EmptyPersistable
 import ru.solrudev.okkeipatcher.domain.core.persistence.Persistable
 import ru.solrudev.okkeipatcher.domain.core.persistence.Retrievable
-import ru.solrudev.okkeipatcher.domain.externalDir
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
 import ru.solrudev.okkeipatcher.domain.repository.app.CommonFilesHashRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkFile
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
-import ru.solrudev.okkeipatcher.domain.service.StreamCopier
-import ru.solrudev.okkeipatcher.domain.service.computeHash
-import ru.solrudev.okkeipatcher.domain.service.copy
 import java.io.File
 import javax.inject.Inject
 
 private const val PACKAGE_NAME = "com.mages.chaoschild_jp"
+
+private val Context.isGameInstalled: Boolean
+	get() = try {
+		packageManager.getPackageInfo(PACKAGE_NAME, PackageManager.GET_ACTIVITIES)
+		true
+	} catch (_: PackageManager.NameNotFoundException) {
+		false
+	}
 
 class ApkRepositoryImpl @Inject constructor(
 	@ApplicationContext private val applicationContext: Context,
@@ -31,7 +39,7 @@ class ApkRepositoryImpl @Inject constructor(
 ) : ApkRepository {
 
 	override val isInstalled: Boolean
-		get() = applicationContext.isPackageInstalled(PACKAGE_NAME)
+		get() = applicationContext.isGameInstalled
 
 	override val backupApk: ApkFile = ApkFileImpl(
 		File(applicationContext.backupDir, "backup.apk"),
@@ -92,7 +100,7 @@ private class ApkFileImpl(
 	 * @return File hash.
 	 */
 	private suspend inline fun copyInstalledApkTo(destinationFile: File) = try {
-		if (!applicationContext.isPackageInstalled(PACKAGE_NAME)) {
+		if (!applicationContext.isGameInstalled) {
 			throw LocalizedException(LocalizedString.resource(R.string.error_game_not_found))
 		}
 		val installedApkPath = applicationContext.packageManager

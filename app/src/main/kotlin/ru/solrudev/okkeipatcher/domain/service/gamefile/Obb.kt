@@ -13,12 +13,10 @@ abstract class Obb(private val obbRepository: ObbRepository) : PatchableGameFile
 	override val backupExists: Boolean
 		get() = obbRepository.backupExists
 
-	override fun canPatch(onNegative: (LocalizedString) -> Unit): Boolean {
+	override fun checkCanPatch() {
 		if (!obbRepository.obbExists && !backupExists) {
-			onNegative(LocalizedString.resource(R.string.error_obb_not_found))
-			return false
+			throw LocalizedException(LocalizedString.resource(R.string.error_obb_not_found))
 		}
-		return true
 	}
 
 	override fun deleteBackup() = obbRepository.deleteBackup()

@@ -2,7 +2,6 @@ package ru.solrudev.okkeipatcher.domain.service.gamefile
 
 import net.lingala.zip4j.ZipFile
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
-import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 
 interface GameFile : AutoCloseable {
 	val backupExists: Boolean
@@ -12,7 +11,7 @@ interface GameFile : AutoCloseable {
 }
 
 interface Patchable {
-	fun canPatch(onNegative: (message: LocalizedString) -> Unit = {}): Boolean
+	fun checkCanPatch()
 	fun patch(): Operation<Unit>
 	fun update(): Operation<Unit>
 }

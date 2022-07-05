@@ -1,19 +1,15 @@
-package ru.solrudev.okkeipatcher.domain.service.operation
+package ru.solrudev.okkeipatcher.data.service.operation
 
 import android.content.Context
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import net.lingala.zip4j.ZipFile
 import net.lingala.zip4j.model.ZipParameters
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.di.IoDispatcher
+import ru.solrudev.okkeipatcher.data.util.externalDir
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.aggregateOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
-import ru.solrudev.okkeipatcher.domain.externalDir
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFile
@@ -25,11 +21,11 @@ import java.io.File
 
 private val tempZipFilesRegex = Regex("(apk|zip)\\d+")
 
-class ScriptsPatchOperation @AssistedInject constructor(
-	@Assisted private val apk: ZipPackage,
-	@Assisted private val scriptsPatchFile: PatchFile,
-	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-	@ApplicationContext private val applicationContext: Context,
+class ScriptsPatchOperation(
+	private val apk: ZipPackage,
+	private val scriptsPatchFile: PatchFile,
+	private val ioDispatcher: CoroutineDispatcher,
+	private val applicationContext: Context,
 	private val httpDownloader: HttpDownloader
 ) : Operation<Unit> {
 

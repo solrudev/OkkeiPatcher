@@ -21,16 +21,10 @@ abstract class Apk(
 	override val backupExists: Boolean
 		get() = apkRepository.backupApk.exists
 
-	override fun canPatch(onNegative: (LocalizedString) -> Unit): Boolean {
+	override fun checkCanPatch() {
 		val canInstallPatchedApk = backupExists && apkRepository.tempApk.exists
-		if (!apkRepository.isInstalled && canInstallPatchedApk) {
-			return true
-		}
-		return if (apkRepository.isInstalled) {
-			true
-		} else {
-			onNegative(LocalizedString.resource(R.string.error_game_not_found))
-			false
+		if (!apkRepository.isInstalled && !canInstallPatchedApk) {
+			throw LocalizedException(LocalizedString.resource(R.string.error_game_not_found))
 		}
 	}
 

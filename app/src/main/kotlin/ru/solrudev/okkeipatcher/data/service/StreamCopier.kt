@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.domain.service
+package ru.solrudev.okkeipatcher.data.service
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ensureActive
