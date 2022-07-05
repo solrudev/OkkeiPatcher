@@ -18,7 +18,7 @@ interface PatchRepositoryModule {
 	@Binds
 	@IntoMap
 	@LanguageKey(Language.English)
-	fun bindDefaultPatchRepository(
+	fun bindDefaultPatchRepositoryIntoMap(
 		defaultPatchRepository: DefaultPatchRepository
 	): PatchRepository
 
