@@ -14,7 +14,7 @@ abstract class Obb(private val obbRepository: ObbRepository) : PatchableGameFile
 		get() = obbRepository.backupExists
 
 	override fun canPatch(onNegative: (LocalizedString) -> Unit): Boolean {
-		if (!obbRepository.obbFile.exists() && !backupExists) {
+		if (!obbRepository.obbExists && !backupExists) {
 			onNegative(LocalizedString.resource(R.string.error_obb_not_found))
 			return false
 		}

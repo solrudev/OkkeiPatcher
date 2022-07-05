@@ -14,7 +14,9 @@ import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbRepository
 import ru.solrudev.okkeipatcher.domain.service.StreamCopier
 import ru.solrudev.okkeipatcher.domain.service.computeHash
 import ru.solrudev.okkeipatcher.domain.service.copy
+import ru.solrudev.okkeipatcher.domain.service.util.recreate
 import java.io.File
+import java.io.OutputStream
 import javax.inject.Inject
 
 private const val PACKAGE_NAME = "com.mages.chaoschild_jp"
@@ -26,24 +28,38 @@ class ObbRepositoryImpl @Inject constructor(
 	@ApplicationContext applicationContext: Context
 ) : ObbRepository {
 
+	override val obbExists: Boolean
+		get() = obbFile.exists()
+
 	override val backupExists: Boolean
 		get() = backup.exists()
 
-	override val obbFile = File(
+	private val obbFile = File(
 		Environment.getExternalStorageDirectory(),
 		"Android/obb/$PACKAGE_NAME/$OBB_FILE_NAME"
 	)
 
 	private val backup = File(applicationContext.backupDir, OBB_FILE_NAME)
 
+	override fun deleteObb() {
+		obbFile.delete()
+	}
+
 	override fun deleteBackup() {
 		backup.delete()
+	}
+
+	override fun openObbInputStream() = obbFile.inputStream()
+
+	override fun openObbOutputStream(): OutputStream {
+		obbFile.recreate()
+		return obbFile.outputStream()
 	}
 
 	override fun backup() = operation(
 		progressMax = streamCopier.progressMax * 6
 	) {
-		if (!obbFile.exists()) {
+		if (!obbExists) {
 			throw LocalizedException(LocalizedString.resource(R.string.error_obb_not_found))
 		}
 		try {
@@ -68,7 +84,7 @@ class ObbRepositoryImpl @Inject constructor(
 				progressDelta(it * 3)
 			}
 		} catch (t: Throwable) {
-			obbFile.delete()
+			deleteObb()
 			throw t
 		}
 	}
