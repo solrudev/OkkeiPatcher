@@ -3,7 +3,7 @@ package ru.solrudev.okkeipatcher.data.repository.patch
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.intPreferencesKey
-import ru.solrudev.okkeipatcher.data.core.InMemoryCache
+import ru.solrudev.okkeipatcher.data.core.Cache
 import ru.solrudev.okkeipatcher.data.network.model.FileDto
 import ru.solrudev.okkeipatcher.data.preference.Preference
 import ru.solrudev.okkeipatcher.domain.core.persistence.Retrievable
@@ -11,7 +11,7 @@ import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFile
 import ru.solrudev.okkeipatcher.io.exception.NetworkNotAvailableException
 
 class PatchFileImpl<T>(
-	private val cache: InMemoryCache<T>,
+	private val cache: Cache<T>,
 	name: String,
 	private val selector: (T) -> FileDto,
 	private val patchStatus: Retrievable<Boolean>,

@@ -21,18 +21,18 @@ class DefaultPatchRepositoryImpl @Inject constructor(
 	private val patchDataCache = InMemoryCache(defaultPatchApi::getPatchData)
 
 	override val scripts = PatchFileImpl(
-		patchDataCache,
+		cache = patchDataCache,
 		name = "scripts",
 		selector = { it.scripts },
-		preferencesRepository.patchStatus,
+		patchStatus = preferencesRepository.patchStatus,
 		preferences
 	)
 
 	override val obb = PatchFileImpl(
-		patchDataCache,
+		cache = patchDataCache,
 		name = "obb",
 		selector = { it.obb },
-		preferencesRepository.patchStatus,
+		patchStatus = preferencesRepository.patchStatus,
 		preferences
 	)
 

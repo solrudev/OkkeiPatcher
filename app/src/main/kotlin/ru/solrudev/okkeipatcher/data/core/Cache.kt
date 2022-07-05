@@ -3,12 +3,16 @@ package ru.solrudev.okkeipatcher.data.core
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
-class InMemoryCache<out T>(private val onRefresh: suspend () -> T) {
+interface Cache<out T> {
+	suspend fun retrieve(refresh: Boolean = false): T
+}
+
+class InMemoryCache<out T>(private val onRefresh: suspend () -> T) : Cache<T> {
 
 	private val mutex = Mutex()
 	private var cache: T? = null
 
-	suspend fun retrieve(refresh: Boolean = false): T {
+	override suspend fun retrieve(refresh: Boolean): T {
 		mutex.withLock {
 			if (!refresh) {
 				cache?.let { return it }
