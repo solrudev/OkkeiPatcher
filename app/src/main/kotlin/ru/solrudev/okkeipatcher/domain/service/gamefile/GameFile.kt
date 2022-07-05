@@ -4,7 +4,6 @@ import net.lingala.zip4j.ZipFile
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 
-// TODO: reduce interfaces by checking conditions inside of services
 interface GameFile : AutoCloseable {
 	val backupExists: Boolean
 	fun deleteBackup()

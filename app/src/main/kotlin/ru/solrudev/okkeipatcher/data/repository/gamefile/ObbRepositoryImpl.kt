@@ -84,7 +84,7 @@ class ObbRepositoryImpl @Inject constructor(
 				progressDelta(it * 3)
 			}
 		} catch (t: Throwable) {
-			deleteObb()
+			obbFile.delete()
 			throw t
 		}
 	}
