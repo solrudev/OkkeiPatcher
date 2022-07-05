@@ -14,8 +14,12 @@ import ru.solrudev.okkeipatcher.domain.usecase.patch.MockGetPatchUpdatesUseCase
 interface UseCaseFlavorModule {
 
 	@Binds
-	fun bindGetPatchUpdatesUseCase(getPatchUpdatesUseCase: MockGetPatchUpdatesUseCase): GetPatchUpdatesUseCase
+	fun bindGetPatchUpdatesUseCase(
+		getPatchUpdatesUseCase: MockGetPatchUpdatesUseCase
+	): GetPatchUpdatesUseCase
 
 	@Binds
-	fun bindGetPatchSizeInMbUseCase(getPatchSizeInMbUseCase: MockGetPatchSizeInMbUseCase): GetPatchSizeInMbUseCase
+	fun bindGetPatchSizeInMbUseCase(
+		getPatchSizeInMbUseCase: MockGetPatchSizeInMbUseCase
+	): GetPatchSizeInMbUseCase
 }

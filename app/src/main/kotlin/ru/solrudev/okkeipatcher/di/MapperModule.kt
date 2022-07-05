@@ -12,5 +12,7 @@ import ru.solrudev.okkeipatcher.data.worker.util.WorkStateMapperImpl
 interface MapperModule {
 
 	@Binds
-	fun bindWorkStateMapper(workStateMapper: WorkStateMapperImpl): WorkStateMapper
+	fun bindWorkStateMapper(
+		workStateMapper: WorkStateMapperImpl
+	): WorkStateMapper
 }

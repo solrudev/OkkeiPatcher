@@ -5,21 +5,26 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoMap
+import ru.solrudev.okkeipatcher.data.repository.patch.DefaultPatchRepositoryImpl
 import ru.solrudev.okkeipatcher.domain.model.Language
 import ru.solrudev.okkeipatcher.domain.repository.patch.DefaultPatchRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchRepository
-import ru.solrudev.okkeipatcher.domain.repository.patch.factory.PatchRepositoryFactory
-import ru.solrudev.okkeipatcher.domain.repository.patch.factory.PatchRepositoryFactoryImpl
+import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
 @Module
 interface PatchRepositoryModule {
 
 	@Binds
-	fun bindPatchRepositoryFactory(patchRepositoryFactory: PatchRepositoryFactoryImpl): PatchRepositoryFactory
-
-	@Binds
 	@IntoMap
 	@LanguageKey(Language.English)
-	fun bindDefaultPatchRepository(defaultPatchRepository: DefaultPatchRepository): PatchRepository
+	fun bindDefaultPatchRepository(
+		defaultPatchRepository: DefaultPatchRepository
+	): PatchRepository
+
+	@Binds
+	@Singleton
+	fun bindDefaultPatchRepository(
+		defaultPatchRepository: DefaultPatchRepositoryImpl
+	): DefaultPatchRepository
 }

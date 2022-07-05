@@ -12,44 +12,72 @@ import ru.solrudev.okkeipatcher.domain.usecase.work.*
 interface UseCaseModule {
 
 	@Binds
-	fun bindEnqueuePatchWorkUseCase(enqueuePatchWorkUseCase: EnqueuePatchWorkUseCaseImpl): EnqueuePatchWorkUseCase
+	fun bindEnqueuePatchWorkUseCase(
+		enqueuePatchWorkUseCase: EnqueuePatchWorkUseCaseImpl
+	): EnqueuePatchWorkUseCase
 
 	@Binds
-	fun bindEnqueueRestoreWorkUseCase(enqueueRestoreWorkUseCase: EnqueueRestoreWorkUseCaseImpl): EnqueueRestoreWorkUseCase
+	fun bindEnqueueRestoreWorkUseCase(
+		enqueueRestoreWorkUseCase: EnqueueRestoreWorkUseCaseImpl
+	): EnqueueRestoreWorkUseCase
 
 	@Binds
-	fun bindGetPatchWorkUseCase(getPatchWorkUseCase: GetPatchWorkUseCaseImpl): GetPatchWorkUseCase
+	fun bindGetPatchWorkUseCase(
+		getPatchWorkUseCase: GetPatchWorkUseCaseImpl
+	): GetPatchWorkUseCase
 
 	@Binds
-	fun bindGetRestoreWorkUseCase(getRestoreWorkUseCase: GetRestoreWorkUseCaseImpl): GetRestoreWorkUseCase
+	fun bindGetRestoreWorkUseCase(
+		getRestoreWorkUseCase: GetRestoreWorkUseCaseImpl
+	): GetRestoreWorkUseCase
 
 	@Binds
-	fun bindCompleteWorkUseCase(completeWorkUseCase: CompleteWorkUseCaseImpl): CompleteWorkUseCase
+	fun bindCompleteWorkUseCase(
+		completeWorkUseCase: CompleteWorkUseCaseImpl
+	): CompleteWorkUseCase
 
 	@Binds
-	fun bindCancelWorkUseCase(cancelWorkUseCase: CancelWorkUseCaseImpl): CancelWorkUseCase
+	fun bindCancelWorkUseCase(
+		cancelWorkUseCase: CancelWorkUseCaseImpl
+	): CancelWorkUseCase
 
 	@Binds
-	fun bindGetWorkStateFlowUseCase(getWorkStateFlowUseCase: GetWorkStateFlowUseCaseImpl): GetWorkStateFlowUseCase
+	fun bindGetWorkStateFlowUseCase(
+		getWorkStateFlowUseCase: GetWorkStateFlowUseCaseImpl
+	): GetWorkStateFlowUseCase
 
 	@Binds
-	fun bindGetIsWorkPendingUseCase(getIsWorkPendingUseCase: GetIsWorkPendingUseCaseImpl): GetIsWorkPendingUseCase
+	fun bindGetIsWorkPendingUseCase(
+		getIsWorkPendingUseCase: GetIsWorkPendingUseCaseImpl
+	): GetIsWorkPendingUseCase
 
 	@Binds
-	fun bindGetIsAppUpdateAvailableUseCase(getIsAppUpdateAvailableUseCase: GetIsAppUpdateAvailableUseCaseImpl): GetIsAppUpdateAvailableUseCase
+	fun bindGetIsAppUpdateAvailableUseCase(
+		getIsAppUpdateAvailableUseCase: GetIsAppUpdateAvailableUseCaseImpl
+	): GetIsAppUpdateAvailableUseCase
 
 	@Binds
-	fun bindGetAppUpdateSizeInMbUseCase(getAppUpdateSizeInMbUseCase: GetAppUpdateSizeInMbUseCaseImpl): GetAppUpdateSizeInMbUseCase
+	fun bindGetAppUpdateSizeInMbUseCase(
+		getAppUpdateSizeInMbUseCase: GetAppUpdateSizeInMbUseCaseImpl
+	): GetAppUpdateSizeInMbUseCase
 
 	@Binds
-	fun bindGetAppUpdateFileUseCase(getAppUpdateFileUseCase: GetAppUpdateFileUseCaseImpl): GetAppUpdateFileUseCase
+	fun bindGetAppUpdateFileUseCase(
+		getAppUpdateFileUseCase: GetAppUpdateFileUseCaseImpl
+	): GetAppUpdateFileUseCase
 
 	@Binds
-	fun bindGetAppChangelogUseCase(getAppChangelogUseCase: GetAppChangelogUseCaseImpl): GetAppChangelogUseCase
+	fun bindGetAppChangelogUseCase(
+		getAppChangelogUseCase: GetAppChangelogUseCaseImpl
+	): GetAppChangelogUseCase
 
 	@Binds
-	fun bindGetIsPatchedUseCase(getIsPatchedFlowUseCase: GetPatchStatusFlowUseCaseImpl): GetPatchStatusFlowUseCase
+	fun bindGetIsPatchedUseCase(
+		getIsPatchedFlowUseCase: GetPatchStatusFlowUseCaseImpl
+	): GetPatchStatusFlowUseCase
 
 	@Binds
-	fun bindGetPatchLanguageUseCase(getPatchLanguageUseCase: GetPatchLanguageUseCaseImpl): GetPatchLanguageUseCase
+	fun bindGetPatchLanguageUseCase(
+		getPatchLanguageUseCase: GetPatchLanguageUseCaseImpl
+	): GetPatchLanguageUseCase
 }

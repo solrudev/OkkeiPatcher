@@ -7,8 +7,8 @@ import ru.solrudev.okkeipatcher.data.core.Cache
 import ru.solrudev.okkeipatcher.data.preference.Preference
 import ru.solrudev.okkeipatcher.domain.core.persistence.Retrievable
 import ru.solrudev.okkeipatcher.domain.model.PatchFileData
+import ru.solrudev.okkeipatcher.domain.model.exception.NetworkNotAvailableException
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFile
-import ru.solrudev.okkeipatcher.io.exception.NetworkNotAvailableException
 
 class PatchFileImpl<T>(
 	private val cache: Cache<T>,

@@ -1,7 +1,7 @@
 package ru.solrudev.okkeipatcher.domain.usecase.app
 
+import ru.solrudev.okkeipatcher.domain.model.exception.NetworkNotAvailableException
 import ru.solrudev.okkeipatcher.domain.repository.app.OkkeiPatcherRepository
-import ru.solrudev.okkeipatcher.io.exception.NetworkNotAvailableException
 import javax.inject.Inject
 
 interface GetIsAppUpdateAvailableUseCase {

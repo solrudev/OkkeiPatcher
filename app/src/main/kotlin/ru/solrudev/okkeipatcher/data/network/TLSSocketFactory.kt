@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.io
+package ru.solrudev.okkeipatcher.data.network
 
 import java.io.IOException
 import java.net.InetAddress

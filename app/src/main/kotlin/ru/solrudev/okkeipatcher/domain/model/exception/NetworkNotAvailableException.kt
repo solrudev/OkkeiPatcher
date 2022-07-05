@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.io.exception
+package ru.solrudev.okkeipatcher.domain.model.exception
 
 import java.io.IOException
 

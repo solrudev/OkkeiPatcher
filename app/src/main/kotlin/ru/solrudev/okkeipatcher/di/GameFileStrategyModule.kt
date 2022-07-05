@@ -23,5 +23,7 @@ interface GameFileStrategyModule {
 	): GameFileStrategy
 
 	@Binds
-	fun bindGameFileStrategyFactory(gameFileStrategyFactory: GameFileStrategyFactoryImpl): GameFileStrategyFactory
+	fun bindGameFileStrategyFactory(
+		gameFileStrategyFactory: GameFileStrategyFactoryImpl
+	): GameFileStrategyFactory
 }

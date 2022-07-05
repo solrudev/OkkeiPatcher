@@ -16,9 +16,13 @@ interface RepositoryFlavorModule {
 
 	@Binds
 	@Singleton
-	fun bindPatchWorkRepository(patchWorkRepository: PatchWorkRepositoryImpl): PatchWorkRepository
+	fun bindPatchWorkRepository(
+		patchWorkRepository: PatchWorkRepositoryImpl
+	): PatchWorkRepository
 
 	@Binds
 	@Singleton
-	fun bindRestoreWorkRepository(restoreWorkRepository: RestoreWorkRepositoryImpl): RestoreWorkRepository
+	fun bindRestoreWorkRepository(
+		restoreWorkRepository: RestoreWorkRepositoryImpl
+	): RestoreWorkRepository
 }
