@@ -93,7 +93,7 @@ abstract class Apk(
 			throw LocalizedException(
 				LocalizedString.resource(
 					R.string.error_install,
-					installResult.cause?.message.toString()
+					installResult.cause.toString()
 				)
 			)
 		}
