@@ -53,12 +53,15 @@ class ApkRepositoryImpl @Inject constructor(
 }
 
 private class ApkFileImpl(
-	override val file: File,
+	private val file: File,
 	private val applicationContext: Context,
 	private val streamCopier: StreamCopier,
 	private val hashRetrievable: Retrievable<String>,
 	private val hashPersistable: Persistable<String>
 ) : ApkFile {
+
+	override val path: String
+		get() = file.absolutePath
 
 	override val exists: Boolean
 		get() = file.exists()

@@ -1,7 +1,5 @@
 package ru.solrudev.okkeipatcher.domain.repository.gamefile
 
-import java.io.File
-
 interface ApkRepository {
 	val isInstalled: Boolean
 	val backupApk: ApkFile
@@ -10,7 +8,7 @@ interface ApkRepository {
 }
 
 interface ApkFile {
-	val file: File
+	val path: String
 	val exists: Boolean
 	fun delete()
 	suspend fun create()

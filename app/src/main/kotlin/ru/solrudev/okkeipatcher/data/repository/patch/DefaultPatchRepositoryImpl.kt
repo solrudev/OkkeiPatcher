@@ -16,7 +16,7 @@ class DefaultPatchRepositoryImpl @Inject constructor(
 	@ApplicationContext applicationContext: Context
 ) : DefaultPatchRepository {
 
-	private val Context.dataStore by preferencesDataStore(name = "en_patch_files_hash")
+	private val Context.dataStore by preferencesDataStore(name = "patch_files_en_hash")
 	private val preferences = applicationContext.dataStore
 	private val patchDataCache = InMemoryCache(defaultPatchApi::getPatchData)
 

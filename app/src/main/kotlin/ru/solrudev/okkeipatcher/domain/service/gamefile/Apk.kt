@@ -48,14 +48,14 @@ abstract class Apk(
 			if (!apkRepository.backupApk.verify()) {
 				throw LocalizedException(LocalizedString.resource(R.string.error_not_trustworthy_apk))
 			}
-			apkRepository.backupApk.file
+			apkRepository.backupApk.path
 		}
 		return aggregateOperation(uninstallOperation, installBackupOperation)
 	}
 
 	protected fun installPatched(updating: Boolean): Operation<Unit> {
 		val uninstallOperation = uninstall(updating)
-		val installOperation = install { apkRepository.tempApk.file }
+		val installOperation = install { apkRepository.tempApk.path }
 		return operation(uninstallOperation, installOperation) {
 			if (!apkRepository.tempApk.exists) {
 				throw LocalizedException(LocalizedString.resource(R.string.error_apk_not_found))
@@ -82,9 +82,9 @@ abstract class Apk(
 		}
 	}
 
-	private fun install(apkFactory: suspend () -> File) = operation(progressMax = 100) {
+	private fun install(apkFactory: suspend () -> String) = operation(progressMax = 100) {
 		status(LocalizedString.resource(R.string.status_installing))
-		val apk = apkFactory()
+		val apk = File(apkFactory())
 		if (!apk.exists()) {
 			throw LocalizedException(LocalizedString.resource(R.string.error_apk_not_found))
 		}

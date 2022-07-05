@@ -6,6 +6,7 @@ import kotlinx.coroutines.sync.withLock
 import net.lingala.zip4j.ZipFile
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
 import ru.solrudev.okkeipatcher.domain.service.ApkSigner
+import java.io.File
 import javax.inject.Inject
 
 class ApkZipPackage @Inject constructor(
@@ -35,7 +36,7 @@ class ApkZipPackage @Inject constructor(
 		if (!apkRepository.tempApk.exists) {
 			apkRepository.tempApk.create()
 		}
-		return ZipFile(apkRepository.tempApk.file)
+		return ZipFile(apkRepository.tempApk.path)
 			.also { zipFile ->
 				tempZipFilesMutex.withLock {
 					tempZipFiles.add(zipFile)
@@ -44,12 +45,12 @@ class ApkZipPackage @Inject constructor(
 	}
 
 	override suspend fun sign() {
-		val apk = apkRepository.tempApk.file
+		val apk = File(apkRepository.tempApk.path)
 		apkSigner.sign(apk)
 	}
 
 	override suspend fun removeSignature() {
-		val apk = apkRepository.tempApk.file
+		val apk = File(apkRepository.tempApk.path)
 		apkSigner.removeSignature(apk)
 	}
 }
