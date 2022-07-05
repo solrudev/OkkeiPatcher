@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.domain.service.util
+package ru.solrudev.okkeipatcher.data.util
 
 import java.io.File
 

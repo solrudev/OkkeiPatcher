@@ -5,10 +5,10 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import net.lingala.zip4j.ZipFile
+import ru.solrudev.okkeipatcher.data.service.util.use
 import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.repository.app.CommonFilesHashRepository
 import ru.solrudev.okkeipatcher.domain.service.ApkSigner
-import ru.solrudev.okkeipatcher.domain.service.util.use
 import java.io.File
 import java.security.KeyFactory
 import java.security.cert.CertificateFactory

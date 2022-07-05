@@ -14,10 +14,10 @@ import okio.HashingSink
 import okio.blackholeSink
 import okio.buffer
 import okio.sink
+import ru.solrudev.okkeipatcher.data.service.util.BlackholeOutputStream
+import ru.solrudev.okkeipatcher.data.service.util.calculateProgressRatio
 import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.service.HttpDownloader
-import ru.solrudev.okkeipatcher.domain.service.util.BlackholeOutputStream
-import ru.solrudev.okkeipatcher.domain.service.util.calculateProgressRatio
 import java.io.OutputStream
 import javax.inject.Inject
 import kotlin.io.use

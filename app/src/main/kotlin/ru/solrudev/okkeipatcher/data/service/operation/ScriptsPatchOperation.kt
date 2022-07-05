@@ -6,6 +6,8 @@ import kotlinx.coroutines.withContext
 import net.lingala.zip4j.ZipFile
 import net.lingala.zip4j.model.ZipParameters
 import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.data.service.util.use
+import ru.solrudev.okkeipatcher.data.util.download
 import ru.solrudev.okkeipatcher.data.util.externalDir
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.aggregateOperation
@@ -14,9 +16,7 @@ import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFile
 import ru.solrudev.okkeipatcher.domain.service.HttpDownloader
-import ru.solrudev.okkeipatcher.domain.service.download
 import ru.solrudev.okkeipatcher.domain.service.gamefile.ZipPackage
-import ru.solrudev.okkeipatcher.domain.service.util.use
 import java.io.File
 
 private val tempZipFilesRegex = Regex("(apk|zip)\\d+")

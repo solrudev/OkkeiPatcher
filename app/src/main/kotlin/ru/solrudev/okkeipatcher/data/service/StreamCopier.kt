@@ -4,10 +4,10 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 import okio.*
+import ru.solrudev.okkeipatcher.data.service.util.BlackholeOutputStream
+import ru.solrudev.okkeipatcher.data.service.util.calculateProgressRatio
+import ru.solrudev.okkeipatcher.data.util.recreate
 import ru.solrudev.okkeipatcher.di.IoDispatcher
-import ru.solrudev.okkeipatcher.domain.service.util.BlackholeOutputStream
-import ru.solrudev.okkeipatcher.domain.service.util.calculateProgressRatio
-import ru.solrudev.okkeipatcher.domain.service.util.recreate
 import java.io.File
 import java.io.InputStream
 import java.io.OutputStream

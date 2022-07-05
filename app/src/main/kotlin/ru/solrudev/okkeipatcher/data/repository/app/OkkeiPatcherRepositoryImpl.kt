@@ -5,13 +5,13 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.network.api.OkkeiPatcherApi
 import ru.solrudev.okkeipatcher.data.network.model.OkkeiPatcherChangelogDto
+import ru.solrudev.okkeipatcher.data.util.download
 import ru.solrudev.okkeipatcher.data.util.versionCode
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
 import ru.solrudev.okkeipatcher.domain.repository.app.OkkeiPatcherRepository
 import ru.solrudev.okkeipatcher.domain.service.HttpDownloader
-import ru.solrudev.okkeipatcher.domain.service.download
 import java.io.File
 import java.util.*
 import javax.inject.Inject

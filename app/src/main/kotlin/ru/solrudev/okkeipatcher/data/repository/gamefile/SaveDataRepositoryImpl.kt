@@ -11,9 +11,9 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import ru.solrudev.okkeipatcher.data.repository.gamefile.util.backupDir
 import ru.solrudev.okkeipatcher.data.service.StreamCopier
 import ru.solrudev.okkeipatcher.data.service.computeHash
+import ru.solrudev.okkeipatcher.data.util.recreate
 import ru.solrudev.okkeipatcher.domain.repository.app.CommonFilesHashRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.SaveDataRepository
-import ru.solrudev.okkeipatcher.domain.service.util.recreate
 import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
