@@ -1,9 +1,8 @@
-package ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.english
+package ru.solrudev.okkeipatcher.domain.service.gamefile.strategy
 
 import ru.solrudev.okkeipatcher.domain.service.gamefile.SaveData
 import ru.solrudev.okkeipatcher.domain.service.gamefile.english.DefaultApk
 import ru.solrudev.okkeipatcher.domain.service.gamefile.english.DefaultObb
-import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.GameFileStrategy
 import javax.inject.Inject
 
 class DefaultGameFileStrategy @Inject constructor(

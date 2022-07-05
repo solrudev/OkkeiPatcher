@@ -1,13 +1,15 @@
 package ru.solrudev.okkeipatcher.domain.repository.patch
 
 import ru.solrudev.okkeipatcher.data.network.model.FileDto
+import ru.solrudev.okkeipatcher.domain.core.persistence.Dao
 
-interface ScriptsDataRepository {
-	suspend fun getScriptsData(): FileDto
+interface PatchFile {
+	val installedVersion: Dao<Int>
+	suspend fun getData(): FileDto
+	suspend fun isUpdateAvailable(): Boolean
 }
 
-interface ObbDataRepository {
-	suspend fun getObbData(): FileDto
+interface DefaultPatchRepository : PatchRepository {
+	val scripts: PatchFile
+	val obb: PatchFile
 }
-
-interface DefaultPatchRepository : PatchRepository, ScriptsDataRepository, ObbDataRepository

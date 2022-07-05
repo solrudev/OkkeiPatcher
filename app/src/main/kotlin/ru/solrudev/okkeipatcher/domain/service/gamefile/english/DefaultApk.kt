@@ -21,7 +21,7 @@ class DefaultApk @Inject constructor(
 	packageInstaller: PackageInstaller
 ) : Apk(apkRepository, apkZipPackage, packageInstaller) {
 
-	private val scriptsPatchOperation = scriptsPatchOperationFactory.create(apkZipPackage, patchRepository)
+	private val scriptsPatchOperation = scriptsPatchOperationFactory.create(apkZipPackage, patchRepository.scripts)
 
 	override fun patch(): Operation<Unit> {
 		val installPatchedOperation = installPatched(updating = false)

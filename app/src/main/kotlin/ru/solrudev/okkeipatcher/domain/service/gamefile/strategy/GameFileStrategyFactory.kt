@@ -1,9 +1,8 @@
-package ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.factory
+package ru.solrudev.okkeipatcher.domain.service.gamefile.strategy
 
 import ru.solrudev.okkeipatcher.domain.core.factory.SuspendFactory
 import ru.solrudev.okkeipatcher.domain.model.Language
 import ru.solrudev.okkeipatcher.domain.repository.app.PreferencesRepository
-import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.GameFileStrategy
 import javax.inject.Inject
 import javax.inject.Provider
 

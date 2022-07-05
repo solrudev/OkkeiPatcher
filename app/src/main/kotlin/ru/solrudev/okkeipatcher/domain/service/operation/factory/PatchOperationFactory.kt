@@ -4,7 +4,7 @@ import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.repository.app.PreferencesRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.factory.PatchRepositoryFactory
 import ru.solrudev.okkeipatcher.domain.service.StorageChecker
-import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.factory.GameFileStrategyFactory
+import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.GameFileStrategyFactory
 import ru.solrudev.okkeipatcher.domain.service.operation.PatchOperation
 import javax.inject.Inject
 

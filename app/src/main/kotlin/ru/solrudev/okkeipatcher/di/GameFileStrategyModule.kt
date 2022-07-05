@@ -6,10 +6,10 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoMap
 import ru.solrudev.okkeipatcher.domain.model.Language
+import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.DefaultGameFileStrategy
 import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.GameFileStrategy
-import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.english.DefaultGameFileStrategy
-import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.factory.GameFileStrategyFactory
-import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.factory.GameFileStrategyFactoryImpl
+import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.GameFileStrategyFactory
+import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.GameFileStrategyFactoryImpl
 
 @InstallIn(SingletonComponent::class)
 @Module

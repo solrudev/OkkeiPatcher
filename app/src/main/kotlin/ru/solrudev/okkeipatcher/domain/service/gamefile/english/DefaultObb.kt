@@ -12,7 +12,7 @@ class DefaultObb @Inject constructor(
 	obbRepository: ObbRepository
 ) : Obb(obbRepository) {
 
-	private val obbDownloadOperation = obbDownloadOperationFactory.create(obbRepository.obbFile, patchRepository)
+	private val obbDownloadOperation = obbDownloadOperationFactory.create(obbRepository.obbFile, patchRepository.obb)
 
 	override fun patch() = obbDownloadOperation
 	override fun update() = patch()

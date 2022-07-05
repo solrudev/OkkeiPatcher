@@ -16,20 +16,18 @@ import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.externalDir
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
-import ru.solrudev.okkeipatcher.domain.repository.patch.ScriptsDataRepository
+import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFile
 import ru.solrudev.okkeipatcher.domain.service.HttpDownloader
 import ru.solrudev.okkeipatcher.domain.service.download
 import ru.solrudev.okkeipatcher.domain.service.gamefile.ZipPackage
-import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.english.PatchFileVersionKey
 import ru.solrudev.okkeipatcher.domain.service.util.use
-import ru.solrudev.okkeipatcher.util.Preferences
 import java.io.File
 
 private val tempZipFilesRegex = Regex("(apk|zip)\\d+")
 
 class ScriptsPatchOperation @AssistedInject constructor(
 	@Assisted private val apk: ZipPackage,
-	@Assisted private val scriptsDataRepository: ScriptsDataRepository,
+	@Assisted private val scriptsPatchFile: PatchFile,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	@ApplicationContext private val applicationContext: Context,
 	private val httpDownloader: HttpDownloader
@@ -58,14 +56,14 @@ class ScriptsPatchOperation @AssistedInject constructor(
 		scriptsFile.delete()
 	}
 
-	private fun downloadScripts() = operation(progressMax = httpDownloader.progressMax) {
+	private fun downloadScripts(): Operation<Unit> = operation(progressMax = httpDownloader.progressMax) {
 		status(LocalizedString.resource(R.string.status_downloading_scripts))
-		val scriptsData = scriptsDataRepository.getScriptsData()
+		val scriptsData = scriptsPatchFile.getData()
 		val scriptsHash = httpDownloader.download(scriptsData.url, scriptsFile, hashing = true, ::progressDelta)
 		if (scriptsHash != scriptsData.hash) {
 			throw LocalizedException(LocalizedString.resource(R.string.error_hash_scripts_mismatch))
 		}
-		Preferences.set(PatchFileVersionKey.scripts_version.name, scriptsData.version)
+		scriptsPatchFile.installedVersion.persist(scriptsData.version)
 	}
 
 	private fun extractScripts() = operation(progressMax = 100) {
