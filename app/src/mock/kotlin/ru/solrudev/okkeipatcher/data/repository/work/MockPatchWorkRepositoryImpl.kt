@@ -4,7 +4,7 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.data.repository.work.mapper.asWork
+import ru.solrudev.okkeipatcher.data.repository.work.mapper.toWork
 import ru.solrudev.okkeipatcher.data.worker.MockWorker
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.Work
@@ -34,5 +34,5 @@ class MockPatchWorkRepositoryImpl @Inject constructor(
 		.getWorkInfosForUniqueWork(PATCH_WORK_NAME)
 		.get()
 		.firstOrNull()
-		?.asWork(workLabel)
+		?.toWork(workLabel)
 }
