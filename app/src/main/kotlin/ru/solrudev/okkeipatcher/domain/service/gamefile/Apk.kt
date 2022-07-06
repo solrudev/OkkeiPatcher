@@ -32,8 +32,11 @@ abstract class Apk(
 	override fun deleteBackup() = apkRepository.backupApk.delete()
 
 	override fun backup() = operation(progressMax = 100) {
-		status(LocalizedString.resource(R.string.status_backing_up_apk))
-		apkRepository.backupApk.create()
+		status(LocalizedString.resource(R.string.status_comparing_apk))
+		if (!apkRepository.backupApk.verify()) {
+			status(LocalizedString.resource(R.string.status_backing_up_apk))
+			apkRepository.backupApk.create()
+		}
 	}
 
 	override fun restore(): Operation<Unit> {

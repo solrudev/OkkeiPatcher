@@ -22,10 +22,14 @@ abstract class Obb(private val obbRepository: ObbRepository) : PatchableGameFile
 	override fun deleteBackup() = obbRepository.deleteBackup()
 
 	override fun backup(): Operation<Unit> {
+		val verifyBackupOperation = obbRepository.verifyBackup().toOperation()
 		val backupOperation = obbRepository.backup().toOperation()
-		return operation(backupOperation) {
-			status(LocalizedString.resource(R.string.status_backing_up_obb))
-			backupOperation()
+		return operation(verifyBackupOperation, backupOperation) {
+			status(LocalizedString.resource(R.string.status_comparing_obb))
+			if (!verifyBackupOperation()) {
+				status(LocalizedString.resource(R.string.status_backing_up_obb))
+				backupOperation()
+			}
 		}
 	}
 
