@@ -56,42 +56,42 @@ class ObbRepositoryImpl @Inject constructor(
 		return obbFile.outputStream()
 	}
 
-	override fun backup() = operation(
-		progressMax = streamCopier.progressMax * 6
-	) {
-		if (!obbExists) {
-			throw LocalizedException(LocalizedString.resource(R.string.error_obb_not_found))
-		}
-		try {
-			val hash = streamCopier.copy(obbFile, backup, hashing = true) {
-				progressDelta(it * 6)
+	override fun backup(): ProgressOperation<Unit> {
+		val progressMultiplier = 6
+		return operation(progressMax = streamCopier.progressMax * progressMultiplier) {
+			if (!obbExists) {
+				throw LocalizedException(LocalizedString.resource(R.string.error_obb_not_found))
 			}
-			commonFilesHashRepository.backupObbHash.persist(hash)
-		} catch (t: Throwable) {
-			backup.delete()
-			throw t
+			try {
+				val hash = streamCopier.copy(obbFile, backup, hashing = true) {
+					progressDelta(it * progressMultiplier)
+				}
+				commonFilesHashRepository.backupObbHash.persist(hash)
+			} catch (t: Throwable) {
+				backup.delete()
+				throw t
+			}
 		}
 	}
 
-	override fun restore(): ProgressOperation<Unit> = operation(
-		progressMax = streamCopier.progressMax * 3
-	) {
-		if (!backupExists) {
-			throw LocalizedException(LocalizedString.resource(R.string.error_obb_not_found))
-		}
-		try {
-			streamCopier.copy(backup, obbFile) {
-				progressDelta(it * 3)
+	override fun restore(): ProgressOperation<Unit> {
+		val progressMultiplier = 3
+		return operation(progressMax = streamCopier.progressMax * progressMultiplier) {
+			if (!backupExists) {
+				throw LocalizedException(LocalizedString.resource(R.string.error_obb_not_found))
 			}
-		} catch (t: Throwable) {
-			obbFile.delete()
-			throw t
+			try {
+				streamCopier.copy(backup, obbFile) {
+					progressDelta(it * progressMultiplier)
+				}
+			} catch (t: Throwable) {
+				obbFile.delete()
+				throw t
+			}
 		}
 	}
 
-	override fun verifyBackup() = operation(
-		progressMax = streamCopier.progressMax
-	) {
+	override fun verifyBackup() = operation(progressMax = streamCopier.progressMax) {
 		val savedHash = commonFilesHashRepository.backupObbHash.retrieve()
 		if (savedHash.isEmpty() || !backup.exists()) {
 			return@operation false
