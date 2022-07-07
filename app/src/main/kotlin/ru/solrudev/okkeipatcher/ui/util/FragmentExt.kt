@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.ui.util.extension
+package ru.solrudev.okkeipatcher.ui.util
 
 import android.view.Menu
 import android.view.MenuInflater

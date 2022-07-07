@@ -23,7 +23,7 @@ import ru.solrudev.okkeipatcher.ui.model.shouldShow
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEvent.*
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkUiState
 import ru.solrudev.okkeipatcher.ui.screen.work.model.percentDone
-import ru.solrudev.okkeipatcher.ui.util.extension.*
+import ru.solrudev.okkeipatcher.ui.util.*
 
 @AndroidEntryPoint
 class WorkFragment : Fragment(R.layout.fragment_work), FeatureView<WorkUiState> {

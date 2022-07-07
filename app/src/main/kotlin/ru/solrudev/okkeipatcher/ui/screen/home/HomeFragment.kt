@@ -23,7 +23,7 @@ import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeEvent.*
 import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeUiState
 import ru.solrudev.okkeipatcher.ui.screen.home.model.PatchEvent.*
 import ru.solrudev.okkeipatcher.ui.screen.home.model.RestoreEvent.*
-import ru.solrudev.okkeipatcher.ui.util.extension.*
+import ru.solrudev.okkeipatcher.ui.util.*
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home), FeatureView<HomeUiState> {

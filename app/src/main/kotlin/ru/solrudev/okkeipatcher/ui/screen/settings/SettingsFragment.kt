@@ -9,8 +9,8 @@ import androidx.preference.PreferenceFragmentCompat
 import com.google.android.material.color.MaterialColors
 import dagger.hilt.android.AndroidEntryPoint
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.ui.util.extension.prepareOptionsMenu
-import ru.solrudev.okkeipatcher.ui.util.extension.setupTransitions
+import ru.solrudev.okkeipatcher.ui.util.prepareOptionsMenu
+import ru.solrudev.okkeipatcher.ui.util.setupTransitions
 
 @AndroidEntryPoint
 class SettingsFragment : PreferenceFragmentCompat() {

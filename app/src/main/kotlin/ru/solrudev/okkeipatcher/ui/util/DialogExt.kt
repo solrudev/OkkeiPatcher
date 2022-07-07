@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.ui.util.extension
+package ru.solrudev.okkeipatcher.ui.util
 
 import android.app.Dialog
 import androidx.appcompat.app.AlertDialog
