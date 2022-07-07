@@ -18,6 +18,7 @@ import javax.inject.Inject
 
 private const val APP_UPDATE_FILE_NAME = "OkkeiPatcher.apk"
 
+// TODO
 class OkkeiPatcherRepositoryImpl @Inject constructor(
 	@ApplicationContext private val applicationContext: Context,
 	private val httpDownloader: HttpDownloader,

@@ -5,6 +5,7 @@ import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import java.io.File
 import java.util.*
 
+// TODO
 interface OkkeiPatcherRepository {
 	suspend fun isUpdateAvailable(): Boolean
 	suspend fun getUpdateSizeInMb(): Double

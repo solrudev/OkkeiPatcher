@@ -28,6 +28,7 @@ suspend fun CoroutineWorker.setProgress(
 		.build()
 )
 
+// TODO
 fun failureWorkData(exception: Throwable) = Data.Builder()
 	.putString(
 		STACK_TRACE,

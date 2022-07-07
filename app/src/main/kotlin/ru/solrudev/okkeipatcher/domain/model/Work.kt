@@ -16,7 +16,7 @@ data class Work(val id: UUID, val label: LocalizedString) : Serializable
 sealed class WorkState {
 
 	data class Running(val status: LocalizedString, val progressData: ProgressData) : WorkState()
-	data class Failed(val stackTrace: String) : WorkState()
+	data class Failed(val stackTrace: String) : WorkState() // TODO
 	object Succeeded : WorkState()
 	object Canceled : WorkState()
 	object Unknown : WorkState()
