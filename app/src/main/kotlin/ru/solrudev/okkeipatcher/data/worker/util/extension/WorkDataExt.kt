@@ -13,7 +13,7 @@ fun <T : Serializable> Data.getSerializable(key: String): T? {
 	}
 }
 
-fun Data.Builder.putSerializable(key: String, value: Serializable): Data.Builder {
+fun Data.Builder.putSerializable(key: String, value: Serializable) =
 	ByteArrayOutputStream().use { byteArrayOutputStream ->
 		ObjectOutputStream(byteArrayOutputStream).use { objectOutputStream ->
 			objectOutputStream.writeObject(value)
@@ -21,5 +21,3 @@ fun Data.Builder.putSerializable(key: String, value: Serializable): Data.Builder
 		}
 		putByteArray(key, byteArrayOutputStream.toByteArray())
 	}
-	return this
-}

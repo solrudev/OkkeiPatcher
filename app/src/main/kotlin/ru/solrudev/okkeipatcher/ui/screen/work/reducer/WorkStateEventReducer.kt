@@ -16,10 +16,9 @@ class WorkStateEventReducer @Inject constructor() : Reducer<WorkUiState, WorkSta
 			progressData = event.progressData
 		)
 		is WorkStateEvent.Failed -> {
-			val stackTrace = event.throwable?.stackTraceToString() ?: "null"
 			val message = Message(
 				LocalizedString.resource(R.string.exception),
-				LocalizedString.raw(stackTrace)
+				LocalizedString.raw(event.stackTrace)
 			)
 			val errorMessage = state.errorMessage.copy(data = message)
 			state.copy(errorMessage = errorMessage)

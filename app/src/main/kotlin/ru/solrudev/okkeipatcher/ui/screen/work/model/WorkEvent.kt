@@ -20,7 +20,7 @@ sealed interface WorkEvent : Event {
 
 sealed interface WorkStateEvent : WorkEvent {
 	data class Running(val status: LocalizedString, val progressData: ProgressData) : WorkStateEvent
-	data class Failed(val throwable: Throwable?) : WorkStateEvent
+	data class Failed(val stackTrace: String) : WorkStateEvent
 	object Succeeded : WorkStateEvent
 	object Canceled : WorkStateEvent
 	object Unknown : WorkStateEvent

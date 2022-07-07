@@ -42,7 +42,7 @@ class ObserveWorkMiddleware @Inject constructor(
 
 	private fun WorkState.toEvent() = when (this) {
 		is WorkState.Running -> Running(status, progressData)
-		is WorkState.Failed -> Failed(throwable)
+		is WorkState.Failed -> Failed(stackTrace)
 		is WorkState.Succeeded -> Succeeded
 		is WorkState.Canceled -> Canceled
 		is WorkState.Unknown -> Unknown

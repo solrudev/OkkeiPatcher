@@ -14,7 +14,7 @@ import javax.inject.Inject
 private const val PROGRESS = "progress"
 private const val PROGRESS_MAX = "progress_max"
 private const val STATUS = "status"
-private const val THROWABLE = "throwable"
+private const val STACK_TRACE = "stack_trace"
 
 suspend fun CoroutineWorker.setProgress(
 	status: LocalizedString,
@@ -29,7 +29,12 @@ suspend fun CoroutineWorker.setProgress(
 )
 
 fun failureWorkData(exception: Throwable) = Data.Builder()
-	.putSerializable(THROWABLE, exception)
+	.putString(
+		STACK_TRACE,
+		exception
+			.stackTraceToString()
+			.take(5000)
+	)
 	.build()
 
 class WorkStateMapperImpl @Inject constructor() : WorkStateMapper {
@@ -43,8 +48,8 @@ class WorkStateMapperImpl @Inject constructor() : WorkStateMapper {
 			WorkState.Running(status, progressData)
 		}
 		WorkInfo.State.FAILED -> {
-			val throwable = workInfo.outputData.getSerializable<Throwable>(THROWABLE)
-			WorkState.Failed(throwable)
+			val stackTrace = workInfo.outputData.getString(STACK_TRACE) ?: ""
+			WorkState.Failed(stackTrace)
 		}
 		WorkInfo.State.SUCCEEDED -> WorkState.Succeeded
 		WorkInfo.State.CANCELLED -> WorkState.Canceled
