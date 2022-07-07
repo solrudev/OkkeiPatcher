@@ -75,9 +75,4 @@ interface UseCaseModule {
 	fun bindGetIsPatchedUseCase(
 		getIsPatchedFlowUseCase: GetPatchStatusFlowUseCaseImpl
 	): GetPatchStatusFlowUseCase
-
-	@Binds
-	fun bindGetPatchLanguageUseCase(
-		getPatchLanguageUseCase: GetPatchLanguageUseCaseImpl
-	): GetPatchLanguageUseCase
 }
