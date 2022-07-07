@@ -36,4 +36,13 @@ class PatchFileImpl<T>(
 		}
 		return latestVersion > currentVersion
 	}
+
+	override suspend fun getSizeInMb(): Double {
+		val fileSize = getData().size / 1_048_576.0
+		val isPatched = patchStatus.retrieve()
+		if (!isPatched) {
+			return fileSize
+		}
+		return if (isUpdateAvailable()) fileSize else 0.0
+	}
 }

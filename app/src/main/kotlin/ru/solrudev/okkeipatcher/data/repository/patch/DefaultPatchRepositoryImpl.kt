@@ -42,19 +42,9 @@ class DefaultPatchRepositoryImpl @Inject constructor(
 		obb.isUpdateAvailable()
 	)
 
-	override suspend fun getPatchSizeInMb(): Double {
-		try {
-			val scriptsSize = scripts.getData().size / 1_048_576.0
-			val obbSize = obb.getData().size / 1_048_576.0
-			val patchUpdates = getPatchUpdates()
-			if (!patchUpdates.available) {
-				return scriptsSize + obbSize
-			}
-			val scriptsUpdateSize = if (patchUpdates.apkUpdatesAvailable) scriptsSize else 0.0
-			val obbUpdateSize = if (patchUpdates.obbUpdatesAvailable) obbSize else 0.0
-			return scriptsUpdateSize + obbUpdateSize
-		} catch (t: Throwable) {
-			return -1.0
-		}
+	override suspend fun getPatchSizeInMb() = try {
+		scripts.getSizeInMb() + obb.getSizeInMb()
+	} catch (t: Throwable) {
+		-1.0
 	}
 }

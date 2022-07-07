@@ -13,4 +13,5 @@ interface PatchFile {
 	val installedVersion: Dao<Int>
 	suspend fun getData(): PatchFileData
 	suspend fun isUpdateAvailable(): Boolean
+	suspend fun getSizeInMb(): Double
 }
