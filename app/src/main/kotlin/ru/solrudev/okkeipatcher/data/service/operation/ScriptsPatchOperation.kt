@@ -15,7 +15,7 @@ import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFile
-import ru.solrudev.okkeipatcher.domain.service.HttpDownloader
+import ru.solrudev.okkeipatcher.domain.service.FileDownloader
 import ru.solrudev.okkeipatcher.domain.service.gamefile.ZipPackage
 import java.io.File
 
@@ -26,7 +26,7 @@ class ScriptsPatchOperation(
 	private val scriptsPatchFile: PatchFile,
 	private val ioDispatcher: CoroutineDispatcher,
 	private val applicationContext: Context,
-	private val httpDownloader: HttpDownloader
+	private val fileDownloader: FileDownloader
 ) : Operation<Unit> {
 
 	private val operation = aggregateOperation(
@@ -52,10 +52,10 @@ class ScriptsPatchOperation(
 		scriptsFile.delete()
 	}
 
-	private fun downloadScripts(): Operation<Unit> = operation(progressMax = httpDownloader.progressMax) {
+	private fun downloadScripts(): Operation<Unit> = operation(progressMax = fileDownloader.progressMax) {
 		status(LocalizedString.resource(R.string.status_downloading_scripts))
 		val scriptsData = scriptsPatchFile.getData()
-		val scriptsHash = httpDownloader.download(scriptsData.url, scriptsFile, hashing = true, ::progressDelta)
+		val scriptsHash = fileDownloader.download(scriptsData.url, scriptsFile, hashing = true, ::progressDelta)
 		if (scriptsHash != scriptsData.hash) {
 			throw LocalizedException(LocalizedString.resource(R.string.error_hash_scripts_mismatch))
 		}

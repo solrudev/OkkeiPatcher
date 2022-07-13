@@ -17,7 +17,7 @@ import okio.sink
 import ru.solrudev.okkeipatcher.data.service.util.BlackholeOutputStream
 import ru.solrudev.okkeipatcher.data.service.util.calculateProgressRatio
 import ru.solrudev.okkeipatcher.di.IoDispatcher
-import ru.solrudev.okkeipatcher.domain.service.HttpDownloader
+import ru.solrudev.okkeipatcher.domain.service.FileDownloader
 import java.io.OutputStream
 import javax.inject.Inject
 import kotlin.io.use
@@ -26,10 +26,10 @@ import kotlin.math.roundToInt
 
 private const val BUFFER_LENGTH = 8192L
 
-class HttpDownloaderImpl @Inject constructor(
+class FileDownloaderImpl @Inject constructor(
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	okHttpClient: OkHttpClient
-) : HttpDownloader {
+) : FileDownloader {
 
 	override val progressMax = 100
 

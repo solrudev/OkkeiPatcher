@@ -11,7 +11,7 @@ import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
 import ru.solrudev.okkeipatcher.domain.repository.app.OkkeiPatcherRepository
-import ru.solrudev.okkeipatcher.domain.service.HttpDownloader
+import ru.solrudev.okkeipatcher.domain.service.FileDownloader
 import java.io.File
 import java.util.*
 import javax.inject.Inject
@@ -21,7 +21,7 @@ private const val APP_UPDATE_FILE_NAME = "OkkeiPatcher.apk"
 // TODO
 class OkkeiPatcherRepositoryImpl @Inject constructor(
 	@ApplicationContext private val applicationContext: Context,
-	private val httpDownloader: HttpDownloader,
+	private val fileDownloader: FileDownloader,
 	private val okkeiPatcherApi: OkkeiPatcherApi
 ) : OkkeiPatcherRepository {
 
@@ -37,14 +37,14 @@ class OkkeiPatcherRepositoryImpl @Inject constructor(
 		return okkeiPatcherApi.getChangelog(locale.language)
 	}
 
-	override fun getUpdateFile() = operation(progressMax = httpDownloader.progressMax) {
+	override fun getUpdateFile() = operation(progressMax = fileDownloader.progressMax) {
 		if (isUpdateDownloaded && updateFile.exists()) {
 			return@operation updateFile
 		}
 		isUpdateDownloaded = false
 		try {
 			val updateData = okkeiPatcherApi.getOkkeiPatcherData()
-			val updateHash = httpDownloader.download(updateData.url, updateFile, hashing = true, ::progressDelta)
+			val updateHash = fileDownloader.download(updateData.url, updateFile, hashing = true, ::progressDelta)
 			if (updateHash != updateData.hash) {
 				throw LocalizedException(LocalizedString.resource(R.string.error_update_app_corrupted))
 			}

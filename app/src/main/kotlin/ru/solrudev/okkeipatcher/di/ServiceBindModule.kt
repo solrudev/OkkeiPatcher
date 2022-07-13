@@ -7,7 +7,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ru.solrudev.okkeipatcher.data.service.*
 import ru.solrudev.okkeipatcher.domain.service.ApkSigner
-import ru.solrudev.okkeipatcher.domain.service.HttpDownloader
+import ru.solrudev.okkeipatcher.domain.service.FileDownloader
 import ru.solrudev.okkeipatcher.domain.service.StorageChecker
 
 @InstallIn(SingletonComponent::class)
@@ -29,8 +29,8 @@ interface ServiceBindModule {
 	@Binds
 	@Reusable
 	fun bindHttpDownloader(
-		httpDownloader: HttpDownloaderImpl
-	): HttpDownloader
+		httpDownloader: FileDownloaderImpl
+	): FileDownloader
 
 	@Binds
 	@Reusable

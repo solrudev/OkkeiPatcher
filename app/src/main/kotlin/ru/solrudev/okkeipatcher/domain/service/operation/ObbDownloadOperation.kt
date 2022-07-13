@@ -6,7 +6,7 @@ import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFile
-import ru.solrudev.okkeipatcher.domain.service.HttpDownloader
+import ru.solrudev.okkeipatcher.domain.service.FileDownloader
 
 private const val PROGRESS_MULTIPLIER = 10
 
@@ -14,12 +14,12 @@ private const val PROGRESS_MULTIPLIER = 10
 fun ObbDownloadOperation(
 	obbPatchFile: PatchFile,
 	obbRepository: ObbRepository,
-	httpDownloader: HttpDownloader
-) = operation(progressMax = httpDownloader.progressMax * PROGRESS_MULTIPLIER) {
+	fileDownloader: FileDownloader
+) = operation(progressMax = fileDownloader.progressMax * PROGRESS_MULTIPLIER) {
 	try {
 		status(LocalizedString.resource(R.string.status_downloading_obb))
 		val obbData = obbPatchFile.getData()
-		val obbHash = httpDownloader.download(
+		val obbHash = fileDownloader.download(
 			obbData.url,
 			obbRepository.openObbOutputStream(),
 			hashing = true

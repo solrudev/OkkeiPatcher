@@ -2,7 +2,7 @@ package ru.solrudev.okkeipatcher.domain.service
 
 import java.io.OutputStream
 
-interface HttpDownloader {
+interface FileDownloader {
 
 	val progressMax: Int
 
