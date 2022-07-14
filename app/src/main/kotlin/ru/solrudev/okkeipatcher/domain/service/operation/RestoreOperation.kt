@@ -1,13 +1,14 @@
 package ru.solrudev.okkeipatcher.domain.service.operation
 
 import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.domain.core.LocalizedString
+import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.aggregateOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.emptyOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.core.persistence.Dao
-import ru.solrudev.okkeipatcher.domain.model.LocalizedString
-import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
+import ru.solrudev.okkeipatcher.domain.model.exception.wrapDomainExceptions
 import ru.solrudev.okkeipatcher.domain.service.StorageChecker
 import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.RestoreStrategy
 
@@ -16,7 +17,7 @@ class RestoreOperation(
 	private val handleSaveData: Boolean,
 	private val patchStatus: Dao<Boolean>,
 	private val storageChecker: StorageChecker
-) : Operation<Unit> {
+) : Operation<Result> {
 
 	private val operation = with(strategy) {
 		aggregateOperation(
@@ -37,23 +38,23 @@ class RestoreOperation(
 	override val progressDelta = operation.progressDelta
 	override val progressMax = operation.progressMax
 
-	override suspend fun invoke() = strategy.use {
-		operation()
-	}
-
-	/**
-	 * Throws an exception if conditions for restoring are not met.
-	 */
-	suspend fun checkCanRestore() {
+	override suspend fun canInvoke(): Result {
 		val isPatched = patchStatus.retrieve()
 		if (!isPatched) {
-			throw LocalizedException(LocalizedString.resource(R.string.error_not_patched))
+			return Result.Failure(LocalizedString.resource(R.string.error_not_patched))
 		}
 		if (!isBackupAvailable()) {
-			throw LocalizedException(LocalizedString.resource(R.string.error_backup_not_found))
+			return Result.Failure(LocalizedString.resource(R.string.error_backup_not_found))
 		}
 		if (!storageChecker.isEnoughSpace()) {
-			throw LocalizedException(LocalizedString.resource(R.string.error_no_free_space))
+			return Result.Failure(LocalizedString.resource(R.string.error_no_free_space))
+		}
+		return Result.Success
+	}
+
+	override suspend fun invoke() = wrapDomainExceptions {
+		strategy.use {
+			operation()
 		}
 	}
 

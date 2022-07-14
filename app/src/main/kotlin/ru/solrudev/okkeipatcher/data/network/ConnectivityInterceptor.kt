@@ -2,7 +2,7 @@ package ru.solrudev.okkeipatcher.data.network
 
 import okhttp3.Interceptor
 import okhttp3.Response
-import ru.solrudev.okkeipatcher.domain.model.exception.NetworkNotAvailableException
+import ru.solrudev.okkeipatcher.data.network.model.exception.NetworkNotAvailableException
 import ru.solrudev.okkeipatcher.domain.repository.app.ConnectivityRepository
 import javax.inject.Inject
 

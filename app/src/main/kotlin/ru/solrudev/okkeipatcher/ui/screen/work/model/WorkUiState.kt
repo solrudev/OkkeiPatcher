@@ -1,6 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.screen.work.model
 
-import ru.solrudev.okkeipatcher.domain.model.LocalizedString
+import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.ProgressData
 import ru.solrudev.okkeipatcher.ui.core.UiState
 import ru.solrudev.okkeipatcher.ui.model.MessageUiState

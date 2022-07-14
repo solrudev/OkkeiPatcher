@@ -16,16 +16,19 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.data.worker.util.failureWorkData
+import ru.solrudev.okkeipatcher.data.worker.model.WorkerFailure
 import ru.solrudev.okkeipatcher.data.worker.util.setProgress
+import ru.solrudev.okkeipatcher.data.worker.util.workerFailure
+import ru.solrudev.okkeipatcher.domain.core.LocalizedString
+import ru.solrudev.okkeipatcher.domain.core.Message
+import ru.solrudev.okkeipatcher.domain.core.onFailure
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.extension.statusAndAccumulatedProgress
-import ru.solrudev.okkeipatcher.domain.model.LocalizedString
-import ru.solrudev.okkeipatcher.domain.model.Message
 import ru.solrudev.okkeipatcher.domain.service.operation.factory.OperationFactory
 import ru.solrudev.okkeipatcher.ui.host.OkkeiActivity
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.time.Duration.Companion.milliseconds
+import ru.solrudev.okkeipatcher.domain.core.Result as DomainResult
 
 private val workerProgressNotificationId = AtomicInteger(813047)
 private val workerMessageNotificationId = AtomicInteger(49725)
@@ -33,7 +36,7 @@ private val workerMessageNotificationId = AtomicInteger(49725)
 abstract class ForegroundWorker(
 	context: Context,
 	workerParameters: WorkerParameters,
-	private val operationFactory: OperationFactory<*>,
+	private val operationFactory: OperationFactory<DomainResult>,
 	private val workLabel: LocalizedString
 ) : CoroutineWorker(context, workerParameters) {
 
@@ -52,37 +55,57 @@ abstract class ForegroundWorker(
 
 	final override suspend fun doWork() = try {
 		setForeground(createForegroundInfo())
+		val operation = operationFactory.create()
+		operation
+			.canInvoke()
+			.onFailure {
+				return createFailure(
+					WorkerFailure.Domain(it.reason)
+				)
+			}
+		val result: DomainResult
 		coroutineScope {
-			val operation = operationFactory.create()
 			val observeJob = observeOperation(operation)
-			operation()
+			result = operation()
 			observeJob.cancel()
 		}
-		clearShownMessageNotifications()
-		val successMessage = Message(
-			LocalizedString.resource(R.string.notification_title_work_finished),
-			LocalizedString.resource(R.string.notification_message_work_success)
-		)
-		displayMessageNotification(successMessage)
-		Result.success()
+		result.onFailure {
+			return createFailure(
+				WorkerFailure.Domain(it.reason)
+			)
+		}
+		createSuccess()
 	} catch (t: Throwable) {
-		clearShownMessageNotifications()
 		if (t is CancellationException) {
 			throw t
 		}
-		val failMessage = Message(
-			LocalizedString.resource(R.string.notification_title_work_finished),
-			LocalizedString.resource(R.string.notification_message_work_failed)
-		)
-		displayMessageNotification(failMessage)
-		Result.failure(failureWorkData(t))
+		createFailure(WorkerFailure.Unhandled(t))
 	} finally {
+		clearShownMessageNotifications()
 		withContext(NonCancellable) {
 			delay(250.milliseconds) // for foreground service notification to be canceled before returning
 		}
 	}
 
 	private fun createForegroundInfo() = ForegroundInfo(progressNotificationId, progressNotificationBuilder.build())
+
+	private suspend fun createSuccess(): Result {
+		val successMessage = Message(
+			LocalizedString.resource(R.string.notification_title_work_finished),
+			LocalizedString.resource(R.string.notification_message_work_success)
+		)
+		displayMessageNotification(successMessage, resultMessage = true)
+		return Result.success()
+	}
+
+	private suspend fun createFailure(failure: WorkerFailure): Result {
+		val failMessage = Message(
+			LocalizedString.resource(R.string.notification_title_work_finished),
+			LocalizedString.resource(R.string.notification_message_work_failed)
+		)
+		displayMessageNotification(failMessage, resultMessage = true)
+		return workerFailure(failure)
+	}
 
 	private fun CoroutineScope.observeOperation(operation: Operation<*>) = launch {
 		reportProgress(operation)
@@ -114,22 +137,25 @@ abstract class ForegroundWorker(
 		.onEach { displayMessageNotification(it) }
 		.launchIn(this)
 
-	private suspend fun displayMessageNotification(message: Message) = withContext(NonCancellable) {
-		val titleString = message.title.resolve(applicationContext)
-		val messageString = message.message.resolve(applicationContext)
-		val notification = simpleNotificationBuilder.apply {
-			setContentTitle(titleString)
-			setContentText(messageString)
-			if (messageString.length > 28) {
-				setStyle(NotificationCompat.BigTextStyle().bigText(messageString))
+	private suspend fun displayMessageNotification(message: Message, resultMessage: Boolean = false) =
+		withContext(NonCancellable) {
+			val titleString = message.title.resolve(applicationContext)
+			val messageString = message.message.resolve(applicationContext)
+			val notification = simpleNotificationBuilder.apply {
+				setContentTitle(titleString)
+				setContentText(messageString)
+				if (messageString.length > 28) {
+					setStyle(NotificationCompat.BigTextStyle().bigText(messageString))
+				}
+			}.build()
+			val notificationId = workerMessageNotificationId.incrementAndGet()
+			if (!resultMessage) {
+				shownMessageNotificationsMutex.withLock {
+					shownMessageNotifications.add(notificationId)
+				}
 			}
-		}.build()
-		val notificationId = workerMessageNotificationId.incrementAndGet()
-		shownMessageNotificationsMutex.withLock {
-			shownMessageNotifications.add(notificationId)
+			notificationManager?.notify(notificationId, notification)
 		}
-		notificationManager?.notify(notificationId, notification)
-	}
 
 	private suspend fun clearShownMessageNotifications() = withContext(NonCancellable) {
 		shownMessageNotificationsMutex.withLock {

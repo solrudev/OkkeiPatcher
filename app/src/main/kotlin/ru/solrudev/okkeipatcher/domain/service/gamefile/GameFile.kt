@@ -1,6 +1,6 @@
 package ru.solrudev.okkeipatcher.domain.service.gamefile
 
-import net.lingala.zip4j.ZipFile
+import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 
 interface GameFile : AutoCloseable {
@@ -8,18 +8,13 @@ interface GameFile : AutoCloseable {
 	fun deleteBackup()
 	fun backup(): Operation<Unit>
 	fun restore(): Operation<Unit>
+	override fun close() {}
 }
 
 interface Patchable {
-	fun checkCanPatch()
+	fun canPatch(): Result
 	fun patch(): Operation<Unit>
 	fun update(): Operation<Unit>
-}
-
-interface ZipPackage : AutoCloseable {
-	suspend fun toZipFile(): ZipFile
-	suspend fun sign()
-	suspend fun removeSignature()
 }
 
 interface PatchableGameFile : GameFile, Patchable

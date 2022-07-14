@@ -3,8 +3,10 @@ package ru.solrudev.okkeipatcher.domain.core.operation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.*
-import ru.solrudev.okkeipatcher.domain.model.LocalizedString
-import ru.solrudev.okkeipatcher.domain.model.Message
+import ru.solrudev.okkeipatcher.domain.core.LocalizedString
+import ru.solrudev.okkeipatcher.domain.core.Message
+import ru.solrudev.okkeipatcher.domain.core.Result
+import ru.solrudev.okkeipatcher.domain.core.onFailure
 
 /**
  * Creates an instance of [Operation] which executes the provided [block] when invoked. This builder function allows
@@ -20,14 +22,17 @@ import ru.solrudev.okkeipatcher.domain.model.Message
  * be summed.
  * @param progressMax max progress of the operation (cannot be negative, defaults to zero). Provided value should
  * account only for actions executed in [block], without nested operations' max progress values.
+ * @param canInvoke lambda which returns if the operation can be invoked at the moment. By default returns
+ * [Result.Success].
  */
 fun <R> operation(
 	vararg operations: Operation<*> = emptyArray(),
 	progressMax: Int = 0,
+	canInvoke: suspend () -> Result = { Result.Success },
 	block: suspend OperationScope.() -> R
 ): Operation<R> {
 	require(progressMax >= 0) { "progressMax cannot be negative, but was $progressMax" }
-	return OperationImpl(operations, progressMax, block)
+	return OperationImpl(operations, progressMax, canInvoke, block)
 }
 
 /**
@@ -36,9 +41,20 @@ fun <R> operation(
  * When operation created with this builder function is finished successfully, it will emit remaining progress delta
  * if accumulated progress hasn't reached max progress.
  */
-fun aggregateOperation(vararg operations: Operation<*>): Operation<Unit> = OperationImpl(operations) {
-	operations.forEach { it.invoke() }
-}
+fun aggregateOperation(vararg operations: Operation<*>): Operation<Unit> = OperationImpl(
+	operations,
+	canInvokeDelegate = lambda@{
+		for (operation in operations) {
+			operation
+				.canInvoke()
+				.onFailure { return@lambda it }
+		}
+		Result.Success
+	},
+	block = {
+		operations.forEach { it.invoke() }
+	}
+)
 
 /**
  * Returns an operation which does nothing.
@@ -56,6 +72,7 @@ private object EmptyOperation : Operation<Unit> {
 private class OperationImpl<out R>(
 	operations: Array<out Operation<*>>,
 	progressMax: Int = 0,
+	private val canInvokeDelegate: suspend () -> Result = { Result.Success },
 	private val block: suspend OperationScope.() -> R
 ) : Operation<R>, OperationScope {
 
@@ -83,6 +100,8 @@ private class OperationImpl<out R>(
 
 	private val remainingProgress: Int
 		get() = progressMax - accumulatedProgress
+
+	override suspend fun canInvoke() = canInvokeDelegate()
 
 	override suspend fun invoke() = coroutineScope {
 		val accumulateProgressJob = if (progressMax > 0) accumulateProgress() else null

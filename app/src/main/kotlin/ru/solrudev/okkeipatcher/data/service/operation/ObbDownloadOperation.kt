@@ -1,12 +1,12 @@
-package ru.solrudev.okkeipatcher.domain.service.operation
+package ru.solrudev.okkeipatcher.data.service.operation
 
 import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.data.service.FileDownloader
+import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
-import ru.solrudev.okkeipatcher.domain.model.LocalizedString
-import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
+import ru.solrudev.okkeipatcher.domain.model.exception.ObbCorruptedException
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFile
-import ru.solrudev.okkeipatcher.domain.service.FileDownloader
 
 private const val PROGRESS_MULTIPLIER = 10
 
@@ -27,7 +27,7 @@ fun ObbDownloadOperation(
 			progressDelta(progressDelta * PROGRESS_MULTIPLIER)
 		}
 		if (obbHash != obbData.hash) {
-			throw LocalizedException(LocalizedString.resource(R.string.error_hash_obb_mismatch))
+			throw ObbCorruptedException()
 		}
 		obbPatchFile.installedVersion.persist(obbData.version)
 	} catch (t: Throwable) {

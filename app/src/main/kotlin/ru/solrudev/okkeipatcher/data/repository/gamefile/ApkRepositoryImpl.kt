@@ -3,8 +3,9 @@ package ru.solrudev.okkeipatcher.data.repository.gamefile
 import android.content.Context
 import android.content.pm.PackageManager
 import dagger.hilt.android.qualifiers.ApplicationContext
+import io.github.solrudev.simpleinstaller.PackageInstaller
 import io.github.solrudev.simpleinstaller.PackageUninstaller
-import ru.solrudev.okkeipatcher.R
+import io.github.solrudev.simpleinstaller.installPackage
 import ru.solrudev.okkeipatcher.data.repository.gamefile.util.backupDir
 import ru.solrudev.okkeipatcher.data.service.StreamCopier
 import ru.solrudev.okkeipatcher.data.service.computeHash
@@ -13,8 +14,7 @@ import ru.solrudev.okkeipatcher.data.util.externalDir
 import ru.solrudev.okkeipatcher.domain.core.persistence.EmptyPersistable
 import ru.solrudev.okkeipatcher.domain.core.persistence.Persistable
 import ru.solrudev.okkeipatcher.domain.core.persistence.Retrievable
-import ru.solrudev.okkeipatcher.domain.model.LocalizedString
-import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
+import ru.solrudev.okkeipatcher.domain.model.exception.GameNotFoundException
 import ru.solrudev.okkeipatcher.domain.repository.app.CommonFilesHashRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkFile
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
@@ -34,6 +34,7 @@ private val Context.isGameInstalled: Boolean
 class ApkRepositoryImpl @Inject constructor(
 	@ApplicationContext private val applicationContext: Context,
 	private val packageUninstaller: PackageUninstaller,
+	packageInstaller: PackageInstaller,
 	commonFilesHashRepository: CommonFilesHashRepository,
 	streamCopier: StreamCopier
 ) : ApkRepository {
@@ -45,6 +46,7 @@ class ApkRepositoryImpl @Inject constructor(
 		File(applicationContext.backupDir, "backup.apk"),
 		applicationContext,
 		streamCopier,
+		packageInstaller,
 		commonFilesHashRepository.backupApkHash,
 		commonFilesHashRepository.backupApkHash
 	)
@@ -53,6 +55,7 @@ class ApkRepositoryImpl @Inject constructor(
 		File(applicationContext.externalDir, "temp.apk"),
 		applicationContext,
 		streamCopier,
+		packageInstaller,
 		commonFilesHashRepository.signedApkHash,
 		EmptyPersistable
 	)
@@ -64,6 +67,7 @@ private class ApkFileImpl(
 	private val file: File,
 	private val applicationContext: Context,
 	private val streamCopier: StreamCopier,
+	private val packageInstaller: PackageInstaller,
 	private val hashRetrievable: Retrievable<String>,
 	private val hashPersistable: Persistable<String>
 ) : ApkFile {
@@ -88,6 +92,8 @@ private class ApkFileImpl(
 		return compareHash(file, savedHash)
 	}
 
+	override suspend fun install() = packageInstaller.installPackage(file)
+
 	private suspend inline fun compareHash(file: File, savedHash: String): Boolean {
 		if (savedHash.isEmpty() || !file.exists()) {
 			return false
@@ -101,7 +107,7 @@ private class ApkFileImpl(
 	 */
 	private suspend inline fun copyInstalledApkTo(destinationFile: File) = try {
 		if (!applicationContext.isGameInstalled) {
-			throw LocalizedException(LocalizedString.resource(R.string.error_game_not_found))
+			throw GameNotFoundException()
 		}
 		val installedApkPath = applicationContext.packageManager
 			.getPackageInfo(PACKAGE_NAME, 0)

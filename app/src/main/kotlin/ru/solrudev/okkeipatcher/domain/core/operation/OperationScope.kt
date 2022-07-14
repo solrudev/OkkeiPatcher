@@ -1,7 +1,7 @@
 package ru.solrudev.okkeipatcher.domain.core.operation
 
-import ru.solrudev.okkeipatcher.domain.model.LocalizedString
-import ru.solrudev.okkeipatcher.domain.model.Message
+import ru.solrudev.okkeipatcher.domain.core.LocalizedString
+import ru.solrudev.okkeipatcher.domain.core.Message
 
 /**
  * Scope for the [operation] builder.

@@ -8,7 +8,6 @@ import net.lingala.zip4j.ZipFile
 import ru.solrudev.okkeipatcher.data.service.util.use
 import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.repository.app.CommonFilesHashRepository
-import ru.solrudev.okkeipatcher.domain.service.ApkSigner
 import java.io.File
 import java.security.KeyFactory
 import java.security.cert.CertificateFactory
@@ -18,6 +17,11 @@ import javax.inject.Inject
 
 private const val CERTIFICATE_FILE_NAME = "testkey.x509.pem"
 private const val PRIVATE_KEY_FILE_NAME = "testkey.pk8"
+
+interface ApkSigner {
+	suspend fun sign(apk: File)
+	suspend fun removeSignature(apk: File)
+}
 
 class ApkSignerImpl @Inject constructor(
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,

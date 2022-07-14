@@ -4,10 +4,10 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.intPreferencesKey
 import ru.solrudev.okkeipatcher.data.core.Cache
+import ru.solrudev.okkeipatcher.data.network.model.exception.NetworkNotAvailableException
 import ru.solrudev.okkeipatcher.data.preference.Preference
 import ru.solrudev.okkeipatcher.domain.core.persistence.Retrievable
 import ru.solrudev.okkeipatcher.domain.model.PatchFileData
-import ru.solrudev.okkeipatcher.domain.model.exception.NetworkNotAvailableException
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFile
 
 class PatchFileImpl<T>(

@@ -1,8 +1,9 @@
 package ru.solrudev.okkeipatcher.ui.screen.work.reducer
 
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.domain.model.LocalizedString
-import ru.solrudev.okkeipatcher.domain.model.Message
+import ru.solrudev.okkeipatcher.domain.core.LocalizedString
+import ru.solrudev.okkeipatcher.domain.core.Message
+import ru.solrudev.okkeipatcher.domain.core.plus
 import ru.solrudev.okkeipatcher.ui.core.Reducer
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkStateEvent
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkUiState
@@ -16,9 +17,10 @@ class WorkStateEventReducer @Inject constructor() : Reducer<WorkUiState, WorkSta
 			progressData = event.progressData
 		)
 		is WorkStateEvent.Failed -> {
+			val newLine = if (event.stackTrace.isNotBlank()) "\n" else ""
 			val message = Message(
-				LocalizedString.resource(R.string.exception),
-				LocalizedString.raw(event.stackTrace)
+				LocalizedString.resource(R.string.error),
+				event.reason + LocalizedString.raw("$newLine${event.stackTrace}")
 			)
 			val errorMessage = state.errorMessage.copy(data = message)
 			state.copy(errorMessage = errorMessage)

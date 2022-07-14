@@ -1,11 +1,12 @@
 package ru.solrudev.okkeipatcher.domain.service.gamefile
 
 import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.domain.core.LocalizedString
+import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.core.operation.toOperation
-import ru.solrudev.okkeipatcher.domain.model.LocalizedString
-import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
+import ru.solrudev.okkeipatcher.domain.model.exception.ObbCorruptedException
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbRepository
 
 abstract class Obb(private val obbRepository: ObbRepository) : PatchableGameFile {
@@ -13,10 +14,11 @@ abstract class Obb(private val obbRepository: ObbRepository) : PatchableGameFile
 	override val backupExists: Boolean
 		get() = obbRepository.backupExists
 
-	override fun checkCanPatch() {
+	override fun canPatch(): Result {
 		if (!obbRepository.obbExists && !backupExists) {
-			throw LocalizedException(LocalizedString.resource(R.string.error_obb_not_found))
+			return Result.Failure(LocalizedString.resource(R.string.error_obb_not_found))
 		}
+		return Result.Success
 	}
 
 	override fun deleteBackup() = obbRepository.deleteBackup()
@@ -39,11 +41,9 @@ abstract class Obb(private val obbRepository: ObbRepository) : PatchableGameFile
 		return operation(verifyBackupOperation, restoreOperation) {
 			status(LocalizedString.resource(R.string.status_restoring_obb))
 			if (!verifyBackupOperation()) {
-				throw LocalizedException(LocalizedString.resource(R.string.error_hash_obb_mismatch))
+				throw ObbCorruptedException()
 			}
 			restoreOperation()
 		}
 	}
-
-	override fun close() {}
 }

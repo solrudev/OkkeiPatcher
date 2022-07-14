@@ -4,25 +4,24 @@ import android.content.Context
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import net.lingala.zip4j.ZipFile
-import net.lingala.zip4j.model.ZipParameters
 import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.data.service.FileDownloader
+import ru.solrudev.okkeipatcher.data.service.factory.ApkZipPackageFactory
 import ru.solrudev.okkeipatcher.data.service.util.use
 import ru.solrudev.okkeipatcher.data.util.download
 import ru.solrudev.okkeipatcher.data.util.externalDir
+import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.aggregateOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
-import ru.solrudev.okkeipatcher.domain.model.LocalizedString
-import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
+import ru.solrudev.okkeipatcher.domain.model.exception.ScriptsCorruptedException
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFile
-import ru.solrudev.okkeipatcher.domain.service.FileDownloader
-import ru.solrudev.okkeipatcher.domain.service.gamefile.ZipPackage
 import java.io.File
 
 private val tempZipFilesRegex = Regex("(apk|zip)\\d+")
 
 class ScriptsPatchOperation(
-	private val apk: ZipPackage,
+	private val apkZipPackageFactory: ApkZipPackageFactory,
 	private val scriptsPatchFile: PatchFile,
 	private val ioDispatcher: CoroutineDispatcher,
 	private val applicationContext: Context,
@@ -52,12 +51,12 @@ class ScriptsPatchOperation(
 		scriptsFile.delete()
 	}
 
-	private fun downloadScripts(): Operation<Unit> = operation(progressMax = fileDownloader.progressMax) {
+	private fun downloadScripts() = operation(progressMax = fileDownloader.progressMax) {
 		status(LocalizedString.resource(R.string.status_downloading_scripts))
 		val scriptsData = scriptsPatchFile.getData()
 		val scriptsHash = fileDownloader.download(scriptsData.url, scriptsFile, hashing = true, ::progressDelta)
 		if (scriptsHash != scriptsData.hash) {
-			throw LocalizedException(LocalizedString.resource(R.string.error_hash_scripts_mismatch))
+			throw ScriptsCorruptedException()
 		}
 		scriptsPatchFile.installedVersion.persist(scriptsData.version)
 	}
@@ -73,19 +72,18 @@ class ScriptsPatchOperation(
 
 	private fun replaceScripts() = operation(progressMax = 100) {
 		status(LocalizedString.resource(R.string.status_replacing_scripts))
-		apk.toZipFile().use { apkZip ->
-			val scriptsFolder = "assets/script/"
-			val parameters = ZipParameters().apply { rootFolderNameInZip = scriptsFolder }
-			val newScripts = extractedScriptsDirectory.listFiles()!!.filter { it.isFile }
-			val oldScripts = newScripts.map { "$scriptsFolder${it.name}" }
-			withContext(ioDispatcher) {
-				apkZip.removeFiles(oldScripts)
-				apkZip.addFiles(newScripts, parameters)
-			}
+		val scriptsFolder = "assets/script/"
+		val newScripts = extractedScriptsDirectory
+			.listFiles()!!
+			.filter { it.isFile }
+		val oldScripts = newScripts.map { "$scriptsFolder${it.name}" }
+		apkZipPackageFactory.create().use { apk ->
+			apk.removeFiles(oldScripts)
+			apk.addFiles(newScripts, root = scriptsFolder)
+			status(LocalizedString.resource(R.string.status_signing_apk))
+			apk.removeSignature()
+			apk.sign()
 		}
-		status(LocalizedString.resource(R.string.status_signing_apk))
-		apk.removeSignature()
-		apk.sign()
 	}
 
 	private fun deleteTempZipFiles() {

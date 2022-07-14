@@ -2,9 +2,9 @@ package ru.solrudev.okkeipatcher.domain.service.gamefile
 
 import androidx.annotation.StringRes
 import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.domain.core.LocalizedString
+import ru.solrudev.okkeipatcher.domain.core.Message
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
-import ru.solrudev.okkeipatcher.domain.model.LocalizedString
-import ru.solrudev.okkeipatcher.domain.model.Message
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.SaveDataRepository
 import javax.inject.Inject
 

@@ -1,6 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.screen.work.model
 
-import ru.solrudev.okkeipatcher.domain.model.LocalizedString
+import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.ProgressData
 import ru.solrudev.okkeipatcher.domain.model.Work
 import ru.solrudev.okkeipatcher.ui.core.Effect
@@ -20,7 +20,7 @@ sealed interface WorkEvent : Event {
 
 sealed interface WorkStateEvent : WorkEvent {
 	data class Running(val status: LocalizedString, val progressData: ProgressData) : WorkStateEvent
-	data class Failed(val stackTrace: String) : WorkStateEvent
+	data class Failed(val reason: LocalizedString, val stackTrace: String) : WorkStateEvent
 	object Succeeded : WorkStateEvent
 	object Canceled : WorkStateEvent
 	object Unknown : WorkStateEvent

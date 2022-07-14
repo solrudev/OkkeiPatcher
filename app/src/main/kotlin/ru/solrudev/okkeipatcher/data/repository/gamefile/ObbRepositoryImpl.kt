@@ -3,7 +3,6 @@ package ru.solrudev.okkeipatcher.data.repository.gamefile
 import android.content.Context
 import android.os.Environment
 import dagger.hilt.android.qualifiers.ApplicationContext
-import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.repository.gamefile.util.backupDir
 import ru.solrudev.okkeipatcher.data.service.StreamCopier
 import ru.solrudev.okkeipatcher.data.service.computeHash
@@ -11,8 +10,7 @@ import ru.solrudev.okkeipatcher.data.service.copy
 import ru.solrudev.okkeipatcher.data.util.recreate
 import ru.solrudev.okkeipatcher.domain.core.operation.ProgressOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
-import ru.solrudev.okkeipatcher.domain.model.LocalizedString
-import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
+import ru.solrudev.okkeipatcher.domain.model.exception.ObbNotFoundException
 import ru.solrudev.okkeipatcher.domain.repository.app.CommonFilesHashRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbRepository
 import java.io.File
@@ -59,8 +57,8 @@ class ObbRepositoryImpl @Inject constructor(
 	override fun backup(): ProgressOperation<Unit> {
 		val progressMultiplier = 6
 		return operation(progressMax = streamCopier.progressMax * progressMultiplier) {
-			if (!obbExists) {
-				throw LocalizedException(LocalizedString.resource(R.string.error_obb_not_found))
+			if (!obbFile.exists()) {
+				throw ObbNotFoundException()
 			}
 			try {
 				val hash = streamCopier.copy(obbFile, backup, hashing = true) {
@@ -77,8 +75,8 @@ class ObbRepositoryImpl @Inject constructor(
 	override fun restore(): ProgressOperation<Unit> {
 		val progressMultiplier = 3
 		return operation(progressMax = streamCopier.progressMax * progressMultiplier) {
-			if (!backupExists) {
-				throw LocalizedException(LocalizedString.resource(R.string.error_obb_not_found))
+			if (!backup.exists()) {
+				throw ObbNotFoundException()
 			}
 			try {
 				streamCopier.copy(backup, obbFile) {

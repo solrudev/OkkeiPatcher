@@ -6,7 +6,7 @@ import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.domain.model.LocalizedString
+import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.service.operation.factory.PatchOperationFactory
 
 private val workLabel = LocalizedString.resource(R.string.notification_title_patch)

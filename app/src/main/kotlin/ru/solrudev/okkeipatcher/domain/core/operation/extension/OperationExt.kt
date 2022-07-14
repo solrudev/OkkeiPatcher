@@ -4,8 +4,8 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.runningReduce
+import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
-import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 
 fun <T> Operation<T>.statusAndAccumulatedProgress() = status
 	.onStart { emit(LocalizedString.empty()) }

@@ -15,7 +15,7 @@
  * copies or substantial portions of the Software.
  */
 
-package ru.solrudev.okkeipatcher.domain.model
+package ru.solrudev.okkeipatcher.domain.core
 
 import android.content.Context
 import androidx.annotation.PluralsRes

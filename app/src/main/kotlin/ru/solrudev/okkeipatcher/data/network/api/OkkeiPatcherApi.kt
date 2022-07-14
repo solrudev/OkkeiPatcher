@@ -14,6 +14,7 @@ interface OkkeiPatcherApi {
 	@GET("app/changelog")
 	suspend fun getChangelog(
 		@Query("locale") locale: String,
+		@Query("version") currentVersion: Int,
 		@Header("Accept-Language") localeHeader: String = locale
 	): OkkeiPatcherChangelogDto
 }

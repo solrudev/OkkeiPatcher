@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.domain.model
+package ru.solrudev.okkeipatcher.domain.core
 
 data class Message(
 	val title: LocalizedString,

@@ -7,7 +7,7 @@ import android.widget.Toast
 import androidx.core.content.getSystemService
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.domain.model.Message
+import ru.solrudev.okkeipatcher.domain.core.Message
 
 fun Context.copyTextToClipboard(clipLabel: CharSequence, text: CharSequence) {
 	val clipboard = getSystemService<ClipboardManager>()

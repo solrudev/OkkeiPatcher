@@ -1,9 +1,10 @@
 package ru.solrudev.okkeipatcher.domain.service.operation
 
 import kotlinx.coroutines.delay
+import ru.solrudev.okkeipatcher.domain.core.LocalizedString
+import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.core.persistence.Dao
-import ru.solrudev.okkeipatcher.domain.model.LocalizedString
 import kotlin.time.Duration.Companion.seconds
 
 private const val STEPS_COUNT = 5
@@ -20,4 +21,5 @@ fun MockOperation(
 		progressDelta(100)
 	}
 	isPatched.persist(tags.contains("PatchWork"))
+	Result.Success
 }

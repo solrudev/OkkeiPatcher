@@ -3,7 +3,6 @@ package ru.solrudev.okkeipatcher
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
@@ -26,7 +25,6 @@ class OkkeiApplication : Application(), Configuration.Provider {
 
 	override fun onCreate() {
 		super.onCreate()
-		instance = this
 		SimpleInstaller.setNotificationIcon(R.mipmap.ic_launcher_foreground)
 		connectivityRepository.startNetworkMonitoring()
 		createNotificationChannels()
@@ -71,13 +69,5 @@ class OkkeiApplication : Application(), Configuration.Provider {
 	override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
 		super.onConfigurationChanged(newConfig)
 		createNotificationChannels()
-	}
-
-	companion object {
-
-		val context: Context
-			get() = instance.applicationContext
-
-		private lateinit var instance: OkkeiApplication
 	}
 }

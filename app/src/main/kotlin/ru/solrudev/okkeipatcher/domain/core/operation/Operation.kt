@@ -2,8 +2,9 @@ package ru.solrudev.okkeipatcher.domain.core.operation
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
-import ru.solrudev.okkeipatcher.domain.model.LocalizedString
-import ru.solrudev.okkeipatcher.domain.model.Message
+import ru.solrudev.okkeipatcher.domain.core.LocalizedString
+import ru.solrudev.okkeipatcher.domain.core.Message
+import ru.solrudev.okkeipatcher.domain.core.Result
 
 /**
  * Operation which reports its progress, status and messages. [R] is the type of operation result.
@@ -19,6 +20,7 @@ interface Operation<out R> : ProgressOperation<R> {
 interface ProgressOperation<out R> {
 	val progressDelta: Flow<Int>
 	val progressMax: Int
+	suspend fun canInvoke(): Result = Result.Success
 	suspend operator fun invoke(): R
 }
 

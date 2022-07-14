@@ -60,3 +60,6 @@
 #### ApkSigner
 -keep @com.android.apksig.internal.asn1.Asn1Class class *
 -keepclassmembers class * { @com.android.apksig.internal.asn1.Asn1Field <fields>; }
+
+#### Miscellaneous
+-keep class ru.solrudev.okkeipatcher.domain.model.Work

@@ -1,34 +1,33 @@
 package ru.solrudev.okkeipatcher.domain.service.gamefile
 
-import io.github.solrudev.simpleinstaller.PackageInstaller
 import io.github.solrudev.simpleinstaller.data.InstallResult
-import io.github.solrudev.simpleinstaller.installPackage
 import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.domain.core.LocalizedString
+import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
-import ru.solrudev.okkeipatcher.domain.core.operation.aggregateOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
-import ru.solrudev.okkeipatcher.domain.model.LocalizedString
-import ru.solrudev.okkeipatcher.domain.model.exception.LocalizedException
+import ru.solrudev.okkeipatcher.domain.model.exception.ApkNotFoundException
+import ru.solrudev.okkeipatcher.domain.model.exception.InstallException
+import ru.solrudev.okkeipatcher.domain.model.exception.NotTrustworthyApkException
+import ru.solrudev.okkeipatcher.domain.model.exception.UninstallException
+import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkFile
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
-import java.io.File
 
-abstract class Apk(
-	protected val apkRepository: ApkRepository,
-	private val apkZipPackage: ZipPackage,
-	private val packageInstaller: PackageInstaller
-) : PatchableGameFile {
+abstract class Apk(protected val apkRepository: ApkRepository) : PatchableGameFile {
 
 	override val backupExists: Boolean
 		get() = apkRepository.backupApk.exists
 
-	override fun checkCanPatch() {
+	override fun canPatch(): Result {
 		val canInstallPatchedApk = backupExists && apkRepository.tempApk.exists
 		if (!apkRepository.isInstalled && !canInstallPatchedApk) {
-			throw LocalizedException(LocalizedString.resource(R.string.error_game_not_found))
+			return Result.Failure(
+				LocalizedString.resource(R.string.error_game_not_found)
+			)
 		}
+		return Result.Success
 	}
 
-	override fun close() = apkZipPackage.close()
 	override fun deleteBackup() = apkRepository.backupApk.delete()
 
 	override fun backup() = operation(progressMax = 100) {
@@ -40,31 +39,38 @@ abstract class Apk(
 	}
 
 	override fun restore(): Operation<Unit> {
+		val apk = apkRepository.backupApk
 		val uninstallOperation = uninstall(updating = false)
-		val installBackupOperation = install {
-			if (!apkRepository.backupApk.verify()) {
-				throw LocalizedException(LocalizedString.resource(R.string.error_not_trustworthy_apk))
+		val installBackupOperation = install(apk)
+		return operation(uninstallOperation, installBackupOperation) {
+			if (!apk.exists) {
+				throw ApkNotFoundException()
 			}
-			apkRepository.backupApk.path
+			status(LocalizedString.resource(R.string.status_comparing_apk))
+			if (!apk.verify()) {
+				throw NotTrustworthyApkException()
+			}
+			uninstallOperation()
+			installBackupOperation()
 		}
-		return aggregateOperation(uninstallOperation, installBackupOperation)
 	}
 
 	protected fun installPatched(updating: Boolean): Operation<Unit> {
+		val apk = apkRepository.tempApk
 		val uninstallOperation = uninstall(updating)
-		val installOperation = install { apkRepository.tempApk.path }
+		val installOperation = install(apk)
 		return operation(uninstallOperation, installOperation) {
-			if (!apkRepository.tempApk.exists) {
-				throw LocalizedException(LocalizedString.resource(R.string.error_apk_not_found))
+			if (!apk.exists) {
+				throw ApkNotFoundException()
 			}
 			status(LocalizedString.resource(R.string.status_comparing_apk))
-			if (!apkRepository.tempApk.verify()) {
-				apkRepository.tempApk.delete()
-				throw LocalizedException(LocalizedString.resource(R.string.error_not_trustworthy_apk))
+			if (!apk.verify()) {
+				apk.delete()
+				throw NotTrustworthyApkException()
 			}
 			uninstallOperation()
 			installOperation()
-			apkRepository.tempApk.delete()
+			apk.delete()
 		}
 	}
 
@@ -75,24 +81,15 @@ abstract class Apk(
 		}
 		val uninstallResult = apkRepository.uninstall()
 		if (!uninstallResult) {
-			throw LocalizedException(LocalizedString.resource(R.string.error_uninstall))
+			throw UninstallException()
 		}
 	}
 
-	private fun install(apkPathFactory: suspend () -> String) = operation(progressMax = 100) {
+	private fun install(apk: ApkFile) = operation(progressMax = 100) {
 		status(LocalizedString.resource(R.string.status_installing))
-		val apk = File(apkPathFactory())
-		if (!apk.exists()) {
-			throw LocalizedException(LocalizedString.resource(R.string.error_apk_not_found))
-		}
-		val installResult = packageInstaller.installPackage(apk)
+		val installResult = apk.install()
 		if (installResult is InstallResult.Failure) {
-			throw LocalizedException(
-				LocalizedString.resource(
-					R.string.error_install,
-					installResult.cause.toString()
-				)
-			)
+			throw InstallException(installResult.cause.toString())
 		}
 	}
 }

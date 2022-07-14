@@ -1,6 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.model
 
-import ru.solrudev.okkeipatcher.domain.model.Message
+import ru.solrudev.okkeipatcher.domain.core.Message
 import ru.solrudev.okkeipatcher.ui.core.UiState
 
 data class MessageUiState(

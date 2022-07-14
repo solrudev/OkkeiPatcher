@@ -1,8 +1,8 @@
 package ru.solrudev.okkeipatcher.ui.screen.work.reducer
 
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.domain.model.LocalizedString
-import ru.solrudev.okkeipatcher.domain.model.Message
+import ru.solrudev.okkeipatcher.domain.core.LocalizedString
+import ru.solrudev.okkeipatcher.domain.core.Message
 import ru.solrudev.okkeipatcher.ui.core.Reducer
 import ru.solrudev.okkeipatcher.ui.model.MessageUiState
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEffect
