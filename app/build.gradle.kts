@@ -14,7 +14,7 @@ plugins {
 	kotlin("kapt")
 	id("dagger.hilt.android.plugin")
 	id("androidx.navigation.safeargs.kotlin")
-	id("com.google.devtools.ksp") version "1.7.0-1.0.6"
+	id("com.google.devtools.ksp") version "1.7.10-1.0.6"
 }
 
 base {
@@ -95,8 +95,8 @@ android {
 	}
 
 	compileOptions {
-		sourceCompatibility = JavaVersion.VERSION_1_8
-		targetCompatibility = JavaVersion.VERSION_1_8
+		sourceCompatibility = JavaVersion.VERSION_11
+		targetCompatibility = JavaVersion.VERSION_11
 	}
 
 	packagingOptions {
@@ -105,7 +105,7 @@ android {
 	}
 
 	kotlinOptions {
-		jvmTarget = "1.8"
+		jvmTarget = "11"
 	}
 
 	buildFeatures {
