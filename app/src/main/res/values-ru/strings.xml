@@ -2,8 +2,8 @@
 	<!--General-->
 	<string name="abort">Стоп</string>
 	<string name="settings">Настройки</string>
-	<string name="attention">Внимание</string>
 	<string name="about_version">Версия %s\nby solrudev</string>
+	<string name="grant">Предоставить</string>
 	<string name="patch">Патч</string>
 	<string name="restoring">Восстановление</string>
 	<string name="start">Начать</string>
@@ -51,6 +51,8 @@
 	<string name="prompt_update_patch_available">Доступно обновление патча</string>
 
 	<!--Rationales-->
+	<string name="rationale_save_data_access_permission_title">Доступ к сохранениям</string>
+	<string name="rationale_save_data_access_permission">На Android 11+ требуется специальное разрешение для доступа к игровым сохранениям CHAOS;CHILD. После нажатия на кнопку \"Предоставить\" нажмите \"Использовать эту папку\" и разрешите доступ.</string>
 	<string name="rationale_install_permission">Okkei Patcher требует разрешения на установку пакетов приложений из неизвестных источников для продолжения работы. После нажатия на кнопку OK откроется страница с настройками, где Вы должны активировать данную опцию. После этого Вы можете вернуться в Okkei Patcher с помощью кнопки или жеста Назад.</string>
 	<string name="rationale_storage_permission">Okkei Patcher требует разрешения на чтение и запись внутренней памяти устройства для продолжения работы. Хотите ли Вы попытаться дать разрешение ещё раз? В противном случае Okkei Patcher будет закрыт.</string>
 	<string name="rationale_storage_permission_denied">Okkei Patcher требует разрешения на чтение и запись внутренней памяти устройства для продолжения работы. Хотите ли Вы попытаться дать разрешение ещё раз? Если Вы нажмёте OK, откроются настройки Okkei Patcher, где Вы должны перейти в меню с разрешениями и активировать разрешение на доступ к внутренней памяти. В противном случае Okkei Patcher будет закрыт.</string>
@@ -61,7 +63,7 @@
 	<string name="preference_about_title">О программе</string>
 	<string name="preference_clear_data_title">Очистить все данные</string>
 	<string name="preference_save_data_title">Игровые сохранения</string>
-	<string name="preference_third_party_notices_title">Уведомления третьих сторон</string>
+	<string name="preference_third_party_licenses_title">Лицензии третьих сторон</string>
 	<string name="preference_clear_data_summary">Используйте эту опцию ТОЛЬКО при переустановке CHAOS;CHILD из-за повреждения данных</string>
 	<string name="preference_save_data_summary">Делать копию и восстанавливать сохранения игры</string>
 
@@ -98,6 +100,7 @@
 	<string name="warning_abort_title">Остановить процесс?</string>
 	<string name="warning_abort">Если Вы остановите процесс, данные установки CHAOS;CHILD и/или данные Okkei Patcher могут быть повреждены.</string>
 	<string name="warning_could_not_backup_save_data">Не удалось создать резервную копию текущих игровых сохранений.</string>
+	<string name="warning_could_not_restore_save_data">Не удалось восстановить предыдущие игровые сохранения.</string>
 	<string name="warning_save_data_backup_not_found_or_corrupted">Резервная копия игровых сохранений не найдена или повреждена и не будет восстановлена.</string>
 	<string name="warning_start_patch_title">Начать применение патча?</string>
 	<string name="warning_start_patch">Будет загружено %.2f МБ данных. Если Вы остановите процесс, данные установки CHAOS;CHILD и/или данные Okkei Patcher могут быть повреждены.</string>

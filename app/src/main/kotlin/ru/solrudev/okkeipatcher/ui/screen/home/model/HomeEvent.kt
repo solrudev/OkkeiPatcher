@@ -21,7 +21,6 @@ sealed interface PatchEvent : HomeEvent {
 	object StartPatch : PatchEvent, PatchEffect
 	object StartPatchMessageShown : PatchEvent
 	object StartPatchMessageDismissed : PatchEvent
-
 }
 
 sealed interface RestoreEvent : HomeEvent {

@@ -3,6 +3,7 @@ package ru.solrudev.okkeipatcher.data.repository.gamefile
 import android.content.Context
 import android.os.Environment
 import dagger.hilt.android.qualifiers.ApplicationContext
+import ru.solrudev.okkeipatcher.data.repository.gamefile.util.GAME_PACKAGE_NAME
 import ru.solrudev.okkeipatcher.data.repository.gamefile.util.backupDir
 import ru.solrudev.okkeipatcher.data.service.StreamCopier
 import ru.solrudev.okkeipatcher.data.service.computeHash
@@ -17,7 +18,6 @@ import java.io.File
 import java.io.OutputStream
 import javax.inject.Inject
 
-private const val PACKAGE_NAME = "com.mages.chaoschild_jp"
 private const val OBB_FILE_NAME = "main.87.com.mages.chaoschild_jp.obb"
 
 class ObbRepositoryImpl @Inject constructor(
@@ -34,7 +34,7 @@ class ObbRepositoryImpl @Inject constructor(
 
 	private val obbFile = File(
 		Environment.getExternalStorageDirectory(),
-		"Android/obb/$PACKAGE_NAME/$OBB_FILE_NAME"
+		"Android/obb/$GAME_PACKAGE_NAME/$OBB_FILE_NAME"
 	)
 
 	private val backup = File(applicationContext.backupDir, OBB_FILE_NAME)

@@ -75,4 +75,24 @@ interface UseCaseModule {
 	fun bindGetIsPatchedUseCase(
 		getIsPatchedFlowUseCase: GetPatchStatusFlowUseCaseImpl
 	): GetPatchStatusFlowUseCase
+
+	@Binds
+	fun bindGetIsSaveDataAccessGrantedUseCase(
+		getIsSaveDataAccessGrantedUseCase: GetIsSaveDataAccessGrantedUseCaseImpl
+	): GetIsSaveDataAccessGrantedUseCase
+
+	@Binds
+	fun bindPersistHandleSaveDataUseCase(
+		persistHandleSaveDataUseCase: PersistHandleSaveDataUseCaseImpl
+	): PersistHandleSaveDataUseCase
+
+	@Binds
+	fun bindGetHandleSaveDataFlowUseCase(
+		getHandleSaveDataFlowUseCase: GetHandleSaveDataFlowUseCaseImpl
+	): GetHandleSaveDataFlowUseCase
+
+	@Binds
+	fun bindCheckSaveDataAccessUseCase(
+		checkSaveDataAccessUseCase: CheckSaveDataAccessUseCaseImpl
+	): CheckSaveDataAccessUseCase
 }

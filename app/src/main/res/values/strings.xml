@@ -8,8 +8,8 @@
 	<string name="percent_done" translatable="false">%d%%</string>
 	<string name="about_version">Version %s\nby solrudev</string>
 	<string name="abort">Abort</string>
+	<string name="grant">Grant</string>
 	<string name="settings">Settings</string>
-	<string name="attention">Attention</string>
 	<string name="patch">Patch</string>
 	<string name="restoring">Restoring</string>
 	<string name="start">Start</string>
@@ -57,6 +57,8 @@
 	<string name="prompt_update_patch_available">Patch update is available</string>
 
 	<!--Rationales-->
+	<string name="rationale_save_data_access_permission_title">Save data access</string>
+	<string name="rationale_save_data_access_permission">On Android 11+ special permission is needed to access CHAOS;CHILD\'s save data. After pressing the Grant button click \"Use this folder\" and then allow access.</string>
 	<string name="rationale_install_permission">Okkei Patcher requires permission to install applications from unknown sources to continue. After pressing the OK button you will be redirected to your device settings where you should enable this option. Then you can return to Okkei Patcher using the back button or gesture.</string>
 	<string name="rationale_storage_permission">Okkei Patcher requires permission to read from and write to external storage to proceed. Would you like to try to grant permission again? Otherwise Okkei Patcher will be closed.</string>
 	<string name="rationale_storage_permission_denied">Okkei Patcher requires permission to read from and write to external storage to proceed. Would you like to try to grant permission again? If you click OK you will be redirected to Okkei Patcher settings where you should go to permissions settings and enable storage permission. Otherwise Okkei Patcher will be closed.</string>
@@ -67,7 +69,7 @@
 	<string name="preference_about_title">About</string>
 	<string name="preference_clear_data_title">Clear all data</string>
 	<string name="preference_save_data_title">Game save data</string>
-	<string name="preference_third_party_notices_title">Third-party notices</string>
+	<string name="preference_third_party_licenses_title">Third-party licenses</string>
 	<string name="preference_clear_data_summary">Use this ONLY when reinstalling CHAOS;CHILD due to data damage</string>
 	<string name="preference_save_data_summary">Backup and restore game save data</string>
 
@@ -104,6 +106,7 @@
 	<string name="warning_abort_title">Abort process?</string>
 	<string name="warning_abort">If you abort the process your CHAOS;CHILD installation and/or Okkei Patcher data may be damaged.</string>
 	<string name="warning_could_not_backup_save_data">Could not backup your current game save data.</string>
+	<string name="warning_could_not_restore_save_data">Could not restore previous game save data.</string>
 	<string name="warning_save_data_backup_not_found_or_corrupted">Game save data backup was not found or is corrupted and won\'t be restored.</string>
 	<string name="warning_start_patch_title">Start patch?</string>
 	<string name="warning_start_patch">You\'re about to download %.2f MB of data. If you abort the process your CHAOS;CHILD installation and/or Okkei Patcher data may be damaged.</string>

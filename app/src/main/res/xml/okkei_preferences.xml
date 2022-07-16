@@ -4,7 +4,8 @@
 
 		<SwitchPreferenceCompat
 			app:icon="@drawable/ic_save"
-			app:key="process_save_data_enabled"
+			app:key="handle_save_data"
+			app:persistent="false"
 			app:summary="@string/preference_save_data_summary"
 			app:title="@string/preference_save_data_title" />
 
@@ -27,9 +28,9 @@
 
 		<Preference
 			app:icon="@drawable/ic_text_snippet"
-			app:key="third_party_notices"
+			app:key="third_party_licenses"
 			app:persistent="false"
-			app:title="@string/preference_third_party_notices_title" />
+			app:title="@string/preference_third_party_licenses_title" />
 
 	</PreferenceCategory>
 

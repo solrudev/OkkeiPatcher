@@ -3,14 +3,14 @@ package ru.solrudev.okkeipatcher.data.repository.gamefile
 import android.content.Context
 import android.os.Build
 import android.os.Environment
-import com.anggrayudi.storage.file.DocumentFileCompat
-import com.anggrayudi.storage.file.makeFile
-import com.anggrayudi.storage.file.openInputStream
-import com.anggrayudi.storage.file.openOutputStream
+import android.provider.DocumentsContract
+import androidx.documentfile.provider.DocumentFile
 import dagger.hilt.android.qualifiers.ApplicationContext
+import ru.solrudev.okkeipatcher.data.repository.gamefile.util.GAME_PACKAGE_NAME
 import ru.solrudev.okkeipatcher.data.repository.gamefile.util.backupDir
 import ru.solrudev.okkeipatcher.data.service.StreamCopier
 import ru.solrudev.okkeipatcher.data.service.computeHash
+import ru.solrudev.okkeipatcher.data.util.ANDROID_DATA_TREE_URI
 import ru.solrudev.okkeipatcher.data.util.recreate
 import ru.solrudev.okkeipatcher.domain.repository.app.CommonFilesHashRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.SaveDataRepository
@@ -19,10 +19,11 @@ import java.io.InputStream
 import java.io.OutputStream
 import javax.inject.Inject
 
-private val CURRENT_SAVE_DATA_PATH =
-	"${Environment.getExternalStorageDirectory().absolutePath}/Android/data/com.mages.chaoschild_jp/files"
-
+private const val FILES_DIR_NAME = "files"
 private const val CURRENT_SAVE_DATA_NAME = "SAVEDATA.DAT"
+
+private val CURRENT_SAVE_DATA_PATH =
+	"${Environment.getExternalStorageDirectory().absolutePath}/Android/data/$GAME_PACKAGE_NAME/$FILES_DIR_NAME"
 
 class SaveDataRepositoryImpl @Inject constructor(
 	@ApplicationContext private val applicationContext: Context,
@@ -33,12 +34,10 @@ class SaveDataRepositoryImpl @Inject constructor(
 	private val backup = File(applicationContext.backupDir, "SAVEDATA.DAT")
 	private val temp = File(applicationContext.backupDir, "SAVEDATA_TEMP.DAT")
 
-	private val current by lazy {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-			AndroidFile(CURRENT_SAVE_DATA_PATH, CURRENT_SAVE_DATA_NAME, applicationContext)
-		} else {
-			RawFile(CURRENT_SAVE_DATA_PATH, CURRENT_SAVE_DATA_NAME)
-		}
+	private val current = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+		SaveDataDocumentFile(applicationContext)
+	} else {
+		SaveDataRawFile()
 	}
 
 	override val backupExists: Boolean
@@ -52,12 +51,15 @@ class SaveDataRepositoryImpl @Inject constructor(
 		temp.delete()
 	}
 
-	override suspend fun createTemp() = if (current.exists) {
-		temp.recreate()
-		streamCopier.copy(current.inputStream(), temp.outputStream(), current.length)
-		true
-	} else {
-		false
+	override suspend fun createTemp(): Boolean {
+		if (current.exists) {
+			temp.recreate()
+			val currentInputStream = current.inputStream() ?: return false
+			streamCopier.copy(currentInputStream, temp.outputStream(), current.length)
+			return true
+		} else {
+			return false
+		}
 	}
 
 	override suspend fun verifyBackup(): Boolean {
@@ -69,9 +71,11 @@ class SaveDataRepositoryImpl @Inject constructor(
 		return backupHash == savedHash
 	}
 
-	override suspend fun restore() {
+	override suspend fun restore(): Boolean {
 		current.recreate()
-		streamCopier.copy(backup.inputStream(), current.outputStream(), backup.length())
+		val currentOutputStream = current.outputStream() ?: return false
+		streamCopier.copy(backup.inputStream(), currentOutputStream, backup.length())
+		return true
 	}
 
 	override suspend fun persistTempAsBackup() {
@@ -90,13 +94,13 @@ private interface SaveDataFile {
 	val exists: Boolean
 	val length: Long
 	fun recreate()
-	fun inputStream(): InputStream
-	fun outputStream(): OutputStream
+	fun inputStream(): InputStream?
+	fun outputStream(): OutputStream?
 }
 
-private class RawFile(path: String, name: String) : SaveDataFile {
+private class SaveDataRawFile : SaveDataFile {
 
-	private val file = File(path, name)
+	private val file = File(CURRENT_SAVE_DATA_PATH, CURRENT_SAVE_DATA_NAME)
 
 	override val exists: Boolean
 		get() = file.exists()
@@ -109,29 +113,53 @@ private class RawFile(path: String, name: String) : SaveDataFile {
 	override fun outputStream() = file.outputStream()
 }
 
-// TODO
-private class AndroidFile(
-	private val path: String,
-	private val name: String,
-	private val applicationContext: Context
-) : SaveDataFile {
+private class SaveDataDocumentFile(private val applicationContext: Context) : SaveDataFile {
 
-	private val documentFile = DocumentFileCompat.fromFullPath(
-		applicationContext,
-		"$path/$name"
-	)
+	private var documentUri = createDocumentFile()?.uri
 
 	override val exists: Boolean
-		get() = documentFile?.exists() ?: false
+		get() = createDocumentFile()?.exists() ?: false
 
 	override val length: Long
-		get() = documentFile?.length() ?: -1L
+		get() = createDocumentFile()?.length() ?: -1L
 
 	override fun recreate() {
-		documentFile?.delete()
-		DocumentFileCompat.mkdirs(applicationContext, path)?.makeFile(applicationContext, name)
+		val file = createDocumentFile()
+		if (file?.exists() == true) {
+			file.delete()
+		} else {
+			DocumentFile
+				.fromTreeUri(applicationContext, ANDROID_DATA_TREE_URI)
+				?.createDirectory(GAME_PACKAGE_NAME)
+				?.createDirectory(FILES_DIR_NAME)
+		}
+		val dirUri = DocumentsContract.buildDocumentUriUsingTree(
+			ANDROID_DATA_TREE_URI,
+			DocumentsContract.getTreeDocumentId(ANDROID_DATA_TREE_URI) +
+					"/$GAME_PACKAGE_NAME/$FILES_DIR_NAME/"
+		)
+		documentUri = DocumentsContract.createDocument(
+			applicationContext.contentResolver,
+			dirUri,
+			"application/octet-stream",
+			CURRENT_SAVE_DATA_NAME
+		)
 	}
 
-	override fun inputStream() = documentFile?.openInputStream(applicationContext)!!
-	override fun outputStream() = documentFile?.openOutputStream(applicationContext)!!
+	override fun inputStream() = documentUri?.let {
+		applicationContext.contentResolver.openInputStream(it)
+	}
+
+	override fun outputStream() = documentUri?.let {
+		applicationContext.contentResolver.openOutputStream(it)
+	}
+
+	private fun createDocumentFile(): DocumentFile? {
+		val fileUri = DocumentsContract.buildDocumentUriUsingTree(
+			ANDROID_DATA_TREE_URI,
+			DocumentsContract.getTreeDocumentId(ANDROID_DATA_TREE_URI) +
+					"/$GAME_PACKAGE_NAME/$FILES_DIR_NAME/$CURRENT_SAVE_DATA_NAME"
+		)
+		return DocumentFile.fromSingleUri(applicationContext, fileUri)
+	}
 }

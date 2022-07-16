@@ -27,7 +27,10 @@ class SaveData @Inject constructor(private val saveDataRepository: SaveDataRepos
 		status(LocalizedString.resource(R.string.status_comparing_saves))
 		if (saveDataRepository.verifyBackup()) {
 			status(LocalizedString.resource(R.string.status_restoring_saves))
-			saveDataRepository.restore()
+			val restoreResult = saveDataRepository.restore()
+			if (!restoreResult) {
+				message(createWarning(R.string.warning_could_not_restore_save_data))
+			}
 		} else {
 			saveDataRepository.deleteBackup()
 			message(createWarning(R.string.warning_save_data_backup_not_found_or_corrupted))

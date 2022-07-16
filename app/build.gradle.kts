@@ -152,7 +152,6 @@ dependencies {
 
 	// Miscellaneous
 	implementation("com.android.tools.build:apksig:$androidGradleVersion")
-	implementation("com.anggrayudi:storage:1.3.0")
 	implementation("net.lingala.zip4j:zip4j:2.11.1")
 	implementation("io.github.solrudev:simpleinstaller:3.1.1")
 	implementation("com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.6")

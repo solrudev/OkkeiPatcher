@@ -6,6 +6,6 @@ interface SaveDataRepository {
 	fun deleteTemp()
 	suspend fun createTemp(): Boolean
 	suspend fun verifyBackup(): Boolean
-	suspend fun restore()
+	suspend fun restore(): Boolean
 	suspend fun persistTempAsBackup()
 }

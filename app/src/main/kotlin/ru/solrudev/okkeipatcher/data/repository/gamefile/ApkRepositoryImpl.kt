@@ -6,6 +6,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import io.github.solrudev.simpleinstaller.PackageInstaller
 import io.github.solrudev.simpleinstaller.PackageUninstaller
 import io.github.solrudev.simpleinstaller.installPackage
+import ru.solrudev.okkeipatcher.data.repository.gamefile.util.GAME_PACKAGE_NAME
 import ru.solrudev.okkeipatcher.data.repository.gamefile.util.backupDir
 import ru.solrudev.okkeipatcher.data.service.StreamCopier
 import ru.solrudev.okkeipatcher.data.service.computeHash
@@ -21,11 +22,9 @@ import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
 import java.io.File
 import javax.inject.Inject
 
-private const val PACKAGE_NAME = "com.mages.chaoschild_jp"
-
 private val Context.isGameInstalled: Boolean
 	get() = try {
-		packageManager.getPackageInfo(PACKAGE_NAME, PackageManager.GET_ACTIVITIES)
+		packageManager.getPackageInfo(GAME_PACKAGE_NAME, PackageManager.GET_ACTIVITIES)
 		true
 	} catch (_: PackageManager.NameNotFoundException) {
 		false
@@ -60,7 +59,7 @@ class ApkRepositoryImpl @Inject constructor(
 		EmptyPersistable
 	)
 
-	override suspend fun uninstall() = packageUninstaller.uninstallPackage(PACKAGE_NAME)
+	override suspend fun uninstall() = packageUninstaller.uninstallPackage(GAME_PACKAGE_NAME)
 }
 
 private class ApkFileImpl(
@@ -110,7 +109,7 @@ private class ApkFileImpl(
 			throw GameNotFoundException()
 		}
 		val installedApkPath = applicationContext.packageManager
-			.getPackageInfo(PACKAGE_NAME, 0)
+			.getPackageInfo(GAME_PACKAGE_NAME, 0)
 			.applicationInfo
 			.publicSourceDir
 		val installedApk = File(installedApkPath)
