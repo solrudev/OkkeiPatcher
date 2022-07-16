@@ -92,6 +92,7 @@ android {
 	androidResources {
 		noCompress("pem")
 		noCompress("pk8")
+		noCompress("past")
 	}
 
 	compileOptions {
@@ -151,6 +152,7 @@ dependencies {
 	}
 
 	// Miscellaneous
+	implementation("com.github.aefyr:pseudoapksigner:1.6")
 	implementation("com.android.tools.build:apksig:$androidGradleVersion")
 	implementation("net.lingala.zip4j:zip4j:2.11.1")
 	implementation("io.github.solrudev:simpleinstaller:3.1.1")

@@ -17,10 +17,12 @@ buildscript {
 	}
 }
 
+@Suppress("JcenterRepositoryObsolete")
 allprojects {
 	repositories {
 		google()
 		mavenCentral()
+		jcenter()
 	}
 }
 

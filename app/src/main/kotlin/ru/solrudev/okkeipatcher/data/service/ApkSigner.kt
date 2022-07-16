@@ -1,6 +1,8 @@
 package ru.solrudev.okkeipatcher.data.service
 
 import android.content.Context
+import android.os.Build
+import com.aefyr.pseudoapksigner.PseudoApkSigner
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -17,6 +19,9 @@ import javax.inject.Inject
 
 private const val CERTIFICATE_FILE_NAME = "testkey.x509.pem"
 private const val PRIVATE_KEY_FILE_NAME = "testkey.pk8"
+private const val TEMPLATE_FILE_NAME = "testkey.past"
+private const val CREATED_BY = "Okkei Patcher"
+private const val SIGNER_NAME = "Okkei"
 
 interface ApkSigner {
 	suspend fun sign(apk: File)
@@ -30,23 +35,12 @@ class ApkSignerImpl @Inject constructor(
 	private val streamCopier: StreamCopier
 ) : ApkSigner {
 
-	@Suppress("BlockingMethodInNonBlockingContext")
 	override suspend fun sign(apk: File) {
-		val certificate = getSigningCertificate()
-		val privateKey = getSigningPrivateKey()
-		val signerConfig = com.android.apksig.ApkSigner.SignerConfig.Builder(
-			"Okkei",
-			privateKey,
-			listOf(certificate)
-		).build()
 		val outputApk = File(apk.parent, "${apk.nameWithoutExtension}-signed.apk")
-		val apkSigner = com.android.apksig.ApkSigner.Builder(listOf(signerConfig))
-			.setCreatedBy("Okkei Patcher")
-			.setInputApk(apk)
-			.setOutputApk(outputApk)
-			.build()
-		withContext(ioDispatcher) {
-			apkSigner.sign()
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+			signWithApkSig(apk, outputApk)
+		} else {
+			signWithPseudoApkSigner(apk, outputApk)
 		}
 		val outputApkHash = streamCopier.computeHash(outputApk)
 		commonFilesHashRepository.signedApkHash.persist(outputApkHash)
@@ -57,6 +51,35 @@ class ApkSignerImpl @Inject constructor(
 	override suspend fun removeSignature(apk: File) = withContext(ioDispatcher) {
 		ZipFile(apk).use { zipFile ->
 			zipFile.removeFile("META-INF/")
+		}
+	}
+
+	@Suppress("BlockingMethodInNonBlockingContext")
+	private suspend inline fun signWithApkSig(apk: File, outputApk: File) {
+		val certificate = getSigningCertificate()
+		val privateKey = getSigningPrivateKey()
+		val signerConfig = com.android.apksig.ApkSigner.SignerConfig.Builder(
+			SIGNER_NAME,
+			privateKey,
+			listOf(certificate)
+		).build()
+		val apkSigner = com.android.apksig.ApkSigner.Builder(listOf(signerConfig))
+			.setCreatedBy(CREATED_BY)
+			.setInputApk(apk)
+			.setOutputApk(outputApk)
+			.build()
+		withContext(ioDispatcher) {
+			apkSigner.sign()
+		}
+	}
+
+	private suspend inline fun signWithPseudoApkSigner(apk: File, outputApk: File) {
+		val templateFile = getSigningTemplateFile()
+		val privateKeyFile = getSigningPrivateKeyFile()
+		withContext(ioDispatcher) {
+			PseudoApkSigner(templateFile, privateKeyFile)
+				.apply { setSignerName(SIGNER_NAME) }
+				.sign(apk, outputApk)
 		}
 	}
 
@@ -81,5 +104,25 @@ class ApkSignerImpl @Inject constructor(
 			val keyFactory = KeyFactory.getInstance("RSA")
 			keyFactory.generatePrivate(keySpec)
 		}
+	}
+
+	private suspend inline fun getSigningPrivateKeyFile() = extractAssetFile(PRIVATE_KEY_FILE_NAME)
+	private suspend inline fun getSigningTemplateFile() = extractAssetFile(TEMPLATE_FILE_NAME)
+
+	@Suppress("BlockingMethodInNonBlockingContext")
+	private suspend inline fun extractAssetFile(fileName: String) = withContext(ioDispatcher) {
+		val file = File(applicationContext.filesDir, fileName)
+		if (file.exists()) {
+			return@withContext file
+		}
+		val assets = applicationContext.assets
+		assets.openFd(fileName).use { templateFd ->
+			streamCopier.copy(
+				templateFd.createInputStream(),
+				file.outputStream(),
+				templateFd.declaredLength
+			)
+		}
+		file
 	}
 }
