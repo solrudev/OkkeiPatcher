@@ -158,6 +158,7 @@ dependencies {
 	implementation("io.github.solrudev:simpleinstaller:3.1.1")
 	implementation("com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.6")
 	implementation("com.github.razir.progressbutton:progressbutton:2.1.0")
+	implementation(files("libs/Base64.jar")) // java.util.Base64 for apksig on API 24-25
 
 	debugImplementation("androidx.multidex:multidex:2.0.1")
 
