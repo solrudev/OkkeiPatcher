@@ -61,7 +61,7 @@
 
 	<!--Rationales-->
 	<string name="rationale_save_data_access_permission_title">Доступ к сохранениям</string>
-	<string name="rationale_save_data_access_permission">На Android 11+ требуется специальное разрешение для доступа к игровым сохранениям CHAOS;CHILD. После клика по кнопке \"Предоставить\" нажмите \"Использовать эту папку\" и разрешите доступ.</string>
+	<string name="rationale_save_data_access_permission">На Android 11+ требуется специальное разрешение для доступа к игровым сохранениям CHAOS;CHILD. После клика по кнопке \"Выдать\" нажмите \"Использовать эту папку\" и разрешите доступ.</string>
 
 	<!--Settings-->
 	<string name="preference_general_header">Общие</string>

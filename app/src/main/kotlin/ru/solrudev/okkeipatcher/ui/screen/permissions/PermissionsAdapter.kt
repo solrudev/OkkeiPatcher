@@ -8,29 +8,32 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.databinding.ItemPermissionBinding
+import ru.solrudev.okkeipatcher.domain.model.Permission
 import ru.solrudev.okkeipatcher.ui.screen.permissions.model.PermissionUiState
 import ru.solrudev.okkeipatcher.ui.util.localizedText
 
 class PermissionsAdapter(
-	private val onButtonClick: (PermissionUiState) -> Unit
+	private val onButtonClick: (Permission) -> Unit
 ) : ListAdapter<PermissionUiState, PermissionsAdapter.PermissionViewHolder>(PermissionDiffCallback) {
 
 	class PermissionViewHolder(
 		itemView: View,
-		private val onButtonClick: (PermissionUiState) -> Unit
+		private val onButtonClick: (Permission) -> Unit
 	) : RecyclerView.ViewHolder(itemView) {
 
 		private val binding = ItemPermissionBinding.bind(itemView)
-		private var permission: PermissionUiState? = null
+		private var permissionUiState: PermissionUiState? = null
 
 		init {
 			binding.buttonPermissionGrant.setOnClickListener {
-				permission?.let(onButtonClick)
+				permissionUiState?.let {
+					onButtonClick(it.permission)
+				}
 			}
 		}
 
 		fun bind(uiState: PermissionUiState) {
-			this.permission = uiState
+			permissionUiState = uiState
 			binding.textViewPermissionTitle.localizedText = uiState.permission.title
 			binding.textViewPermissionDescription.localizedText = uiState.permission.description
 			binding.buttonPermissionGrant.isEnabled = !uiState.isGranted
@@ -45,8 +48,8 @@ class PermissionsAdapter(
 	}
 
 	override fun onBindViewHolder(holder: PermissionViewHolder, position: Int) {
-		val permission = getItem(position)
-		holder.bind(permission)
+		val permissionUiState = getItem(position)
+		holder.bind(permissionUiState)
 	}
 }
 

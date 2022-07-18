@@ -50,9 +50,7 @@ class PermissionsFragment : Fragment(R.layout.fragment_permissions), FeatureView
 		}
 	}
 
-	private val permissionsAdapter = PermissionsAdapter {
-		requestPermission(it.permission)
-	}
+	private val permissionsAdapter = PermissionsAdapter(::requestPermission)
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
