@@ -47,9 +47,9 @@
 	<string name="notification_channel_progress_name">Status and progress</string>
 	<string name="notification_message_work_failed">Work failed. Press to learn more.</string>
 	<string name="notification_message_work_success">Work succeeded.</string>
-	<string name="notification_title_patch">Patching…</string>
-	<string name="notification_title_restore">Restoring…</string>
-	<string name="notification_title_test">Test work…</string>
+	<string name="notification_title_patch">Patching</string>
+	<string name="notification_title_restore">Restoring</string>
+	<string name="notification_title_test">Test work</string>
 	<string name="notification_title_work_finished">Work finished</string>
 
 	<!--Prompts-->
@@ -80,32 +80,24 @@
 	<string name="preference_save_data_summary">Backup and restore game save data</string>
 
 	<!--Statuses-->
-	<string name="status_backing_up_apk">Backing up APK…</string>
-	<string name="status_backing_up_obb">Backing up OBB…</string>
-	<string name="status_backing_up_save_data">Backing up save data…</string>
-	<string name="status_checking">Checking…</string>
-	<string name="status_comparing_apk">Comparing APK checksums…</string>
-	<string name="status_comparing_obb">Comparing OBB checksums…</string>
-	<string name="status_comparing_saves">Comparing save data checksums…</string>
-	<string name="status_comparing_scripts">Comparing scripts checksums…</string>
-	<string name="status_copying_apk">Copying APK…</string>
-	<string name="status_downloading_obb">Downloading OBB…</string>
-	<string name="status_downloading_scripts">Downloading scripts…</string>
-	<string name="status_extracting_scripts">Extracting scripts…</string>
-	<string name="status_installing">Installing…</string>
-	<string name="status_persisting_save_data">Persisting save data…</string>
-	<string name="status_removing_signature">Removing old signature…</string>
-	<string name="status_replacing_scripts">Replacing scripts…</string>
-	<string name="status_restoring_obb">Restoring OBB…</string>
-	<string name="status_restoring_saves">Restoring save data…</string>
-	<string name="status_signing_apk">Signing APK…</string>
-	<string name="status_succeeded">Work succeeded.</string>
-	<string name="status_uninstalling">Uninstalling…</string>
-	<string name="status_update_app_downloading">Downloading update…</string>
-	<string name="status_writing_apk_hash">Writing APK checksum…</string>
-	<string name="status_writing_obb_hash">Writing OBB checksum…</string>
-	<string name="status_writing_patched_apk_hash">Writing patched APK checksum…</string>
-	<string name="status_writing_scripts_hash">Writing scripts checksum…</string>
+	<string name="status_backing_up_apk">Backing up APK</string>
+	<string name="status_backing_up_obb">Backing up OBB</string>
+	<string name="status_backing_up_save_data">Backing up save data</string>
+	<string name="status_comparing_apk">Comparing APK checksums</string>
+	<string name="status_comparing_obb">Comparing OBB checksums</string>
+	<string name="status_comparing_saves">Comparing save data checksums</string>
+	<string name="status_downloading_obb">Downloading OBB</string>
+	<string name="status_downloading_scripts">Downloading scripts</string>
+	<string name="status_extracting_scripts">Extracting scripts</string>
+	<string name="status_installing">Installing</string>
+	<string name="status_persisting_save_data">Persisting save data</string>
+	<string name="status_replacing_scripts">Replacing scripts</string>
+	<string name="status_restoring_obb">Restoring OBB</string>
+	<string name="status_restoring_saves">Restoring save data</string>
+	<string name="status_signing_apk">Signing APK</string>
+	<string name="status_succeeded">Work succeeded</string>
+	<string name="status_uninstalling">Uninstalling</string>
+	<string name="status_update_app_downloading">Downloading update</string>
 
 	<!--Warnings-->
 	<string name="warning">Warning</string>
