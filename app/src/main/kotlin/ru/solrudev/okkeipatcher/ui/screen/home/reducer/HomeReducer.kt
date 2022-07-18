@@ -14,6 +14,7 @@ class HomeReducer @Inject constructor(
 		is HomeEffect -> state
 		is PatchEvent -> patchReducer.reduce(state, event)
 		is RestoreEvent -> restoreReducer.reduce(state, event)
+		is PermissionsRequired -> state.copy(permissionsRequired = true)
 		is WorkIsPending -> state.copy(pendingWork = event.work)
 		is PatchStatusChanged -> state.copy(
 			isPatchEnabled = !event.isPatched,
@@ -33,6 +34,7 @@ class HomeReducer @Inject constructor(
 			patchUpdatesAvailable = false,
 			canShowPatchUpdatesMessage = false
 		)
+		is NavigatedToPermissionsScreen -> state.copy(permissionsRequired = false)
 		is ViewHidden -> {
 			val startPatchMessage = state.startPatchMessage.copy(isVisible = false)
 			val startRestoreMessage = state.startRestoreMessage.copy(isVisible = false)

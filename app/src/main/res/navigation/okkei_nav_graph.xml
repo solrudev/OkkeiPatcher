@@ -6,6 +6,9 @@
 	app:startDestination="@id/home_fragment">
 
 	<action
+		android:id="@+id/action_global_permissions"
+		app:destination="@id/permissions_fragment" />
+	<action
 		android:id="@+id/action_global_work"
 		app:destination="@id/work_fragment" />
 	<action
@@ -17,6 +20,11 @@
 		android:name="ru.solrudev.okkeipatcher.ui.screen.home.HomeFragment"
 		android:label="@string/app_name"
 		tools:layout="@layout/fragment_home" />
+	<fragment
+		android:id="@+id/permissions_fragment"
+		android:name="ru.solrudev.okkeipatcher.ui.screen.permissions.PermissionsFragment"
+		android:label="@string/permissions_screen_title"
+		tools:layout="@layout/fragment_permissions" />
 	<fragment
 		android:id="@+id/work_fragment"
 		android:name="ru.solrudev.okkeipatcher.ui.screen.work.WorkFragment"

@@ -62,7 +62,7 @@ class WorkFragment : Fragment(R.layout.fragment_work), FeatureView<WorkUiState> 
 	}
 
 	override fun render(uiState: WorkUiState) {
-		binding.textviewWorkStatus.text = uiState.status.resolve(requireContext())
+		binding.textviewWorkStatus.localizedText = uiState.status
 		binding.textviewWorkPercentDone.text = getString(R.string.percent_done, uiState.percentDone)
 		setProgress(uiState.progressData)
 		if (uiState.isWorkSuccessful) {

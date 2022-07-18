@@ -21,7 +21,9 @@ import ru.solrudev.okkeipatcher.databinding.OkkeiContainerBinding
 class OkkeiActivity : AppCompatActivity(R.layout.okkei_container) {
 
 	private val binding by viewBinding(OkkeiContainerBinding::bind, R.id.okkei_container)
-	private val appBarConfiguration = AppBarConfiguration(setOf(R.id.home_fragment, R.id.work_fragment))
+	private val appBarConfiguration = AppBarConfiguration(
+		setOf(R.id.home_fragment, R.id.permissions_fragment, R.id.work_fragment)
+	)
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)

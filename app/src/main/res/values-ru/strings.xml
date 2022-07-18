@@ -3,7 +3,8 @@
 	<string name="abort">Стоп</string>
 	<string name="settings">Настройки</string>
 	<string name="about_version">Версия %s\nby solrudev</string>
-	<string name="grant">Предоставить</string>
+	<string name="grant">Выдать</string>
+	<string name="granted">Выдано</string>
 	<string name="patch">Патч</string>
 	<string name="restoring">Восстановление</string>
 	<string name="start">Начать</string>
@@ -45,6 +46,14 @@
 	<string name="notification_title_test">Тестовый процесс…</string>
 	<string name="notification_title_work_finished">Процесс завершён</string>
 
+	<!--Permissions-->
+	<string name="permissions_screen_title">Разрешения</string>
+	<string name="permissions_screen_subtitle">Данные разрешения необходимы для работы Okkei Patcher</string>
+	<string name="permission_install_title">Установка пакетов</string>
+	<string name="permission_install_description">Для установки и удаления CHAOS;CHILD, а также доступа к игровым файлам</string>
+	<string name="permission_storage_title">Доступ к памяти</string>
+	<string name="permission_storage_description">Для доступа к данным CHAOS;CHILD, необходимо для патча, создания и восстановления резервной копии</string>
+
 	<!--Prompts-->
 	<string name="prompt_update_app_install">Сейчас последует запрос на установку обновления Okkei Patcher. Пожалуйста, подтвердите установку. Обратите внимание, что после установки Okkei Patcher будет закрыт, и Вам придётся перезапустить его вручную.</string>
 	<string name="prompt_update_app_available">Доступна новая версия Okkei Patcher!\nТекущая версия: %1$s\nРазмер обновления: %2$.2f МБ\nСписок изменений:\n%3$s</string>
@@ -52,10 +61,7 @@
 
 	<!--Rationales-->
 	<string name="rationale_save_data_access_permission_title">Доступ к сохранениям</string>
-	<string name="rationale_save_data_access_permission">На Android 11+ требуется специальное разрешение для доступа к игровым сохранениям CHAOS;CHILD. После нажатия на кнопку \"Предоставить\" нажмите \"Использовать эту папку\" и разрешите доступ.</string>
-	<string name="rationale_install_permission">Okkei Patcher требует разрешения на установку пакетов приложений из неизвестных источников для продолжения работы. После нажатия на кнопку OK откроется страница с настройками, где Вы должны активировать данную опцию. После этого Вы можете вернуться в Okkei Patcher с помощью кнопки или жеста Назад.</string>
-	<string name="rationale_storage_permission">Okkei Patcher требует разрешения на чтение и запись внутренней памяти устройства для продолжения работы. Хотите ли Вы попытаться дать разрешение ещё раз? В противном случае Okkei Patcher будет закрыт.</string>
-	<string name="rationale_storage_permission_denied">Okkei Patcher требует разрешения на чтение и запись внутренней памяти устройства для продолжения работы. Хотите ли Вы попытаться дать разрешение ещё раз? Если Вы нажмёте OK, откроются настройки Okkei Patcher, где Вы должны перейти в меню с разрешениями и активировать разрешение на доступ к внутренней памяти. В противном случае Okkei Patcher будет закрыт.</string>
+	<string name="rationale_save_data_access_permission">На Android 11+ требуется специальное разрешение для доступа к игровым сохранениям CHAOS;CHILD. После клика по кнопке \"Предоставить\" нажмите \"Использовать эту папку\" и разрешите доступ.</string>
 
 	<!--Settings-->
 	<string name="preference_general_header">Общие</string>

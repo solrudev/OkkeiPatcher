@@ -8,9 +8,11 @@ sealed interface HomeEvent : Event {
 	data class WorkIsPending(val work: Work) : HomeEvent
 	data class WorkFinished(val success: Boolean) : HomeEvent, HomeEffect
 	data class PatchStatusChanged(val isPatched: Boolean) : HomeEvent
+	object PermissionsRequired : HomeEvent
 	object PatchUpdatesAvailable : HomeEvent
 	object PatchUpdatesMessageShown : HomeEvent
 	object NavigatedToWorkScreen : HomeEvent
+	object NavigatedToPermissionsScreen : HomeEvent
 	object ViewHidden : HomeEvent
 }
 

@@ -5,6 +5,7 @@ import ru.solrudev.okkeipatcher.ui.core.UiState
 import ru.solrudev.okkeipatcher.ui.model.MessageUiState
 
 data class HomeUiState(
+	val permissionsRequired: Boolean = false,
 	val isPatchEnabled: Boolean = true,
 	val isRestoreEnabled: Boolean = false,
 	val isPatchSizeLoading: Boolean = false,

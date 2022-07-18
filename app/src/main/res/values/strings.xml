@@ -9,6 +9,7 @@
 	<string name="about_version">Version %s\nby solrudev</string>
 	<string name="abort">Abort</string>
 	<string name="grant">Grant</string>
+	<string name="granted">Granted</string>
 	<string name="settings">Settings</string>
 	<string name="patch">Patch</string>
 	<string name="restoring">Restoring</string>
@@ -56,12 +57,17 @@
 	<string name="prompt_update_app_available">A new version of Okkei Patcher is available!\nCurrent version: %1$s\nDownload size: %2$.2f MB\nChangelog:\n%3$s</string>
 	<string name="prompt_update_patch_available">Patch update is available</string>
 
+	<!--Permissions-->
+	<string name="permissions_screen_title">Permissions</string>
+	<string name="permissions_screen_subtitle">These permissions are required for Okkei Patcher to work</string>
+	<string name="permission_install_title">Packages install</string>
+	<string name="permission_install_description">For installing and uninstalling CHAOS;CHILD, game files access</string>
+	<string name="permission_storage_title">Storage access</string>
+	<string name="permission_storage_description">For access to CHAOS;CHILD data, needed for patching, backing up and restoring</string>
+
 	<!--Rationales-->
 	<string name="rationale_save_data_access_permission_title">Save data access</string>
 	<string name="rationale_save_data_access_permission">On Android 11+ special permission is needed to access CHAOS;CHILD\'s save data. After pressing the Grant button click \"Use this folder\" and then allow access.</string>
-	<string name="rationale_install_permission">Okkei Patcher requires permission to install applications from unknown sources to continue. After pressing the OK button you will be redirected to your device settings where you should enable this option. Then you can return to Okkei Patcher using the back button or gesture.</string>
-	<string name="rationale_storage_permission">Okkei Patcher requires permission to read from and write to external storage to proceed. Would you like to try to grant permission again? Otherwise Okkei Patcher will be closed.</string>
-	<string name="rationale_storage_permission_denied">Okkei Patcher requires permission to read from and write to external storage to proceed. Would you like to try to grant permission again? If you click OK you will be redirected to Okkei Patcher settings where you should go to permissions settings and enable storage permission. Otherwise Okkei Patcher will be closed.</string>
 
 	<!--Settings-->
 	<string name="preference_general_header">General</string>

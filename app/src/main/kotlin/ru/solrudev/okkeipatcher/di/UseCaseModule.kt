@@ -95,4 +95,9 @@ interface UseCaseModule {
 	fun bindCheckSaveDataAccessUseCase(
 		checkSaveDataAccessUseCase: CheckSaveDataAccessUseCaseImpl
 	): CheckSaveDataAccessUseCase
+
+	@Binds
+	fun bindGetRequiredPermissionsUseCase(
+		getRequiredPermissionsUseCase: GetRequiredPermissionsUseCaseImpl
+	): GetRequiredPermissionsUseCase
 }

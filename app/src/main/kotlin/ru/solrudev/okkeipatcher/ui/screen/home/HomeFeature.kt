@@ -8,6 +8,7 @@ import ru.solrudev.okkeipatcher.ui.screen.home.reducer.HomeReducer
 import javax.inject.Inject
 
 class HomeFeature @Inject constructor(
+	checkRequiredPermissionsMiddleware: CheckRequiredPermissionsMiddleware,
 	checkSaveDataAccessMiddleware: CheckSaveDataAccessMiddleware,
 	observePatchStatusMiddleware: ObservePatchStatusMiddleware,
 	checkPatchUpdatesMiddleware: CheckPatchUpdatesMiddleware,
@@ -18,6 +19,7 @@ class HomeFeature @Inject constructor(
 	homeReducer: HomeReducer
 ) : Feature<HomeEvent, HomeUiState>(
 	middlewares = listOf(
+		checkRequiredPermissionsMiddleware,
 		checkSaveDataAccessMiddleware,
 		observePatchStatusMiddleware,
 		checkPatchUpdatesMiddleware,

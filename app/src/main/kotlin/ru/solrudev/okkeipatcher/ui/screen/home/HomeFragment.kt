@@ -52,6 +52,9 @@ class HomeFragment : Fragment(R.layout.fragment_home), FeatureView<HomeUiState> 
 		binding.buttonMainPatch.isEnabled = uiState.isPatchEnabled
 		binding.buttonMainRestore.isEnabled = uiState.isRestoreEnabled
 		binding.buttonMainPatch.setLoading(uiState.isPatchSizeLoading, R.string.patch)
+		if (uiState.permissionsRequired) {
+			navigateToPermissionsScreen()
+		}
 		if (uiState.pendingWork != null) {
 			navigateToWorkScreen(uiState.pendingWork)
 		}
@@ -93,6 +96,12 @@ class HomeFragment : Fragment(R.layout.fragment_home), FeatureView<HomeUiState> 
 		val toWorkScreen = OkkeiNavGraphDirections.actionGlobalWork(work)
 		navController.navigate(toWorkScreen)
 		viewModel.dispatchEvent(NavigatedToWorkScreen)
+	}
+
+	private fun navigateToPermissionsScreen() {
+		val toWorkScreen = OkkeiNavGraphDirections.actionGlobalPermissions()
+		findNavController().navigate(toWorkScreen)
+		viewModel.dispatchEvent(NavigatedToPermissionsScreen)
 	}
 
 	private fun showPatchUpdatesSnackbar() {
