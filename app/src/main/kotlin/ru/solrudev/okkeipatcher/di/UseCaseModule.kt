@@ -22,16 +22,6 @@ interface UseCaseModule {
 	): EnqueueRestoreWorkUseCase
 
 	@Binds
-	fun bindGetPatchWorkUseCase(
-		getPatchWorkUseCase: GetPatchWorkUseCaseImpl
-	): GetPatchWorkUseCase
-
-	@Binds
-	fun bindGetRestoreWorkUseCase(
-		getRestoreWorkUseCase: GetRestoreWorkUseCaseImpl
-	): GetRestoreWorkUseCase
-
-	@Binds
 	fun bindCompleteWorkUseCase(
 		completeWorkUseCase: CompleteWorkUseCaseImpl
 	): CompleteWorkUseCase
@@ -47,9 +37,9 @@ interface UseCaseModule {
 	): GetWorkStateFlowUseCase
 
 	@Binds
-	fun bindGetIsWorkPendingUseCase(
-		getIsWorkPendingUseCase: GetIsWorkPendingUseCaseImpl
-	): GetIsWorkPendingUseCase
+	fun bindGetPendingWorkUseCase(
+		getPendingWorkUseCase: GetPendingWorkUseCaseImpl
+	): GetPendingWorkUseCase
 
 	@Binds
 	fun bindGetIsAppUpdateAvailableUseCase(

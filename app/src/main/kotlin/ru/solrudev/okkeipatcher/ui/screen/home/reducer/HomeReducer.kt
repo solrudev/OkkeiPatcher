@@ -14,7 +14,7 @@ class HomeReducer @Inject constructor(
 		is HomeEffect -> state
 		is PatchEvent -> patchReducer.reduce(state, event)
 		is RestoreEvent -> restoreReducer.reduce(state, event)
-		is PermissionsRequired -> state.copy(permissionsRequired = true)
+		is PermissionsChecked -> state.copy(permissionsRequired = !event.allPermissionsGranted)
 		is WorkIsPending -> state.copy(pendingWork = event.work)
 		is PatchStatusChanged -> state.copy(
 			isPatchEnabled = !event.isPatched,

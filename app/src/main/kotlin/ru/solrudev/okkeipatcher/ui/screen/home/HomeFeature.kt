@@ -8,22 +8,22 @@ import ru.solrudev.okkeipatcher.ui.screen.home.reducer.HomeReducer
 import javax.inject.Inject
 
 class HomeFeature @Inject constructor(
-	checkRequiredPermissionsMiddleware: CheckRequiredPermissionsMiddleware,
+	checkPermissionsMiddleware: CheckPermissionsMiddleware,
 	checkSaveDataAccessMiddleware: CheckSaveDataAccessMiddleware,
 	observePatchStatusMiddleware: ObservePatchStatusMiddleware,
 	checkPatchUpdatesMiddleware: CheckPatchUpdatesMiddleware,
-	checkPendingWorksMiddleware: CheckPendingWorksMiddleware,
+	checkPendingWorkMiddleware: CheckPendingWorkMiddleware,
 	enqueuePatchWorkMiddleware: EnqueuePatchWorkMiddleware,
 	enqueueRestoreWorkMiddleware: EnqueueRestoreWorkMiddleware,
 	getPatchSizeMiddleware: GetPatchSizeMiddleware,
 	homeReducer: HomeReducer
 ) : Feature<HomeEvent, HomeUiState>(
 	middlewares = listOf(
-		checkRequiredPermissionsMiddleware,
+		checkPermissionsMiddleware,
 		checkSaveDataAccessMiddleware,
 		observePatchStatusMiddleware,
 		checkPatchUpdatesMiddleware,
-		checkPendingWorksMiddleware,
+		checkPendingWorkMiddleware,
 		enqueuePatchWorkMiddleware,
 		enqueueRestoreWorkMiddleware,
 		getPatchSizeMiddleware

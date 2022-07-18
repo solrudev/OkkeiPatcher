@@ -23,6 +23,7 @@ import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeEvent.*
 import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeUiState
 import ru.solrudev.okkeipatcher.ui.screen.home.model.PatchEvent.*
 import ru.solrudev.okkeipatcher.ui.screen.home.model.RestoreEvent.*
+import ru.solrudev.okkeipatcher.ui.screen.home.model.shouldShowPatchUpdatesMessage
 import ru.solrudev.okkeipatcher.ui.util.*
 
 @AndroidEntryPoint
@@ -64,7 +65,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), FeatureView<HomeUiState> 
 		if (uiState.startRestoreMessage.shouldShow) {
 			showStartRestoreMessage(uiState.startRestoreMessage.data)
 		}
-		if (uiState.patchUpdatesAvailable && uiState.canShowPatchUpdatesMessage) {
+		if (uiState.shouldShowPatchUpdatesMessage) {
 			showPatchUpdatesSnackbar()
 		}
 	}
@@ -89,6 +90,12 @@ class HomeFragment : Fragment(R.layout.fragment_home), FeatureView<HomeUiState> 
 		savedStateHandle.clearResult()
 	}
 
+	private fun navigateToPermissionsScreen() {
+		val toWorkScreen = OkkeiNavGraphDirections.actionGlobalPermissions()
+		findNavController().navigate(toWorkScreen)
+		viewModel.dispatchEvent(NavigatedToPermissionsScreen)
+	}
+
 	private fun navigateToWorkScreen(work: Work) {
 		val navController = findNavController()
 		val workScreen = navController.findDestination(R.id.work_fragment)
@@ -96,12 +103,6 @@ class HomeFragment : Fragment(R.layout.fragment_home), FeatureView<HomeUiState> 
 		val toWorkScreen = OkkeiNavGraphDirections.actionGlobalWork(work)
 		navController.navigate(toWorkScreen)
 		viewModel.dispatchEvent(NavigatedToWorkScreen)
-	}
-
-	private fun navigateToPermissionsScreen() {
-		val toWorkScreen = OkkeiNavGraphDirections.actionGlobalPermissions()
-		findNavController().navigate(toWorkScreen)
-		viewModel.dispatchEvent(NavigatedToPermissionsScreen)
 	}
 
 	private fun showPatchUpdatesSnackbar() {

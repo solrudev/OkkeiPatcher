@@ -5,17 +5,15 @@ import kotlinx.coroutines.flow.flow
 import ru.solrudev.okkeipatcher.domain.usecase.app.GetRequiredPermissionsUseCase
 import ru.solrudev.okkeipatcher.ui.core.Middleware
 import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeEvent
-import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeEvent.PermissionsRequired
+import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeEvent.PermissionsChecked
 import javax.inject.Inject
 
-class CheckRequiredPermissionsMiddleware @Inject constructor(
+class CheckPermissionsMiddleware @Inject constructor(
 	private val getRequiredPermissionsUseCase: GetRequiredPermissionsUseCase
 ) : Middleware<HomeEvent> {
 
 	override fun apply(events: Flow<HomeEvent>) = flow {
-		val permissionsRequired = getRequiredPermissionsUseCase().any { (_, isGranted) -> !isGranted }
-		if (permissionsRequired) {
-			emit(PermissionsRequired)
-		}
+		val allPermissionsGranted = getRequiredPermissionsUseCase().all { (_, isGranted) -> isGranted }
+		emit(PermissionsChecked(allPermissionsGranted))
 	}
 }

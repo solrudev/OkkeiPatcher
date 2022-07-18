@@ -15,3 +15,6 @@ data class HomeUiState(
 	val patchUpdatesAvailable: Boolean = false,
 	val canShowPatchUpdatesMessage: Boolean = true
 ) : UiState
+
+val HomeUiState.shouldShowPatchUpdatesMessage: Boolean
+	get() = patchUpdatesAvailable && canShowPatchUpdatesMessage
