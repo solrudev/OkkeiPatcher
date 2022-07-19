@@ -100,11 +100,6 @@ android {
 		targetCompatibility = JavaVersion.VERSION_11
 	}
 
-	packagingOptions {
-		resources.excludes.add("DebugProbesKt.bin")
-		resources.excludes.add("androidsupportmultidexversion.txt")
-	}
-
 	kotlinOptions {
 		jvmTarget = "11"
 	}
