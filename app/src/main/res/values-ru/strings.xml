@@ -26,7 +26,6 @@
 	<string name="error_no_free_space">Недостаточно свободного места. Убедитесь, что на устройстве свободно как минимум 2 ГБ.</string>
 	<string name="error_no_install_permission">Okkei Patcher не может получить разрешение на установку пакетов приложений.</string>
 	<string name="error_no_network">Отсутствует интернет-соединение.</string>
-	<string name="error_no_storage_permission">Okkei Patcher не может получить разрешение на чтение и запись внутренней памяти устройства.</string>
 	<string name="error_not_patched">Патч ещё не был применён к CHAOS;CHILD.</string>
 	<string name="error_not_trustworthy_apk">Возможно, APK для установки не был создан с помощью Okkei Patcher.</string>
 	<string name="error_obb_not_found">Файл OBB не найден.</string>
@@ -43,7 +42,6 @@
 	<string name="notification_message_work_success">Процесс прошёл успешно.</string>
 	<string name="notification_title_patch">Патч</string>
 	<string name="notification_title_restore">Восстановление</string>
-	<string name="notification_title_test">Тестовый процесс</string>
 	<string name="notification_title_work_finished">Процесс завершён</string>
 
 	<!--Permissions-->

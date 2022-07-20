@@ -1,0 +1,4 @@
+﻿<resources>
+	<!--Notifications-->
+	<string name="notification_title_test">Тестовый процесс</string>
+</resources>

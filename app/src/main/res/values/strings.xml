@@ -32,7 +32,6 @@
 	<string name="error_no_free_space">Not enough free disk space. Ensure that you have at least 2 GB of free space.</string>
 	<string name="error_no_install_permission">Okkei Patcher can\'t get permission to install packages.</string>
 	<string name="error_no_network">Network is not available.</string>
-	<string name="error_no_storage_permission">Okkei Patcher can\'t get permission to read from and write to external storage.</string>
 	<string name="error_not_patched">CHAOS;CHILD hasn\'t been patched yet.</string>
 	<string name="error_not_trustworthy_apk">APK to be installed might be not created by Okkei Patcher.</string>
 	<string name="error_obb_not_found">OBB file was not found.</string>
@@ -49,7 +48,6 @@
 	<string name="notification_message_work_success">Work succeeded.</string>
 	<string name="notification_title_patch">Patching</string>
 	<string name="notification_title_restore">Restoring</string>
-	<string name="notification_title_test">Test work</string>
 	<string name="notification_title_work_finished">Work finished</string>
 
 	<!--Prompts-->
