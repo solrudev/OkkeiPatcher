@@ -5,6 +5,7 @@ import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.launch
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -84,6 +85,6 @@ class PermissionsFragment : Fragment(R.layout.fragment_permissions), FeatureView
 			val storagePermissions = arrayOf(READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE)
 			storagePermissionLauncher.launch(storagePermissions)
 		}
-		Permission.Install -> installPermissionLauncher.launch(Unit)
+		Permission.Install -> installPermissionLauncher.launch()
 	}
 }

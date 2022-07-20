@@ -3,6 +3,7 @@ package ru.solrudev.okkeipatcher.ui.screen.settings.savedataaccess
 import android.content.Context
 import android.os.Bundle
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.launch
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -72,7 +73,7 @@ class SaveDataAccessFragment : DialogFragment(), FeatureView<SaveDataAccessUiSta
 	private fun showRationale(message: Message) {
 		requireContext().createDialogBuilder(message)
 			.setPositiveButton(R.string.button_text_grant) { _, _ ->
-				permissionRequestLauncher.launch(Unit)
+				permissionRequestLauncher.launch()
 			}
 			.setNegativeButton(android.R.string.cancel) { _, _ ->
 				findNavController().popBackStack()
