@@ -1,23 +1,24 @@
 ﻿<resources>
 	<!--General-->
-	<string name="abort">Стоп</string>
-	<string name="settings">Настройки</string>
 	<string name="about_version">Версия %s\nby solrudev</string>
-	<string name="grant">Выдать</string>
-	<string name="granted">Выдано</string>
-	<string name="patch">Патч</string>
-	<string name="restoring">Восстановление</string>
-	<string name="start">Начать</string>
-	<string name="toast_copied_to_clipboard">Скопировано в буфер обмена</string>
+	<string name="settings">Настройки</string>
 	<string name="update">Обновление</string>
 
-	<!--Dialogs-->
-	<string name="dialog_button_copy_to_clipboard">Копировать в буфер обмена</string>
+	<!--Button texts-->
+	<string name="button_text_abort">Стоп</string>
+	<string name="button_text_clear">Очистить</string>
+	<string name="button_text_copy_to_clipboard">Копировать в буфер обмена</string>
+	<string name="button_text_grant">Выдать</string>
+	<string name="button_text_granted">Выдано</string>
+	<string name="button_text_patch">Патч</string>
+	<string name="button_text_restoring">Восстановление</string>
+	<string name="button_text_start">Начать</string>
 
 	<!--Errors-->
 	<string name="error">Ошибка</string>
 	<string name="error_apk_not_found">APK для установки не найден.</string>
 	<string name="error_backup_not_found">Резервная копия CHAOS;CHILD не найдена.</string>
+	<string name="error_clear_data">При очистке данных произошла ошибка</string>
 	<string name="error_game_not_found">CHAOS;CHILD не найден на этом устройстве.</string>
 	<string name="error_hash_obb_mismatch">OBB повреждён.</string>
 	<string name="error_hash_scripts_mismatch">Скрипты повреждены.</string>
@@ -49,17 +50,10 @@
 	<string name="permissions_screen_subtitle">Данные разрешения необходимы для работы Okkei Patcher</string>
 	<string name="permission_install_title">Установка пакетов</string>
 	<string name="permission_install_description">Для установки и удаления CHAOS;CHILD, а также доступа к игровым файлам</string>
+	<string name="permission_save_data_access_title">Доступ к сохранениям</string>
+	<string name="permission_save_data_access_description">На Android 11+ требуется специальное разрешение для доступа к игровым сохранениям CHAOS;CHILD. После клика по кнопке \"Выдать\" нажмите \"Использовать эту папку\" и разрешите доступ.</string>
 	<string name="permission_storage_title">Доступ к памяти</string>
 	<string name="permission_storage_description">Для доступа к данным CHAOS;CHILD, необходимо для патча, создания и восстановления резервной копии</string>
-
-	<!--Prompts-->
-	<string name="prompt_update_app_install">Сейчас последует запрос на установку обновления Okkei Patcher. Пожалуйста, подтвердите установку. Обратите внимание, что после установки Okkei Patcher будет закрыт, и Вам придётся перезапустить его вручную.</string>
-	<string name="prompt_update_app_available">Доступна новая версия Okkei Patcher!\nТекущая версия: %1$s\nРазмер обновления: %2$.2f МБ\nСписок изменений:\n%3$s</string>
-	<string name="prompt_update_patch_available">Доступно обновление патча</string>
-
-	<!--Rationales-->
-	<string name="rationale_save_data_access_permission_title">Доступ к сохранениям</string>
-	<string name="rationale_save_data_access_permission">На Android 11+ требуется специальное разрешение для доступа к игровым сохранениям CHAOS;CHILD. После клика по кнопке \"Выдать\" нажмите \"Использовать эту папку\" и разрешите доступ.</string>
 
 	<!--Settings-->
 	<string name="preference_general_header">Общие</string>
@@ -70,6 +64,10 @@
 	<string name="preference_third_party_licenses_title">Лицензии третьих сторон</string>
 	<string name="preference_clear_data_summary">Используйте эту опцию ТОЛЬКО при переустановке CHAOS;CHILD из-за повреждения данных</string>
 	<string name="preference_save_data_summary">Делать копию и восстанавливать сохранения игры</string>
+
+	<!--Snackbars-->
+	<string name="snackbar_data_cleared">Данные очищены</string>
+	<string name="snackbar_patch_update_available">Доступно обновление патча</string>
 
 	<!--Statuses-->
 	<string name="status_backing_up_apk">Создание резервной копии APK</string>
@@ -89,16 +87,24 @@
 	<string name="status_signing_apk">Подпись APK</string>
 	<string name="status_succeeded">Процесс прошёл успешно</string>
 	<string name="status_uninstalling">Деинсталляция</string>
-	<string name="status_update_app_downloading">Загрузка обновления</string>
+
+	<!--Toasts-->
+	<string name="toast_copied_to_clipboard">Скопировано в буфер обмена</string>
 
 	<!--Warnings-->
 	<string name="warning">Предупреждение</string>
 	<string name="warning_abort_title">Остановить процесс?</string>
 	<string name="warning_abort">Если Вы остановите процесс, данные установки CHAOS;CHILD и/или данные Okkei Patcher могут быть повреждены.</string>
+	<string name="warning_clear_data_title">Очистить данные?</string>
+	<string name="warning_clear_data">Вы собираетесь очистить все данные Okkei Patcher, включая резервную копию предыдущей установки CHAOS;CHILD, без возможности восстановления.</string>
 	<string name="warning_could_not_backup_save_data">Не удалось создать резервную копию текущих игровых сохранений.</string>
 	<string name="warning_could_not_restore_save_data">Не удалось восстановить предыдущие игровые сохранения.</string>
 	<string name="warning_save_data_backup_not_found_or_corrupted">Резервная копия игровых сохранений не найдена или повреждена и не будет восстановлена.</string>
 	<string name="warning_start_patch_title">Начать применение патча?</string>
 	<string name="warning_start_patch">Будет загружено %.2f МБ данных. Если Вы остановите процесс, данные установки CHAOS;CHILD и/или данные Okkei Patcher могут быть повреждены.</string>
 	<string name="warning_start_restore_title">Начать восстановление?</string>
+
+	<!--Work labels-->
+	<string name="work_label_patch">Патч</string>
+	<string name="work_label_restoring">Восстановление</string>
 </resources>

@@ -13,7 +13,7 @@ import ru.solrudev.okkeipatcher.domain.repository.work.WorkRepository
 import javax.inject.Inject
 
 private const val PATCH_WORK_NAME = "PatchWork"
-private val workLabel = LocalizedString.resource(R.string.patch)
+private val workLabel = LocalizedString.resource(R.string.work_label_patch)
 
 class MockPatchWorkRepositoryImpl @Inject constructor(
 	private val workRepository: WorkRepository,

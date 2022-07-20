@@ -1,6 +1,7 @@
 package ru.solrudev.okkeipatcher.data.repository.app
 
 import android.content.Context
+import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -23,4 +24,10 @@ class CommonFilesHashRepositoryImpl @Inject constructor(@ApplicationContext appl
 	override val backupApkHash = Preference(key = BACKUP_APK, defaultValue = "", preferences)
 	override val backupObbHash = Preference(key = BACKUP_OBB, defaultValue = "", preferences)
 	override val saveDataHash = Preference(key = SAVE_DATA, defaultValue = "", preferences)
+
+	override suspend fun clear() {
+		preferences.edit {
+			it.clear()
+		}
+	}
 }

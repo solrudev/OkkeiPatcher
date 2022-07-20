@@ -37,7 +37,7 @@ class PermissionsAdapter(
 			binding.textViewPermissionTitle.localizedText = uiState.permission.title
 			binding.textViewPermissionDescription.localizedText = uiState.permission.description
 			binding.buttonPermissionGrant.isEnabled = !uiState.isGranted
-			val buttonText = if (uiState.isGranted) R.string.granted else R.string.grant
+			val buttonText = if (uiState.isGranted) R.string.button_text_granted else R.string.button_text_grant
 			binding.buttonPermissionGrant.setText(buttonText)
 		}
 	}

@@ -133,7 +133,7 @@ class WorkFragment : Fragment(R.layout.fragment_work), FeatureView<WorkUiState> 
 
 	private fun showCancelWorkMessage(cancelWorkMessage: Message) {
 		val dialog = requireContext().createDialogBuilder(cancelWorkMessage)
-			.setPositiveButton(R.string.abort) { _, _ ->
+			.setPositiveButton(R.string.button_text_abort) { _, _ ->
 				viewModel.dispatchEvent(CancelWork(args.work))
 			}
 			.setNegativeButton(android.R.string.cancel, null)
@@ -150,7 +150,7 @@ class WorkFragment : Fragment(R.layout.fragment_work), FeatureView<WorkUiState> 
 	private fun showErrorMessage(errorMessage: Message) {
 		val message = errorMessage.message.resolve(requireContext())
 		requireContext().createDialogBuilder(errorMessage)
-			.setNeutralButton(R.string.dialog_button_copy_to_clipboard) { _, _ ->
+			.setNeutralButton(R.string.button_text_copy_to_clipboard) { _, _ ->
 				requireContext().copyTextToClipboard("Okkei Patcher Exception", message)
 			}
 			.setOnDismissListener {

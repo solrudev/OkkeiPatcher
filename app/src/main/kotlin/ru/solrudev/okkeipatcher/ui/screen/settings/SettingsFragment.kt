@@ -12,7 +12,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.ui.core.FeatureView
 import ru.solrudev.okkeipatcher.ui.core.renderBy
-import ru.solrudev.okkeipatcher.ui.screen.settings.model.SettingsEvent.*
+import ru.solrudev.okkeipatcher.ui.screen.settings.model.SettingsEvent.HandleSaveDataClicked
+import ru.solrudev.okkeipatcher.ui.screen.settings.model.SettingsEvent.SaveDataAccessRequestHandled
 import ru.solrudev.okkeipatcher.ui.screen.settings.model.SettingsUiState
 import ru.solrudev.okkeipatcher.ui.util.prepareOptionsMenu
 import ru.solrudev.okkeipatcher.ui.util.setupTransitions
@@ -68,7 +69,7 @@ class SettingsFragment : PreferenceFragmentCompat(), FeatureView<SettingsUiState
 			false
 		}
 		clearData?.setOnPreferenceClickListener {
-			viewModel.dispatchEvent(ClearDataClicked)
+			navigateToClearDataScreen()
 			true
 		}
 		about?.setOnPreferenceClickListener {
@@ -82,9 +83,14 @@ class SettingsFragment : PreferenceFragmentCompat(), FeatureView<SettingsUiState
 	}
 
 	private fun navigateToSaveDataAccessScreen() {
-		val toSaveDataAccess = SettingsFragmentDirections.actionSettingsFragmentToSaveDataAccessFragment()
-		findNavController().navigate(toSaveDataAccess)
+		val toSaveDataAccessScreen = SettingsFragmentDirections.actionSettingsFragmentToSaveDataAccessFragment()
+		findNavController().navigate(toSaveDataAccessScreen)
 		viewModel.dispatchEvent(SaveDataAccessRequestHandled)
+	}
+
+	private fun navigateToClearDataScreen() {
+		val toClearDataScreen = SettingsFragmentDirections.actionSettingsFragmentToClearDataFragment()
+		findNavController().navigate(toClearDataScreen)
 	}
 
 	private fun navigateToAboutScreen() {

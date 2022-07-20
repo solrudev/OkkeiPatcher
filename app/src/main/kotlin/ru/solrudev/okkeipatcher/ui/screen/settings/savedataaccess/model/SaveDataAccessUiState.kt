@@ -9,8 +9,8 @@ import ru.solrudev.okkeipatcher.ui.model.MessageUiState
 data class SaveDataAccessUiState(
 	val rationale: MessageUiState = MessageUiState(
 		data = Message(
-			LocalizedString.resource(R.string.rationale_save_data_access_permission_title),
-			LocalizedString.resource(R.string.rationale_save_data_access_permission)
+			LocalizedString.resource(R.string.permission_save_data_access_title),
+			LocalizedString.resource(R.string.permission_save_data_access_description)
 		)
 	),
 	val handleSaveDataEnabled: Boolean = false

@@ -1,6 +1,7 @@
 package ru.solrudev.okkeipatcher.data.repository.patch
 
 import android.content.Context
+import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import ru.solrudev.okkeipatcher.data.core.InMemoryCache
@@ -46,5 +47,11 @@ class DefaultPatchRepositoryImpl @Inject constructor(
 		scripts.getSizeInMb() + obb.getSizeInMb()
 	} catch (t: Throwable) {
 		-1.0
+	}
+
+	override suspend fun clearPersistedData() {
+		preferences.edit {
+			it.clear()
+		}
 	}
 }

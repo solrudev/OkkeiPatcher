@@ -7,4 +7,5 @@ interface CommonFilesHashRepository {
 	val backupApkHash: Dao<String>
 	val backupObbHash: Dao<String>
 	val saveDataHash: Dao<String>
+	suspend fun clear()
 }

@@ -13,7 +13,7 @@ import ru.solrudev.okkeipatcher.domain.repository.work.WorkRepository
 import javax.inject.Inject
 
 private const val RESTORE_WORK_NAME = "RestoreWork"
-private val workLabel = LocalizedString.resource(R.string.restoring)
+private val workLabel = LocalizedString.resource(R.string.work_label_restoring)
 
 class RestoreWorkRepositoryImpl @Inject constructor(
 	private val workRepository: WorkRepository,

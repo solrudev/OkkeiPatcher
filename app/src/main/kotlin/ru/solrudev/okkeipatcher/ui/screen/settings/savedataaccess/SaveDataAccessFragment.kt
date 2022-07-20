@@ -71,7 +71,7 @@ class SaveDataAccessFragment : DialogFragment(), FeatureView<SaveDataAccessUiSta
 
 	private fun showRationale(message: Message) {
 		requireContext().createDialogBuilder(message)
-			.setPositiveButton(R.string.grant) { _, _ ->
+			.setPositiveButton(R.string.button_text_grant) { _, _ ->
 				permissionRequestLauncher.launch(Unit)
 			}
 			.setNegativeButton(android.R.string.cancel) { _, _ ->

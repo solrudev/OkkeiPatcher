@@ -41,6 +41,9 @@
 			android:id="@+id/action_settingsFragment_to_saveDataAccessFragment"
 			app:destination="@id/save_data_access_fragment" />
 		<action
+			android:id="@+id/action_settingsFragment_to_clearDataFragment"
+			app:destination="@id/clear_data_fragment" />
+		<action
 			android:id="@+id/action_settingsFragment_to_aboutFragment"
 			app:destination="@id/about_fragment" />
 	</fragment>
@@ -53,5 +56,9 @@
 	<dialog
 		android:id="@+id/save_data_access_fragment"
 		android:name="ru.solrudev.okkeipatcher.ui.screen.settings.savedataaccess.SaveDataAccessFragment"
-		android:label="@string/rationale_save_data_access_permission_title" />
+		android:label="@string/permission_save_data_access_title" />
+	<dialog
+		android:id="@+id/clear_data_fragment"
+		android:name="ru.solrudev.okkeipatcher.ui.screen.settings.cleardata.ClearDataFragment"
+		android:label="@string/warning_clear_data_title" />
 </navigation>

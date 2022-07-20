@@ -52,7 +52,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), FeatureView<HomeUiState> 
 	override fun render(uiState: HomeUiState) {
 		binding.buttonMainPatch.isEnabled = uiState.isPatchEnabled
 		binding.buttonMainRestore.isEnabled = uiState.isRestoreEnabled
-		binding.buttonMainPatch.setLoading(uiState.isPatchSizeLoading, R.string.patch)
+		binding.buttonMainPatch.setLoading(uiState.isPatchSizeLoading, R.string.button_text_patch)
 		if (uiState.permissionsRequired) {
 			navigateToPermissionsScreen()
 		}
@@ -107,14 +107,14 @@ class HomeFragment : Fragment(R.layout.fragment_home), FeatureView<HomeUiState> 
 
 	private fun showPatchUpdatesSnackbar() {
 		view?.let {
-			Snackbar.make(it, R.string.prompt_update_patch_available, Snackbar.LENGTH_LONG).show()
+			Snackbar.make(it, R.string.snackbar_patch_update_available, Snackbar.LENGTH_LONG).show()
 		}
 		viewModel.dispatchEvent(PatchUpdatesMessageShown)
 	}
 
 	private fun showStartPatchMessage(startPatchMessage: Message) {
 		requireContext().createDialogBuilder(startPatchMessage)
-			.setPositiveButton(R.string.start) { _, _ ->
+			.setPositiveButton(R.string.button_text_start) { _, _ ->
 				viewModel.dispatchEvent(StartPatch)
 			}
 			.setNegativeButton(android.R.string.cancel, null)
@@ -127,7 +127,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), FeatureView<HomeUiState> 
 
 	private fun showStartRestoreMessage(startRestoreMessage: Message) {
 		requireContext().createDialogBuilder(startRestoreMessage)
-			.setPositiveButton(R.string.start) { _, _ ->
+			.setPositiveButton(R.string.button_text_start) { _, _ ->
 				viewModel.dispatchEvent(StartRestore)
 			}
 			.setNegativeButton(android.R.string.cancel, null)

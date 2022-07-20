@@ -15,3 +15,11 @@ inline fun <R> Result.onFailure(block: (Result.Failure) -> R): Result {
 	if (this is Result.Failure) block(this)
 	return this
 }
+
+/**
+ * Executes [block] if the result is [Result.Success] and returns itself.
+ */
+inline fun <R> Result.onSuccess(block: (Result.Success) -> R): Result {
+	if (this is Result.Success) block(this)
+	return this
+}

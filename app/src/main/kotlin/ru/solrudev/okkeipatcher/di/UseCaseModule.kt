@@ -90,4 +90,9 @@ interface UseCaseModule {
 	fun bindGetRequiredPermissionsUseCase(
 		getRequiredPermissionsUseCase: GetRequiredPermissionsUseCaseImpl
 	): GetRequiredPermissionsUseCase
+
+	@Binds
+	fun bindClearDataUseCase(
+		clearDataUseCase: ClearDataUseCaseImpl
+	): ClearDataUseCase
 }
