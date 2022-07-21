@@ -58,7 +58,7 @@
 	<fragment
 		android:id="@+id/licenses_fragment"
 		android:name="ru.solrudev.okkeipatcher.ui.screen.licenses.LicensesFragment"
-		android:label="@string/preference_third_party_licenses_title"
+		android:label="@string/preference_licenses_title"
 		tools:layout="@layout/fragment_licenses" />
 
 	<dialog

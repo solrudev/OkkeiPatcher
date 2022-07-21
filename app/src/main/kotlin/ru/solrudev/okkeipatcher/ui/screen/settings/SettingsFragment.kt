@@ -24,16 +24,16 @@ class SettingsFragment : PreferenceFragmentCompat(), FeatureView<SettingsUiState
 	private val viewModel by viewModels<SettingsViewModel>()
 
 	private val handleSaveData: SwitchPreferenceCompat?
-		get() = findPreference("handle_save_data")
+		get() = findPreference(getString(R.string.preference_key_handle_save_data))
 
 	private val clearData: Preference?
-		get() = findPreference("clear_data")
+		get() = findPreference(getString(R.string.preference_key_clear_data))
 
 	private val about: Preference?
-		get() = findPreference("about")
+		get() = findPreference(getString(R.string.preference_key_about))
 
 	private val thirdPartyLicenses: Preference?
-		get() = findPreference("third_party_licenses")
+		get() = findPreference(getString(R.string.preference_key_licenses))
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)

@@ -61,7 +61,7 @@
 	<string name="preference_about_title">О программе</string>
 	<string name="preference_clear_data_title">Очистить все данные</string>
 	<string name="preference_save_data_title">Игровые сохранения</string>
-	<string name="preference_third_party_licenses_title">Лицензии третьих сторон</string>
+	<string name="preference_licenses_title">Лицензии</string>
 	<string name="preference_clear_data_summary">Используйте эту опцию ТОЛЬКО при переустановке CHAOS;CHILD из-за повреждения данных</string>
 	<string name="preference_save_data_summary">Делать копию и восстанавливать сохранения игры</string>
 
