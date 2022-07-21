@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.google.android.material.color.MaterialColors
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.solrudev.simpleinstaller.activityresult.InstallPermissionContract
 import ru.solrudev.okkeipatcher.R
@@ -68,9 +67,6 @@ class PermissionsFragment : Fragment(R.layout.fragment_permissions), FeatureView
 		}
 		binding.recyclerviewPermissions.adapter = permissionsAdapter
 		viewModel.renderBy(this)
-		// Workaround for a bug in transition
-		val colorBackground = MaterialColors.getColor(view, android.R.attr.colorBackground)
-		view.setBackgroundColor(colorBackground)
 	}
 
 	override fun render(uiState: PermissionsUiState) {
