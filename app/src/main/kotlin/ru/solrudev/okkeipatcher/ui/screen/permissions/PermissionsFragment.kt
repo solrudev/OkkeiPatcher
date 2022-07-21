@@ -66,7 +66,7 @@ class PermissionsFragment : Fragment(R.layout.fragment_permissions), FeatureView
 		prepareOptionsMenu {
 			clear()
 		}
-		binding.recyclerViewPermissions.adapter = permissionsAdapter
+		binding.recyclerviewPermissions.adapter = permissionsAdapter
 		viewModel.renderBy(this)
 		// Workaround for a bug in transition
 		val colorBackground = MaterialColors.getColor(view, android.R.attr.colorBackground)

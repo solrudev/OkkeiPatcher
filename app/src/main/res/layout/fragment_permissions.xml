@@ -15,9 +15,10 @@
 		android:text="@string/permissions_screen_subtitle" />
 
 	<androidx.recyclerview.widget.RecyclerView
-		android:id="@+id/recyclerView_permissions"
+		android:id="@+id/recyclerview_permissions"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:overScrollMode="never"
 		app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
 		tools:listitem="@layout/item_permission" />
 

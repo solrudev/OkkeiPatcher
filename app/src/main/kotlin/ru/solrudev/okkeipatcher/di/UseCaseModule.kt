@@ -95,4 +95,9 @@ interface UseCaseModule {
 	fun bindClearDataUseCase(
 		clearDataUseCase: ClearDataUseCaseImpl
 	): ClearDataUseCase
+
+	@Binds
+	fun bindGetLicensesUseCase(
+		getLicensesUseCase: GetLicensesUseCaseImpl
+	): GetLicensesUseCase
 }

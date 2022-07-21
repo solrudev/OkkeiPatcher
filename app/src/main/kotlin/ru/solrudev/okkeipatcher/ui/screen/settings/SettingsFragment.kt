@@ -77,7 +77,7 @@ class SettingsFragment : PreferenceFragmentCompat(), FeatureView<SettingsUiState
 			true
 		}
 		thirdPartyLicenses?.setOnPreferenceClickListener {
-			// TODO
+			navigateToLicensesScreen()
 			true
 		}
 	}
@@ -96,5 +96,10 @@ class SettingsFragment : PreferenceFragmentCompat(), FeatureView<SettingsUiState
 	private fun navigateToAboutScreen() {
 		val toAboutScreen = SettingsFragmentDirections.actionSettingsFragmentToAboutFragment()
 		findNavController().navigate(toAboutScreen)
+	}
+
+	private fun navigateToLicensesScreen() {
+		val toLicensesScreen = SettingsFragmentDirections.actionSettingsFragmentToLicensesFragment()
+		findNavController().navigate(toLicensesScreen)
 	}
 }

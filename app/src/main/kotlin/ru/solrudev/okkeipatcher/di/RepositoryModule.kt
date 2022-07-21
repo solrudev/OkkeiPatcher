@@ -73,4 +73,10 @@ interface RepositoryModule {
 	fun bindPermissionsRepository(
 		permissionsRepository: PermissionsRepositoryImpl
 	): PermissionsRepository
+
+	@Binds
+	@Singleton
+	fun bindLicensesRepository(
+		licensesRepository: LicensesRepositoryImpl
+	): LicensesRepository
 }
