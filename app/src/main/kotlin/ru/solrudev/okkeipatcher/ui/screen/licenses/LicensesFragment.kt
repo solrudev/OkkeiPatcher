@@ -11,6 +11,7 @@ import ru.solrudev.okkeipatcher.databinding.FragmentLicensesBinding
 import ru.solrudev.okkeipatcher.ui.core.FeatureView
 import ru.solrudev.okkeipatcher.ui.core.renderBy
 import ru.solrudev.okkeipatcher.ui.screen.licenses.model.LicensesUiState
+import ru.solrudev.okkeipatcher.ui.util.fixRecyclerViewTransition
 import ru.solrudev.okkeipatcher.ui.util.prepareOptionsMenu
 import ru.solrudev.okkeipatcher.ui.util.setupTransitions
 
@@ -27,11 +28,12 @@ class LicensesFragment : Fragment(R.layout.fragment_licenses), FeatureView<Licen
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		view.fixRecyclerViewTransition()
 		prepareOptionsMenu {
 			clear()
 		}
-		viewModel.renderBy(this)
 		binding.recyclerviewLicenses.adapter = licensesAdapter
+		viewModel.renderBy(this)
 	}
 
 	override fun render(uiState: LicensesUiState) {

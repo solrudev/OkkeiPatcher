@@ -20,6 +20,7 @@ import ru.solrudev.okkeipatcher.ui.core.renderBy
 import ru.solrudev.okkeipatcher.ui.screen.permissions.model.PermissionsEvent.PermissionStateChanged
 import ru.solrudev.okkeipatcher.ui.screen.permissions.model.PermissionsUiState
 import ru.solrudev.okkeipatcher.ui.screen.permissions.model.allPermissionsGranted
+import ru.solrudev.okkeipatcher.ui.util.fixRecyclerViewTransition
 import ru.solrudev.okkeipatcher.ui.util.onBackPressed
 import ru.solrudev.okkeipatcher.ui.util.prepareOptionsMenu
 import ru.solrudev.okkeipatcher.ui.util.setupTransitions
@@ -59,6 +60,7 @@ class PermissionsFragment : Fragment(R.layout.fragment_permissions), FeatureView
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		view.fixRecyclerViewTransition()
 		onBackPressed {
 			requireActivity().finish()
 		}

@@ -7,7 +7,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
-import com.google.android.material.color.MaterialColors
 import dagger.hilt.android.AndroidEntryPoint
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.ui.core.FeatureView
@@ -15,6 +14,7 @@ import ru.solrudev.okkeipatcher.ui.core.renderBy
 import ru.solrudev.okkeipatcher.ui.screen.settings.model.SettingsEvent.HandleSaveDataClicked
 import ru.solrudev.okkeipatcher.ui.screen.settings.model.SettingsEvent.SaveDataAccessRequestHandled
 import ru.solrudev.okkeipatcher.ui.screen.settings.model.SettingsUiState
+import ru.solrudev.okkeipatcher.ui.util.fixRecyclerViewTransition
 import ru.solrudev.okkeipatcher.ui.util.prepareOptionsMenu
 import ru.solrudev.okkeipatcher.ui.util.setupTransitions
 
@@ -42,13 +42,11 @@ class SettingsFragment : PreferenceFragmentCompat(), FeatureView<SettingsUiState
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
+		view.fixRecyclerViewTransition()
 		prepareOptionsMenu {
 			removeItem(R.id.settings_fragment)
 		}
 		viewModel.renderBy(this)
-		// Workaround for a bug in transition
-		val colorBackground = MaterialColors.getColor(view, android.R.attr.colorBackground)
-		view.setBackgroundColor(colorBackground)
 	}
 
 	override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
