@@ -27,11 +27,11 @@ open class MappedPreference<DomainType, DataType>(
 
 class Preference<T>(
 	key: Preferences.Key<T>,
-	defaultValue: T,
+	defaultValue: () -> T,
 	preferences: DataStore<Preferences>
 ) : MappedPreference<T, T>(
 	key,
 	toDataType = { it },
-	toDomainType = { it ?: defaultValue },
+	toDomainType = { it ?: defaultValue() },
 	preferences
 )

@@ -19,7 +19,7 @@ class PatchFileImpl<T>(
 ) : PatchFile {
 
 	private val versionKey = intPreferencesKey(name)
-	override val installedVersion = Preference(key = versionKey, defaultValue = 1, preferences)
+	override val installedVersion = Preference(key = versionKey, defaultValue = { 1 }, preferences)
 
 	override suspend fun getData() = selector(cache.retrieve())
 

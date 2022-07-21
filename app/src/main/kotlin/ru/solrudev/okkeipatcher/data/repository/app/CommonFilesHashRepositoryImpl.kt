@@ -20,10 +20,10 @@ class CommonFilesHashRepositoryImpl @Inject constructor(@ApplicationContext appl
 	private val Context.dataStore by preferencesDataStore(name = "common_files_hash")
 	private val preferences = applicationContext.dataStore
 
-	override val signedApkHash = Preference(key = SIGNED_APK, defaultValue = "", preferences)
-	override val backupApkHash = Preference(key = BACKUP_APK, defaultValue = "", preferences)
-	override val backupObbHash = Preference(key = BACKUP_OBB, defaultValue = "", preferences)
-	override val saveDataHash = Preference(key = SAVE_DATA, defaultValue = "", preferences)
+	override val signedApkHash = Preference(key = SIGNED_APK, defaultValue = { "" }, preferences)
+	override val backupApkHash = Preference(key = BACKUP_APK, defaultValue = { "" }, preferences)
+	override val backupObbHash = Preference(key = BACKUP_OBB, defaultValue = { "" }, preferences)
+	override val saveDataHash = Preference(key = SAVE_DATA, defaultValue = { "" }, preferences)
 
 	override suspend fun clear() {
 		preferences.edit {
