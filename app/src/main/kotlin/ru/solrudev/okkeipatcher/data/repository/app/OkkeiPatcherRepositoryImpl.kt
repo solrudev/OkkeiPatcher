@@ -1,14 +1,15 @@
 package ru.solrudev.okkeipatcher.data.repository.app
 
 import android.content.Context
+import androidx.core.os.ConfigurationCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
 import ru.solrudev.okkeipatcher.data.network.api.OkkeiPatcherApi
-import ru.solrudev.okkeipatcher.data.network.model.OkkeiPatcherChangelogDto
 import ru.solrudev.okkeipatcher.data.network.model.exception.NetworkNotAvailableException
 import ru.solrudev.okkeipatcher.data.service.FileDownloader
 import ru.solrudev.okkeipatcher.data.util.download
 import ru.solrudev.okkeipatcher.data.util.versionCode
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
+import ru.solrudev.okkeipatcher.domain.model.OkkeiPatcherVersion
 import ru.solrudev.okkeipatcher.domain.model.exception.AppUpdateCorruptedException
 import ru.solrudev.okkeipatcher.domain.model.exception.NoNetworkException
 import ru.solrudev.okkeipatcher.domain.repository.app.OkkeiPatcherRepository
@@ -40,10 +41,13 @@ class OkkeiPatcherRepositoryImpl @Inject constructor(
 		-1.0
 	}
 
-	override suspend fun getChangelog(locale: Locale) = try {
-		okkeiPatcherApi.getChangelog(locale.language, applicationContext.versionCode)
+	override suspend fun getChangelog() = try {
+		val locale = ConfigurationCompat.getLocales(applicationContext.resources.configuration)[0] ?: Locale.ENGLISH
+		okkeiPatcherApi
+			.getChangelog(applicationContext.versionCode, locale.language)
+			.map { OkkeiPatcherVersion(it.versionName, it.changes) }
 	} catch (t: Throwable) {
-		OkkeiPatcherChangelogDto(emptyMap())
+		emptyList()
 	}
 
 	override fun getUpdateFile() = operation(progressMax = fileDownloader.progressMax) {
