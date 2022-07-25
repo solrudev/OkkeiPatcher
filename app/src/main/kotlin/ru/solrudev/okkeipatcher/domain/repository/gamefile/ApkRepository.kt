@@ -1,6 +1,6 @@
 package ru.solrudev.okkeipatcher.domain.repository.gamefile
 
-import io.github.solrudev.simpleinstaller.data.InstallResult
+import ru.solrudev.okkeipatcher.domain.core.Result
 
 interface ApkRepository {
 	val isInstalled: Boolean
@@ -15,5 +15,5 @@ interface ApkFile {
 	fun delete()
 	suspend fun create()
 	suspend fun verify(): Boolean
-	suspend fun install(): InstallResult
+	suspend fun install(): Result
 }

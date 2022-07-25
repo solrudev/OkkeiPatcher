@@ -5,9 +5,9 @@ import android.content.pm.PackageManager
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.github.solrudev.simpleinstaller.PackageInstaller
 import io.github.solrudev.simpleinstaller.PackageUninstaller
-import io.github.solrudev.simpleinstaller.installPackage
 import ru.solrudev.okkeipatcher.data.repository.gamefile.util.GAME_PACKAGE_NAME
 import ru.solrudev.okkeipatcher.data.repository.gamefile.util.backupDir
+import ru.solrudev.okkeipatcher.data.repository.util.install
 import ru.solrudev.okkeipatcher.data.service.StreamCopier
 import ru.solrudev.okkeipatcher.data.service.computeHash
 import ru.solrudev.okkeipatcher.data.service.copy
@@ -91,7 +91,7 @@ private class ApkFileImpl(
 		return compareHash(file, savedHash)
 	}
 
-	override suspend fun install() = packageInstaller.installPackage(file)
+	override suspend fun install() = packageInstaller.install(file)
 
 	private suspend inline fun compareHash(file: File, savedHash: String): Boolean {
 		if (savedHash.isEmpty() || !file.exists()) {

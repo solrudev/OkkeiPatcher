@@ -30,7 +30,7 @@ class UninstallException : DomainException(
 	LocalizedString.resource(R.string.error_uninstall)
 )
 
-class InstallException(failureCause: String) : DomainException(
+class InstallException(failureCause: LocalizedString) : DomainException(
 	LocalizedString.resource(R.string.error_install, failureCause)
 )
 

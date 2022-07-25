@@ -1,9 +1,9 @@
 package ru.solrudev.okkeipatcher.domain.service.gamefile
 
-import io.github.solrudev.simpleinstaller.data.InstallResult
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Result
+import ru.solrudev.okkeipatcher.domain.core.onFailure
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.model.exception.ApkNotFoundException
@@ -85,11 +85,10 @@ abstract class Apk(protected val apkRepository: ApkRepository) : PatchableGameFi
 		}
 	}
 
-	private fun install(apk: ApkFile) = operation(progressMax = 100) {
+	private fun install(apk: ApkFile): Operation<Unit> = operation(progressMax = 100) {
 		status(LocalizedString.resource(R.string.status_installing))
-		val installResult = apk.install()
-		if (installResult is InstallResult.Failure) {
-			throw InstallException(installResult.cause.toString())
-		}
+		apk
+			.install()
+			.onFailure { throw InstallException(it.reason) }
 	}
 }
