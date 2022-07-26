@@ -16,7 +16,7 @@ import ru.solrudev.okkeipatcher.data.network.api.patch.DefaultPatchApi
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
-private const val BASE_URL = "https://okkei-patcher-backend.herokuapp.com/api/"
+private const val BASE_URL = "https://api.okkeipatcher.ml/api/"
 
 @InstallIn(SingletonComponent::class)
 @Module
