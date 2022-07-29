@@ -81,30 +81,7 @@ private class ApkFileImpl(
 		file.delete()
 	}
 
-	override suspend fun create() {
-		val hash = copyInstalledApkTo(file)
-		hashPersistable.persist(hash)
-	}
-
-	override suspend fun verify(): Boolean {
-		val savedHash = hashRetrievable.retrieve()
-		return compareHash(file, savedHash)
-	}
-
-	override suspend fun install() = packageInstaller.install(file)
-
-	private suspend inline fun compareHash(file: File, savedHash: String): Boolean {
-		if (savedHash.isEmpty() || !file.exists()) {
-			return false
-		}
-		val fileHash = streamCopier.computeHash(file)
-		return fileHash == savedHash
-	}
-
-	/**
-	 * @return File hash.
-	 */
-	private suspend inline fun copyInstalledApkTo(destinationFile: File) = try {
+	override suspend fun create() = try {
 		if (!applicationContext.isGameInstalled) {
 			throw GameNotFoundException()
 		}
@@ -113,9 +90,24 @@ private class ApkFileImpl(
 			.applicationInfo
 			.publicSourceDir
 		val installedApk = File(installedApkPath)
-		streamCopier.copy(installedApk, destinationFile, hashing = true)
+		val hash = streamCopier.copy(installedApk, file, hashing = true)
+		hashPersistable.persist(hash)
 	} catch (t: Throwable) {
-		destinationFile.delete()
+		file.delete()
 		throw t
 	}
+
+	override suspend fun verify(): Boolean {
+		if (!file.exists()) {
+			return false
+		}
+		val savedHash = hashRetrievable.retrieve()
+		if (savedHash.isEmpty()) {
+			return false
+		}
+		val fileHash = streamCopier.computeHash(file)
+		return fileHash == savedHash
+	}
+
+	override suspend fun install() = packageInstaller.install(file)
 }
