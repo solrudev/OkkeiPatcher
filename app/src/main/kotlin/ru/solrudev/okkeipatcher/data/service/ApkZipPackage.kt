@@ -20,7 +20,7 @@ class ApkZipPackage(
 	private val ioDispatcher: CoroutineDispatcher
 ) : ZipPackage {
 
-	private val zipFile = ZipFile(apkRepository.tempApk.path)
+	private val zipFile = ZipFile(apkRepository.tempPath)
 
 	override fun close() {
 		zipFile.executorService?.shutdownNow()
@@ -39,21 +39,18 @@ class ApkZipPackage(
 	}
 
 	override suspend fun sign() {
-		val apk = File(apkRepository.tempApk.path)
+		val apk = File(apkRepository.tempPath)
 		apkSigner.sign(apk)
 	}
 
 	override suspend fun removeSignature() {
-		val apk = File(apkRepository.tempApk.path)
+		val apk = File(apkRepository.tempPath)
 		apkSigner.removeSignature(apk)
 	}
 
-	/**
-	 * Creates temporary copy of game APK if it doesn't exist.
-	 */
 	suspend fun create() {
-		if (!apkRepository.tempApk.exists) {
-			apkRepository.tempApk.create()
+		if (!apkRepository.tempExists) {
+			apkRepository.createTemp()
 		}
 	}
 }

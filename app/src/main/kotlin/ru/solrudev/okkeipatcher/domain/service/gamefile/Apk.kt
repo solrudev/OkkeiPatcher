@@ -10,16 +10,19 @@ import ru.solrudev.okkeipatcher.domain.model.exception.ApkNotFoundException
 import ru.solrudev.okkeipatcher.domain.model.exception.InstallException
 import ru.solrudev.okkeipatcher.domain.model.exception.NotTrustworthyApkException
 import ru.solrudev.okkeipatcher.domain.model.exception.UninstallException
-import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkFile
+import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkBackupRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
 
-abstract class Apk(protected val apkRepository: ApkRepository) : PatchableGameFile {
+abstract class Apk(
+	protected val apkRepository: ApkRepository,
+	protected val apkBackupRepository: ApkBackupRepository
+) : PatchableGameFile {
 
 	override val backupExists: Boolean
-		get() = apkRepository.backupApk.exists
+		get() = apkBackupRepository.backupExists
 
 	override fun canPatch(): Result {
-		val canInstallPatchedApk = backupExists && apkRepository.tempApk.exists
+		val canInstallPatchedApk = apkBackupRepository.backupExists && apkRepository.tempExists
 		if (!apkRepository.isInstalled && !canInstallPatchedApk) {
 			return Result.Failure(
 				LocalizedString.resource(R.string.error_game_not_found)
@@ -28,26 +31,25 @@ abstract class Apk(protected val apkRepository: ApkRepository) : PatchableGameFi
 		return Result.Success
 	}
 
-	override fun deleteBackup() = apkRepository.backupApk.delete()
+	override fun deleteBackup() = apkBackupRepository.deleteBackup()
 
 	override fun backup() = operation(progressMax = 100) {
 		status(LocalizedString.resource(R.string.status_comparing_apk))
-		if (!apkRepository.backupApk.verify()) {
+		if (!apkBackupRepository.verifyBackup()) {
 			status(LocalizedString.resource(R.string.status_backing_up_apk))
-			apkRepository.backupApk.create()
+			apkBackupRepository.createBackup()
 		}
 	}
 
 	override fun restore(): Operation<Unit> {
-		val apk = apkRepository.backupApk
 		val uninstallOperation = uninstall(updating = false)
-		val installBackupOperation = install(apk)
+		val installBackupOperation = install(apkBackupRepository::installBackup)
 		return operation(uninstallOperation, installBackupOperation) {
-			if (!apk.exists) {
+			if (!apkBackupRepository.backupExists) {
 				throw ApkNotFoundException()
 			}
 			status(LocalizedString.resource(R.string.status_comparing_apk))
-			if (!apk.verify()) {
+			if (!apkBackupRepository.verifyBackup()) {
 				throw NotTrustworthyApkException()
 			}
 			uninstallOperation()
@@ -56,21 +58,20 @@ abstract class Apk(protected val apkRepository: ApkRepository) : PatchableGameFi
 	}
 
 	protected fun installPatched(updating: Boolean): Operation<Unit> {
-		val apk = apkRepository.tempApk
 		val uninstallOperation = uninstall(updating)
-		val installOperation = install(apk)
+		val installOperation = install(apkRepository::installTemp)
 		return operation(uninstallOperation, installOperation) {
-			if (!apk.exists) {
+			if (!apkRepository.tempExists) {
 				throw ApkNotFoundException()
 			}
 			status(LocalizedString.resource(R.string.status_comparing_apk))
-			if (!apk.verify()) {
-				apk.delete()
+			if (!apkRepository.verifyTemp()) {
+				apkRepository.deleteTemp()
 				throw NotTrustworthyApkException()
 			}
 			uninstallOperation()
 			installOperation()
-			apk.delete()
+			apkRepository.deleteTemp()
 		}
 	}
 
@@ -85,10 +86,9 @@ abstract class Apk(protected val apkRepository: ApkRepository) : PatchableGameFi
 		}
 	}
 
-	private fun install(apk: ApkFile): Operation<Unit> = operation(progressMax = 100) {
-		status(LocalizedString.resource(R.string.status_installing))
-		apk
-			.install()
-			.onFailure { throw InstallException(it.reason) }
-	}
+	private inline fun install(crossinline installApk: suspend () -> Result): Operation<Unit> =
+		operation(progressMax = 100) {
+			status(LocalizedString.resource(R.string.status_installing))
+			installApk().onFailure { throw InstallException(it.reason) }
+		}
 }

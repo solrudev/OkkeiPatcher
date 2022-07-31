@@ -4,16 +4,11 @@ import ru.solrudev.okkeipatcher.domain.core.Result
 
 interface ApkRepository {
 	val isInstalled: Boolean
-	val backupApk: ApkFile
-	val tempApk: ApkFile
+	val tempPath: String
+	val tempExists: Boolean
+	fun deleteTemp()
+	suspend fun createTemp()
+	suspend fun verifyTemp(): Boolean
+	suspend fun installTemp(): Result
 	suspend fun uninstall(): Boolean
-}
-
-interface ApkFile {
-	val path: String
-	val exists: Boolean
-	fun delete()
-	suspend fun create()
-	suspend fun verify(): Boolean
-	suspend fun install(): Result
 }

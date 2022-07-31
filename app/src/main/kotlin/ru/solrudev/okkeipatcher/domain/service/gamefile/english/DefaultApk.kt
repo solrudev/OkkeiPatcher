@@ -5,6 +5,7 @@ import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.aggregateOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
+import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkBackupRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.DefaultPatchRepository
 import ru.solrudev.okkeipatcher.domain.service.gamefile.Apk
@@ -14,8 +15,9 @@ import javax.inject.Inject
 class DefaultApk @Inject constructor(
 	patchRepository: DefaultPatchRepository,
 	scriptsPatchOperationFactory: ScriptsPatchOperationFactory,
-	apkRepository: ApkRepository
-) : Apk(apkRepository) {
+	apkRepository: ApkRepository,
+	apkBackupRepository: ApkBackupRepository
+) : Apk(apkRepository, apkBackupRepository) {
 
 	private val scriptsPatchOperation = scriptsPatchOperationFactory.create(patchRepository.scripts)
 
@@ -23,7 +25,7 @@ class DefaultApk @Inject constructor(
 		val installPatchedOperation = installPatched(updating = false)
 		return operation(scriptsPatchOperation, installPatchedOperation) {
 			status(LocalizedString.resource(R.string.status_comparing_apk))
-			if (apkRepository.tempApk.verify()) {
+			if (apkRepository.verifyTemp()) {
 				progressDelta(scriptsPatchOperation.progressMax)
 				installPatchedOperation()
 				return@operation
@@ -35,7 +37,7 @@ class DefaultApk @Inject constructor(
 
 	override fun update() = aggregateOperation(
 		operation {
-			apkRepository.tempApk.delete()
+			apkRepository.deleteTemp()
 		},
 		scriptsPatchOperation,
 		installPatched(updating = true)

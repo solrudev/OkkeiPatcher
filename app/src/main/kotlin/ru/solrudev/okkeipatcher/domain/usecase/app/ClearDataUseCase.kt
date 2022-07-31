@@ -6,6 +6,7 @@ import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.model.Language
 import ru.solrudev.okkeipatcher.domain.repository.app.CommonFilesHashRepository
 import ru.solrudev.okkeipatcher.domain.repository.app.PreferencesRepository
+import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkBackupRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.SaveDataRepository
@@ -19,6 +20,7 @@ interface ClearDataUseCase {
 
 class ClearDataUseCaseImpl @Inject constructor(
 	private val apkRepository: ApkRepository,
+	private val apkBackupRepository: ApkBackupRepository,
 	private val obbRepository: ObbRepository,
 	private val saveDataRepository: SaveDataRepository,
 	private val preferencesRepository: PreferencesRepository,
@@ -27,8 +29,8 @@ class ClearDataUseCaseImpl @Inject constructor(
 ) : ClearDataUseCase {
 
 	override suspend fun invoke() = try {
-		apkRepository.backupApk.delete()
-		apkRepository.tempApk.delete()
+		apkRepository.deleteTemp()
+		apkBackupRepository.deleteBackup()
 		obbRepository.deleteBackup()
 		saveDataRepository.deleteBackup()
 		preferencesRepository.reset()
