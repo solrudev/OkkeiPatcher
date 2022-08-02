@@ -29,14 +29,14 @@ class PreferencesRepositoryImpl @Inject constructor(
 
 	override val handleSaveData = Preference(
 		key = HANDLE_SAVE_DATA,
-		defaultValue = { permissionsRepository.isSaveDataAccessGranted() },
+		defaultValue = permissionsRepository::isSaveDataAccessGranted,
 		preferences
 	)
 
 	override val patchLanguage = MappedPreference(
 		key = PATCH_LANGUAGE,
-		toDataType = { language -> language.name },
-		toDomainType = { name -> Language.fromString(name) },
+		toDataType = Language::name,
+		toDomainType = Language::fromString,
 		preferences
 	)
 
