@@ -30,5 +30,5 @@
 		<item name="android:shadowColor">@color/md_theme_dark_shadow</item>
 	</style>
 
-	<style name="Base.Theme.OkkeiPatcher" parent="Base.V19.Night.Theme.OkkeiPatcher" />
+	<style name="Base.V19.Theme.OkkeiPatcher" parent="Base.V19.Night.Theme.OkkeiPatcher" />
 </resources>

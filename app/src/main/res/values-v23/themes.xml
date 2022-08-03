@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<style name="Base.V23.Theme.OkkeiPatcher" parent="Base.V19.Theme.OkkeiPatcher">
+		<item name="android:statusBarColor">@android:color/transparent</item>
+		<item name="android:windowLightStatusBar">true</item>
+	</style>
+
+	<style name="Base.Theme.OkkeiPatcher" parent="Base.V23.Theme.OkkeiPatcher" />
+</resources>
