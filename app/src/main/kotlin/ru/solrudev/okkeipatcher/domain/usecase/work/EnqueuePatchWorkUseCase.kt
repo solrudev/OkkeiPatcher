@@ -17,5 +17,5 @@ interface EnqueuePatchWorkUseCase {
 class EnqueuePatchWorkUseCaseImpl @Inject constructor(private val patchWorkRepository: PatchWorkRepository) :
 	EnqueuePatchWorkUseCase {
 
-	override suspend fun invoke() = patchWorkRepository.enqueuePatchWork()
+	override suspend fun invoke() = patchWorkRepository.enqueueWork()
 }

@@ -19,8 +19,8 @@ class GetPendingWorkUseCaseImpl @Inject constructor(
 ) : GetPendingWorkUseCase {
 
 	override suspend fun invoke(): Work? {
-		val patchWork = patchWorkRepository.getPatchWork()
-		val restoreWork = restoreWorkRepository.getRestoreWork()
+		val patchWork = patchWorkRepository.getWork()
+		val restoreWork = restoreWorkRepository.getWork()
 		return pendingWorkOrNull(patchWork) ?: pendingWorkOrNull(restoreWork)
 	}
 

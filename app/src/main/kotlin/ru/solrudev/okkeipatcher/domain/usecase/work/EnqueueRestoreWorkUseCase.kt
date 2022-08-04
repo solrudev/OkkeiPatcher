@@ -17,5 +17,5 @@ interface EnqueueRestoreWorkUseCase {
 class EnqueueRestoreWorkUseCaseImpl @Inject constructor(private val restoreWorkRepository: RestoreWorkRepository) :
 	EnqueueRestoreWorkUseCase {
 
-	override suspend fun invoke() = restoreWorkRepository.enqueueRestoreWork()
+	override suspend fun invoke() = restoreWorkRepository.enqueueWork()
 }
