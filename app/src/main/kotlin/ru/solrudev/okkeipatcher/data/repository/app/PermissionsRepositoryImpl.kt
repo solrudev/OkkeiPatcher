@@ -36,14 +36,10 @@ class PermissionsRepositoryImpl @Inject constructor(
 	}
 
 	override fun isStoragePermissionGranted(): Boolean {
-		val isReadStorageGranted = ContextCompat.checkSelfPermission(
-			applicationContext,
-			READ_EXTERNAL_STORAGE
-		) == PERMISSION_GRANTED
-		val isWriteStorageGranted = ContextCompat.checkSelfPermission(
-			applicationContext,
-			WRITE_EXTERNAL_STORAGE
-		) == PERMISSION_GRANTED
+		val isReadStorageGranted =
+			ContextCompat.checkSelfPermission(applicationContext, READ_EXTERNAL_STORAGE) == PERMISSION_GRANTED
+		val isWriteStorageGranted =
+			ContextCompat.checkSelfPermission(applicationContext, WRITE_EXTERNAL_STORAGE) == PERMISSION_GRANTED
 		return isReadStorageGranted && isWriteStorageGranted
 	}
 
