@@ -12,7 +12,7 @@ class HomeFeature @Inject constructor(
 	checkSaveDataAccessMiddleware: CheckSaveDataAccessMiddleware,
 	observePatchStatusMiddleware: ObservePatchStatusMiddleware,
 	checkPatchUpdatesMiddleware: CheckPatchUpdatesMiddleware,
-	checkPendingWorkMiddleware: CheckPendingWorkMiddleware,
+	observePendingWorkMiddleware: ObservePendingWorkMiddleware,
 	enqueuePatchWorkMiddleware: EnqueuePatchWorkMiddleware,
 	enqueueRestoreWorkMiddleware: EnqueueRestoreWorkMiddleware,
 	getPatchSizeMiddleware: GetPatchSizeMiddleware,
@@ -23,7 +23,7 @@ class HomeFeature @Inject constructor(
 		checkSaveDataAccessMiddleware,
 		observePatchStatusMiddleware,
 		checkPatchUpdatesMiddleware,
-		checkPendingWorkMiddleware,
+		observePendingWorkMiddleware,
 		enqueuePatchWorkMiddleware,
 		enqueueRestoreWorkMiddleware,
 		getPatchSizeMiddleware

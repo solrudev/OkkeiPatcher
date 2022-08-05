@@ -7,9 +7,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.content.getSystemService
-import androidx.work.CoroutineWorker
-import androidx.work.ForegroundInfo
-import androidx.work.WorkerParameters
+import androidx.work.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -36,6 +34,7 @@ private val workerMessageNotificationId = AtomicInteger(49725)
 abstract class ForegroundWorker(
 	context: Context,
 	workerParameters: WorkerParameters,
+	private val workManager: WorkManager,
 	private val operationFactory: OperationFactory<DomainResult>,
 	private val workLabel: LocalizedString
 ) : CoroutineWorker(context, workerParameters) {
@@ -54,6 +53,11 @@ abstract class ForegroundWorker(
 	}
 
 	final override suspend fun doWork() = try {
+		if (runAttemptCount > 0) {
+			workManager
+				.cancelWorkById(id)
+				.await()
+		}
 		setForeground(createForegroundInfo())
 		val operation = operationFactory.create()
 		operation

@@ -13,5 +13,5 @@ interface GetWorkStateFlowUseCase {
 class GetWorkStateFlowUseCaseImpl @Inject constructor(private val workRepository: WorkRepository) :
 	GetWorkStateFlowUseCase {
 
-	override fun invoke(work: Work) = workRepository.getWorkStateFlow(work)
+	override fun invoke(work: Work) = workRepository.getWorkStateFlow(work.id)
 }

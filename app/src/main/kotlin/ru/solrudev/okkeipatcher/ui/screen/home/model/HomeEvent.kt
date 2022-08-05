@@ -5,6 +5,7 @@ import ru.solrudev.okkeipatcher.ui.core.Effect
 import ru.solrudev.okkeipatcher.ui.core.Event
 
 sealed interface HomeEvent : Event {
+	object PermissionsCheckRequested : HomeEvent, HomeEffect
 	data class PermissionsChecked(val allPermissionsGranted: Boolean) : HomeEvent
 	data class WorkIsPending(val work: Work) : HomeEvent
 	data class WorkFinished(val success: Boolean) : HomeEvent, HomeEffect

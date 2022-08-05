@@ -42,6 +42,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), FeatureView<HomeUiState> 
 		viewLifecycleOwner.bindProgressButton(binding.buttonMainPatch)
 		viewModel.renderBy(this)
 		checkWorkResult()
+		viewModel.dispatchEvent(PermissionsCheckRequested)
 	}
 
 	override fun onStop() {

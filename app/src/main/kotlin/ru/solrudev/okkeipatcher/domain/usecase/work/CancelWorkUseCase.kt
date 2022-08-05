@@ -9,5 +9,5 @@ interface CancelWorkUseCase {
 }
 
 class CancelWorkUseCaseImpl @Inject constructor(private val workRepository: WorkRepository) : CancelWorkUseCase {
-	override fun invoke(work: Work) = workRepository.cancelWork(work)
+	override fun invoke(work: Work) = workRepository.cancelWork(work.id)
 }

@@ -1,8 +1,11 @@
 package ru.solrudev.okkeipatcher.data.repository.work
 
+import androidx.lifecycle.asFlow
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import kotlinx.coroutines.flow.*
 import ru.solrudev.okkeipatcher.data.repository.work.mapper.toWork
 import ru.solrudev.okkeipatcher.data.worker.ForegroundWorker
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
@@ -22,15 +25,21 @@ open class ConcreteWorkRepositoryImpl<T : ForegroundWorker>(
 		val workRequest = OneTimeWorkRequest.Builder(workerClass)
 			.addTag(workName)
 			.build()
-		val work = Work(workRequest.id, workLabel)
-		workRepository.add(work)
+		workRepository.add(workRequest.id)
 		workManager.enqueueUniqueWork(workName, ExistingWorkPolicy.KEEP, workRequest)
-		return work
+		return Work(workRequest.id, workLabel)
 	}
 
-	override fun getWork() = workManager
-		.getWorkInfosForUniqueWork(workName)
-		.get()
-		.firstOrNull()
-		?.toWork(workLabel)
+	override fun getPendingWorkFlow() = workManager
+		.getWorkInfosForUniqueWorkLiveData(workName)
+		.asFlow()
+		.mapNotNull { workInfoList -> workInfoList.firstOrNull() }
+		.onEach {
+			if (it.state == WorkInfo.State.CANCELLED) {
+				workRepository.updateIsPending(it.id, isPending = false)
+			}
+		}
+		.distinctUntilChangedBy { it.id }
+		.filter { workRepository.getIsPending(it.id) }
+		.map { it.toWork(workLabel) }
 }

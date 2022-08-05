@@ -15,5 +15,5 @@ interface CompleteWorkUseCase {
 class CompleteWorkUseCaseImpl @Inject constructor(private val workRepository: WorkRepository) :
 	CompleteWorkUseCase {
 
-	override suspend fun invoke(work: Work) = workRepository.updateIsPending(work, isPending = false)
+	override suspend fun invoke(work: Work) = workRepository.updateIsPending(work.id, isPending = false)
 }

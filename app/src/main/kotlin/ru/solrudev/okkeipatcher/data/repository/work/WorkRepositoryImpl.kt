@@ -8,8 +8,8 @@ import kotlinx.coroutines.supervisorScope
 import ru.solrudev.okkeipatcher.data.database.dao.WorkDao
 import ru.solrudev.okkeipatcher.data.database.model.WorkModel
 import ru.solrudev.okkeipatcher.data.repository.work.mapper.WorkStateMapper
-import ru.solrudev.okkeipatcher.domain.model.Work
 import ru.solrudev.okkeipatcher.domain.repository.work.WorkRepository
+import java.util.*
 import javax.inject.Inject
 
 class WorkRepositoryImpl @Inject constructor(
@@ -18,27 +18,27 @@ class WorkRepositoryImpl @Inject constructor(
 	private val workStateMapper: WorkStateMapper
 ) : WorkRepository {
 
-	override suspend fun add(work: Work) {
-		val workModel = WorkModel(workId = work.id)
+	override suspend fun add(workId: UUID) {
+		val workModel = WorkModel(workId = workId)
 		workDao.insert(workModel)
 	}
 
-	override suspend fun updateIsPending(work: Work, isPending: Boolean) =
-		workDao.updateIsPendingByWorkId(work.id, isPending)
+	override suspend fun updateIsPending(workId: UUID, isPending: Boolean) =
+		workDao.updateIsPendingByWorkId(workId, isPending)
 
-	override suspend fun getIsPending(work: Work): Boolean {
-		val isPending = workDao.getIsPendingByWorkId(work.id)
+	override suspend fun getIsPending(workId: UUID): Boolean {
+		val isPending = workDao.getIsPendingByWorkId(workId)
 		return isPending ?: false
 	}
 
-	override fun cancelWork(work: Work) {
-		workManager.cancelWorkById(work.id)
+	override fun cancelWork(workId: UUID) {
+		workManager.cancelWorkById(workId)
 	}
 
-	override fun getWorkStateFlow(work: Work) = flow {
+	override fun getWorkStateFlow(workId: UUID) = flow {
 		supervisorScope {
 			workManager
-				.getWorkInfoByIdLiveData(work.id)
+				.getWorkInfoByIdLiveData(workId)
 				.asFlow()
 				.collect { workInfo ->
 					val workState = workStateMapper(workInfo)
