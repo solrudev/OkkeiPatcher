@@ -91,7 +91,6 @@ class WorkFragment : Fragment(R.layout.fragment_work), FeatureView<WorkUiState> 
 	}
 
 	private fun onWorkSucceeded(playAnimations: Boolean) {
-		setResult(true)
 		if (playAnimations) {
 			startSuccessAnimations()
 		}
@@ -104,12 +103,10 @@ class WorkFragment : Fragment(R.layout.fragment_work), FeatureView<WorkUiState> 
 	}
 
 	private fun onWorkCanceled() {
-		setResult(false)
 		findNavController().popBackStack()
 	}
 
 	private fun onError(error: Message) {
-		setResult(false)
 		binding.buttonWork.isEnabled = false
 		showErrorMessage(error)
 		clearNotifications()
@@ -160,7 +157,4 @@ class WorkFragment : Fragment(R.layout.fragment_work), FeatureView<WorkUiState> 
 			.showWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.Event.ON_STOP)
 		viewModel.dispatchEvent(ErrorShown)
 	}
-
-	private fun setResult(value: Boolean) =
-		findNavController().previousBackStackEntry?.savedStateHandle?.setResult(value)
 }

@@ -23,7 +23,7 @@ import ru.solrudev.okkeipatcher.domain.core.onFailure
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.extension.statusAndAccumulatedProgress
 import ru.solrudev.okkeipatcher.domain.service.operation.factory.OperationFactory
-import ru.solrudev.okkeipatcher.ui.host.OkkeiActivity
+import ru.solrudev.okkeipatcher.ui.host.HostActivity
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.time.Duration.Companion.milliseconds
 import ru.solrudev.okkeipatcher.domain.core.Result as DomainResult
@@ -198,7 +198,7 @@ abstract class ForegroundWorker(
 	}
 
 	private fun createPendingIntent(): PendingIntent {
-		val activityIntent = Intent(applicationContext, OkkeiActivity::class.java).apply {
+		val activityIntent = Intent(applicationContext, HostActivity::class.java).apply {
 			flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
 		}
 		val flagImmutable = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0

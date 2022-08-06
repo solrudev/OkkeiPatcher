@@ -1,8 +1,11 @@
 package ru.solrudev.okkeipatcher.ui.screen.home.reducer
 
 import ru.solrudev.okkeipatcher.ui.core.Reducer
-import ru.solrudev.okkeipatcher.ui.screen.home.model.*
+import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeEvent
 import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeEvent.*
+import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeUiState
+import ru.solrudev.okkeipatcher.ui.screen.home.model.PatchEvent
+import ru.solrudev.okkeipatcher.ui.screen.home.model.RestoreEvent
 import javax.inject.Inject
 
 class HomeReducer @Inject constructor(
@@ -11,11 +14,8 @@ class HomeReducer @Inject constructor(
 ) : Reducer<HomeUiState, HomeEvent> {
 
 	override fun reduce(state: HomeUiState, event: HomeEvent) = when (event) {
-		is HomeEffect -> state
 		is PatchEvent -> patchReducer.reduce(state, event)
 		is RestoreEvent -> restoreReducer.reduce(state, event)
-		is PermissionsChecked -> state.copy(permissionsRequired = !event.allPermissionsGranted)
-		is WorkIsPending -> state.copy(pendingWork = event.work)
 		is PatchStatusChanged -> state.copy(
 			isPatchEnabled = !event.isPatched,
 			isRestoreEnabled = event.isPatched,
@@ -23,18 +23,13 @@ class HomeReducer @Inject constructor(
 		)
 		is PatchUpdatesAvailable -> state.copy(
 			isPatchEnabled = true,
-			patchUpdatesAvailable = true
+			patchUpdatesAvailable = true,
+			canShowPatchUpdatesMessage = true
 		)
 		is PatchUpdatesMessageShown -> state.copy(
 			patchUpdatesAvailable = false,
 			canShowPatchUpdatesMessage = false
 		)
-		is NavigatedToWorkScreen -> state.copy(
-			pendingWork = null,
-			patchUpdatesAvailable = false,
-			canShowPatchUpdatesMessage = false
-		)
-		is NavigatedToPermissionsScreen -> state.copy(permissionsRequired = false)
 		is ViewHidden -> {
 			val startPatchMessage = state.startPatchMessage.copy(isVisible = false)
 			val startRestoreMessage = state.startRestoreMessage.copy(isVisible = false)

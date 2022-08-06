@@ -1,19 +1,12 @@
 package ru.solrudev.okkeipatcher.ui.screen.home.model
 
-import ru.solrudev.okkeipatcher.domain.model.Work
 import ru.solrudev.okkeipatcher.ui.core.Effect
 import ru.solrudev.okkeipatcher.ui.core.Event
 
 sealed interface HomeEvent : Event {
-	object PermissionsCheckRequested : HomeEvent, HomeEffect
-	data class PermissionsChecked(val allPermissionsGranted: Boolean) : HomeEvent
-	data class WorkIsPending(val work: Work) : HomeEvent
-	data class WorkFinished(val success: Boolean) : HomeEvent, HomeEffect
 	data class PatchStatusChanged(val isPatched: Boolean) : HomeEvent
 	object PatchUpdatesAvailable : HomeEvent
 	object PatchUpdatesMessageShown : HomeEvent
-	object NavigatedToWorkScreen : HomeEvent
-	object NavigatedToPermissionsScreen : HomeEvent
 	object ViewHidden : HomeEvent
 }
 
@@ -33,6 +26,5 @@ sealed interface RestoreEvent : HomeEvent {
 	object StartRestoreMessageDismissed : RestoreEvent
 }
 
-sealed interface HomeEffect : Effect
 sealed interface PatchEffect : Effect
 sealed interface RestoreEffect : Effect

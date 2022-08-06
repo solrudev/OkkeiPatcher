@@ -1,5 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.core
 
+import androidx.activity.ComponentActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -25,6 +26,21 @@ fun <S : UiState, V> Flow<S>.renderBy(featureView: V): Job
 			  V : Fragment {
 	return featureView.viewLifecycleOwner.lifecycleScope.launch {
 		featureView.viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+			collect(featureView::render)
+		}
+	}
+}
+
+/**
+ * Launches lifecycle-aware collection of the [Flow] of [UiState] which will re-render view each time
+ * new state is emitted.
+ * @return [Job] of the flow collection.
+ */
+fun <S : UiState, V> Flow<S>.renderBy(featureView: V): Job
+		where V : FeatureView<S>,
+			  V : ComponentActivity {
+	return featureView.lifecycleScope.launch {
+		featureView.repeatOnLifecycle(Lifecycle.State.STARTED) {
 			collect(featureView::render)
 		}
 	}

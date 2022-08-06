@@ -5,26 +5,27 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.bindProgressButton
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import ru.solrudev.okkeipatcher.OkkeiNavGraphDirections
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.databinding.FragmentHomeBinding
 import ru.solrudev.okkeipatcher.domain.core.Message
-import ru.solrudev.okkeipatcher.domain.model.Work
 import ru.solrudev.okkeipatcher.ui.core.FeatureView
 import ru.solrudev.okkeipatcher.ui.core.renderBy
 import ru.solrudev.okkeipatcher.ui.model.shouldShow
-import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeEvent.*
+import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeEvent.PatchUpdatesMessageShown
+import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeEvent.ViewHidden
 import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeUiState
 import ru.solrudev.okkeipatcher.ui.screen.home.model.PatchEvent.*
 import ru.solrudev.okkeipatcher.ui.screen.home.model.RestoreEvent.*
 import ru.solrudev.okkeipatcher.ui.screen.home.model.shouldShowPatchUpdatesMessage
-import ru.solrudev.okkeipatcher.ui.util.*
+import ru.solrudev.okkeipatcher.ui.util.createDialogBuilder
+import ru.solrudev.okkeipatcher.ui.util.setLoading
+import ru.solrudev.okkeipatcher.ui.util.setupTransitions
+import ru.solrudev.okkeipatcher.ui.util.showWithLifecycle
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home), FeatureView<HomeUiState> {
@@ -41,8 +42,6 @@ class HomeFragment : Fragment(R.layout.fragment_home), FeatureView<HomeUiState> 
 		setupNavigation()
 		viewLifecycleOwner.bindProgressButton(binding.buttonMainPatch)
 		viewModel.renderBy(this)
-		checkWorkResult()
-		viewModel.dispatchEvent(PermissionsCheckRequested)
 	}
 
 	override fun onStop() {
@@ -54,12 +53,6 @@ class HomeFragment : Fragment(R.layout.fragment_home), FeatureView<HomeUiState> 
 		binding.buttonMainPatch.isEnabled = uiState.isPatchEnabled
 		binding.buttonMainRestore.isEnabled = uiState.isRestoreEnabled
 		binding.buttonMainPatch.setLoading(uiState.isPatchSizeLoading, R.string.button_text_patch)
-		if (uiState.permissionsRequired) {
-			navigateToPermissionsScreen()
-		}
-		if (uiState.pendingWork != null) {
-			navigateToWorkScreen(uiState.pendingWork)
-		}
 		if (uiState.startPatchMessage.shouldShow) {
 			showStartPatchMessage(uiState.startPatchMessage.data)
 		}
@@ -82,28 +75,6 @@ class HomeFragment : Fragment(R.layout.fragment_home), FeatureView<HomeUiState> 
 		binding.buttonMainRestore.setOnClickListener {
 			viewModel.dispatchEvent(RestoreRequested)
 		}
-	}
-
-	private fun checkWorkResult() {
-		val savedStateHandle = findNavController().currentBackStackEntry?.savedStateHandle ?: return
-		val result = savedStateHandle.getResult() ?: return
-		viewModel.dispatchEvent(WorkFinished(result))
-		savedStateHandle.clearResult()
-	}
-
-	private fun navigateToPermissionsScreen() {
-		val toWorkScreen = OkkeiNavGraphDirections.actionGlobalPermissions()
-		findNavController().navigate(toWorkScreen)
-		viewModel.dispatchEvent(NavigatedToPermissionsScreen)
-	}
-
-	private fun navigateToWorkScreen(work: Work) {
-		val navController = findNavController()
-		val workScreen = navController.findDestination(R.id.work_fragment)
-		workScreen?.label = work.label.resolve(requireContext())
-		val toWorkScreen = OkkeiNavGraphDirections.actionGlobalWork(work)
-		navController.navigate(toWorkScreen)
-		viewModel.dispatchEvent(NavigatedToWorkScreen)
 	}
 
 	private fun showPatchUpdatesSnackbar() {

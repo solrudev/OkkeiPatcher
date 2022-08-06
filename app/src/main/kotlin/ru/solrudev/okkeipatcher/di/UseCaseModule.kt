@@ -42,6 +42,11 @@ interface UseCaseModule {
 	): GetPendingWorkFlowUseCase
 
 	@Binds
+	fun bindGetIsWorkPendingFlowUseCase(
+		getIsWorkPendingFlowUseCase: GetIsWorkPendingFlowUseCaseImpl
+	): GetIsWorkPendingFlowUseCase
+
+	@Binds
 	fun bindGetIsAppUpdateAvailableUseCase(
 		getIsAppUpdateAvailableUseCase: GetIsAppUpdateAvailableUseCaseImpl
 	): GetIsAppUpdateAvailableUseCase
