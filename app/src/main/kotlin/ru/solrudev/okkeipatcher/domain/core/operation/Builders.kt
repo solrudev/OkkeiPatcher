@@ -126,7 +126,7 @@ private class OperationImpl<out R>(
 	}
 
 	private fun CoroutineScope.accumulateProgress() = progressDelta
-		.runningReduce { accumulator, value -> accumulator + value }
+		.runningReduce(Int::plus)
 		.conflate()
 		.onEach { accumulatedProgress = it }
 		.launchIn(this)

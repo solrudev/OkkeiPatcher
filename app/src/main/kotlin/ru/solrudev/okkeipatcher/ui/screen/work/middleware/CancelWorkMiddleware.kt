@@ -13,7 +13,7 @@ class CancelWorkMiddleware @Inject constructor(
 	private val cancelWorkUseCase: CancelWorkUseCase
 ) : Middleware<WorkEvent> {
 
-	override fun apply(events: Flow<WorkEvent>) = flow<WorkEvent> {
+	override fun apply(events: Flow<WorkEvent>) = flow<Nothing> {
 		events.collectEvent<CancelWork> {
 			cancelWorkUseCase(it.work)
 		}

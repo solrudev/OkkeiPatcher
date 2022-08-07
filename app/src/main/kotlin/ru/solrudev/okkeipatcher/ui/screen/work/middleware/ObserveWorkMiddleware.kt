@@ -13,7 +13,7 @@ import ru.solrudev.okkeipatcher.ui.core.collectEvent
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEvent
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEvent.StartObservingWork
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEvent.ViewHidden
-import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkStateEvent.*
+import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkStateEvent
 import javax.inject.Inject
 
 class ObserveWorkMiddleware @Inject constructor(
@@ -41,11 +41,11 @@ class ObserveWorkMiddleware @Inject constructor(
 	}
 
 	private fun WorkState.toEvent() = when (this) {
-		is WorkState.Running -> Running(status, progressData)
-		is WorkState.Failed -> Failed(reason, stackTrace)
-		is WorkState.Succeeded -> Succeeded
-		is WorkState.Canceled -> Canceled
-		is WorkState.Unknown -> Unknown
+		is WorkState.Running -> WorkStateEvent.Running(status, progressData)
+		is WorkState.Failed -> WorkStateEvent.Failed(reason, stackTrace)
+		is WorkState.Succeeded -> WorkStateEvent.Succeeded
+		is WorkState.Canceled -> WorkStateEvent.Canceled
+		is WorkState.Unknown -> WorkStateEvent.Unknown
 	}
 
 	private fun Flow<WorkEvent>.shouldCollect() = flow {
