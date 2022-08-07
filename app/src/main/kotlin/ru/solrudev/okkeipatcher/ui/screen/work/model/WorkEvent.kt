@@ -8,14 +8,14 @@ import ru.solrudev.okkeipatcher.ui.core.Event
 
 sealed interface WorkEvent : Event {
 	data class CancelWork(val work: Work) : WorkEvent, WorkEffect
-	data class StartObservingWork(val work: Work) : WorkEvent, WorkEffect
+	data class StartObservingWork(val work: Work) : ObserveWorkEvent, WorkEffect
 	object CancelRequested : WorkEvent
 	object CancelMessageShown : WorkEvent
 	object CancelMessageDismissed : WorkEvent
 	object ErrorShown : WorkEvent
 	object ErrorDismissed : WorkEvent
 	object AnimationsPlayed : WorkEvent
-	object ViewHidden : WorkEvent
+	object ViewHidden : ObserveWorkEvent
 }
 
 sealed interface WorkStateEvent : WorkEvent {
@@ -26,4 +26,5 @@ sealed interface WorkStateEvent : WorkEvent {
 	object Unknown : WorkStateEvent
 }
 
+sealed interface ObserveWorkEvent : WorkEvent
 sealed interface WorkEffect : Effect

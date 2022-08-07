@@ -1,15 +1,12 @@
 package ru.solrudev.okkeipatcher.ui.screen.work.middleware
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.*
 import ru.solrudev.okkeipatcher.domain.model.WorkState
 import ru.solrudev.okkeipatcher.domain.usecase.work.CompleteWorkUseCase
 import ru.solrudev.okkeipatcher.domain.usecase.work.GetWorkStateFlowUseCase
 import ru.solrudev.okkeipatcher.ui.core.Middleware
-import ru.solrudev.okkeipatcher.ui.core.collectEvent
+import ru.solrudev.okkeipatcher.ui.screen.work.model.ObserveWorkEvent
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEvent
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEvent.StartObservingWork
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEvent.ViewHidden
@@ -21,23 +18,24 @@ class ObserveWorkMiddleware @Inject constructor(
 	private val completeWorkUseCase: CompleteWorkUseCase
 ) : Middleware<WorkEvent> {
 
+	@OptIn(ExperimentalCoroutinesApi::class)
 	override fun apply(events: Flow<WorkEvent>) = channelFlow {
-		var shouldCollect = true
-		launch {
-			events
-				.shouldCollect()
-				.collect { shouldCollect = it }
-		}
-		events.collectEvent<StartObservingWork> { event ->
-			getWorkStateFlowUseCase(event.work)
-				.filter { shouldCollect }
-				.collect { workState ->
-					if (workState.isFinished) {
-						completeWorkUseCase(event.work)
+		events
+			.filterIsInstance<ObserveWorkEvent>()
+			.flatMapLatest { event ->
+				when (event) {
+					is StartObservingWork -> event.work.let { work ->
+						getWorkStateFlowUseCase(work).map { workState -> work to workState }
 					}
-					send(workState.toEvent())
+					is ViewHidden -> emptyFlow()
 				}
-		}
+			}
+			.collect { (work, workState) ->
+				if (workState.isFinished) {
+					completeWorkUseCase(work)
+				}
+				send(workState.toEvent())
+			}
 	}
 
 	private fun WorkState.toEvent() = when (this) {
@@ -46,12 +44,5 @@ class ObserveWorkMiddleware @Inject constructor(
 		is WorkState.Succeeded -> WorkStateEvent.Succeeded
 		is WorkState.Canceled -> WorkStateEvent.Canceled
 		is WorkState.Unknown -> WorkStateEvent.Unknown
-	}
-
-	private fun Flow<WorkEvent>.shouldCollect() = flow {
-		collect {
-			if (it is StartObservingWork) emit(true)
-			if (it is ViewHidden) emit(false)
-		}
 	}
 }

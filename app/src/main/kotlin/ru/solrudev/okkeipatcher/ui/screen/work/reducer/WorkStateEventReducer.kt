@@ -7,17 +7,18 @@ import ru.solrudev.okkeipatcher.domain.core.Message
 import ru.solrudev.okkeipatcher.domain.core.plus
 import ru.solrudev.okkeipatcher.ui.core.Reducer
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkStateEvent
+import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkStateEvent.*
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkUiState
 import javax.inject.Inject
 
 class WorkStateEventReducer @Inject constructor() : Reducer<WorkUiState, WorkStateEvent> {
 
 	override fun reduce(state: WorkUiState, event: WorkStateEvent) = when (event) {
-		is WorkStateEvent.Running -> state.copy(
+		is Running -> state.copy(
 			status = event.status,
 			progressData = event.progressData
 		)
-		is WorkStateEvent.Failed -> {
+		is Failed -> {
 			val newLine = if (event.stackTrace.isNotBlank() && event.reason !is EmptyString) "\n" else ""
 			val message = Message(
 				LocalizedString.resource(R.string.error),
@@ -26,7 +27,7 @@ class WorkStateEventReducer @Inject constructor() : Reducer<WorkUiState, WorkSta
 			val errorMessage = state.errorMessage.copy(data = message)
 			state.copy(errorMessage = errorMessage)
 		}
-		is WorkStateEvent.Succeeded -> {
+		is Succeeded -> {
 			val maxProgress = state.progressData.copy(progress = state.progressData.max)
 			state.copy(
 				status = LocalizedString.resource(R.string.status_succeeded),
@@ -34,7 +35,7 @@ class WorkStateEventReducer @Inject constructor() : Reducer<WorkUiState, WorkSta
 				isWorkSuccessful = true
 			)
 		}
-		is WorkStateEvent.Canceled -> state.copy(isWorkCanceled = true)
-		is WorkStateEvent.Unknown -> state
+		is Canceled -> state.copy(isWorkCanceled = true)
+		is Unknown -> state
 	}
 }
