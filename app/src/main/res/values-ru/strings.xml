@@ -6,10 +6,12 @@
 
 	<!--Button texts-->
 	<string name="button_text_abort">Стоп</string>
+	<string name="button_text_cancel">Отмена</string>
 	<string name="button_text_clear">Очистить</string>
 	<string name="button_text_copy_to_clipboard">Копировать в буфер обмена</string>
 	<string name="button_text_grant">Выдать</string>
 	<string name="button_text_granted">Выдано</string>
+	<string name="button_text_ok">OK</string>
 	<string name="button_text_patch">Патч</string>
 	<string name="button_text_restoring">Восстановление</string>
 	<string name="button_text_start">Начать</string>

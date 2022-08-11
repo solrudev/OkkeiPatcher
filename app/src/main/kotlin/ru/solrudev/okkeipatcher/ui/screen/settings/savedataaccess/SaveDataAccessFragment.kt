@@ -75,7 +75,7 @@ class SaveDataAccessFragment : DialogFragment(), FeatureView<SaveDataAccessUiSta
 			.setPositiveButton(R.string.button_text_grant) { _, _ ->
 				permissionRequestLauncher.launch()
 			}
-			.setNegativeButton(android.R.string.cancel) { _, _ ->
+			.setNegativeButton(R.string.button_text_cancel) { _, _ ->
 				findNavController().popBackStack()
 			}
 			.setOnCancelListener {

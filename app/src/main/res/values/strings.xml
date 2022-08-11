@@ -10,10 +10,12 @@
 
 	<!--Button texts-->
 	<string name="button_text_abort">Abort</string>
+	<string name="button_text_cancel">Cancel</string>
 	<string name="button_text_clear">Clear</string>
 	<string name="button_text_copy_to_clipboard">Copy to clipboard</string>
 	<string name="button_text_grant">Grant</string>
 	<string name="button_text_granted">Granted</string>
+	<string name="button_text_ok">OK</string>
 	<string name="button_text_patch">Patch</string>
 	<string name="button_text_restoring">Restoring</string>
 	<string name="button_text_start">Start</string>

@@ -89,7 +89,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), FeatureView<HomeUiState> 
 			.setPositiveButton(R.string.button_text_start) { _, _ ->
 				viewModel.dispatchEvent(StartPatch)
 			}
-			.setNegativeButton(android.R.string.cancel, null)
+			.setNegativeButton(R.string.button_text_cancel, null)
 			.setOnDismissListener {
 				viewModel.dispatchEvent(StartPatchMessageDismissed)
 			}
@@ -102,7 +102,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), FeatureView<HomeUiState> 
 			.setPositiveButton(R.string.button_text_start) { _, _ ->
 				viewModel.dispatchEvent(StartRestore)
 			}
-			.setNegativeButton(android.R.string.cancel, null)
+			.setNegativeButton(R.string.button_text_cancel, null)
 			.setOnDismissListener {
 				viewModel.dispatchEvent(StartRestoreMessageDismissed)
 			}

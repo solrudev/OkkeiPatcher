@@ -98,7 +98,7 @@ class WorkFragment : Fragment(R.layout.fragment_work), FeatureView<WorkUiState> 
 		binding.buttonWork.setOnClickListener {
 			findNavController().popBackStack()
 		}
-		binding.buttonWork.setText(android.R.string.ok)
+		binding.buttonWork.setText(R.string.button_text_ok)
 		currentCancelDialog?.dismiss()
 		clearNotifications()
 	}
@@ -134,7 +134,7 @@ class WorkFragment : Fragment(R.layout.fragment_work), FeatureView<WorkUiState> 
 			.setPositiveButton(R.string.button_text_abort) { _, _ ->
 				viewModel.dispatchEvent(CancelWork(args.work))
 			}
-			.setNegativeButton(android.R.string.cancel, null)
+			.setNegativeButton(R.string.button_text_cancel, null)
 			.setOnDismissListener {
 				viewModel.dispatchEvent(CancelMessageDismissed)
 				currentCancelDialog = null

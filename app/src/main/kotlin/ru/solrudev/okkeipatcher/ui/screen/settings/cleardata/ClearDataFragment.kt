@@ -64,7 +64,7 @@ class ClearDataFragment : DialogFragment(), FeatureView<ClearDataUiState> {
 			.setPositiveButton(R.string.button_text_clear) { _, _ ->
 				viewModel.dispatchEvent(ClearingRequested)
 			}
-			.setNegativeButton(android.R.string.cancel) { _, _ ->
+			.setNegativeButton(R.string.button_text_cancel) { _, _ ->
 				findNavController().popBackStack()
 			}
 			.setOnCancelListener {
