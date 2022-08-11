@@ -11,15 +11,12 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okio.HashingSink
-import okio.blackholeSink
+import okio.Sink
 import okio.buffer
-import okio.sink
 import ru.solrudev.okkeipatcher.data.network.model.exception.NetworkNotAvailableException
-import ru.solrudev.okkeipatcher.data.service.util.BlackholeOutputStream
 import ru.solrudev.okkeipatcher.data.service.util.calculateProgressRatio
 import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.model.exception.NoNetworkException
-import java.io.OutputStream
 import javax.inject.Inject
 import kotlin.io.use
 import kotlin.math.ceil
@@ -37,7 +34,7 @@ interface FileDownloader {
 	 */
 	suspend fun download(
 		url: String,
-		outputStream: OutputStream,
+		sink: Sink,
 		hashing: Boolean = false,
 		onProgressDeltaChanged: suspend (Int) -> Unit = {}
 	): String
@@ -61,7 +58,7 @@ class FileDownloaderImpl @Inject constructor(
 	@Suppress("BlockingMethodInNonBlockingContext")
 	override suspend fun download(
 		url: String,
-		outputStream: OutputStream,
+		sink: Sink,
 		hashing: Boolean,
 		onProgressDeltaChanged: suspend (Int) -> Unit
 	) = try {
@@ -74,9 +71,8 @@ class FileDownloaderImpl @Inject constructor(
 				val progressDelta = (100.0 / progressMax).roundToInt()
 				var currentProgress = 0
 				var transferredBytes = 0L
-				val baseSink = if (outputStream is BlackholeOutputStream) blackholeSink() else outputStream.sink()
-				val sink = if (hashing) HashingSink.sha256(baseSink) else baseSink
-				sink.buffer().use { bufferedSink ->
+				val finalSink = if (hashing) HashingSink.sha256(sink) else sink
+				finalSink.buffer().use { bufferedSink ->
 					while (!channel.isClosedForRead) {
 						ensureActive()
 						val packet = channel.readRemaining(BUFFER_LENGTH)
@@ -95,7 +91,7 @@ class FileDownloaderImpl @Inject constructor(
 					}
 					onProgressDeltaChanged(100 - currentProgress / progressRatio)
 					bufferedSink.flush()
-					if (sink is HashingSink) sink.hash.hex() else ""
+					if (finalSink is HashingSink) finalSink.hash.hex() else ""
 				}
 			}
 		}

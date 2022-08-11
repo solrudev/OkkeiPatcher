@@ -21,7 +21,7 @@ fun ObbDownloadOperation(
 		val obbData = obbPatchFile.getData()
 		val obbHash = fileDownloader.download(
 			obbData.url,
-			obbRepository.openObbOutputStream(),
+			obbRepository.obbSink(),
 			hashing = true
 		) { progressDelta ->
 			progressDelta(progressDelta * PROGRESS_MULTIPLIER)

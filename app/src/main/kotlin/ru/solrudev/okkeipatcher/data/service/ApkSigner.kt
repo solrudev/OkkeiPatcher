@@ -7,6 +7,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import net.lingala.zip4j.ZipFile
+import okio.sink
+import okio.source
 import ru.solrudev.okkeipatcher.data.service.util.use
 import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.repository.app.CommonFilesHashRepository
@@ -118,8 +120,8 @@ class ApkSignerImpl @Inject constructor(
 		val assets = applicationContext.assets
 		assets.openFd(fileName).use { fd ->
 			streamCopier.copy(
-				fd.createInputStream(),
-				file.outputStream(),
+				fd.createInputStream().source(),
+				file.sink(),
 				fd.declaredLength
 			)
 		}

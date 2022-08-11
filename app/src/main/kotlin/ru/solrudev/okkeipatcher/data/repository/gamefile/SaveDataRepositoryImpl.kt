@@ -4,8 +4,11 @@ import android.content.Context
 import android.os.Build
 import android.os.Environment
 import android.provider.DocumentsContract
+import androidx.annotation.RequiresApi
 import androidx.documentfile.provider.DocumentFile
 import dagger.hilt.android.qualifiers.ApplicationContext
+import okio.sink
+import okio.source
 import ru.solrudev.okkeipatcher.data.repository.gamefile.util.GAME_PACKAGE_NAME
 import ru.solrudev.okkeipatcher.data.repository.gamefile.util.backupDir
 import ru.solrudev.okkeipatcher.data.service.StreamCopier
@@ -54,8 +57,8 @@ class SaveDataRepositoryImpl @Inject constructor(
 	override suspend fun createTemp(): Boolean {
 		if (current.exists) {
 			temp.recreate()
-			val currentInputStream = current.inputStream() ?: return false
-			streamCopier.copy(currentInputStream, temp.outputStream(), current.length)
+			val currentSource = current.inputStream()?.source() ?: return false
+			streamCopier.copy(currentSource, temp.sink(), current.length)
 			return true
 		} else {
 			return false
@@ -73,8 +76,8 @@ class SaveDataRepositoryImpl @Inject constructor(
 
 	override suspend fun restore(): Boolean {
 		current.recreate()
-		val currentOutputStream = current.outputStream() ?: return false
-		streamCopier.copy(backup.inputStream(), currentOutputStream, backup.length())
+		val currentSink = current.outputStream()?.sink() ?: return false
+		streamCopier.copy(backup.source(), currentSink, backup.length())
 		return true
 	}
 
@@ -113,6 +116,7 @@ private class SaveDataRawFile : SaveDataFile {
 	override fun outputStream() = file.outputStream()
 }
 
+@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 private class SaveDataDocumentFile(private val applicationContext: Context) : SaveDataFile {
 
 	private var documentUri = createDocumentFile()?.uri

@@ -1,5 +1,6 @@
 package ru.solrudev.okkeipatcher.data.util
 
+import okio.sink
 import ru.solrudev.okkeipatcher.data.service.FileDownloader
 import java.io.File
 
@@ -14,5 +15,5 @@ suspend inline fun FileDownloader.download(
 	noinline onProgressDeltaChanged: suspend (Int) -> Unit
 ): String {
 	outputFile.recreate()
-	return download(url, outputFile.outputStream(), hashing, onProgressDeltaChanged)
+	return download(url, outputFile.sink(), hashing, onProgressDeltaChanged)
 }
