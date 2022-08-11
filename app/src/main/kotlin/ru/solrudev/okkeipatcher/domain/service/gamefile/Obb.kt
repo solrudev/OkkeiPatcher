@@ -7,12 +7,16 @@ import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.core.operation.toOperation
 import ru.solrudev.okkeipatcher.domain.model.exception.ObbCorruptedException
+import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbBackupRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbRepository
 
-abstract class Obb(private val obbRepository: ObbRepository) : PatchableGameFile {
+abstract class Obb(
+	private val obbRepository: ObbRepository,
+	private val obbBackupRepository: ObbBackupRepository
+) : PatchableGameFile {
 
 	override val backupExists: Boolean
-		get() = obbRepository.backupExists
+		get() = obbBackupRepository.backupExists
 
 	override fun canPatch(): Result {
 		if (!obbRepository.obbExists && !backupExists) {
@@ -21,11 +25,11 @@ abstract class Obb(private val obbRepository: ObbRepository) : PatchableGameFile
 		return Result.Success
 	}
 
-	override fun deleteBackup() = obbRepository.deleteBackup()
+	override fun deleteBackup() = obbBackupRepository.deleteBackup()
 
 	override fun backup(): Operation<Unit> {
-		val verifyBackupOperation = obbRepository.verifyBackup().toOperation()
-		val backupOperation = obbRepository.backup().toOperation()
+		val verifyBackupOperation = obbBackupRepository.verifyBackup().toOperation()
+		val backupOperation = obbBackupRepository.createBackup().toOperation()
 		return operation(verifyBackupOperation, backupOperation) {
 			status(LocalizedString.resource(R.string.status_comparing_obb))
 			if (!verifyBackupOperation()) {
@@ -36,8 +40,8 @@ abstract class Obb(private val obbRepository: ObbRepository) : PatchableGameFile
 	}
 
 	override fun restore(): Operation<Unit> {
-		val verifyBackupOperation = obbRepository.verifyBackup().toOperation()
-		val restoreOperation = obbRepository.restore().toOperation()
+		val verifyBackupOperation = obbBackupRepository.verifyBackup().toOperation()
+		val restoreOperation = obbBackupRepository.restore().toOperation()
 		return operation(verifyBackupOperation, restoreOperation) {
 			status(LocalizedString.resource(R.string.status_restoring_obb))
 			if (!verifyBackupOperation()) {

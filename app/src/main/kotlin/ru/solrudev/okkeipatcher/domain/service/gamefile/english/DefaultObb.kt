@@ -1,5 +1,6 @@
 package ru.solrudev.okkeipatcher.domain.service.gamefile.english
 
+import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbBackupRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.DefaultPatchRepository
 import ru.solrudev.okkeipatcher.domain.service.gamefile.Obb
@@ -9,8 +10,9 @@ import javax.inject.Inject
 class DefaultObb @Inject constructor(
 	patchRepository: DefaultPatchRepository,
 	obbDownloadOperationFactory: ObbDownloadOperationFactory,
-	obbRepository: ObbRepository
-) : Obb(obbRepository) {
+	obbRepository: ObbRepository,
+	obbBackupRepository: ObbBackupRepository
+) : Obb(obbRepository, obbBackupRepository) {
 
 	private val obbDownloadOperation = obbDownloadOperationFactory.create(patchRepository.obb)
 
