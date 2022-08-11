@@ -3,11 +3,13 @@ package ru.solrudev.okkeipatcher.data.repository.app
 import android.content.Context
 import androidx.core.os.ConfigurationCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineDispatcher
 import ru.solrudev.okkeipatcher.data.network.api.OkkeiPatcherApi
 import ru.solrudev.okkeipatcher.data.network.model.exception.NetworkNotAvailableException
 import ru.solrudev.okkeipatcher.data.service.FileDownloader
 import ru.solrudev.okkeipatcher.data.util.download
 import ru.solrudev.okkeipatcher.data.util.versionCode
+import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.model.OkkeiPatcherVersion
 import ru.solrudev.okkeipatcher.domain.model.exception.AppUpdateCorruptedException
@@ -22,6 +24,7 @@ private const val APP_UPDATE_FILE_NAME = "OkkeiPatcher.apk"
 // TODO
 class OkkeiPatcherRepositoryImpl @Inject constructor(
 	@ApplicationContext private val applicationContext: Context,
+	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	private val fileDownloader: FileDownloader,
 	private val okkeiPatcherApi: OkkeiPatcherApi
 ) : OkkeiPatcherRepository {
@@ -57,7 +60,8 @@ class OkkeiPatcherRepositoryImpl @Inject constructor(
 		isUpdateDownloaded = false
 		try {
 			val updateData = okkeiPatcherApi.getOkkeiPatcherData()
-			val updateHash = fileDownloader.download(updateData.url, updateFile, hashing = true, ::progressDelta)
+			val updateHash =
+				fileDownloader.download(updateData.url, updateFile, ioDispatcher, hashing = true, ::progressDelta)
 			if (updateHash != updateData.hash) {
 				throw AppUpdateCorruptedException()
 			}

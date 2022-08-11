@@ -7,6 +7,8 @@ import android.provider.DocumentsContract
 import androidx.annotation.RequiresApi
 import androidx.documentfile.provider.DocumentFile
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 import okio.sink
 import okio.source
 import ru.solrudev.okkeipatcher.data.repository.gamefile.util.GAME_PACKAGE_NAME
@@ -15,6 +17,7 @@ import ru.solrudev.okkeipatcher.data.service.StreamCopier
 import ru.solrudev.okkeipatcher.data.service.computeHash
 import ru.solrudev.okkeipatcher.data.util.ANDROID_DATA_TREE_URI
 import ru.solrudev.okkeipatcher.data.util.recreate
+import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.repository.app.CommonFilesHashRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.SaveDataRepository
 import java.io.File
@@ -30,6 +33,7 @@ private val CURRENT_SAVE_DATA_PATH =
 
 class SaveDataRepositoryImpl @Inject constructor(
 	@ApplicationContext private val applicationContext: Context,
+	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	private val streamCopier: StreamCopier,
 	private val commonFilesHashRepository: CommonFilesHashRepository
 ) : SaveDataRepository {
@@ -54,11 +58,13 @@ class SaveDataRepositoryImpl @Inject constructor(
 		temp.delete()
 	}
 
+	@Suppress("BlockingMethodInNonBlockingContext")
 	override suspend fun createTemp(): Boolean {
 		if (current.exists) {
 			temp.recreate()
 			val currentSource = current.inputStream()?.source() ?: return false
-			streamCopier.copy(currentSource, temp.sink(), current.length)
+			val sink = withContext(ioDispatcher) { temp.sink() }
+			streamCopier.copy(currentSource, sink, current.length)
 			return true
 		} else {
 			return false
@@ -70,14 +76,16 @@ class SaveDataRepositoryImpl @Inject constructor(
 		if (savedHash.isEmpty() || !backup.exists()) {
 			return false
 		}
-		val backupHash = streamCopier.computeHash(backup)
+		val backupHash = streamCopier.computeHash(backup, ioDispatcher)
 		return backupHash == savedHash
 	}
 
+	@Suppress("BlockingMethodInNonBlockingContext")
 	override suspend fun restore(): Boolean {
 		current.recreate()
 		val currentSink = current.outputStream()?.sink() ?: return false
-		streamCopier.copy(backup.source(), currentSink, backup.length())
+		val source = withContext(ioDispatcher) { backup.source() }
+		streamCopier.copy(source, currentSink, backup.length())
 		return true
 	}
 
@@ -87,7 +95,7 @@ class SaveDataRepositoryImpl @Inject constructor(
 			temp.renameTo(backup)
 		}
 		if (backup.exists()) {
-			val backupHash = streamCopier.computeHash(backup)
+			val backupHash = streamCopier.computeHash(backup, ioDispatcher)
 			commonFilesHashRepository.saveDataHash.persist(backupHash)
 		}
 	}

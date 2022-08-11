@@ -54,7 +54,8 @@ class ScriptsPatchOperation(
 	private fun downloadScripts() = operation(progressMax = fileDownloader.progressMax) {
 		status(LocalizedString.resource(R.string.status_downloading_scripts))
 		val scriptsData = scriptsPatchFile.getData()
-		val scriptsHash = fileDownloader.download(scriptsData.url, scriptsFile, hashing = true, ::progressDelta)
+		val scriptsHash =
+			fileDownloader.download(scriptsData.url, scriptsFile, ioDispatcher, hashing = true, ::progressDelta)
 		if (scriptsHash != scriptsData.hash) {
 			throw ScriptsCorruptedException()
 		}

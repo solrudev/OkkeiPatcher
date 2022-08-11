@@ -44,7 +44,7 @@ class ApkSignerImpl @Inject constructor(
 		} else {
 			signWithPseudoApkSigner(apk, outputApk)
 		}
-		val outputApkHash = streamCopier.computeHash(outputApk)
+		val outputApkHash = streamCopier.computeHash(outputApk, ioDispatcher)
 		commonFilesHashRepository.signedApkHash.persist(outputApkHash)
 		apk.delete()
 		outputApk.renameTo(apk)

@@ -4,6 +4,7 @@ import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.github.solrudev.simpleinstaller.PackageInstaller
 import io.github.solrudev.simpleinstaller.PackageUninstaller
+import kotlinx.coroutines.CoroutineDispatcher
 import ru.solrudev.okkeipatcher.data.repository.gamefile.util.GAME_PACKAGE_NAME
 import ru.solrudev.okkeipatcher.data.repository.gamefile.util.isGameInstalled
 import ru.solrudev.okkeipatcher.data.repository.util.install
@@ -11,6 +12,7 @@ import ru.solrudev.okkeipatcher.data.service.StreamCopier
 import ru.solrudev.okkeipatcher.data.service.computeHash
 import ru.solrudev.okkeipatcher.data.service.copy
 import ru.solrudev.okkeipatcher.data.util.externalDir
+import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.model.exception.GameNotFoundException
 import ru.solrudev.okkeipatcher.domain.repository.app.CommonFilesHashRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
@@ -19,6 +21,7 @@ import javax.inject.Inject
 
 class ApkRepositoryImpl @Inject constructor(
 	@ApplicationContext private val applicationContext: Context,
+	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	private val packageUninstaller: PackageUninstaller,
 	private val packageInstaller: PackageInstaller,
 	private val commonFilesHashRepository: CommonFilesHashRepository,
@@ -50,7 +53,7 @@ class ApkRepositoryImpl @Inject constructor(
 				.applicationInfo
 				.publicSourceDir
 			val installedApk = File(installedApkPath)
-			streamCopier.copy(installedApk, temp)
+			streamCopier.copy(installedApk, temp, ioDispatcher)
 		} catch (t: Throwable) {
 			temp.delete()
 			throw t
@@ -65,7 +68,7 @@ class ApkRepositoryImpl @Inject constructor(
 		if (savedHash.isEmpty()) {
 			return false
 		}
-		val fileHash = streamCopier.computeHash(temp)
+		val fileHash = streamCopier.computeHash(temp, ioDispatcher)
 		return fileHash == savedHash
 	}
 

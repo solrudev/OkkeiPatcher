@@ -3,6 +3,7 @@ package ru.solrudev.okkeipatcher.data.repository.gamefile
 import android.content.Context
 import android.os.Environment
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineDispatcher
 import okio.Sink
 import okio.sink
 import ru.solrudev.okkeipatcher.data.repository.gamefile.util.GAME_PACKAGE_NAME
@@ -11,6 +12,7 @@ import ru.solrudev.okkeipatcher.data.service.StreamCopier
 import ru.solrudev.okkeipatcher.data.service.computeHash
 import ru.solrudev.okkeipatcher.data.service.copy
 import ru.solrudev.okkeipatcher.data.util.recreate
+import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.core.operation.ProgressOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.model.exception.ObbNotFoundException
@@ -45,6 +47,7 @@ class ObbRepositoryImpl @Inject constructor() : ObbRepository {
 class ObbBackupRepositoryImpl @Inject constructor(
 	private val streamCopier: StreamCopier,
 	private val commonFilesHashRepository: CommonFilesHashRepository,
+	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	@ApplicationContext applicationContext: Context
 ) : ObbBackupRepository {
 
@@ -64,7 +67,7 @@ class ObbBackupRepositoryImpl @Inject constructor(
 				throw ObbNotFoundException()
 			}
 			try {
-				val hash = streamCopier.copy(obbFile, backup, hashing = true) {
+				val hash = streamCopier.copy(obbFile, backup, ioDispatcher, hashing = true) {
 					progressDelta(it * progressMultiplier)
 				}
 				commonFilesHashRepository.backupObbHash.persist(hash)
@@ -82,7 +85,7 @@ class ObbBackupRepositoryImpl @Inject constructor(
 				throw ObbNotFoundException()
 			}
 			try {
-				streamCopier.copy(backup, obbFile) {
+				streamCopier.copy(backup, obbFile, ioDispatcher) {
 					progressDelta(it * progressMultiplier)
 				}
 			} catch (t: Throwable) {
@@ -97,7 +100,7 @@ class ObbBackupRepositoryImpl @Inject constructor(
 		if (savedHash.isEmpty() || !backup.exists()) {
 			return@operation false
 		}
-		val fileHash = streamCopier.computeHash(backup, ::progressDelta)
+		val fileHash = streamCopier.computeHash(backup, ioDispatcher, ::progressDelta)
 		fileHash == savedHash
 	}
 }
