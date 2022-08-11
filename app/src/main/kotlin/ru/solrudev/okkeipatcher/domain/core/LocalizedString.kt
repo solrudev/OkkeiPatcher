@@ -1,5 +1,5 @@
 /**
- * Taken from Sesame library.
+ * Modified version of Sesame LocalizedString.
  * https://github.com/aartikov/Sesame/tree/master/sesame-localized-string
  *
  * Copyright (c) 2021 Artur Artikov
@@ -17,7 +17,6 @@
 
 package ru.solrudev.okkeipatcher.domain.core
 
-import android.content.Context
 import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
 import java.io.Serializable
@@ -25,12 +24,7 @@ import java.io.Serializable
 /**
  * String with locale-dependent value.
  */
-interface LocalizedString : Serializable {
-
-	/**
-	 * Resolves string value for a given [context].
-	 */
-	fun resolve(context: Context): CharSequence
+sealed interface LocalizedString : Serializable {
 
 	companion object {
 
@@ -60,6 +54,17 @@ interface LocalizedString : Serializable {
 	}
 }
 
+object EmptyString : LocalizedString
+data class RawString(val value: CharSequence) : LocalizedString
+data class ResourceString(@StringRes val resourceId: Int, val args: List<Any>) : LocalizedString
+data class CompoundString(val parts: List<LocalizedString>) : LocalizedString
+
+data class QuantityResourceString(
+	@PluralsRes val resourceId: Int,
+	val quantity: Int,
+	val args: List<Any>
+) : LocalizedString
+
 /**
  * Concatenates two [LocalizedString]s.
  */
@@ -70,52 +75,4 @@ operator fun LocalizedString.plus(other: LocalizedString): LocalizedString {
 		other is CompoundString -> CompoundString(listOf(this) + other.parts)
 		else -> CompoundString(listOf(this, other))
 	}
-}
-
-object EmptyString : LocalizedString {
-	override fun resolve(context: Context): CharSequence {
-		return ""
-	}
-}
-
-data class RawString(val value: CharSequence) : LocalizedString {
-	override fun resolve(context: Context): CharSequence {
-		return value
-	}
-}
-
-data class ResourceString(
-	@StringRes val resourceId: Int,
-	val args: List<Any>
-) : LocalizedString {
-	override fun resolve(context: Context): CharSequence {
-		return context.getString(resourceId, *getArgValues(context, args))
-	}
-}
-
-data class QuantityResourceString(
-	@PluralsRes val resourceId: Int,
-	val quantity: Int,
-	val args: List<Any>
-) : LocalizedString {
-	override fun resolve(context: Context): CharSequence {
-		return context.resources.getQuantityString(resourceId, quantity, *getArgValues(context, args))
-	}
-}
-
-data class CompoundString(val parts: List<LocalizedString>) : LocalizedString {
-
-	override fun resolve(context: Context): CharSequence {
-		return parts.joinToString(separator = "") { it.resolve(context) }
-	}
-}
-
-private fun getArgValues(context: Context, args: List<Any>): Array<Any> {
-	return args.map {
-		if (it is LocalizedString) {
-			it.resolve(context)
-		} else {
-			it
-		}
-	}.toTypedArray()
 }

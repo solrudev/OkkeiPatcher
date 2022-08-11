@@ -14,6 +14,7 @@ import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.data.core.resolve
 import ru.solrudev.okkeipatcher.databinding.FragmentWorkBinding
 import ru.solrudev.okkeipatcher.domain.core.Message
 import ru.solrudev.okkeipatcher.domain.model.ProgressData

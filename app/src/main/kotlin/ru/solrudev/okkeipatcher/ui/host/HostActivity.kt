@@ -23,6 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import ru.solrudev.okkeipatcher.OkkeiNavGraphDirections
 import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.data.core.resolve
 import ru.solrudev.okkeipatcher.databinding.OkkeiContainerBinding
 import ru.solrudev.okkeipatcher.domain.model.Work
 import ru.solrudev.okkeipatcher.ui.core.FeatureView

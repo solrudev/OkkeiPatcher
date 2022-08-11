@@ -5,6 +5,7 @@ import androidx.annotation.StringRes
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.isProgressActive
 import com.github.razir.progressbutton.showProgress
+import ru.solrudev.okkeipatcher.data.core.resolve
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 
 /**

@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.data.core.resolve
 import ru.solrudev.okkeipatcher.data.worker.model.WorkerFailure
 import ru.solrudev.okkeipatcher.data.worker.util.setProgress
 import ru.solrudev.okkeipatcher.data.worker.util.workerFailure
