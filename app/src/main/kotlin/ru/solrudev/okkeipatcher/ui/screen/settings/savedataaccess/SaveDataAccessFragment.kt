@@ -1,9 +1,11 @@
 package ru.solrudev.okkeipatcher.ui.screen.settings.savedataaccess
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.launch
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -21,6 +23,7 @@ import ru.solrudev.okkeipatcher.ui.screen.settings.savedataaccess.model.SaveData
 import ru.solrudev.okkeipatcher.ui.util.createDialogBuilder
 import ru.solrudev.okkeipatcher.ui.util.showWithLifecycle
 
+@RequiresApi(Build.VERSION_CODES.O)
 @AndroidEntryPoint
 class SaveDataAccessFragment : DialogFragment(), FeatureView<SaveDataAccessUiState> {
 
