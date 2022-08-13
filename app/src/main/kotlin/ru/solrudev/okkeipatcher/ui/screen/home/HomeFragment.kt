@@ -40,7 +40,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), FeatureView<HomeUiState> 
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		setupNavigation()
-		viewLifecycleOwner.bindProgressButton(binding.buttonMainPatch)
+		viewLifecycleOwner.bindProgressButton(binding.buttonHomePatch)
 		viewModel.renderBy(this)
 	}
 
@@ -50,9 +50,9 @@ class HomeFragment : Fragment(R.layout.fragment_home), FeatureView<HomeUiState> 
 	}
 
 	override fun render(uiState: HomeUiState) {
-		binding.buttonMainPatch.isEnabled = uiState.isPatchEnabled
-		binding.buttonMainRestore.isEnabled = uiState.isRestoreEnabled
-		binding.buttonMainPatch.setLoading(uiState.isPatchSizeLoading, R.string.button_text_patch)
+		binding.buttonHomePatch.isEnabled = uiState.isPatchEnabled
+		binding.buttonHomeRestore.isEnabled = uiState.isRestoreEnabled
+		binding.buttonHomePatch.setLoading(uiState.isPatchSizeLoading, R.string.button_text_patch)
 		if (uiState.startPatchMessage.shouldShow) {
 			showStartPatchMessage(uiState.startPatchMessage.data)
 		}
@@ -65,14 +65,14 @@ class HomeFragment : Fragment(R.layout.fragment_home), FeatureView<HomeUiState> 
 	}
 
 	private fun setupNavigation() {
-		binding.buttonMainPatch.attachTextChangeAnimator {
+		binding.buttonHomePatch.attachTextChangeAnimator {
 			fadeInMills = 150
 			fadeOutMills = 150
 		}
-		binding.buttonMainPatch.setOnClickListener {
+		binding.buttonHomePatch.setOnClickListener {
 			viewModel.dispatchEvent(PatchRequested)
 		}
-		binding.buttonMainRestore.setOnClickListener {
+		binding.buttonHomeRestore.setOnClickListener {
 			viewModel.dispatchEvent(RestoreRequested)
 		}
 	}

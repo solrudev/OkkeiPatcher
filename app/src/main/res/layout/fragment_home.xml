@@ -6,7 +6,7 @@
 	android:splitMotionEvents="false">
 
 	<ImageView
-		android:id="@+id/imageview_main_okkei"
+		android:id="@+id/imageview_home_okkei"
 		android:layout_width="0dp"
 		android:layout_height="150dp"
 		android:layout_marginTop="16dp"
@@ -17,25 +17,25 @@
 		app:srcCompat="@drawable/okkei" />
 
 	<Button
-		android:id="@+id/button_main_patch"
+		android:id="@+id/button_home_patch"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:layout_marginStart="16dp"
 		android:layout_marginTop="8dp"
 		android:text="@string/button_text_patch"
-		app:layout_constraintEnd_toStartOf="@+id/button_main_restore"
+		app:layout_constraintEnd_toStartOf="@+id/button_home_restore"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/imageview_main_okkei" />
+		app:layout_constraintTop_toBottomOf="@id/imageview_home_okkei" />
 
 	<Button
-		android:id="@+id/button_main_restore"
+		android:id="@+id/button_home_restore"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:layout_marginStart="8dp"
 		android:layout_marginEnd="16dp"
 		android:text="@string/button_text_restoring"
 		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toEndOf="@id/button_main_patch"
-		app:layout_constraintTop_toTopOf="@id/button_main_patch" />
+		app:layout_constraintStart_toEndOf="@id/button_home_patch"
+		app:layout_constraintTop_toTopOf="@id/button_home_patch" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
