@@ -146,7 +146,7 @@ class WorkFragment : Fragment(R.layout.fragment_work), FeatureView<WorkUiState> 
 	}
 
 	private fun showErrorMessage(errorMessage: Message) {
-		val message = errorMessage.message.resolve(requireContext())
+		val message = errorMessage.text.resolve(requireContext())
 		requireContext().createDialogBuilder(errorMessage)
 			.setNeutralButton(R.string.button_text_copy_to_clipboard) { _, _ ->
 				requireContext().copyTextToClipboard("Okkei Patcher Exception", message)

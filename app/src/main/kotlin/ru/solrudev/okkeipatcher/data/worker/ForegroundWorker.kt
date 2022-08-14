@@ -145,7 +145,7 @@ abstract class ForegroundWorker(
 	private suspend fun displayMessageNotification(message: Message, resultMessage: Boolean = false) =
 		withContext(NonCancellable) {
 			val titleString = message.title.resolve(applicationContext)
-			val messageString = message.message.resolve(applicationContext)
+			val messageString = message.text.resolve(applicationContext)
 			val notification = simpleNotificationBuilder.apply {
 				setContentTitle(titleString)
 				setContentText(messageString)

@@ -21,7 +21,7 @@ fun Context.copyTextToClipboard(clipLabel: CharSequence, text: CharSequence) {
  */
 fun Context.createDialogBuilder(message: Message): MaterialAlertDialogBuilder {
 	val titleString = message.title.resolve(this)
-	val messageString = message.message.resolve(this)
+	val messageString = message.text.resolve(this)
 	return MaterialAlertDialogBuilder(this)
 		.setCancelable(true)
 		.setTitle(titleString)
