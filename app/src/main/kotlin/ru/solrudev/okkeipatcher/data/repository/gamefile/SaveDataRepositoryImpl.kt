@@ -11,6 +11,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import okio.sink
 import okio.source
+import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.repository.gamefile.util.GAME_PACKAGE_NAME
 import ru.solrudev.okkeipatcher.data.repository.gamefile.util.backupDir
 import ru.solrudev.okkeipatcher.data.service.StreamCopier
@@ -18,6 +19,8 @@ import ru.solrudev.okkeipatcher.data.service.computeHash
 import ru.solrudev.okkeipatcher.data.util.ANDROID_DATA_TREE_URI
 import ru.solrudev.okkeipatcher.data.util.recreate
 import ru.solrudev.okkeipatcher.di.IoDispatcher
+import ru.solrudev.okkeipatcher.domain.core.LocalizedString
+import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.repository.app.CommonFilesHashRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.SaveDataRepository
 import java.io.File
@@ -59,15 +62,22 @@ class SaveDataRepositoryImpl @Inject constructor(
 	}
 
 	@Suppress("BlockingMethodInNonBlockingContext")
-	override suspend fun createTemp(): Boolean {
+	override suspend fun createTemp(): Result {
+		val failure = Result.Failure(
+			LocalizedString.resource(R.string.warning_could_not_backup_save_data)
+		)
 		if (current.exists) {
 			temp.recreate()
-			val currentSource = current.inputStream()?.source() ?: return false
-			val sink = withContext(ioDispatcher) { temp.sink() }
-			streamCopier.copy(currentSource, sink, current.length)
-			return true
+			return try {
+				val currentSource = current.inputStream()?.source() ?: return failure
+				val sink = withContext(ioDispatcher) { temp.sink() }
+				streamCopier.copy(currentSource, sink, current.length)
+				Result.Success
+			} catch (t: Throwable) {
+				failure
+			}
 		} else {
-			return false
+			return failure
 		}
 	}
 
@@ -81,12 +91,19 @@ class SaveDataRepositoryImpl @Inject constructor(
 	}
 
 	@Suppress("BlockingMethodInNonBlockingContext")
-	override suspend fun restore(): Boolean {
-		current.recreate()
-		val currentSink = current.outputStream()?.sink() ?: return false
-		val source = withContext(ioDispatcher) { backup.source() }
-		streamCopier.copy(source, currentSink, backup.length())
-		return true
+	override suspend fun restoreBackup(): Result {
+		val failure = Result.Failure(
+			LocalizedString.resource(R.string.warning_could_not_restore_save_data)
+		)
+		return try {
+			current.recreate()
+			val currentSink = current.outputStream()?.sink() ?: return failure
+			val source = withContext(ioDispatcher) { backup.source() }
+			streamCopier.copy(source, currentSink, backup.length())
+			Result.Success
+		} catch (t: Throwable) {
+			failure
+		}
 	}
 
 	override suspend fun persistTempAsBackup() {

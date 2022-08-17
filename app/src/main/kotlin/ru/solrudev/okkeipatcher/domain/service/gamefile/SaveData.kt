@@ -1,9 +1,10 @@
 package ru.solrudev.okkeipatcher.domain.service.gamefile
 
-import androidx.annotation.StringRes
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Message
+import ru.solrudev.okkeipatcher.domain.core.onFailure
+import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.SaveDataRepository
 import javax.inject.Inject
@@ -15,25 +16,24 @@ class SaveData @Inject constructor(private val saveDataRepository: SaveDataRepos
 
 	override fun deleteBackup() = saveDataRepository.deleteBackup()
 
-	override fun backup() = operation(progressMax = 100) {
+	override fun backup(): Operation<Unit> = operation(progressMax = 100) {
 		status(LocalizedString.resource(R.string.status_backing_up_save_data))
-		val backupResult = saveDataRepository.createTemp()
-		if (!backupResult) {
-			message(createWarning(R.string.warning_could_not_backup_save_data))
-		}
+		saveDataRepository
+			.createTemp()
+			.onFailure { message(createWarning(it.reason)) }
 	}
 
 	override fun restore() = operation(progressMax = 100) {
 		status(LocalizedString.resource(R.string.status_comparing_saves))
 		if (saveDataRepository.verifyBackup()) {
 			status(LocalizedString.resource(R.string.status_restoring_saves))
-			val restoreResult = saveDataRepository.restore()
-			if (!restoreResult) {
-				message(createWarning(R.string.warning_could_not_restore_save_data))
-			}
+			saveDataRepository
+				.restoreBackup()
+				.onFailure { message(createWarning(it.reason)) }
 		} else {
 			saveDataRepository.deleteBackup()
-			message(createWarning(R.string.warning_save_data_backup_not_found_or_corrupted))
+			val warningMessage = LocalizedString.resource(R.string.warning_save_data_backup_not_found_or_corrupted)
+			message(createWarning(warningMessage))
 		}
 		status(LocalizedString.resource(R.string.status_persisting_save_data))
 		saveDataRepository.persistTempAsBackup()
@@ -41,8 +41,8 @@ class SaveData @Inject constructor(private val saveDataRepository: SaveDataRepos
 
 	override fun close() = saveDataRepository.deleteTemp()
 
-	private fun createWarning(@StringRes message: Int) = Message(
+	private fun createWarning(message: LocalizedString) = Message(
 		LocalizedString.resource(R.string.warning),
-		LocalizedString.resource(message)
+		message
 	)
 }
