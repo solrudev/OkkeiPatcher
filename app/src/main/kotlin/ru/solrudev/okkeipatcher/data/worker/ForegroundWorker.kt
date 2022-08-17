@@ -1,20 +1,12 @@
 package ru.solrudev.okkeipatcher.data.worker
 
-import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
-import android.os.Build
-import androidx.core.app.NotificationCompat
-import androidx.core.content.getSystemService
 import androidx.work.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.data.core.resolve
+import ru.solrudev.okkeipatcher.data.service.NotificationService
 import ru.solrudev.okkeipatcher.data.worker.model.WorkerFailure
 import ru.solrudev.okkeipatcher.data.worker.util.setProgress
 import ru.solrudev.okkeipatcher.data.worker.util.workerFailure
@@ -23,30 +15,23 @@ import ru.solrudev.okkeipatcher.domain.core.Message
 import ru.solrudev.okkeipatcher.domain.core.onFailure
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.extension.statusAndAccumulatedProgress
+import ru.solrudev.okkeipatcher.domain.model.ProgressData
 import ru.solrudev.okkeipatcher.domain.service.operation.factory.OperationFactory
-import ru.solrudev.okkeipatcher.ui.host.HostActivity
-import java.util.concurrent.atomic.AtomicInteger
+import kotlin.Throwable
 import kotlin.time.Duration.Companion.milliseconds
 import ru.solrudev.okkeipatcher.domain.core.Result as DomainResult
-
-private val workerProgressNotificationId = AtomicInteger(813047)
-private val workerMessageNotificationId = AtomicInteger(49725)
 
 abstract class ForegroundWorker(
 	context: Context,
 	workerParameters: WorkerParameters,
+	private val notificationService: NotificationService,
 	private val workManager: WorkManager,
 	private val operationFactory: OperationFactory<DomainResult>,
-	private val workLabel: LocalizedString
+	workLabel: LocalizedString
 ) : CoroutineWorker(context, workerParameters) {
 
-	private val notificationManager = context.getSystemService<NotificationManager>()
-	private val progressNotificationId = workerProgressNotificationId.incrementAndGet()
-	private val shownMessageNotifications = mutableListOf<Int>()
-	private val shownMessageNotificationsMutex = Mutex()
-
-	private val progressNotificationBuilder by lazy {
-		createNotificationBuilder(workLabel, progressNotification = true)
+	init {
+		notificationService.progressNotificationTitle = workLabel
 	}
 
 	final override suspend fun doWork() = try {
@@ -82,20 +67,23 @@ abstract class ForegroundWorker(
 		}
 		createFailure(WorkerFailure.Unhandled(t))
 	} finally {
-		clearShownMessageNotifications()
 		withContext(NonCancellable) {
+			notificationService.clearShownMessageNotifications()
 			delay(250.milliseconds) // for foreground service notification to be canceled before returning
 		}
 	}
 
-	private fun createForegroundInfo() = ForegroundInfo(progressNotificationId, progressNotificationBuilder.build())
+	private fun createForegroundInfo() = ForegroundInfo(
+		notificationService.progressNotificationId,
+		notificationService.getProgressNotification()
+	)
 
 	private suspend fun createSuccess(): Result {
 		val successMessage = Message(
 			LocalizedString.resource(R.string.notification_title_work_finished),
 			LocalizedString.resource(R.string.notification_message_work_success)
 		)
-		displayMessageNotification(successMessage, resultMessage = true)
+		withContext(NonCancellable) { notificationService.displayResultNotification(successMessage) }
 		return Result.success()
 	}
 
@@ -104,7 +92,7 @@ abstract class ForegroundWorker(
 			LocalizedString.resource(R.string.notification_title_work_finished),
 			LocalizedString.resource(R.string.notification_message_work_failed)
 		)
-		displayMessageNotification(failMessage, resultMessage = true)
+		withContext(NonCancellable) { notificationService.displayResultNotification(failMessage) }
 		return workerFailure(failure)
 	}
 
@@ -124,84 +112,13 @@ abstract class ForegroundWorker(
 	private fun CoroutineScope.updateProgressNotification(operation: Operation<*>) = operation
 		.statusAndAccumulatedProgress()
 		.onEach { (status, progress) ->
-			val statusString = status.resolve(applicationContext)
-			val notification = progressNotificationBuilder
-				.setContentText(statusString)
-				.setProgress(operation.progressMax, progress, false)
-				.build()
-			notificationManager?.notify(progressNotificationId, notification)
+			val progressData = ProgressData(progress, operation.progressMax)
+			notificationService.updateProgressNotification(status, progressData)
 			delay(500.milliseconds)
 		}
 		.launchIn(this)
 
 	private fun CoroutineScope.collectMessages(operation: Operation<*>) = operation.messages
-		.onEach(::displayMessageNotification)
+		.onEach(notificationService::displayMessageNotification)
 		.launchIn(this)
-
-	private suspend fun displayMessageNotification(message: Message, resultMessage: Boolean = false) =
-		withContext(NonCancellable) {
-			val messageString = message.text.resolve(applicationContext)
-			val notification = createNotificationBuilder(message.title, progressNotification = false).apply {
-				setContentText(messageString)
-				if (messageString.length > 28) {
-					setStyle(NotificationCompat.BigTextStyle().bigText(messageString))
-				}
-			}.build()
-			val notificationId = workerMessageNotificationId.incrementAndGet()
-			if (!resultMessage) {
-				shownMessageNotificationsMutex.withLock {
-					shownMessageNotifications.add(notificationId)
-				}
-			}
-			notificationManager?.notify(notificationId, notification)
-		}
-
-	private suspend fun clearShownMessageNotifications() = withContext(NonCancellable) {
-		shownMessageNotificationsMutex.withLock {
-			shownMessageNotifications.forEach {
-				notificationManager?.cancel(it)
-			}
-			shownMessageNotifications.clear()
-		}
-	}
-
-	private fun createNotificationBuilder(
-		title: LocalizedString,
-		progressNotification: Boolean
-	): NotificationCompat.Builder {
-		val contentTitle = title.resolve(applicationContext)
-		val contentIntent = createPendingIntent()
-		val channelId = if (progressNotification) {
-			applicationContext.getString(R.string.notification_channel_progress_id)
-		} else {
-			applicationContext.getString(R.string.notification_channel_messages_id)
-		}
-		return NotificationCompat.Builder(applicationContext, channelId).apply {
-			setContentTitle(contentTitle)
-			setContentText("")
-			priority = NotificationCompat.PRIORITY_DEFAULT
-			setSmallIcon(R.mipmap.ic_launcher_foreground)
-			setContentIntent(contentIntent)
-			setSound(null)
-			if (progressNotification) {
-				setProgress(100, 0, false)
-				setOnlyAlertOnce(true)
-			} else {
-				setAutoCancel(true)
-			}
-		}
-	}
-
-	private fun createPendingIntent(): PendingIntent {
-		val activityIntent = Intent(applicationContext, HostActivity::class.java).apply {
-			flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-		}
-		val flagImmutable = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
-		return PendingIntent.getActivity(
-			applicationContext,
-			0,
-			activityIntent,
-			PendingIntent.FLAG_UPDATE_CURRENT or flagImmutable
-		)
-	}
 }

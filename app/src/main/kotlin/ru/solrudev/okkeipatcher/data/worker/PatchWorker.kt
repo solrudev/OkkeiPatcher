@@ -7,6 +7,7 @@ import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.data.service.NotificationService
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.service.operation.factory.PatchOperationFactory
 
@@ -16,6 +17,7 @@ private val workLabel = LocalizedString.resource(R.string.notification_title_pat
 class PatchWorker @AssistedInject constructor(
 	@Assisted context: Context,
 	@Assisted workerParameters: WorkerParameters,
+	notificationService: NotificationService,
 	workManager: WorkManager,
 	patchOperationFactory: PatchOperationFactory
-) : ForegroundWorker(context, workerParameters, workManager, patchOperationFactory, workLabel)
+) : ForegroundWorker(context, workerParameters, notificationService, workManager, patchOperationFactory, workLabel)

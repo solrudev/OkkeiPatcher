@@ -7,6 +7,7 @@ import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.data.service.NotificationService
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.repository.app.PreferencesRepository
 import ru.solrudev.okkeipatcher.domain.service.operation.factory.MockOperationFactory
@@ -17,12 +18,11 @@ private val workLabel = LocalizedString.resource(R.string.notification_title_tes
 class MockWorker @AssistedInject constructor(
 	@Assisted context: Context,
 	@Assisted workerParameters: WorkerParameters,
+	notificationService: NotificationService,
 	workManager: WorkManager,
 	preferencesRepository: PreferencesRepository
 ) : ForegroundWorker(
-	context,
-	workerParameters,
-	workManager,
+	context, workerParameters, notificationService, workManager,
 	MockOperationFactory(preferencesRepository.patchStatus, workerParameters.tags),
 	workLabel
 )

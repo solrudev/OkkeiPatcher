@@ -35,4 +35,9 @@ interface ServiceBindModule {
 	fun bindStreamCopier(
 		streamCopier: StreamCopierImpl
 	): StreamCopier
+
+	@Binds
+	fun bindNotificationService(
+		notificationService: NotificationServiceImpl
+	): NotificationService
 }
