@@ -23,8 +23,8 @@ class RestoreOperation(
 		aggregateOperation(
 			if (handleSaveData) saveData.backup() else emptyOperation(),
 			apk.restore(),
-			obb.restore(),
 			if (handleSaveData) saveData.restore() else emptyOperation(),
+			obb.restore(),
 			operation {
 				apk.deleteBackup()
 				obb.deleteBackup()

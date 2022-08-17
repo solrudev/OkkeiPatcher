@@ -57,12 +57,12 @@ class PatchOperation(
 
 	private fun patch() = with(strategy) {
 		aggregateOperation(
-			if (handleSaveData) saveData.backup() else emptyOperation(),
 			obb.backup(),
 			apk.backup(),
+			if (handleSaveData) saveData.backup() else emptyOperation(),
 			apk.patch(),
-			obb.patch(),
 			if (handleSaveData) saveData.restore() else emptyOperation(),
+			obb.patch(),
 			operation {
 				patchStatus.persist(true)
 			}
