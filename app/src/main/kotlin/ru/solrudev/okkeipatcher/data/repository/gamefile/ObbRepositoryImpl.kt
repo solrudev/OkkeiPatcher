@@ -78,7 +78,7 @@ class ObbBackupRepositoryImpl @Inject constructor(
 		}
 	}
 
-	override fun restore(): ProgressOperation<Unit> {
+	override fun restoreBackup(): ProgressOperation<Unit> {
 		val progressMultiplier = 3
 		return operation(progressMax = streamCopier.progressMax * progressMultiplier) {
 			if (!backup.exists()) {

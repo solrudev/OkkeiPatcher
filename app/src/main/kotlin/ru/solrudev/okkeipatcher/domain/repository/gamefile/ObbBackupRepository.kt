@@ -7,5 +7,5 @@ interface ObbBackupRepository {
 	fun deleteBackup()
 	fun createBackup(): ProgressOperation<Unit>
 	fun verifyBackup(): ProgressOperation<Boolean>
-	fun restore(): ProgressOperation<Unit>
+	fun restoreBackup(): ProgressOperation<Unit>
 }

@@ -41,7 +41,7 @@ abstract class Obb(
 
 	override fun restore(): Operation<Unit> {
 		val verifyBackupOperation = obbBackupRepository.verifyBackup().toOperation()
-		val restoreOperation = obbBackupRepository.restore().toOperation()
+		val restoreOperation = obbBackupRepository.restoreBackup().toOperation()
 		return operation(verifyBackupOperation, restoreOperation) {
 			status(LocalizedString.resource(R.string.status_restoring_obb))
 			if (!verifyBackupOperation()) {
