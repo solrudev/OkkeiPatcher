@@ -45,10 +45,6 @@ abstract class ForegroundWorker(
 	private val shownMessageNotifications = mutableListOf<Int>()
 	private val shownMessageNotificationsMutex = Mutex()
 
-	private val simpleNotificationBuilder by lazy {
-		createNotificationBuilder(progressNotification = false)
-	}
-
 	private val progressNotificationBuilder by lazy {
 		createNotificationBuilder(workLabel, progressNotification = true)
 	}
@@ -139,15 +135,13 @@ abstract class ForegroundWorker(
 		.launchIn(this)
 
 	private fun CoroutineScope.collectMessages(operation: Operation<*>) = operation.messages
-		.onEach { displayMessageNotification(it) }
+		.onEach(::displayMessageNotification)
 		.launchIn(this)
 
 	private suspend fun displayMessageNotification(message: Message, resultMessage: Boolean = false) =
 		withContext(NonCancellable) {
-			val titleString = message.title.resolve(applicationContext)
 			val messageString = message.text.resolve(applicationContext)
-			val notification = simpleNotificationBuilder.apply {
-				setContentTitle(titleString)
+			val notification = createNotificationBuilder(message.title, progressNotification = false).apply {
 				setContentText(messageString)
 				if (messageString.length > 28) {
 					setStyle(NotificationCompat.BigTextStyle().bigText(messageString))
@@ -172,7 +166,7 @@ abstract class ForegroundWorker(
 	}
 
 	private fun createNotificationBuilder(
-		title: LocalizedString = LocalizedString.empty(),
+		title: LocalizedString,
 		progressNotification: Boolean
 	): NotificationCompat.Builder {
 		val contentTitle = title.resolve(applicationContext)
