@@ -23,6 +23,6 @@ class MockWorker @AssistedInject constructor(
 	preferencesRepository: PreferencesRepository
 ) : ForegroundWorker(
 	context, workerParameters, notificationService, workManager,
-	MockOperationFactory(preferencesRepository.patchStatus, workerParameters.tags),
+	MockOperationFactory(preferencesRepository.patchStatus, isPatchWork = "PatchWork" in workerParameters.tags),
 	workLabel
 )

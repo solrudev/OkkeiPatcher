@@ -12,7 +12,7 @@ private const val STEPS_COUNT = 5
 @Suppress("FunctionName")
 fun MockOperation(
 	isPatched: Persistable<Boolean>,
-	tags: Set<String>
+	isPatchWork: Boolean
 ) = operation(progressMax = STEPS_COUNT * 100) {
 	repeat(STEPS_COUNT) { stepIndex ->
 		val step = stepIndex + 1
@@ -20,6 +20,6 @@ fun MockOperation(
 		delay(1.seconds)
 		progressDelta(100)
 	}
-	isPatched.persist(tags.contains("PatchWork"))
+	isPatched.persist(isPatchWork)
 	Result.Success
 }

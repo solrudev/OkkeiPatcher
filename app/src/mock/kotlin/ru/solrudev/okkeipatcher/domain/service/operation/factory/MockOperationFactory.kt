@@ -6,8 +6,8 @@ import ru.solrudev.okkeipatcher.domain.service.operation.MockOperation
 
 class MockOperationFactory(
 	private val isPatchedDao: Persistable<Boolean>,
-	private val tags: Set<String>
+	private val isPatchWork: Boolean
 ) : OperationFactory<Result> {
 
-	override suspend fun create() = MockOperation(isPatchedDao, tags)
+	override suspend fun create() = MockOperation(isPatchedDao, isPatchWork)
 }
