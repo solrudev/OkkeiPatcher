@@ -5,8 +5,7 @@
 	android:id="@+id/okkei_nav_host_container"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:orientation="vertical"
-	android:splitMotionEvents="false">
+	android:orientation="vertical">
 
 	<com.google.android.material.appbar.MaterialToolbar
 		android:id="@+id/toolbar"

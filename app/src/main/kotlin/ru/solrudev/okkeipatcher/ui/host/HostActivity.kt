@@ -30,6 +30,7 @@ import ru.solrudev.okkeipatcher.ui.core.FeatureView
 import ru.solrudev.okkeipatcher.ui.core.renderBy
 import ru.solrudev.okkeipatcher.ui.host.model.HostEvent.*
 import ru.solrudev.okkeipatcher.ui.host.model.HostUiState
+import ru.solrudev.okkeipatcher.ui.util.navigateSafely
 
 private const val PREVIOUS_DESTINATION_ID = "PREVIOUS_DESTINATION_ID"
 
@@ -112,7 +113,7 @@ class HostActivity : AppCompatActivity(R.layout.okkei_container), FeatureView<Ho
 
 	private fun navigateToPermissionsScreen() {
 		val toPermissionsScreen = OkkeiNavGraphDirections.actionGlobalPermissions()
-		navController.navigate(toPermissionsScreen)
+		navController.navigateSafely(toPermissionsScreen)
 		viewModel.dispatchEvent(NavigatedToPermissionsScreen)
 	}
 
@@ -120,7 +121,7 @@ class HostActivity : AppCompatActivity(R.layout.okkei_container), FeatureView<Ho
 		val workScreen = navController.findDestination(R.id.work_fragment)
 		workScreen?.label = work.label.resolve(this)
 		val toWorkScreen = OkkeiNavGraphDirections.actionGlobalWork(work)
-		navController.navigate(toWorkScreen)
+		navController.navigateSafely(toWorkScreen)
 		viewModel.dispatchEvent(NavigatedToWorkScreen)
 	}
 }

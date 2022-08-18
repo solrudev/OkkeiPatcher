@@ -15,6 +15,7 @@ import ru.solrudev.okkeipatcher.ui.screen.settings.model.SettingsEvent.HandleSav
 import ru.solrudev.okkeipatcher.ui.screen.settings.model.SettingsEvent.SaveDataAccessRequestHandled
 import ru.solrudev.okkeipatcher.ui.screen.settings.model.SettingsUiState
 import ru.solrudev.okkeipatcher.ui.util.fixRecyclerViewTransition
+import ru.solrudev.okkeipatcher.ui.util.navigateSafely
 import ru.solrudev.okkeipatcher.ui.util.prepareOptionsMenu
 import ru.solrudev.okkeipatcher.ui.util.setupTransitions
 
@@ -82,22 +83,22 @@ class SettingsFragment : PreferenceFragmentCompat(), FeatureView<SettingsUiState
 
 	private fun navigateToSaveDataAccessScreen() {
 		val toSaveDataAccessScreen = SettingsFragmentDirections.actionSettingsFragmentToSaveDataAccessFragment()
-		findNavController().navigate(toSaveDataAccessScreen)
+		findNavController().navigateSafely(toSaveDataAccessScreen)
 		viewModel.dispatchEvent(SaveDataAccessRequestHandled)
 	}
 
 	private fun navigateToClearDataScreen() {
 		val toClearDataScreen = SettingsFragmentDirections.actionSettingsFragmentToClearDataFragment()
-		findNavController().navigate(toClearDataScreen)
+		findNavController().navigateSafely(toClearDataScreen)
 	}
 
 	private fun navigateToAboutScreen() {
 		val toAboutScreen = SettingsFragmentDirections.actionSettingsFragmentToAboutFragment()
-		findNavController().navigate(toAboutScreen)
+		findNavController().navigateSafely(toAboutScreen)
 	}
 
 	private fun navigateToLicensesScreen() {
 		val toLicensesScreen = SettingsFragmentDirections.actionSettingsFragmentToLicensesFragment()
-		findNavController().navigate(toLicensesScreen)
+		findNavController().navigateSafely(toLicensesScreen)
 	}
 }
