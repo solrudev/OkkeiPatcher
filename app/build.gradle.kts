@@ -124,7 +124,7 @@ dependencies {
 	implementation("androidx.activity:activity-ktx:1.5.1")
 	implementation("androidx.preference:preference-ktx:1.2.0")
 	implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.5.1")
-	implementation("androidx.fragment:fragment-ktx:1.5.1")
+	implementation("androidx.fragment:fragment-ktx:1.5.2")
 	implementation("androidx.hilt:hilt-work:1.0.0")
 	implementation("androidx.work:work-runtime-ktx:2.7.1")
 	implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
@@ -150,7 +150,7 @@ dependencies {
 	implementation("com.github.aefyr:pseudoapksigner:1.6")
 	implementation("com.android.tools.build:apksig:$androidGradleVersion")
 	implementation("net.lingala.zip4j:zip4j:2.11.1")
-	implementation("io.github.solrudev:simpleinstaller:3.1.1")
+	implementation("io.github.solrudev:simpleinstaller:4.0.0")
 	implementation("com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.6")
 	implementation("com.github.razir.progressbutton:progressbutton:2.1.0")
 	implementation(files("libs/Base64.jar")) // java.util.Base64 for apksig on API 24-25

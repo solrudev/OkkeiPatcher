@@ -10,7 +10,6 @@ import androidx.core.content.getSystemService
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import dagger.hilt.android.HiltAndroidApp
-import io.github.solrudev.simpleinstaller.SimpleInstaller
 import ru.solrudev.okkeipatcher.domain.repository.app.ConnectivityRepository
 import javax.inject.Inject
 
@@ -25,7 +24,6 @@ class OkkeiApplication : Application(), Configuration.Provider {
 
 	override fun onCreate() {
 		super.onCreate()
-		SimpleInstaller.setNotificationIcon(R.mipmap.ic_launcher_foreground)
 		connectivityRepository.startNetworkMonitoring()
 		createNotificationChannels()
 	}

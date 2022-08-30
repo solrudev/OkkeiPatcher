@@ -4,7 +4,10 @@ import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.github.solrudev.simpleinstaller.PackageInstaller
 import io.github.solrudev.simpleinstaller.PackageUninstaller
+import io.github.solrudev.simpleinstaller.data.notification
+import io.github.solrudev.simpleinstaller.uninstallPackage
 import kotlinx.coroutines.CoroutineDispatcher
+import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.repository.gamefile.util.GAME_PACKAGE_NAME
 import ru.solrudev.okkeipatcher.data.repository.gamefile.util.isGameInstalled
 import ru.solrudev.okkeipatcher.data.repository.util.install
@@ -73,5 +76,10 @@ class ApkRepositoryImpl @Inject constructor(
 	}
 
 	override suspend fun installTemp() = packageInstaller.install(temp)
-	override suspend fun uninstall() = packageUninstaller.uninstallPackage(GAME_PACKAGE_NAME)
+
+	override suspend fun uninstall() = packageUninstaller.uninstallPackage(GAME_PACKAGE_NAME) {
+		notification {
+			icon = R.mipmap.ic_launcher_foreground
+		}
+	}
 }
