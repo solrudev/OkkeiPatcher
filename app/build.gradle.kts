@@ -102,6 +102,7 @@ android {
 
 	kotlinOptions {
 		jvmTarget = "11"
+		freeCompilerArgs += "-Xjvm-default=all"
 	}
 
 	buildFeatures {
