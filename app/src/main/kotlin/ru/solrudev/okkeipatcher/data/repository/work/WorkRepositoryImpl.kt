@@ -3,7 +3,7 @@ package ru.solrudev.okkeipatcher.data.repository.work
 import androidx.lifecycle.asFlow
 import androidx.work.WorkManager
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.supervisorScope
 import ru.solrudev.okkeipatcher.data.database.dao.WorkDao
 import ru.solrudev.okkeipatcher.data.database.model.WorkModel
@@ -40,13 +40,11 @@ class WorkRepositoryImpl @Inject constructor(
 			workManager
 				.getWorkInfoByIdLiveData(workId)
 				.asFlow()
-				.collect { workInfo ->
-					val workState = workStateMapper(workInfo)
-					emit(workState)
-					if (workState.isFinished) {
-						this@supervisorScope.cancel()
-					}
-				}
+				.map(workStateMapper)
+				.onEach(::emit)
+				.filter { it.isFinished }
+				.onEach { this@supervisorScope.cancel() }
+				.collect()
 		}
 	}
 }
