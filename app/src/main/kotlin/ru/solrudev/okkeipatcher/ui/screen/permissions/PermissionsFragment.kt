@@ -60,7 +60,7 @@ class PermissionsFragment : Fragment(R.layout.fragment_permissions), FeatureView
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		view.fixRecyclerViewTransition()
+		fixRecyclerViewTransition(view)
 		onBackPressed {
 			requireActivity().finish()
 		}

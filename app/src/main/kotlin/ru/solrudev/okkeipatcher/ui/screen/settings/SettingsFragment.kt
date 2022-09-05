@@ -43,7 +43,7 @@ class SettingsFragment : PreferenceFragmentCompat(), FeatureView<SettingsUiState
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-		view.fixRecyclerViewTransition()
+		fixRecyclerViewTransition(view)
 		prepareOptionsMenu {
 			removeItem(R.id.settings_fragment)
 		}

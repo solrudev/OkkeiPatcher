@@ -28,7 +28,7 @@ class LicensesFragment : Fragment(R.layout.fragment_licenses), FeatureView<Licen
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		view.fixRecyclerViewTransition()
+		fixRecyclerViewTransition(view)
 		prepareOptionsMenu {
 			clear()
 		}
