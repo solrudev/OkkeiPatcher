@@ -15,10 +15,8 @@ class LicensesAdapter : ListAdapter<License, LicensesAdapter.LicenseViewHolder>(
 	class LicenseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
 		private val binding = ItemLicenseBinding.bind(itemView)
-		private var license: License? = null
 
 		fun bind(license: License) {
-			this.license = license
 			binding.textviewLicenseSubject.text = license.subject
 			binding.textviewLicenseText.text = license.text
 		}
