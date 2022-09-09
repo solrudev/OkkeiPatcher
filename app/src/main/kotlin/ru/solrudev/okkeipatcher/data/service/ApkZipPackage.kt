@@ -4,7 +4,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import net.lingala.zip4j.ZipFile
 import net.lingala.zip4j.model.ZipParameters
-import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
 import java.io.File
 
 interface ZipPackage : AutoCloseable {
@@ -15,12 +14,12 @@ interface ZipPackage : AutoCloseable {
 }
 
 class ApkZipPackage(
-	private val apkRepository: ApkRepository,
+	private val apkPath: String,
 	private val apkSigner: ApkSigner,
 	private val ioDispatcher: CoroutineDispatcher
 ) : ZipPackage {
 
-	private val zipFile = ZipFile(apkRepository.tempPath)
+	private val zipFile = ZipFile(apkPath)
 
 	override fun close() {
 		zipFile.executorService?.shutdownNow()
@@ -39,18 +38,12 @@ class ApkZipPackage(
 	}
 
 	override suspend fun sign() {
-		val apk = File(apkRepository.tempPath)
+		val apk = File(apkPath)
 		apkSigner.sign(apk)
 	}
 
 	override suspend fun removeSignature() {
-		val apk = File(apkRepository.tempPath)
+		val apk = File(apkPath)
 		apkSigner.removeSignature(apk)
-	}
-
-	suspend fun create() {
-		if (!apkRepository.tempExists) {
-			apkRepository.createTemp()
-		}
 	}
 }

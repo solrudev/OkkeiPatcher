@@ -6,6 +6,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import ru.solrudev.okkeipatcher.data.service.FileDownloader
 import ru.solrudev.okkeipatcher.data.service.factory.ApkZipPackageFactory
 import ru.solrudev.okkeipatcher.data.service.operation.ScriptsPatchOperation
+import ru.solrudev.okkeipatcher.data.util.externalDir
 import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFile
 import ru.solrudev.okkeipatcher.domain.service.operation.factory.ScriptsPatchOperationFactory
@@ -18,6 +19,11 @@ class ScriptsPatchOperationFactoryImpl @Inject constructor(
 	private val apkZipPackageFactory: ApkZipPackageFactory
 ) : ScriptsPatchOperationFactory {
 
-	override fun create(scriptsPatchFile: PatchFile) =
-		ScriptsPatchOperation(apkZipPackageFactory, scriptsPatchFile, ioDispatcher, applicationContext, fileDownloader)
+	override fun create(scriptsPatchFile: PatchFile) = ScriptsPatchOperation(
+		scriptsPatchFile,
+		apkZipPackageFactory,
+		ioDispatcher,
+		applicationContext.externalDir,
+		fileDownloader
+	)
 }

@@ -17,16 +17,10 @@ class ApkZipPackageFactoryImpl @Inject constructor(
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ApkZipPackageFactory {
 
-	override suspend fun create() = ApkZipPackage(
-		apkRepository,
-		apkSigner,
-		ioDispatcher
-	).also { apkZipPackage ->
-		try {
-			apkZipPackage.create()
-		} catch (t: Throwable) {
-			apkZipPackage.close()
-			throw t
+	override suspend fun create(): ZipPackage {
+		if (!apkRepository.tempExists) {
+			apkRepository.createTemp()
 		}
+		return ApkZipPackage(apkRepository.tempPath, apkSigner, ioDispatcher)
 	}
 }
