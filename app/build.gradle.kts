@@ -24,6 +24,7 @@ base {
 android {
 	compileSdk = 32
 	buildToolsVersion = "33.0.0"
+	namespace = packageName
 
 	defaultConfig {
 		applicationId = packageName
