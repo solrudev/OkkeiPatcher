@@ -119,12 +119,14 @@ class ApkSignerImpl @Inject constructor(
 		}
 		val assets = applicationContext.assets
 		assets.openFd(fileName).use { fd ->
-			streamCopier.copy(
-				fd.createInputStream().source(),
-				file.sink(),
-				fd.declaredLength
-			)
+			fd.createInputStream().source().use { source ->
+				streamCopier.copy(
+					source,
+					file.sink(),
+					fd.declaredLength
+				)
+			}
 		}
-		file
+		return@withContext file
 	}
 }

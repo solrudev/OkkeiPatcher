@@ -66,17 +66,18 @@ class SaveDataRepositoryImpl @Inject constructor(
 		val failure = Result.Failure(
 			LocalizedString.resource(R.string.warning_could_not_backup_save_data)
 		)
-		if (current.exists) {
-			temp.recreate()
-			return try {
-				val currentSource = current.inputStream()?.source() ?: return failure
+		if (!current.exists) {
+			return failure
+		}
+		temp.recreate()
+		try {
+			val currentSource = current.inputStream()?.source() ?: return failure
+			currentSource.use { source ->
 				val sink = withContext(ioDispatcher) { temp.sink() }
-				streamCopier.copy(currentSource, sink, current.length)
-				Result.Success
-			} catch (t: Throwable) {
-				failure
+				streamCopier.copy(source, sink, current.length)
+				return Result.Success
 			}
-		} else {
+		} catch (t: Throwable) {
 			return failure
 		}
 	}
@@ -95,14 +96,16 @@ class SaveDataRepositoryImpl @Inject constructor(
 		val failure = Result.Failure(
 			LocalizedString.resource(R.string.warning_could_not_restore_save_data)
 		)
-		return try {
+		try {
 			current.recreate()
 			val currentSink = current.outputStream()?.sink() ?: return failure
-			val source = withContext(ioDispatcher) { backup.source() }
-			streamCopier.copy(source, currentSink, backup.length())
-			Result.Success
+			currentSink.use { sink ->
+				val source = withContext(ioDispatcher) { backup.source() }
+				streamCopier.copy(source, sink, backup.length())
+				return Result.Success
+			}
 		} catch (t: Throwable) {
-			failure
+			return failure
 		}
 	}
 

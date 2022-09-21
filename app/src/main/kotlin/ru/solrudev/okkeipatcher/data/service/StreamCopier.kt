@@ -41,9 +41,10 @@ suspend inline fun StreamCopier.copy(
 	noinline onProgressDeltaChanged: suspend (Int) -> Unit = {}
 ): String {
 	outputFile.recreate()
-	val source = withContext(ioDispatcher) { inputFile.source() }
-	val sink = withContext(ioDispatcher) { outputFile.sink() }
-	return copy(source, sink, inputFile.length(), hashing, onProgressDeltaChanged)
+	withContext(ioDispatcher) { inputFile.source() }.use { source ->
+		val sink = withContext(ioDispatcher) { outputFile.sink() }
+		return copy(source, sink, inputFile.length(), hashing, onProgressDeltaChanged)
+	}
 }
 
 @Suppress("BlockingMethodInNonBlockingContext")
