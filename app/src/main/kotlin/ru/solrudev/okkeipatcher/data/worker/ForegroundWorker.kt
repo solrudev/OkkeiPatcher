@@ -34,42 +34,43 @@ abstract class ForegroundWorker(
 		notificationService.progressNotificationTitle = workLabel
 	}
 
-	final override suspend fun doWork() = try {
+	final override suspend fun doWork(): Result {
+		cancelIfRetry()
+		try {
+			setForeground(createForegroundInfo())
+			val operation = operationFactory.create()
+			operation
+				.canInvoke()
+				.onFailure { failure ->
+					return createFailure(WorkerFailure.Domain(failure.reason))
+				}
+			val result: DomainResult
+			coroutineScope {
+				val observeJob = observeOperation(operation)
+				result = operation()
+				observeJob.cancel()
+			}
+			result.onFailure { failure ->
+				return createFailure(WorkerFailure.Domain(failure.reason))
+			}
+			return createSuccess()
+		} catch (cancellationException: CancellationException) {
+			throw cancellationException
+		} catch (t: Throwable) {
+			return createFailure(WorkerFailure.Unhandled(t))
+		} finally {
+			withContext(NonCancellable) {
+				notificationService.clearShownMessageNotifications()
+				delay(250.milliseconds) // for foreground service notification to be canceled before returning
+			}
+		}
+	}
+
+	private suspend fun cancelIfRetry() {
 		if (runAttemptCount > 0) {
 			workManager
 				.cancelWorkById(id)
 				.await()
-		}
-		setForeground(createForegroundInfo())
-		val operation = operationFactory.create()
-		operation
-			.canInvoke()
-			.onFailure {
-				return createFailure(
-					WorkerFailure.Domain(it.reason)
-				)
-			}
-		val result: DomainResult
-		coroutineScope {
-			val observeJob = observeOperation(operation)
-			result = operation()
-			observeJob.cancel()
-		}
-		result.onFailure {
-			return createFailure(
-				WorkerFailure.Domain(it.reason)
-			)
-		}
-		createSuccess()
-	} catch (t: Throwable) {
-		if (t is CancellationException) {
-			throw t
-		}
-		createFailure(WorkerFailure.Unhandled(t))
-	} finally {
-		withContext(NonCancellable) {
-			notificationService.clearShownMessageNotifications()
-			delay(250.milliseconds) // for foreground service notification to be canceled before returning
 		}
 	}
 

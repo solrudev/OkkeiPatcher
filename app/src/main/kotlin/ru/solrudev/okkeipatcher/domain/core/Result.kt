@@ -9,7 +9,7 @@ sealed interface Result {
 }
 
 /**
- * Executes [block] if the result is [Result.Failure] and returns itself.
+ * Executes [block] if the result is [Result.Failure] and returns result unmodified.
  */
 inline fun <R> Result.onFailure(block: (Result.Failure) -> R): Result {
 	if (this is Result.Failure) block(this)
@@ -17,7 +17,7 @@ inline fun <R> Result.onFailure(block: (Result.Failure) -> R): Result {
 }
 
 /**
- * Executes [block] if the result is [Result.Success] and returns itself.
+ * Executes [block] if the result is [Result.Success] and returns result unmodified.
  */
 inline fun <R> Result.onSuccess(block: (Result.Success) -> R): Result {
 	if (this is Result.Success) block(this)
