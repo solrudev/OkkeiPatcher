@@ -7,7 +7,7 @@ import ru.solrudev.okkeipatcher.domain.core.*
  * Resolves string value for a given [context].
  */
 fun LocalizedString.resolve(context: Context): CharSequence = when (this) {
-	EmptyString -> ""
+	is EmptyString -> ""
 	is RawString -> value
 	is ResourceString -> context.getString(resourceId, *getArgValues(context, args))
 	is CompoundString -> parts.joinToString(separator = "") { it.resolve(context) }
