@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.app.NotificationManager
 import android.os.Bundle
 import android.view.animation.DecelerateInterpolator
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.getSystemService
 import androidx.lifecycle.Lifecycle
@@ -17,7 +16,7 @@ import ru.solrudev.okkeipatcher.databinding.ActivityWorkBinding
 import ru.solrudev.okkeipatcher.domain.core.Message
 import ru.solrudev.okkeipatcher.domain.model.ProgressData
 import ru.solrudev.okkeipatcher.ui.core.FeatureView
-import ru.solrudev.okkeipatcher.ui.core.renderBy
+import ru.solrudev.okkeipatcher.ui.core.featureViewModels
 import ru.solrudev.okkeipatcher.ui.model.shouldShow
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEvent.*
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkUiState
@@ -27,7 +26,7 @@ import ru.solrudev.okkeipatcher.ui.util.*
 @AndroidEntryPoint
 class WorkActivity : AppCompatActivity(R.layout.activity_work), FeatureView<WorkUiState> {
 
-	private val viewModel by viewModels<WorkViewModel>()
+	private val viewModel: WorkViewModel by featureViewModels()
 	private val args by navArgs<WorkActivityArgs>()
 	private val binding by viewBinding(ActivityWorkBinding::bind, R.id.container_work)
 	private var currentCancelDialog: Dialog? = null
@@ -39,7 +38,6 @@ class WorkActivity : AppCompatActivity(R.layout.activity_work), FeatureView<Work
 			finishAffinity()
 		}
 		setupNavigation()
-		viewModel.renderBy(this)
 		binding.toolbarWork.title = args.work.label.resolve(this)
 	}
 

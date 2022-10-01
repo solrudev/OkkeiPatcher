@@ -21,7 +21,7 @@ interface FeatureView<in S : UiState> {
  * new state is emitted.
  * @return [Job] of the flow collection.
  */
-fun <S : UiState, V> Flow<S>.renderBy(featureView: V): Job
+fun <S : UiState, V> Flow<S>.bind(featureView: V): Job
 		where V : FeatureView<S>,
 			  V : Fragment {
 	return featureView.viewLifecycleOwner.lifecycleScope.launch {
@@ -36,7 +36,7 @@ fun <S : UiState, V> Flow<S>.renderBy(featureView: V): Job
  * new state is emitted.
  * @return [Job] of the flow collection.
  */
-fun <S : UiState, V> Flow<S>.renderBy(featureView: V): Job
+fun <S : UiState, V> Flow<S>.bind(featureView: V): Job
 		where V : FeatureView<S>,
 			  V : ComponentActivity {
 	return featureView.lifecycleScope.launch {

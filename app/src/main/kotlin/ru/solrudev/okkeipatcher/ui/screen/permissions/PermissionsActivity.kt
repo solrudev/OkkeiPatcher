@@ -5,7 +5,6 @@ import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.launch
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -14,7 +13,7 @@ import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.databinding.ActivityPermissionsBinding
 import ru.solrudev.okkeipatcher.domain.model.Permission
 import ru.solrudev.okkeipatcher.ui.core.FeatureView
-import ru.solrudev.okkeipatcher.ui.core.renderBy
+import ru.solrudev.okkeipatcher.ui.core.featureViewModels
 import ru.solrudev.okkeipatcher.ui.screen.permissions.model.PermissionsEvent.PermissionStateChanged
 import ru.solrudev.okkeipatcher.ui.screen.permissions.model.PermissionsUiState
 import ru.solrudev.okkeipatcher.ui.screen.permissions.model.allPermissionsGranted
@@ -24,7 +23,7 @@ import ru.solrudev.okkeipatcher.ui.util.onBackPressed
 class PermissionsActivity : AppCompatActivity(R.layout.activity_permissions), FeatureView<PermissionsUiState> {
 
 	private val binding by viewBinding(ActivityPermissionsBinding::bind, R.id.container_permissions)
-	private val viewModel by viewModels<PermissionsViewModel>()
+	private val viewModel: PermissionsViewModel by featureViewModels()
 
 	private val storagePermissionLauncher = registerForActivityResult(
 		ActivityResultContracts.RequestMultiplePermissions()
@@ -56,7 +55,6 @@ class PermissionsActivity : AppCompatActivity(R.layout.activity_permissions), Fe
 			finishAffinity()
 		}
 		binding.recyclerviewPermissions.adapter = permissionsAdapter
-		viewModel.renderBy(this)
 	}
 
 	override fun render(uiState: PermissionsUiState) {

@@ -1,7 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.host
 
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
@@ -23,7 +22,7 @@ import ru.solrudev.okkeipatcher.data.core.resolve
 import ru.solrudev.okkeipatcher.databinding.OkkeiNavHostBinding
 import ru.solrudev.okkeipatcher.domain.model.Work
 import ru.solrudev.okkeipatcher.ui.core.FeatureView
-import ru.solrudev.okkeipatcher.ui.core.renderBy
+import ru.solrudev.okkeipatcher.ui.core.featureViewModels
 import ru.solrudev.okkeipatcher.ui.host.model.HostEvent.*
 import ru.solrudev.okkeipatcher.ui.host.model.HostUiState
 import ru.solrudev.okkeipatcher.ui.util.navigateSafely
@@ -34,7 +33,7 @@ private const val PREVIOUS_DESTINATION_ID = "PREVIOUS_DESTINATION_ID"
 class HostActivity : AppCompatActivity(R.layout.okkei_nav_host), FeatureView<HostUiState> {
 
 	private val binding by viewBinding(OkkeiNavHostBinding::bind, R.id.okkei_nav_host_container)
-	private val viewModel by viewModels<HostViewModel>()
+	private val viewModel: HostViewModel by featureViewModels()
 	private val topLevelDestinations = setOf(R.id.home_fragment, R.id.update_fragment, R.id.settings_fragment)
 	private val appBarConfiguration = AppBarConfiguration(topLevelDestinations)
 
@@ -52,7 +51,6 @@ class HostActivity : AppCompatActivity(R.layout.okkei_nav_host), FeatureView<Hos
 		binding.bottomNavView.setupWithNavController(navController)
 		setupActionBarWithNavController(navController, appBarConfiguration)
 		checkPermissionsWithNavController(navController)
-		viewModel.renderBy(this)
 		previousDestinationId = savedInstanceState?.getInt(PREVIOUS_DESTINATION_ID) ?: 0
 	}
 

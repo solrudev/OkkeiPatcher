@@ -3,7 +3,6 @@ package ru.solrudev.okkeipatcher.ui.screen.home
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.github.razir.progressbutton.attachTextChangeAnimator
@@ -14,7 +13,7 @@ import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.databinding.FragmentHomeBinding
 import ru.solrudev.okkeipatcher.domain.core.Message
 import ru.solrudev.okkeipatcher.ui.core.FeatureView
-import ru.solrudev.okkeipatcher.ui.core.renderBy
+import ru.solrudev.okkeipatcher.ui.core.featureViewModels
 import ru.solrudev.okkeipatcher.ui.model.shouldShow
 import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeEvent.PatchUpdatesMessageShown
 import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeEvent.ViewHidden
@@ -29,13 +28,12 @@ import ru.solrudev.okkeipatcher.ui.util.showWithLifecycle
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home), FeatureView<HomeUiState> {
 
-	private val viewModel by viewModels<HomeViewModel>()
+	private val viewModel: HomeViewModel by featureViewModels()
 	private val binding by viewBinding(FragmentHomeBinding::bind)
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		setupNavigation()
 		viewLifecycleOwner.bindProgressButton(binding.buttonHomePatch)
-		viewModel.renderBy(this)
 	}
 
 	override fun onStop() {
