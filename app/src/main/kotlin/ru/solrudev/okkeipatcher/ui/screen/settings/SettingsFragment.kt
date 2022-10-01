@@ -2,7 +2,6 @@ package ru.solrudev.okkeipatcher.ui.screen.settings
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
@@ -10,7 +9,7 @@ import androidx.preference.SwitchPreferenceCompat
 import dagger.hilt.android.AndroidEntryPoint
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.ui.core.FeatureView
-import ru.solrudev.okkeipatcher.ui.core.renderBy
+import ru.solrudev.okkeipatcher.ui.core.featureViewModels
 import ru.solrudev.okkeipatcher.ui.screen.settings.model.SettingsEvent.HandleSaveDataClicked
 import ru.solrudev.okkeipatcher.ui.screen.settings.model.SettingsEvent.SaveDataAccessRequestHandled
 import ru.solrudev.okkeipatcher.ui.screen.settings.model.SettingsUiState
@@ -22,7 +21,7 @@ import ru.solrudev.okkeipatcher.ui.util.setupTransitions
 @AndroidEntryPoint
 class SettingsFragment : PreferenceFragmentCompat(), FeatureView<SettingsUiState> {
 
-	private val viewModel by viewModels<SettingsViewModel>()
+	private val viewModel: SettingsViewModel by featureViewModels()
 
 	private val handleSaveData: SwitchPreferenceCompat?
 		get() = findPreference(getString(R.string.preference_key_handle_save_data))
@@ -47,7 +46,6 @@ class SettingsFragment : PreferenceFragmentCompat(), FeatureView<SettingsUiState
 		prepareOptionsMenu {
 			removeItem(R.id.settings_fragment)
 		}
-		viewModel.renderBy(this)
 	}
 
 	override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {

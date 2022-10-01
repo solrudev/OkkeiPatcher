@@ -7,7 +7,6 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.launch
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -16,7 +15,7 @@ import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.databinding.FragmentPermissionsBinding
 import ru.solrudev.okkeipatcher.domain.model.Permission
 import ru.solrudev.okkeipatcher.ui.core.FeatureView
-import ru.solrudev.okkeipatcher.ui.core.renderBy
+import ru.solrudev.okkeipatcher.ui.core.featureViewModels
 import ru.solrudev.okkeipatcher.ui.screen.permissions.model.PermissionsEvent.PermissionStateChanged
 import ru.solrudev.okkeipatcher.ui.screen.permissions.model.PermissionsUiState
 import ru.solrudev.okkeipatcher.ui.screen.permissions.model.allPermissionsGranted
@@ -29,7 +28,7 @@ import ru.solrudev.okkeipatcher.ui.util.setupTransitions
 class PermissionsFragment : Fragment(R.layout.fragment_permissions), FeatureView<PermissionsUiState> {
 
 	private val binding by viewBinding(FragmentPermissionsBinding::bind)
-	private val viewModel by viewModels<PermissionsViewModel>()
+	private val viewModel: PermissionsViewModel by featureViewModels()
 
 	private val storagePermissionLauncher = registerForActivityResult(
 		ActivityResultContracts.RequestMultiplePermissions()
@@ -68,7 +67,6 @@ class PermissionsFragment : Fragment(R.layout.fragment_permissions), FeatureView
 			clear()
 		}
 		binding.recyclerviewPermissions.adapter = permissionsAdapter
-		viewModel.renderBy(this)
 	}
 
 	override fun render(uiState: PermissionsUiState) {

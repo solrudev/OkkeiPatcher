@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import androidx.activity.viewModels
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
@@ -27,7 +26,7 @@ import ru.solrudev.okkeipatcher.data.core.resolve
 import ru.solrudev.okkeipatcher.databinding.OkkeiContainerBinding
 import ru.solrudev.okkeipatcher.domain.model.Work
 import ru.solrudev.okkeipatcher.ui.core.FeatureView
-import ru.solrudev.okkeipatcher.ui.core.renderBy
+import ru.solrudev.okkeipatcher.ui.core.featureViewModels
 import ru.solrudev.okkeipatcher.ui.host.model.HostEvent.*
 import ru.solrudev.okkeipatcher.ui.host.model.HostUiState
 import ru.solrudev.okkeipatcher.ui.util.navigateSafely
@@ -38,7 +37,7 @@ private const val PREVIOUS_DESTINATION_ID = "PREVIOUS_DESTINATION_ID"
 class HostActivity : AppCompatActivity(R.layout.okkei_container), FeatureView<HostUiState> {
 
 	private val binding by viewBinding(OkkeiContainerBinding::bind, R.id.okkei_container)
-	private val viewModel by viewModels<HostViewModel>()
+	private val viewModel: HostViewModel by featureViewModels()
 
 	private val appBarConfiguration = AppBarConfiguration(
 		setOf(R.id.home_fragment, R.id.permissions_fragment, R.id.work_fragment)
@@ -60,7 +59,6 @@ class HostActivity : AppCompatActivity(R.layout.okkei_container), FeatureView<Ho
 			checkPermissionsWithNavController(navController)
 		}
 		setupOptionsMenu()
-		viewModel.renderBy(this)
 		previousDestinationId = savedInstanceState?.getInt(PREVIOUS_DESTINATION_ID) ?: 0
 	}
 

@@ -7,7 +7,6 @@ import android.view.View
 import android.view.animation.DecelerateInterpolator
 import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -19,7 +18,7 @@ import ru.solrudev.okkeipatcher.databinding.FragmentWorkBinding
 import ru.solrudev.okkeipatcher.domain.core.Message
 import ru.solrudev.okkeipatcher.domain.model.ProgressData
 import ru.solrudev.okkeipatcher.ui.core.FeatureView
-import ru.solrudev.okkeipatcher.ui.core.renderBy
+import ru.solrudev.okkeipatcher.ui.core.featureViewModels
 import ru.solrudev.okkeipatcher.ui.model.shouldShow
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEvent.*
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkUiState
@@ -29,7 +28,7 @@ import ru.solrudev.okkeipatcher.ui.util.*
 @AndroidEntryPoint
 class WorkFragment : Fragment(R.layout.fragment_work), FeatureView<WorkUiState> {
 
-	private val viewModel by viewModels<WorkViewModel>()
+	private val viewModel: WorkViewModel by featureViewModels()
 	private val args by navArgs<WorkFragmentArgs>()
 	private val binding by viewBinding(FragmentWorkBinding::bind)
 	private var currentCancelDialog: Dialog? = null
@@ -48,7 +47,6 @@ class WorkFragment : Fragment(R.layout.fragment_work), FeatureView<WorkUiState> 
 			clear()
 		}
 		setupNavigation()
-		viewModel.renderBy(this)
 	}
 
 	override fun onStart() {

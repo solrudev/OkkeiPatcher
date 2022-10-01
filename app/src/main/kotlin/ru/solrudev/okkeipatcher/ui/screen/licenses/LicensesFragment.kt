@@ -9,7 +9,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.databinding.FragmentLicensesBinding
 import ru.solrudev.okkeipatcher.ui.core.FeatureView
-import ru.solrudev.okkeipatcher.ui.core.renderBy
+import ru.solrudev.okkeipatcher.ui.core.bind
 import ru.solrudev.okkeipatcher.ui.screen.licenses.model.LicensesUiState
 import ru.solrudev.okkeipatcher.ui.util.fixRecyclerViewTransition
 import ru.solrudev.okkeipatcher.ui.util.prepareOptionsMenu
@@ -19,7 +19,7 @@ import ru.solrudev.okkeipatcher.ui.util.setupTransitions
 class LicensesFragment : Fragment(R.layout.fragment_licenses), FeatureView<LicensesUiState> {
 
 	private val binding by viewBinding(FragmentLicensesBinding::bind)
-	private val viewModel by viewModels<LicensesViewModel>()
+	private val viewModel: LicensesViewModel by viewModels()
 	private val licensesAdapter = LicensesAdapter()
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +33,7 @@ class LicensesFragment : Fragment(R.layout.fragment_licenses), FeatureView<Licen
 			clear()
 		}
 		binding.recyclerviewLicenses.adapter = licensesAdapter
-		viewModel.renderBy(this)
+		viewModel.bind(this)
 	}
 
 	override fun render(uiState: LicensesUiState) {
