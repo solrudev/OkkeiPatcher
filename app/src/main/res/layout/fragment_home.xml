@@ -27,7 +27,7 @@
 				android:id="@+id/button_home_restore"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:text="@string/button_text_restoring" />
+				android:text="@string/button_text_restore" />
 
 		</LinearLayout>
 

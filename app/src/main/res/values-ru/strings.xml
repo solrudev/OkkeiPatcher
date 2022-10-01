@@ -14,7 +14,7 @@
 	<string name="button_text_granted">Выдано</string>
 	<string name="button_text_ok">OK</string>
 	<string name="button_text_patch">Пропатчить</string>
-	<string name="button_text_restoring">Восстановить</string>
+	<string name="button_text_restore">Восстановить</string>
 	<string name="button_text_start">Начать</string>
 
 	<!--Errors-->
