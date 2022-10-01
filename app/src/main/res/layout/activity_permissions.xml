@@ -9,8 +9,8 @@
 
 	<com.google.android.material.appbar.MaterialToolbar
 		android:id="@+id/toolbar_permissions"
-		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
+		android:layout_height="?attr/actionBarSize"
 		app:title="@string/permissions_screen_title" />
 
 	<LinearLayout
