@@ -1,27 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/okkei_nav_host_container"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:orientation="vertical">
+	android:layout_height="match_parent">
 
 	<com.google.android.material.appbar.MaterialToolbar
+		android:layout_height="?attr/actionBarSize"
 		android:id="@+id/toolbar"
 		android:layout_width="match_parent"
-		android:layout_height="?attr/actionBarSize"
-		android:splitMotionEvents="false"
-		app:menu="@menu/okkei_menu" />
+		app:layout_constraintTop_toTopOf="parent" />
 
-	<androidx.fragment.app.FragmentContainerView
-		android:id="@+id/okkei_nav_host_content"
-		android:name="androidx.navigation.fragment.NavHostFragment"
+	<androidx.coordinatorlayout.widget.CoordinatorLayout
+		android:id="@+id/okkei_nav_host_content_container"
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
-		android:layout_weight="1"
-		app:defaultNavHost="true"
-		app:navGraph="@navigation/okkei_nav_graph"
-		tools:layout="@layout/fragment_home" />
+		app:layout_constraintBottom_toTopOf="@+id/bottom_nav_view"
+		app:layout_constraintTop_toBottomOf="@id/toolbar">
 
-</LinearLayout>
+		<androidx.fragment.app.FragmentContainerView
+			android:id="@+id/okkei_nav_host_content"
+			android:name="androidx.navigation.fragment.NavHostFragment"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			app:defaultNavHost="true"
+			app:navGraph="@navigation/okkei_nav_graph"
+			tools:layout="@layout/fragment_home" />
+
+	</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+	<com.google.android.material.bottomnavigation.BottomNavigationView
+		android:id="@+id/bottom_nav_view"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="?android:attr/windowBackground"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:menu="@menu/okkei_menu" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

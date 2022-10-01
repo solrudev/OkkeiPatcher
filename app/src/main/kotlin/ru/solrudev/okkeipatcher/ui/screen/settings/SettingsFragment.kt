@@ -14,10 +14,7 @@ import ru.solrudev.okkeipatcher.ui.core.renderBy
 import ru.solrudev.okkeipatcher.ui.screen.settings.model.SettingsEvent.HandleSaveDataClicked
 import ru.solrudev.okkeipatcher.ui.screen.settings.model.SettingsEvent.SaveDataAccessRequestHandled
 import ru.solrudev.okkeipatcher.ui.screen.settings.model.SettingsUiState
-import ru.solrudev.okkeipatcher.ui.util.fixRecyclerViewTransition
 import ru.solrudev.okkeipatcher.ui.util.navigateSafely
-import ru.solrudev.okkeipatcher.ui.util.prepareOptionsMenu
-import ru.solrudev.okkeipatcher.ui.util.setupTransitions
 
 @AndroidEntryPoint
 class SettingsFragment : PreferenceFragmentCompat(), FeatureView<SettingsUiState> {
@@ -36,17 +33,8 @@ class SettingsFragment : PreferenceFragmentCompat(), FeatureView<SettingsUiState
 	private val thirdPartyLicenses: Preference?
 		get() = findPreference(getString(R.string.preference_key_licenses))
 
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
-		setupTransitions()
-	}
-
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-		fixRecyclerViewTransition(view)
-		prepareOptionsMenu {
-			removeItem(R.id.settings_fragment)
-		}
 		viewModel.renderBy(this)
 	}
 

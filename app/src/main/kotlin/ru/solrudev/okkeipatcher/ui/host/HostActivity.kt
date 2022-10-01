@@ -1,13 +1,10 @@
 package ru.solrudev.okkeipatcher.ui.host
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.MenuProvider
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -16,15 +13,19 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
+import androidx.transition.Slide
+import androidx.transition.TransitionManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.solrudev.okkeipatcher.OkkeiNavGraphDirections
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.core.resolve
-import ru.solrudev.okkeipatcher.databinding.OkkeiContainerBinding
+import ru.solrudev.okkeipatcher.databinding.OkkeiNavHostBinding
 import ru.solrudev.okkeipatcher.domain.model.Work
 import ru.solrudev.okkeipatcher.ui.core.FeatureView
 import ru.solrudev.okkeipatcher.ui.core.renderBy
@@ -35,14 +36,13 @@ import ru.solrudev.okkeipatcher.ui.util.navigateSafely
 private const val PREVIOUS_DESTINATION_ID = "PREVIOUS_DESTINATION_ID"
 
 @AndroidEntryPoint
-class HostActivity : AppCompatActivity(R.layout.okkei_container), FeatureView<HostUiState> {
+class HostActivity : AppCompatActivity(R.layout.okkei_nav_host), FeatureView<HostUiState> {
 
-	private val binding by viewBinding(OkkeiContainerBinding::bind, R.id.okkei_container)
+	private val binding by viewBinding(OkkeiNavHostBinding::bind, R.id.okkei_nav_host_container)
 	private val viewModel by viewModels<HostViewModel>()
-
-	private val appBarConfiguration = AppBarConfiguration(
-		setOf(R.id.home_fragment, R.id.permissions_fragment, R.id.work_fragment)
-	)
+	private val topLevelDestinations = setOf(R.id.home_fragment, R.id.update_fragment, R.id.settings_fragment)
+	private val independentDestinations = setOf(R.id.permissions_fragment, R.id.work_fragment)
+	private val appBarConfiguration = AppBarConfiguration(topLevelDestinations + independentDestinations)
 
 	private val navController: NavController
 		get() = findNavController(R.id.okkei_nav_host_content)
@@ -53,13 +53,12 @@ class HostActivity : AppCompatActivity(R.layout.okkei_container), FeatureView<Ho
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(binding.root)
-		with(binding.okkeiContent) {
-			setSupportActionBar(toolbar)
-			val navController = okkeiNavHostContent.getFragment<NavHostFragment>().navController
-			setupActionBarWithNavController(navController, appBarConfiguration)
-			checkPermissionsWithNavController(navController)
-		}
-		setupOptionsMenu()
+		setSupportActionBar(binding.toolbar)
+		val navController = binding.okkeiNavHostContent.getFragment<NavHostFragment>().navController
+		binding.bottomNavView.setupWithNavController(navController)
+		hideBottomNavigationOnIndependentDestinations(navController)
+		setupActionBarWithNavController(navController, appBarConfiguration)
+		checkPermissionsWithNavController(navController)
 		viewModel.renderBy(this)
 		previousDestinationId = savedInstanceState?.getInt(PREVIOUS_DESTINATION_ID) ?: 0
 	}
@@ -80,13 +79,16 @@ class HostActivity : AppCompatActivity(R.layout.okkei_container), FeatureView<Ho
 		}
 	}
 
-	private fun setupOptionsMenu() {
-		addMenuProvider(object : MenuProvider {
-			override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) =
-				menuInflater.inflate(R.menu.okkei_menu, menu)
-
-			override fun onMenuItemSelected(menuItem: MenuItem) = menuItem.onNavDestinationSelected(navController)
-		})
+	private fun hideBottomNavigationOnIndependentDestinations(navController: NavController) = lifecycleScope.launch {
+		navController
+			.currentBackStackEntryFlow
+			.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+			.map { it.destination.id in independentDestinations }
+			.distinctUntilChanged()
+			.collect { isIndependent ->
+				TransitionManager.beginDelayedTransition(binding.bottomNavView, Slide())
+				binding.bottomNavView.isVisible = !isIndependent
+			}
 	}
 
 	private fun checkPermissionsWithNavController(navController: NavController) = lifecycleScope.launch {

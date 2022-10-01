@@ -24,7 +24,6 @@ import ru.solrudev.okkeipatcher.ui.screen.home.model.RestoreEvent.*
 import ru.solrudev.okkeipatcher.ui.screen.home.model.shouldShowPatchUpdatesMessage
 import ru.solrudev.okkeipatcher.ui.util.createDialogBuilder
 import ru.solrudev.okkeipatcher.ui.util.setLoading
-import ru.solrudev.okkeipatcher.ui.util.setupTransitions
 import ru.solrudev.okkeipatcher.ui.util.showWithLifecycle
 
 @AndroidEntryPoint
@@ -32,11 +31,6 @@ class HomeFragment : Fragment(R.layout.fragment_home), FeatureView<HomeUiState> 
 
 	private val viewModel by viewModels<HomeViewModel>()
 	private val binding by viewBinding(FragmentHomeBinding::bind)
-
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
-		setupTransitions()
-	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		setupNavigation()

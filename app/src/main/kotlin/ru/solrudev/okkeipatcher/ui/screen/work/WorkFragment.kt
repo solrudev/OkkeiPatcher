@@ -36,16 +36,12 @@ class WorkFragment : Fragment(R.layout.fragment_work), FeatureView<WorkUiState> 
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		setupTransitions()
 		findNavController().currentDestination?.label = args.work.label.resolve(requireContext())
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		onBackPressed {
 			requireActivity().finish()
-		}
-		prepareOptionsMenu {
-			clear()
 		}
 		setupNavigation()
 		viewModel.renderBy(this)

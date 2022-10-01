@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/settings_nav_graph"
+	app:startDestination="@id/settings_fragment">
+
+	<fragment
+		android:id="@+id/licenses_fragment"
+		android:name="ru.solrudev.okkeipatcher.ui.screen.licenses.LicensesFragment"
+		android:label="@string/preference_licenses_title"
+		tools:layout="@layout/fragment_licenses" />
+	<fragment
+		android:id="@+id/settings_fragment"
+		android:name="ru.solrudev.okkeipatcher.ui.screen.settings.SettingsFragment"
+		android:label="@string/settings">
+		<action
+			android:id="@+id/action_settingsFragment_to_saveDataAccessFragment"
+			app:destination="@id/save_data_access_fragment" />
+		<action
+			android:id="@+id/action_settingsFragment_to_clearDataFragment"
+			app:destination="@id/clear_data_fragment" />
+		<action
+			android:id="@+id/action_settingsFragment_to_aboutFragment"
+			app:destination="@id/about_fragment"
+			app:enterAnim="@anim/slide_enter"
+			app:exitAnim="@anim/slide_exit"
+			app:popEnterAnim="@anim/slide_pop_enter"
+			app:popExitAnim="@anim/slide_pop_exit" />
+		<action
+			android:id="@+id/action_settingsFragment_to_licensesFragment"
+			app:destination="@id/licenses_fragment"
+			app:enterAnim="@anim/slide_enter"
+			app:exitAnim="@anim/slide_exit"
+			app:popEnterAnim="@anim/slide_pop_enter"
+			app:popExitAnim="@anim/slide_pop_exit" />
+	</fragment>
+	<fragment
+		android:id="@+id/about_fragment"
+		android:name="ru.solrudev.okkeipatcher.ui.screen.about.AboutFragment"
+		android:label="@string/preference_about_title"
+		tools:layout="@layout/fragment_about" />
+	<dialog
+		android:id="@+id/save_data_access_fragment"
+		android:name="ru.solrudev.okkeipatcher.ui.screen.settings.savedataaccess.SaveDataAccessFragment"
+		android:label="@string/permission_save_data_access_title" />
+	<dialog
+		android:id="@+id/clear_data_fragment"
+		android:name="ru.solrudev.okkeipatcher.ui.screen.settings.cleardata.ClearDataFragment"
+		android:label="@string/warning_clear_data_title" />
+
+</navigation>

@@ -1,16 +1,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	tools:context=".ui.host.HostActivity">
 	<item
-		android:id="@+id/action_update"
-		android:icon="@drawable/ic_update"
-		android:title="@string/update"
-		android:visible="false"
-		app:showAsAction="ifRoom" />
+		android:id="@+id/home_fragment"
+		android:icon="@drawable/ic_patcher"
+		android:title="@string/patcher" />
 	<item
-		android:id="@+id/settings_fragment"
+		android:id="@+id/update_fragment"
+		android:icon="@drawable/ic_update"
+		android:title="@string/update" />
+	<item
+		android:id="@+id/settings_nav_graph"
 		android:icon="@drawable/ic_settings"
-		android:title="@string/settings"
-		app:showAsAction="always" />
+		android:title="@string/settings" />
 </menu>

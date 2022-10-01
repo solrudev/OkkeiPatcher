@@ -1,6 +1,7 @@
 ﻿<resources>
 	<!--General-->
 	<string name="about_version">Версия %s\nby solrudev</string>
+	<string name="patcher">Патчер</string>
 	<string name="settings">Настройки</string>
 	<string name="update">Обновление</string>
 

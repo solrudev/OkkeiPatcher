@@ -20,10 +20,7 @@ import ru.solrudev.okkeipatcher.ui.core.renderBy
 import ru.solrudev.okkeipatcher.ui.screen.permissions.model.PermissionsEvent.PermissionStateChanged
 import ru.solrudev.okkeipatcher.ui.screen.permissions.model.PermissionsUiState
 import ru.solrudev.okkeipatcher.ui.screen.permissions.model.allPermissionsGranted
-import ru.solrudev.okkeipatcher.ui.util.fixRecyclerViewTransition
 import ru.solrudev.okkeipatcher.ui.util.onBackPressed
-import ru.solrudev.okkeipatcher.ui.util.prepareOptionsMenu
-import ru.solrudev.okkeipatcher.ui.util.setupTransitions
 
 @AndroidEntryPoint
 class PermissionsFragment : Fragment(R.layout.fragment_permissions), FeatureView<PermissionsUiState> {
@@ -54,18 +51,9 @@ class PermissionsFragment : Fragment(R.layout.fragment_permissions), FeatureView
 
 	private val permissionsAdapter = PermissionsAdapter(::requestPermission)
 
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
-		setupTransitions()
-	}
-
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		fixRecyclerViewTransition(view)
 		onBackPressed {
 			requireActivity().finish()
-		}
-		prepareOptionsMenu {
-			clear()
 		}
 		binding.recyclerviewPermissions.adapter = permissionsAdapter
 		viewModel.renderBy(this)
