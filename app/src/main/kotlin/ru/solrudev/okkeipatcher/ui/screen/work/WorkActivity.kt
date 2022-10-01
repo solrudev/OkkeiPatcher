@@ -3,19 +3,17 @@ package ru.solrudev.okkeipatcher.ui.screen.work
 import android.app.Dialog
 import android.app.NotificationManager
 import android.os.Bundle
-import android.view.View
 import android.view.animation.DecelerateInterpolator
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.getSystemService
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
+import androidx.navigation.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.core.resolve
-import ru.solrudev.okkeipatcher.databinding.FragmentWorkBinding
+import ru.solrudev.okkeipatcher.databinding.ActivityWorkBinding
 import ru.solrudev.okkeipatcher.domain.core.Message
 import ru.solrudev.okkeipatcher.domain.model.ProgressData
 import ru.solrudev.okkeipatcher.ui.core.FeatureView
@@ -27,24 +25,22 @@ import ru.solrudev.okkeipatcher.ui.screen.work.model.percentDone
 import ru.solrudev.okkeipatcher.ui.util.*
 
 @AndroidEntryPoint
-class WorkFragment : Fragment(R.layout.fragment_work), FeatureView<WorkUiState> {
+class WorkActivity : AppCompatActivity(R.layout.activity_work), FeatureView<WorkUiState> {
 
 	private val viewModel by viewModels<WorkViewModel>()
-	private val args by navArgs<WorkFragmentArgs>()
-	private val binding by viewBinding(FragmentWorkBinding::bind)
+	private val args by navArgs<WorkActivityArgs>()
+	private val binding by viewBinding(ActivityWorkBinding::bind, R.id.container_work)
 	private var currentCancelDialog: Dialog? = null
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		findNavController().currentDestination?.label = args.work.label.resolve(requireContext())
-	}
-
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		setContentView(binding.root)
 		onBackPressed {
-			requireActivity().finish()
+			finishAffinity()
 		}
 		setupNavigation()
 		viewModel.renderBy(this)
+		binding.toolbarWork.title = args.work.label.resolve(this)
 	}
 
 	override fun onStart() {
@@ -83,7 +79,7 @@ class WorkFragment : Fragment(R.layout.fragment_work), FeatureView<WorkUiState> 
 	}
 
 	private fun clearNotifications() {
-		val notificationManager = requireContext().getSystemService<NotificationManager>()
+		val notificationManager = getSystemService<NotificationManager>()
 		notificationManager?.cancelAll()
 	}
 
@@ -92,7 +88,7 @@ class WorkFragment : Fragment(R.layout.fragment_work), FeatureView<WorkUiState> 
 			startSuccessAnimations()
 		}
 		binding.buttonWork.setOnClickListener {
-			findNavController().popBackStack()
+			finish()
 		}
 		binding.buttonWork.setText(R.string.button_text_ok)
 		currentCancelDialog?.dismiss()
@@ -100,7 +96,7 @@ class WorkFragment : Fragment(R.layout.fragment_work), FeatureView<WorkUiState> 
 	}
 
 	private fun onWorkCanceled() {
-		findNavController().popBackStack()
+		finish()
 	}
 
 	private fun onError(error: Message) {
@@ -126,7 +122,7 @@ class WorkFragment : Fragment(R.layout.fragment_work), FeatureView<WorkUiState> 
 	}
 
 	private fun showCancelWorkMessage(cancelWorkMessage: Message) {
-		val dialog = requireContext().createDialogBuilder(cancelWorkMessage)
+		val dialog = createDialogBuilder(cancelWorkMessage)
 			.setPositiveButton(R.string.button_text_abort) { _, _ ->
 				viewModel.dispatchEvent(CancelWork(args.work))
 			}
@@ -137,21 +133,21 @@ class WorkFragment : Fragment(R.layout.fragment_work), FeatureView<WorkUiState> 
 			}
 			.create()
 		currentCancelDialog = dialog
-		dialog.showWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.Event.ON_STOP)
+		dialog.showWithLifecycle(lifecycle, Lifecycle.Event.ON_STOP)
 		viewModel.dispatchEvent(CancelMessageShown)
 	}
 
 	private fun showErrorMessage(errorMessage: Message) {
-		val message = errorMessage.text.resolve(requireContext())
-		requireContext().createDialogBuilder(errorMessage)
+		val message = errorMessage.text.resolve(this)
+		createDialogBuilder(errorMessage)
 			.setNeutralButton(R.string.button_text_copy_to_clipboard) { _, _ ->
-				requireContext().copyTextToClipboard("Okkei Patcher Exception", message)
+				copyTextToClipboard("Okkei Patcher Exception", message)
 			}
 			.setOnDismissListener {
 				viewModel.dispatchEvent(ErrorDismissed)
-				findNavController().popBackStack()
+				finish()
 			}
-			.showWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.Event.ON_STOP)
+			.showWithLifecycle(lifecycle, Lifecycle.Event.ON_STOP)
 		viewModel.dispatchEvent(ErrorShown)
 	}
 }

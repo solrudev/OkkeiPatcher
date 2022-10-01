@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -15,12 +14,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.transition.Slide
-import androidx.transition.TransitionManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.solrudev.okkeipatcher.OkkeiNavGraphDirections
 import ru.solrudev.okkeipatcher.R
@@ -41,8 +36,7 @@ class HostActivity : AppCompatActivity(R.layout.okkei_nav_host), FeatureView<Hos
 	private val binding by viewBinding(OkkeiNavHostBinding::bind, R.id.okkei_nav_host_container)
 	private val viewModel by viewModels<HostViewModel>()
 	private val topLevelDestinations = setOf(R.id.home_fragment, R.id.update_fragment, R.id.settings_fragment)
-	private val independentDestinations = setOf(R.id.permissions_fragment, R.id.work_fragment)
-	private val appBarConfiguration = AppBarConfiguration(topLevelDestinations + independentDestinations)
+	private val appBarConfiguration = AppBarConfiguration(topLevelDestinations)
 
 	private val navController: NavController
 		get() = findNavController(R.id.okkei_nav_host_content)
@@ -56,7 +50,6 @@ class HostActivity : AppCompatActivity(R.layout.okkei_nav_host), FeatureView<Hos
 		setSupportActionBar(binding.toolbar)
 		val navController = binding.okkeiNavHostContent.getFragment<NavHostFragment>().navController
 		binding.bottomNavView.setupWithNavController(navController)
-		hideBottomNavigationOnIndependentDestinations(navController)
 		setupActionBarWithNavController(navController, appBarConfiguration)
 		checkPermissionsWithNavController(navController)
 		viewModel.renderBy(this)
@@ -79,18 +72,6 @@ class HostActivity : AppCompatActivity(R.layout.okkei_nav_host), FeatureView<Hos
 		}
 	}
 
-	private fun hideBottomNavigationOnIndependentDestinations(navController: NavController) = lifecycleScope.launch {
-		navController
-			.currentBackStackEntryFlow
-			.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
-			.map { it.destination.id in independentDestinations }
-			.distinctUntilChanged()
-			.collect { isIndependent ->
-				TransitionManager.beginDelayedTransition(binding.bottomNavView, Slide())
-				binding.bottomNavView.isVisible = !isIndependent
-			}
-	}
-
 	private fun checkPermissionsWithNavController(navController: NavController) = lifecycleScope.launch {
 		navController
 			.currentBackStackEntryFlow
@@ -108,7 +89,7 @@ class HostActivity : AppCompatActivity(R.layout.okkei_nav_host), FeatureView<Hos
 	private fun shouldCheckPermissions(@IdRes previousDestination: Int, @IdRes currentDestination: Int): Boolean {
 		val noPreviousDestination = previousDestination == 0
 		val returnedFromPermissionsScreen =
-			previousDestination == R.id.permissions_fragment && previousDestination != currentDestination
+			previousDestination == R.id.permissions_activity && previousDestination != currentDestination
 		val isStartDestination = currentDestination == navController.graph.startDestinationId
 		return noPreviousDestination || returnedFromPermissionsScreen || isStartDestination
 	}
@@ -120,7 +101,7 @@ class HostActivity : AppCompatActivity(R.layout.okkei_nav_host), FeatureView<Hos
 	}
 
 	private fun navigateToWorkScreen(work: Work) {
-		val workScreen = navController.findDestination(R.id.work_fragment)
+		val workScreen = navController.findDestination(R.id.work_activity)
 		workScreen?.label = work.label.resolve(this)
 		val toWorkScreen = OkkeiNavGraphDirections.actionGlobalWork(work)
 		navController.navigateSafely(toWorkScreen)

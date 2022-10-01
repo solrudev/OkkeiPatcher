@@ -33,6 +33,14 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
+		<activity
+			android:name=".ui.screen.permissions.PermissionsActivity"
+			android:exported="false"
+			android:theme="@style/Theme.OkkeiPatcher.NoActionBar" />
+		<activity
+			android:name=".ui.screen.work.WorkActivity"
+			android:exported="false"
+			android:theme="@style/Theme.OkkeiPatcher.NoActionBar" />
 
 		<provider
 			android:name="androidx.startup.InitializationProvider"

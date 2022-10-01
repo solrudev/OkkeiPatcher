@@ -3,17 +3,15 @@ package ru.solrudev.okkeipatcher.ui.screen.permissions
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.os.Bundle
-import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.launch
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.solrudev.simpleinstaller.activityresult.InstallPermissionContract
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.databinding.FragmentPermissionsBinding
+import ru.solrudev.okkeipatcher.databinding.ActivityPermissionsBinding
 import ru.solrudev.okkeipatcher.domain.model.Permission
 import ru.solrudev.okkeipatcher.ui.core.FeatureView
 import ru.solrudev.okkeipatcher.ui.core.renderBy
@@ -23,9 +21,9 @@ import ru.solrudev.okkeipatcher.ui.screen.permissions.model.allPermissionsGrante
 import ru.solrudev.okkeipatcher.ui.util.onBackPressed
 
 @AndroidEntryPoint
-class PermissionsFragment : Fragment(R.layout.fragment_permissions), FeatureView<PermissionsUiState> {
+class PermissionsActivity : AppCompatActivity(R.layout.activity_permissions), FeatureView<PermissionsUiState> {
 
-	private val binding by viewBinding(FragmentPermissionsBinding::bind)
+	private val binding by viewBinding(ActivityPermissionsBinding::bind, R.id.container_permissions)
 	private val viewModel by viewModels<PermissionsViewModel>()
 
 	private val storagePermissionLauncher = registerForActivityResult(
@@ -51,9 +49,11 @@ class PermissionsFragment : Fragment(R.layout.fragment_permissions), FeatureView
 
 	private val permissionsAdapter = PermissionsAdapter(::requestPermission)
 
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		setContentView(binding.root)
 		onBackPressed {
-			requireActivity().finish()
+			finishAffinity()
 		}
 		binding.recyclerviewPermissions.adapter = permissionsAdapter
 		viewModel.renderBy(this)
@@ -61,7 +61,7 @@ class PermissionsFragment : Fragment(R.layout.fragment_permissions), FeatureView
 
 	override fun render(uiState: PermissionsUiState) {
 		if (uiState.allPermissionsGranted) {
-			findNavController().popBackStack()
+			finish()
 		}
 		permissionsAdapter.submitList(uiState.permissions)
 	}
