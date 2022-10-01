@@ -18,7 +18,7 @@
 	<string name="button_text_granted">Granted</string>
 	<string name="button_text_ok">OK</string>
 	<string name="button_text_patch">Patch</string>
-	<string name="button_text_restoring">Restoring</string>
+	<string name="button_text_restoring">Restore</string>
 	<string name="button_text_start">Start</string>
 
 	<!--Errors-->
