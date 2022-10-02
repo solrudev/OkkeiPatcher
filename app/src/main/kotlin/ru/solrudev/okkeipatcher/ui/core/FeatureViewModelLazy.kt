@@ -88,6 +88,7 @@ class FragmentFeatureViewModelLazy<VM : FeatureViewModel<E, S>, E : Event, S : U
 		fragmentManager?.let { fragmentManager ->
 			callback?.let(fragmentManager::unregisterFragmentLifecycleCallbacks)
 		}
+		fragment = null
 		fragmentManager = null
 		callback = null
 	}
