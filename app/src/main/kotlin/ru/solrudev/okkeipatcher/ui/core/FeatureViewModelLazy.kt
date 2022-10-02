@@ -79,7 +79,7 @@ class FragmentFeatureViewModelLazy<VM : FeatureViewModel<E, S>, E : Event, S : U
 		if (callback != null) {
 			return
 		}
-		val callback = BindViewModelFragmentCallback<S, V>().also { this.callback = it }
+		val callback = BindViewModelFragmentCallback().also { this.callback = it }
 		val fragmentManager = fragment.parentFragmentManager.also { this.fragmentManager = it }
 		fragmentManager.registerFragmentLifecycleCallbacks(callback, false)
 	}
@@ -93,9 +93,7 @@ class FragmentFeatureViewModelLazy<VM : FeatureViewModel<E, S>, E : Event, S : U
 		callback = null
 	}
 
-	private inner class BindViewModelFragmentCallback<S : UiState, V> : FragmentLifecycleCallbacks()
-			where V : FeatureView<S>,
-				  V : Fragment {
+	private inner class BindViewModelFragmentCallback : FragmentLifecycleCallbacks() {
 
 		override fun onFragmentViewCreated(fm: FragmentManager, f: Fragment, v: View, savedInstanceState: Bundle?) {
 			fragment
