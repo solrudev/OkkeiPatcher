@@ -43,9 +43,7 @@ class ActivityFeatureViewModelLazy<VM : FeatureViewModel<E, S>, E : Event, S : U
 	}
 
 	override fun onCreate(owner: LifecycleOwner) {
-		activity?.let {
-			viewModelLazy.value.bind(it)
-		}
+		activity?.let(viewModelLazy.value::bind)
 	}
 
 	override fun onDestroy(owner: LifecycleOwner) {
@@ -101,9 +99,7 @@ class FragmentFeatureViewModelLazy<VM : FeatureViewModel<E, S>, E : Event, S : U
 		override fun onFragmentViewCreated(fm: FragmentManager, f: Fragment, v: View, savedInstanceState: Bundle?) {
 			fragment
 				?.takeIf { it === f }
-				?.let { fragment ->
-					viewModelLazy.value.bind(fragment)
-				}
+				?.let(viewModelLazy.value::bind)
 		}
 	}
 }
