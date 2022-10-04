@@ -5,12 +5,12 @@ import ru.solrudev.okkeipatcher.domain.repository.app.PreferencesRepository
 import javax.inject.Inject
 
 interface GetPatchVersionFlowUseCase {
-	suspend operator fun invoke(): Flow<String>
+	operator fun invoke(): Flow<String>
 }
 
 class GetPatchVersionFlowUseCaseImpl @Inject constructor(
 	private val preferencesRepository: PreferencesRepository
 ) : GetPatchVersionFlowUseCase {
 
-	override suspend fun invoke() = preferencesRepository.patchVersion.flow
+	override fun invoke() = preferencesRepository.patchVersion.flow
 }
