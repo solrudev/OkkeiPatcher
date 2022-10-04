@@ -5,6 +5,8 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import ru.solrudev.okkeipatcher.domain.usecase.app.*
+import ru.solrudev.okkeipatcher.domain.usecase.patch.GetPatchVersionFlowUseCase
+import ru.solrudev.okkeipatcher.domain.usecase.patch.GetPatchVersionFlowUseCaseImpl
 import ru.solrudev.okkeipatcher.domain.usecase.work.*
 
 @InstallIn(ViewModelComponent::class)
@@ -47,9 +49,14 @@ interface UseCaseModule {
 	): GetIsWorkPendingFlowUseCase
 
 	@Binds
-	fun bindGetIsPatchedUseCase(
-		getIsPatchedFlowUseCase: GetPatchStatusFlowUseCaseImpl
+	fun bindGetPatchStatusUseCase(
+		getPatchStatusFlowUseCase: GetPatchStatusFlowUseCaseImpl
 	): GetPatchStatusFlowUseCase
+
+	@Binds
+	fun bindGetPatchVersionFlowUseCase(
+		getPatchVersionFlowUseCase: GetPatchVersionFlowUseCaseImpl
+	): GetPatchVersionFlowUseCase
 
 	@Binds
 	fun bindGetIsSaveDataAccessGrantedUseCase(
