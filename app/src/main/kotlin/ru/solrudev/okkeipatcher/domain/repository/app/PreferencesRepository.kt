@@ -7,5 +7,6 @@ interface PreferencesRepository {
 	val patchStatus: ReactiveDao<Boolean>
 	val handleSaveData: ReactiveDao<Boolean>
 	val patchLanguage: ReactiveDao<Language>
+	val patchVersion: ReactiveDao<String>
 	suspend fun reset()
 }
