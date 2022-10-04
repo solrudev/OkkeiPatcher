@@ -9,6 +9,7 @@ import javax.inject.Inject
 
 class HomeFeature @Inject constructor(
 	observePatchStatusMiddleware: ObservePatchStatusMiddleware,
+	observePatchVersionMiddleware: ObservePatchVersionMiddleware,
 	checkPatchUpdatesMiddleware: CheckPatchUpdatesMiddleware,
 	enqueuePatchWorkMiddleware: EnqueuePatchWorkMiddleware,
 	enqueueRestoreWorkMiddleware: EnqueueRestoreWorkMiddleware,
@@ -17,6 +18,7 @@ class HomeFeature @Inject constructor(
 ) : Feature<HomeEvent, HomeUiState>(
 	middlewares = listOf(
 		observePatchStatusMiddleware,
+		observePatchVersionMiddleware,
 		checkPatchUpdatesMiddleware,
 		enqueuePatchWorkMiddleware,
 		enqueueRestoreWorkMiddleware,
