@@ -47,26 +47,6 @@ interface UseCaseModule {
 	): GetIsWorkPendingFlowUseCase
 
 	@Binds
-	fun bindGetIsAppUpdateAvailableUseCase(
-		getIsAppUpdateAvailableUseCase: GetIsAppUpdateAvailableUseCaseImpl
-	): GetIsAppUpdateAvailableUseCase
-
-	@Binds
-	fun bindGetAppUpdateSizeInMbUseCase(
-		getAppUpdateSizeInMbUseCase: GetAppUpdateSizeInMbUseCaseImpl
-	): GetAppUpdateSizeInMbUseCase
-
-	@Binds
-	fun bindGetAppUpdateFileUseCase(
-		getAppUpdateFileUseCase: GetAppUpdateFileUseCaseImpl
-	): GetAppUpdateFileUseCase
-
-	@Binds
-	fun bindGetAppChangelogUseCase(
-		getAppChangelogUseCase: GetAppChangelogUseCaseImpl
-	): GetAppChangelogUseCase
-
-	@Binds
 	fun bindGetIsPatchedUseCase(
 		getIsPatchedFlowUseCase: GetPatchStatusFlowUseCaseImpl
 	): GetPatchStatusFlowUseCase
@@ -105,4 +85,24 @@ interface UseCaseModule {
 	fun bindGetLicensesUseCase(
 		getLicensesUseCase: GetLicensesUseCaseImpl
 	): GetLicensesUseCase
+
+	@Binds
+	fun bindGetUpdateDataUseCase(
+		getUpdateDataUseCase: GetUpdateDataUseCaseImpl
+	): GetUpdateDataUseCase
+
+	@Binds
+	fun bindInstallUpdateUseCase(
+		installUpdateUseCase: InstallUpdateUseCaseImpl
+	): InstallUpdateUseCase
+
+	@Binds
+	fun bindEnqueueUpdateDownloadWorkUseCase(
+		enqueueUpdateDownloadWorkUseCase: EnqueueUpdateDownloadWorkUseCaseImpl
+	): EnqueueUpdateDownloadWorkUseCase
+
+	@Binds
+	fun bindGetPendingUpdateDownloadWorkFlowUseCase(
+		getPendingUpdateDownloadWorkFlowUseCase: GetPendingUpdateDownloadWorkFlowUseCaseImpl
+	): GetPendingUpdateDownloadWorkFlowUseCase
 }

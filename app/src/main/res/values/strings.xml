@@ -49,6 +49,7 @@
 	<string name="notification_channel_progress_name">Status and progress</string>
 	<string name="notification_message_work_failed">Work failed. Press to learn more.</string>
 	<string name="notification_message_work_success">Work succeeded.</string>
+	<string name="notification_title_downloading_update">Downloading update</string>
 	<string name="notification_title_patch">Patching</string>
 	<string name="notification_title_restore">Restoring</string>
 	<string name="notification_title_work_finished">Work finished</string>
@@ -117,6 +118,7 @@
 	<string name="warning_start_restore_title">Start restoring?</string>
 
 	<!--Work labels-->
+	<string name="work_label_download_update">App update</string>
 	<string name="work_label_patch">Patch</string>
 	<string name="work_label_restoring">Restoring</string>
 </resources>
