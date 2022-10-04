@@ -17,7 +17,7 @@ import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.RestoreStrategy
 class RestoreOperation(
 	private val parameters: RestoreParameters,
 	private val strategy: RestoreStrategy,
-	private val patchVersionPersistable: Persistable<String>,
+	private val patchVersion: Persistable<String>,
 	private val patchStatus: Dao<Boolean>,
 	private val storageChecker: StorageChecker
 ) : Operation<Result> {
@@ -29,7 +29,7 @@ class RestoreOperation(
 			if (parameters.handleSaveData) saveData.restore() else emptyOperation(),
 			obb.restore(),
 			operation {
-				patchVersionPersistable.clear()
+				patchVersion.clear()
 				apk.deleteBackup()
 				obb.deleteBackup()
 				patchStatus.persist(false)

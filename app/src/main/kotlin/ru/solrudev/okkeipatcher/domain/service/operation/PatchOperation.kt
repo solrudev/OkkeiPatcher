@@ -18,7 +18,7 @@ import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.PatchStrategy
 class PatchOperation(
 	private val parameters: PatchParameters,
 	private val strategy: PatchStrategy,
-	private val patchVersionPersistable: Persistable<String>,
+	private val patchVersion: Persistable<String>,
 	private val patchStatus: Dao<Boolean>,
 	private val storageChecker: StorageChecker
 ) : Operation<Result> {
@@ -65,7 +65,7 @@ class PatchOperation(
 			if (parameters.handleSaveData) saveData.restore() else emptyOperation(),
 			obb.patch(),
 			operation {
-				patchVersionPersistable.persist(parameters.patchVersion)
+				patchVersion.persist(parameters.patchVersion)
 				patchStatus.persist(true)
 			}
 		)
