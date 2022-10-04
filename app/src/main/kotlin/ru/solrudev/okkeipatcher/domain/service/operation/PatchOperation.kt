@@ -9,20 +9,21 @@ import ru.solrudev.okkeipatcher.domain.core.operation.aggregateOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.emptyOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.core.persistence.Dao
+import ru.solrudev.okkeipatcher.domain.core.persistence.Persistable
+import ru.solrudev.okkeipatcher.domain.model.PatchParameters
 import ru.solrudev.okkeipatcher.domain.model.exception.wrapDomainExceptions
-import ru.solrudev.okkeipatcher.domain.model.patchupdates.PatchUpdates
 import ru.solrudev.okkeipatcher.domain.service.StorageChecker
 import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.PatchStrategy
 
 class PatchOperation(
+	private val parameters: PatchParameters,
 	private val strategy: PatchStrategy,
-	private val handleSaveData: Boolean,
-	private val patchUpdates: PatchUpdates,
+	private val patchVersion: Persistable<String>,
 	private val patchStatus: Dao<Boolean>,
 	private val storageChecker: StorageChecker
 ) : Operation<Result> {
 
-	private val operation = if (patchUpdates.available) update() else patch()
+	private val operation = if (parameters.patchUpdates.available) update() else patch()
 	override val status = operation.status
 	override val messages = operation.messages
 	override val progressDelta = operation.progressDelta
@@ -30,7 +31,7 @@ class PatchOperation(
 
 	override suspend fun canInvoke(): Result = with(strategy) {
 		val isPatched = patchStatus.retrieve()
-		if (isPatched && !patchUpdates.available) {
+		if (isPatched && !parameters.patchUpdates.available) {
 			return Result.Failure(
 				LocalizedString.resource(R.string.error_patched)
 			)
@@ -59,11 +60,12 @@ class PatchOperation(
 		aggregateOperation(
 			obb.backup(),
 			apk.backup(),
-			if (handleSaveData) saveData.backup() else emptyOperation(),
+			if (parameters.handleSaveData) saveData.backup() else emptyOperation(),
 			apk.patch(),
-			if (handleSaveData) saveData.restore() else emptyOperation(),
+			if (parameters.handleSaveData) saveData.restore() else emptyOperation(),
 			obb.patch(),
 			operation {
+				patchVersion.persist(parameters.patchVersion)
 				patchStatus.persist(true)
 			}
 		)
@@ -71,8 +73,8 @@ class PatchOperation(
 
 	private fun update() = with(strategy) {
 		aggregateOperation(
-			if (patchUpdates.apkUpdatesAvailable) apk.update() else emptyOperation(),
-			if (patchUpdates.obbUpdatesAvailable) obb.update() else emptyOperation()
+			if (parameters.patchUpdates.apkUpdatesAvailable) apk.update() else emptyOperation(),
+			if (parameters.patchUpdates.obbUpdatesAvailable) obb.update() else emptyOperation()
 		)
 	}
 }

@@ -6,9 +6,11 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ru.solrudev.okkeipatcher.data.repository.app.*
 import ru.solrudev.okkeipatcher.data.repository.gamefile.*
+import ru.solrudev.okkeipatcher.data.repository.work.DownloadUpdateWorkRepositoryImpl
 import ru.solrudev.okkeipatcher.data.repository.work.WorkRepositoryImpl
 import ru.solrudev.okkeipatcher.domain.repository.app.*
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.*
+import ru.solrudev.okkeipatcher.domain.repository.work.DownloadUpdateWorkRepository
 import ru.solrudev.okkeipatcher.domain.repository.work.WorkRepository
 import javax.inject.Singleton
 
@@ -87,4 +89,10 @@ interface RepositoryModule {
 	fun bindLicensesRepository(
 		licensesRepository: LicensesRepositoryImpl
 	): LicensesRepository
+
+	@Binds
+	@Singleton
+	fun bindDownloadUpdateWorkRepository(
+		downloadUpdateWorkRepository: DownloadUpdateWorkRepositoryImpl
+	): DownloadUpdateWorkRepository
 }

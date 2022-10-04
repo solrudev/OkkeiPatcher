@@ -21,6 +21,7 @@ class HomeReducer @Inject constructor(
 			isRestoreEnabled = event.isPatched,
 			canShowPatchUpdatesMessage = event.isPatched
 		)
+		is PatchVersionChanged -> state.copy(patchVersion = event.patchVersion)
 		is PatchUpdatesAvailable -> state.copy(
 			isPatchEnabled = true,
 			patchUpdatesAvailable = true,

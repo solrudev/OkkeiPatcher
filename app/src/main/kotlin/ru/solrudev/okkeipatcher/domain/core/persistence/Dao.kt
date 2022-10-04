@@ -24,6 +24,7 @@ interface Retrievable<out T> {
  */
 interface Persistable<in T> {
 	suspend fun persist(value: T)
+	suspend fun clear()
 }
 
 /**

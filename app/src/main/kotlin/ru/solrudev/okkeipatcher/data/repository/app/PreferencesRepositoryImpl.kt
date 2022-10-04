@@ -16,6 +16,7 @@ import javax.inject.Inject
 private val HANDLE_SAVE_DATA = booleanPreferencesKey("handle_save_data")
 private val IS_PATCHED = booleanPreferencesKey("is_patched")
 private val PATCH_LANGUAGE = stringPreferencesKey("patch_language")
+private val PATCH_VERSION = stringPreferencesKey("patch_version")
 
 class PreferencesRepositoryImpl @Inject constructor(
 	@ApplicationContext applicationContext: Context,
@@ -39,6 +40,8 @@ class PreferencesRepositoryImpl @Inject constructor(
 		toDomainType = Language::fromString,
 		preferences
 	)
+
+	override val patchVersion = Preference(key = PATCH_VERSION, defaultValue = { "-" }, preferences)
 
 	override suspend fun reset() {
 		preferences.edit {

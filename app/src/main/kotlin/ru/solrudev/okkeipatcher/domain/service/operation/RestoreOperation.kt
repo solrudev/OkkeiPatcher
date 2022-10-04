@@ -8,24 +8,28 @@ import ru.solrudev.okkeipatcher.domain.core.operation.aggregateOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.emptyOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.core.persistence.Dao
+import ru.solrudev.okkeipatcher.domain.core.persistence.Persistable
+import ru.solrudev.okkeipatcher.domain.model.RestoreParameters
 import ru.solrudev.okkeipatcher.domain.model.exception.wrapDomainExceptions
 import ru.solrudev.okkeipatcher.domain.service.StorageChecker
 import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.RestoreStrategy
 
 class RestoreOperation(
+	private val parameters: RestoreParameters,
 	private val strategy: RestoreStrategy,
-	private val handleSaveData: Boolean,
+	private val patchVersion: Persistable<String>,
 	private val patchStatus: Dao<Boolean>,
 	private val storageChecker: StorageChecker
 ) : Operation<Result> {
 
 	private val operation = with(strategy) {
 		aggregateOperation(
-			if (handleSaveData) saveData.backup() else emptyOperation(),
+			if (parameters.handleSaveData) saveData.backup() else emptyOperation(),
 			apk.restore(),
-			if (handleSaveData) saveData.restore() else emptyOperation(),
+			if (parameters.handleSaveData) saveData.restore() else emptyOperation(),
 			obb.restore(),
 			operation {
+				patchVersion.clear()
 				apk.deleteBackup()
 				obb.deleteBackup()
 				patchStatus.persist(false)

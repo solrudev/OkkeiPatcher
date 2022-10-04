@@ -5,6 +5,10 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import ru.solrudev.okkeipatcher.domain.usecase.app.*
+import ru.solrudev.okkeipatcher.domain.usecase.patch.GetPatchStatusFlowUseCase
+import ru.solrudev.okkeipatcher.domain.usecase.patch.GetPatchStatusFlowUseCaseImpl
+import ru.solrudev.okkeipatcher.domain.usecase.patch.GetPatchVersionFlowUseCase
+import ru.solrudev.okkeipatcher.domain.usecase.patch.GetPatchVersionFlowUseCaseImpl
 import ru.solrudev.okkeipatcher.domain.usecase.work.*
 
 @InstallIn(ViewModelComponent::class)
@@ -47,29 +51,14 @@ interface UseCaseModule {
 	): GetIsWorkPendingFlowUseCase
 
 	@Binds
-	fun bindGetIsAppUpdateAvailableUseCase(
-		getIsAppUpdateAvailableUseCase: GetIsAppUpdateAvailableUseCaseImpl
-	): GetIsAppUpdateAvailableUseCase
-
-	@Binds
-	fun bindGetAppUpdateSizeInMbUseCase(
-		getAppUpdateSizeInMbUseCase: GetAppUpdateSizeInMbUseCaseImpl
-	): GetAppUpdateSizeInMbUseCase
-
-	@Binds
-	fun bindGetAppUpdateFileUseCase(
-		getAppUpdateFileUseCase: GetAppUpdateFileUseCaseImpl
-	): GetAppUpdateFileUseCase
-
-	@Binds
-	fun bindGetAppChangelogUseCase(
-		getAppChangelogUseCase: GetAppChangelogUseCaseImpl
-	): GetAppChangelogUseCase
-
-	@Binds
-	fun bindGetIsPatchedUseCase(
-		getIsPatchedFlowUseCase: GetPatchStatusFlowUseCaseImpl
+	fun bindGetPatchStatusUseCase(
+		getPatchStatusFlowUseCase: GetPatchStatusFlowUseCaseImpl
 	): GetPatchStatusFlowUseCase
+
+	@Binds
+	fun bindGetPatchVersionFlowUseCase(
+		getPatchVersionFlowUseCase: GetPatchVersionFlowUseCaseImpl
+	): GetPatchVersionFlowUseCase
 
 	@Binds
 	fun bindGetIsSaveDataAccessGrantedUseCase(
@@ -105,4 +94,24 @@ interface UseCaseModule {
 	fun bindGetLicensesUseCase(
 		getLicensesUseCase: GetLicensesUseCaseImpl
 	): GetLicensesUseCase
+
+	@Binds
+	fun bindGetUpdateDataUseCase(
+		getUpdateDataUseCase: GetUpdateDataUseCaseImpl
+	): GetUpdateDataUseCase
+
+	@Binds
+	fun bindInstallUpdateUseCase(
+		installUpdateUseCase: InstallUpdateUseCaseImpl
+	): InstallUpdateUseCase
+
+	@Binds
+	fun bindEnqueueUpdateDownloadWorkUseCase(
+		enqueueUpdateDownloadWorkUseCase: EnqueueUpdateDownloadWorkUseCaseImpl
+	): EnqueueUpdateDownloadWorkUseCase
+
+	@Binds
+	fun bindGetPendingUpdateDownloadWorkFlowUseCase(
+		getPendingUpdateDownloadWorkFlowUseCase: GetPendingUpdateDownloadWorkFlowUseCaseImpl
+	): GetPendingUpdateDownloadWorkFlowUseCase
 }

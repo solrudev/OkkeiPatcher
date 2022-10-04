@@ -38,6 +38,12 @@ class DefaultPatchRepositoryImpl @Inject constructor(
 		preferences
 	)
 
+	override suspend fun getDisplayVersion() = try {
+		patchDataCache.retrieve().displayVersion
+	} catch (_: Throwable) {
+		"-"
+	}
+
 	override suspend fun getPatchUpdates() = DefaultPatchUpdates(
 		scripts.isUpdateAvailable(),
 		obb.isUpdateAvailable()
@@ -45,7 +51,7 @@ class DefaultPatchRepositoryImpl @Inject constructor(
 
 	override suspend fun getPatchSizeInMb() = try {
 		scripts.getSizeInMb() + obb.getSizeInMb()
-	} catch (t: Throwable) {
+	} catch (_: Throwable) {
 		-1.0
 	}
 

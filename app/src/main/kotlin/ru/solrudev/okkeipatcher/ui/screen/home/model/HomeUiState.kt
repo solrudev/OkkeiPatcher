@@ -6,6 +6,7 @@ import ru.solrudev.okkeipatcher.ui.model.MessageUiState
 data class HomeUiState(
 	val isPatchEnabled: Boolean = true,
 	val isRestoreEnabled: Boolean = false,
+	val patchVersion: String = "-",
 	val isPatchSizeLoading: Boolean = false,
 	val startPatchMessage: MessageUiState = MessageUiState(),
 	val startRestoreMessage: MessageUiState = MessageUiState(),

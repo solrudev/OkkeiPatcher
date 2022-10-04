@@ -23,6 +23,12 @@ open class MappedPreference<DomainType, DataType>(
 			it[key] = toDataType(value)
 		}
 	}
+
+	override suspend fun clear() {
+		preferences.edit {
+			it.remove(key)
+		}
+	}
 }
 
 class Preference<T>(

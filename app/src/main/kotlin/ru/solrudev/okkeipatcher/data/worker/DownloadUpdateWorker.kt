@@ -9,24 +9,17 @@ import dagger.assisted.AssistedInject
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.service.NotificationService
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
-import ru.solrudev.okkeipatcher.domain.repository.app.PreferencesRepository
-import ru.solrudev.okkeipatcher.domain.service.operation.factory.MockOperationFactory
+import ru.solrudev.okkeipatcher.domain.service.operation.factory.DownloadUpdateOperationFactory
 
-private val workLabel = LocalizedString.resource(R.string.notification_title_test)
+private val workLabel = LocalizedString.resource(R.string.notification_title_downloading_update)
 
 @HiltWorker
-class MockWorker @AssistedInject constructor(
+class DownloadUpdateWorker @AssistedInject constructor(
 	@Assisted context: Context,
 	@Assisted workerParameters: WorkerParameters,
 	notificationService: NotificationService,
 	workManager: WorkManager,
-	preferencesRepository: PreferencesRepository
+	downloadUpdateOperationFactory: DownloadUpdateOperationFactory
 ) : ForegroundWorker(
-	context, workerParameters, notificationService, workManager,
-	MockOperationFactory(
-		preferencesRepository.patchVersion,
-		preferencesRepository.patchStatus,
-		isPatchWork = "PatchWork" in workerParameters.tags
-	),
-	workLabel
+	context, workerParameters, notificationService, workManager, downloadUpdateOperationFactory, workLabel
 )

@@ -10,3 +10,4 @@ interface ConcreteWorkRepository {
 
 interface PatchWorkRepository : ConcreteWorkRepository
 interface RestoreWorkRepository : ConcreteWorkRepository
+interface DownloadUpdateWorkRepository : ConcreteWorkRepository
