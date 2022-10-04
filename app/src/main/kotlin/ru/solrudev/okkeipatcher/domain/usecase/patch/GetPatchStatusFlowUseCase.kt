@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.domain.usecase.app
+package ru.solrudev.okkeipatcher.domain.usecase.patch
 
 import kotlinx.coroutines.flow.Flow
 import ru.solrudev.okkeipatcher.domain.repository.app.PreferencesRepository
