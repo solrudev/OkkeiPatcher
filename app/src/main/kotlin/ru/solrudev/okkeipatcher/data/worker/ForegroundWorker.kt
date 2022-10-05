@@ -39,11 +39,9 @@ abstract class ForegroundWorker(
 		try {
 			setForeground(createForegroundInfo())
 			val operation = operationFactory.create()
-			operation
-				.canInvoke()
-				.onFailure { failure ->
-					return createFailure(WorkerFailure.Domain(failure.reason))
-				}
+			operation.canInvoke().onFailure { failure ->
+				return createFailure(WorkerFailure.Domain(failure.reason))
+			}
 			val result: DomainResult
 			coroutineScope {
 				val observeJob = observeOperation(operation)

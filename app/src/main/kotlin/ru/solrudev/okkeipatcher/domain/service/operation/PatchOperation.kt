@@ -1,9 +1,7 @@
 package ru.solrudev.okkeipatcher.domain.service.operation
 
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.domain.core.LocalizedString
-import ru.solrudev.okkeipatcher.domain.core.Result
-import ru.solrudev.okkeipatcher.domain.core.onFailure
+import ru.solrudev.okkeipatcher.domain.core.*
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.aggregateOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.emptyOperation
@@ -32,20 +30,12 @@ class PatchOperation(
 	override suspend fun canInvoke(): Result = with(strategy) {
 		val isPatched = patchStatus.retrieve()
 		if (isPatched && !parameters.patchUpdates.available) {
-			return Result.Failure(
-				LocalizedString.resource(R.string.error_patched)
-			)
+			return Result.Failure(LocalizedString.resource(R.string.error_patched))
 		}
-		apk
-			.canPatch()
-			.onFailure { return it }
-		obb
-			.canPatch()
-			.onFailure { return it }
+		apk.canPatch().onFailure { return it }
+		obb.canPatch().onFailure { return it }
 		if (!storageChecker.isEnoughSpace()) {
-			return Result.Failure(
-				LocalizedString.resource(R.string.error_no_free_space)
-			)
+			return Result.Failure(LocalizedString.resource(R.string.error_no_free_space))
 		}
 		return Result.Success
 	}
