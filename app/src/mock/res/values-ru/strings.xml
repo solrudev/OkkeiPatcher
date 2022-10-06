@@ -1,4 +1,7 @@
 ﻿<resources>
 	<!--Notifications-->
+	<string name="notification_message_test_failed">Процесс завершился с ошибкой. Нажмите, чтобы узнать подробности.</string>
+	<string name="notification_message_test_success">Процесс прошёл успешно.</string>
 	<string name="notification_title_test">Тестовый процесс</string>
+	<string name="notification_title_test_completed">Процесс завершён</string>
 </resources>

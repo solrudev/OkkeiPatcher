@@ -47,12 +47,19 @@
 	<string name="notification_channel_progress_id" translatable="false">OkkeiPatcher_Progress_NotificationChannel</string>
 	<string name="notification_channel_progress_description">Display current status and progress</string>
 	<string name="notification_channel_progress_name">Status and progress</string>
-	<string name="notification_message_work_failed">Work failed. Press to learn more.</string>
-	<string name="notification_message_work_success">Work succeeded.</string>
+	<string name="notification_message_downloading_update_failed">Failed to download Okkei Patcher update. Press to learn more.</string>
+	<string name="notification_message_downloading_update_success">Okkei Patcher update was successfully downloaded.</string>
+	<string name="notification_message_patch_failed">Failed to patch CHAOS;CHILD. Press to learn more.</string>
+	<string name="notification_message_patch_success">CHAOS;CHILD was successfully patched.</string>
+	<string name="notification_message_restore_failed">Failed to restore CHAOS;CHILD backup. Press to learn more.</string>
+	<string name="notification_message_restore_success">CHAOS;CHILD backup was successfully restored.</string>
 	<string name="notification_title_downloading_update">Downloading update</string>
 	<string name="notification_title_patch">Patching</string>
 	<string name="notification_title_restore">Restoring</string>
-	<string name="notification_title_work_finished">Work finished</string>
+	<string name="notification_title_downloading_update_failed">Download failed</string>
+	<string name="notification_title_downloading_update_success">Update ready</string>
+	<string name="notification_title_patch_completed">Patching completed</string>
+	<string name="notification_title_restore_completed">Restoring completed</string>
 
 	<!--Permissions-->
 	<string name="permissions_screen_title">Permissions</string>

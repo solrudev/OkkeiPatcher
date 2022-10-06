@@ -1,37 +1,39 @@
 package ru.solrudev.okkeipatcher.data.worker
 
+import android.app.PendingIntent
 import android.content.Context
+import android.os.Build
 import androidx.work.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.data.service.NotificationService
+import ru.solrudev.okkeipatcher.data.service.factory.NotificationServiceFactory
+import ru.solrudev.okkeipatcher.data.worker.model.WorkNotificationsParameters
 import ru.solrudev.okkeipatcher.data.worker.model.WorkerFailure
 import ru.solrudev.okkeipatcher.data.worker.util.setProgress
 import ru.solrudev.okkeipatcher.data.worker.util.workerFailure
-import ru.solrudev.okkeipatcher.domain.core.LocalizedString
-import ru.solrudev.okkeipatcher.domain.core.Message
 import ru.solrudev.okkeipatcher.domain.core.onFailure
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.extension.statusAndAccumulatedProgress
 import ru.solrudev.okkeipatcher.domain.model.ProgressData
 import ru.solrudev.okkeipatcher.domain.service.operation.factory.OperationFactory
 import kotlin.Throwable
+import kotlin.getValue
+import kotlin.lazy
 import kotlin.time.Duration.Companion.milliseconds
 import ru.solrudev.okkeipatcher.domain.core.Result as DomainResult
 
-abstract class ForegroundWorker(
+abstract class ForegroundOperationWorker(
 	context: Context,
 	workerParameters: WorkerParameters,
-	private val notificationService: NotificationService,
+	private val notificationServiceFactory: NotificationServiceFactory,
 	private val workManager: WorkManager,
 	private val operationFactory: OperationFactory<DomainResult>,
-	workLabel: LocalizedString
+	private val workNotificationsParameters: WorkNotificationsParameters
 ) : CoroutineWorker(context, workerParameters) {
 
-	init {
-		notificationService.progressNotificationTitle = workLabel
+	private val notificationService by lazy {
+		notificationServiceFactory.create(workNotificationsParameters.workLabel, createNotificationsContentIntent())
 	}
 
 	final override suspend fun doWork(): Result {
@@ -64,11 +66,18 @@ abstract class ForegroundWorker(
 		}
 	}
 
+	protected open fun createNotificationsContentIntent(): PendingIntent {
+		val launchIntent = applicationContext.packageManager.getLaunchIntentForPackage(applicationContext.packageName)
+		val flagImmutable = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
+		return PendingIntent.getActivity(
+			applicationContext, 0, launchIntent,
+			PendingIntent.FLAG_UPDATE_CURRENT or flagImmutable
+		)
+	}
+
 	private suspend fun cancelIfRetry() {
 		if (runAttemptCount > 0) {
-			workManager
-				.cancelWorkById(id)
-				.await()
+			workManager.cancelWorkById(id).await()
 		}
 	}
 
@@ -78,20 +87,16 @@ abstract class ForegroundWorker(
 	)
 
 	private suspend fun createSuccess(): Result {
-		val successMessage = Message(
-			LocalizedString.resource(R.string.notification_title_work_finished),
-			LocalizedString.resource(R.string.notification_message_work_success)
-		)
-		withContext(NonCancellable) { notificationService.displayResultNotification(successMessage) }
+		withContext(NonCancellable) {
+			notificationService.displayResultNotification(workNotificationsParameters.successMessage)
+		}
 		return Result.success()
 	}
 
 	private suspend fun createFailure(failure: WorkerFailure): Result {
-		val failMessage = Message(
-			LocalizedString.resource(R.string.notification_title_work_finished),
-			LocalizedString.resource(R.string.notification_message_work_failed)
-		)
-		withContext(NonCancellable) { notificationService.displayResultNotification(failMessage) }
+		withContext(NonCancellable) {
+			notificationService.displayResultNotification(workNotificationsParameters.failureMessage)
+		}
 		return workerFailure(failure)
 	}
 

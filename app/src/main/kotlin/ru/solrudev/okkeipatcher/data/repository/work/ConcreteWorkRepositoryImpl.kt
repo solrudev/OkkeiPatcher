@@ -7,13 +7,13 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import kotlinx.coroutines.flow.*
 import ru.solrudev.okkeipatcher.data.repository.work.mapper.toWork
-import ru.solrudev.okkeipatcher.data.worker.ForegroundWorker
+import ru.solrudev.okkeipatcher.data.worker.ForegroundOperationWorker
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.Work
 import ru.solrudev.okkeipatcher.domain.repository.work.ConcreteWorkRepository
 import ru.solrudev.okkeipatcher.domain.repository.work.WorkRepository
 
-open class ConcreteWorkRepositoryImpl<T : ForegroundWorker>(
+open class ConcreteWorkRepositoryImpl<T : ForegroundOperationWorker>(
 	private val workName: String,
 	private val workLabel: LocalizedString,
 	private val workerClass: Class<T>,
