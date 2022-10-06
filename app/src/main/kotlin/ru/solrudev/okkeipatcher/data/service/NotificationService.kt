@@ -1,11 +1,11 @@
 package ru.solrudev.okkeipatcher.data.service
 
-import android.app.Notification
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import androidx.core.app.NotificationCompat
 import androidx.core.content.getSystemService
+import androidx.work.ForegroundInfo
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import ru.solrudev.okkeipatcher.R
@@ -19,8 +19,7 @@ private val globalProgressNotificationId = AtomicInteger(813047)
 private val globalMessageNotificationId = AtomicInteger(49725)
 
 interface NotificationService {
-	val progressNotificationId: Int
-	fun getProgressNotification(): Notification
+	fun createForegroundInfo(): ForegroundInfo
 	fun updateProgressNotification(status: LocalizedString, progressData: ProgressData)
 	suspend fun displayMessageNotification(message: Message)
 	suspend fun displayResultNotification(message: Message)
@@ -33,16 +32,15 @@ class NotificationServiceImpl(
 	private val contentIntent: PendingIntent
 ) : NotificationService {
 
-	override val progressNotificationId = globalProgressNotificationId.incrementAndGet()
-
 	private val progressNotificationBuilder =
 		createNotificationBuilder(progressNotificationTitle, progressNotification = true)
 
+	private val progressNotificationId = globalProgressNotificationId.incrementAndGet()
 	private val notificationManager = applicationContext.getSystemService<NotificationManager>()
 	private val shownMessageNotifications = mutableListOf<Int>()
 	private val shownMessageNotificationsMutex = Mutex()
 
-	override fun getProgressNotification() = progressNotificationBuilder.build()
+	override fun createForegroundInfo() = ForegroundInfo(progressNotificationId, progressNotificationBuilder.build())
 
 	override fun updateProgressNotification(status: LocalizedString, progressData: ProgressData) {
 		val titleString = progressNotificationTitle.resolve(applicationContext)

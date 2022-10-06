@@ -3,7 +3,10 @@ package ru.solrudev.okkeipatcher.data.worker
 import android.app.PendingIntent
 import android.content.Context
 import android.os.Build
-import androidx.work.*
+import androidx.work.CoroutineWorker
+import androidx.work.WorkManager
+import androidx.work.WorkerParameters
+import androidx.work.await
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -39,16 +42,16 @@ abstract class ForegroundOperationWorker(
 	final override suspend fun doWork(): Result {
 		cancelIfRetry()
 		try {
-			setForeground(createForegroundInfo())
+			setForeground(notificationService.createForegroundInfo())
 			val operation = operationFactory.create()
 			operation.canInvoke().onFailure { failure ->
 				return createFailure(WorkerFailure.Domain(failure.reason))
 			}
 			val result: DomainResult
 			coroutineScope {
-				val observeJob = observeOperation(operation)
+				val observeOperationJob = operation.observeIn(this)
 				result = operation()
-				observeJob.cancel()
+				observeOperationJob.cancel()
 			}
 			result.onFailure { failure ->
 				return createFailure(WorkerFailure.Domain(failure.reason))
@@ -81,11 +84,6 @@ abstract class ForegroundOperationWorker(
 		}
 	}
 
-	private fun createForegroundInfo() = ForegroundInfo(
-		notificationService.progressNotificationId,
-		notificationService.getProgressNotification()
-	)
-
 	private suspend fun createSuccess(): Result {
 		withContext(NonCancellable) {
 			notificationService.displayResultNotification(workNotificationsParameters.successMessage)
@@ -100,29 +98,27 @@ abstract class ForegroundOperationWorker(
 		return workerFailure(failure)
 	}
 
-	private fun CoroutineScope.observeOperation(operation: Operation<*>) = launch {
-		reportProgress(operation)
-		updateProgressNotification(operation)
-		collectMessages(operation)
+	private fun Operation<*>.observeIn(scope: CoroutineScope) = scope.launch {
+		reportProgressIn(this)
+		updateProgressNotificationIn(this)
+		collectMessagesIn(this)
 	}
 
-	private fun CoroutineScope.reportProgress(operation: Operation<*>) = operation
-		.statusAndAccumulatedProgress()
+	private fun Operation<*>.reportProgressIn(scope: CoroutineScope) = statusAndAccumulatedProgress()
 		.onEach { (status, progress) ->
-			setProgress(status, progress, operation.progressMax)
+			setProgress(status, progress, progressMax)
 		}
-		.launchIn(this)
+		.launchIn(scope)
 
-	private fun CoroutineScope.updateProgressNotification(operation: Operation<*>) = operation
-		.statusAndAccumulatedProgress()
+	private fun Operation<*>.updateProgressNotificationIn(scope: CoroutineScope) = statusAndAccumulatedProgress()
 		.onEach { (status, progress) ->
-			val progressData = ProgressData(progress, operation.progressMax)
+			val progressData = ProgressData(progress, progressMax)
 			notificationService.updateProgressNotification(status, progressData)
 			delay(500.milliseconds)
 		}
-		.launchIn(this)
+		.launchIn(scope)
 
-	private fun CoroutineScope.collectMessages(operation: Operation<*>) = operation.messages
+	private fun Operation<*>.collectMessagesIn(scope: CoroutineScope) = messages
 		.onEach(notificationService::displayMessageNotification)
-		.launchIn(this)
+		.launchIn(scope)
 }
