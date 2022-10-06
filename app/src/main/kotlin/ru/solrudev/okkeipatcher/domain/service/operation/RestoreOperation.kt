@@ -44,16 +44,13 @@ class RestoreOperation(
 
 	override suspend fun canInvoke(): Result {
 		val isPatched = patchStatus.retrieve()
-		if (!isPatched) {
-			return Result.Failure(LocalizedString.resource(R.string.error_not_patched))
+		val failureReason = when {
+			!isPatched -> R.string.error_not_patched
+			!isBackupAvailable() -> R.string.error_backup_not_found
+			!storageChecker.isEnoughSpace() -> R.string.error_no_free_space
+			else -> null
 		}
-		if (!isBackupAvailable()) {
-			return Result.Failure(LocalizedString.resource(R.string.error_backup_not_found))
-		}
-		if (!storageChecker.isEnoughSpace()) {
-			return Result.Failure(LocalizedString.resource(R.string.error_no_free_space))
-		}
-		return Result.Success
+		return failureReason?.let(LocalizedString::resource)?.let(Result::Failure) ?: Result.Success
 	}
 
 	override suspend fun invoke() = wrapDomainExceptions {

@@ -1,4 +1,7 @@
 <resources>
 	<!--Notifications-->
+	<string name="notification_message_test_failed">Work failed. Press to learn more.</string>
+	<string name="notification_message_test_success">Work succeeded.</string>
 	<string name="notification_title_test">Test work</string>
+	<string name="notification_title_test_completed">Work completed</string>
 </resources>

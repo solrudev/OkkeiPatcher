@@ -6,6 +6,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ru.solrudev.okkeipatcher.data.service.factory.ApkZipPackageFactory
 import ru.solrudev.okkeipatcher.data.service.factory.ApkZipPackageFactoryImpl
+import ru.solrudev.okkeipatcher.data.service.factory.NotificationServiceFactory
+import ru.solrudev.okkeipatcher.data.service.factory.NotificationServiceFactoryImpl
 import ru.solrudev.okkeipatcher.data.service.operation.factory.ObbDownloadOperationFactoryImpl
 import ru.solrudev.okkeipatcher.data.service.operation.factory.ScriptsPatchOperationFactoryImpl
 import ru.solrudev.okkeipatcher.domain.repository.patch.factory.PatchRepositoryFactory
@@ -38,6 +40,11 @@ interface FactoryBindModule {
 	fun bindObbDownloadOperationFactory(
 		obbDownloadOperationFactory: ObbDownloadOperationFactoryImpl
 	): ObbDownloadOperationFactory
+
+	@Binds
+	fun bindNotificationServiceFactory(
+		notificationServiceFactory: NotificationServiceFactoryImpl
+	): NotificationServiceFactory
 
 	@Binds
 	fun bindApkZipPackageFactory(
