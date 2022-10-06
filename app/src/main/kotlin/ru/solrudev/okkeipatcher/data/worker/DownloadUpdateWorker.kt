@@ -42,7 +42,7 @@ class DownloadUpdateWorker @AssistedInject constructor(
 	override fun createNotificationsContentIntent(): PendingIntent {
 		return NavDeepLinkBuilder(applicationContext)
 			.setGraph(R.navigation.okkei_nav_graph)
-			.setDestination(R.id.home_fragment) // TODO: stub, replace with update fragment
+			.setDestination(R.id.update_fragment)
 			.createPendingIntent()
 	}
 }
