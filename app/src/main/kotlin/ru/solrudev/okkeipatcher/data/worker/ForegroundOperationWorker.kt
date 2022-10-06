@@ -3,7 +3,10 @@ package ru.solrudev.okkeipatcher.data.worker
 import android.app.PendingIntent
 import android.content.Context
 import android.os.Build
-import androidx.work.*
+import androidx.work.CoroutineWorker
+import androidx.work.WorkManager
+import androidx.work.WorkerParameters
+import androidx.work.await
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -39,7 +42,7 @@ abstract class ForegroundOperationWorker(
 	final override suspend fun doWork(): Result {
 		cancelIfRetry()
 		try {
-			setForeground(createForegroundInfo())
+			setForeground(notificationService.createForegroundInfo())
 			val operation = operationFactory.create()
 			operation.canInvoke().onFailure { failure ->
 				return createFailure(WorkerFailure.Domain(failure.reason))
@@ -80,11 +83,6 @@ abstract class ForegroundOperationWorker(
 			workManager.cancelWorkById(id).await()
 		}
 	}
-
-	private fun createForegroundInfo() = ForegroundInfo(
-		notificationService.progressNotificationId,
-		notificationService.getProgressNotification()
-	)
 
 	private suspend fun createSuccess(): Result {
 		withContext(NonCancellable) {
