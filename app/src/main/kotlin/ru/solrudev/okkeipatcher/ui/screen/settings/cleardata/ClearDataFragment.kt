@@ -20,6 +20,7 @@ import ru.solrudev.okkeipatcher.ui.screen.settings.cleardata.model.ClearDataEven
 import ru.solrudev.okkeipatcher.ui.screen.settings.cleardata.model.ClearDataUiState
 import ru.solrudev.okkeipatcher.ui.screen.settings.cleardata.model.shouldShowErrorMessage
 import ru.solrudev.okkeipatcher.ui.util.createDialogBuilder
+import ru.solrudev.okkeipatcher.ui.util.showSnackbar
 import ru.solrudev.okkeipatcher.ui.util.showWithLifecycle
 
 @AndroidEntryPoint
@@ -79,14 +80,14 @@ class ClearDataFragment : DialogFragment(), FeatureView<ClearDataUiState> {
 
 	private fun showSuccessMessage() {
 		parentFragment?.view?.let {
-			Snackbar.make(it, R.string.snackbar_data_cleared, Snackbar.LENGTH_SHORT).show()
+			showSnackbar(it, R.string.snackbar_data_cleared, Snackbar.LENGTH_SHORT)
 		}
 	}
 
 	private fun showErrorMessage(error: LocalizedString) {
 		val errorString = error.resolve(requireContext())
 		parentFragment?.view?.let {
-			Snackbar.make(it, errorString, Snackbar.LENGTH_SHORT).show()
+			showSnackbar(it, errorString, Snackbar.LENGTH_SHORT)
 		}
 		viewModel.dispatchEvent(ErrorMessageShown)
 	}

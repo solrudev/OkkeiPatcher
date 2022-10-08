@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/container_nav_host"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent">
+	android:layout_height="match_parent"
+	android:orientation="horizontal">
+
+	<com.google.android.material.navigation.NavigationView
+		android:id="@+id/navigationView_nav_host"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		app:menu="@menu/okkei_menu" />
 
 	<androidx.coordinatorlayout.widget.CoordinatorLayout
 		android:layout_width="match_parent"
@@ -33,13 +40,5 @@
 			app:navGraph="@navigation/okkei_nav_graph"
 			tools:layout="@layout/fragment_home" />
 
-		<com.google.android.material.bottomnavigation.BottomNavigationView
-			android:id="@+id/bottomNavigationView_nav_host"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_gravity="bottom"
-			app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
-			app:menu="@menu/okkei_menu" />
-
 	</androidx.coordinatorlayout.widget.CoordinatorLayout>
-</FrameLayout>
+</LinearLayout>

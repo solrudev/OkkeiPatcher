@@ -23,6 +23,7 @@ import ru.solrudev.okkeipatcher.ui.screen.home.model.RestoreEvent.*
 import ru.solrudev.okkeipatcher.ui.screen.home.model.shouldShowPatchUpdatesMessage
 import ru.solrudev.okkeipatcher.ui.util.createDialogBuilder
 import ru.solrudev.okkeipatcher.ui.util.setLoading
+import ru.solrudev.okkeipatcher.ui.util.showSnackbar
 import ru.solrudev.okkeipatcher.ui.util.showWithLifecycle
 
 @AndroidEntryPoint
@@ -71,7 +72,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), FeatureView<HomeUiState> 
 
 	private fun showPatchUpdatesSnackbar() {
 		view?.let {
-			Snackbar.make(it, R.string.snackbar_patch_update_available, Snackbar.LENGTH_LONG).show()
+			showSnackbar(it, R.string.snackbar_patch_update_available, Snackbar.LENGTH_LONG)
 		}
 		viewModel.dispatchEvent(PatchUpdatesMessageShown)
 	}
