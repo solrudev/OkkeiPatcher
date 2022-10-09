@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.ui.host
+package ru.solrudev.okkeipatcher.ui.navhost
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -23,16 +23,15 @@ import ru.solrudev.okkeipatcher.databinding.OkkeiNavHostBinding
 import ru.solrudev.okkeipatcher.domain.model.Work
 import ru.solrudev.okkeipatcher.ui.core.FeatureView
 import ru.solrudev.okkeipatcher.ui.core.featureViewModels
-import ru.solrudev.okkeipatcher.ui.host.model.HostEvent.*
-import ru.solrudev.okkeipatcher.ui.host.model.HostUiState
-import ru.solrudev.okkeipatcher.ui.util.BottomNavigationViewBehavior
+import ru.solrudev.okkeipatcher.ui.navhost.model.HostEvent.*
+import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostUiState
 import ru.solrudev.okkeipatcher.ui.util.navigateSafely
 
 @AndroidEntryPoint
-class HostActivity : AppCompatActivity(R.layout.okkei_nav_host), FeatureView<HostUiState> {
+class NavHostActivity : AppCompatActivity(R.layout.okkei_nav_host), FeatureView<NavHostUiState> {
 
 	private val binding by viewBinding(OkkeiNavHostBinding::bind, R.id.container_nav_host)
-	private val viewModel: HostViewModel by featureViewModels()
+	private val viewModel: NavHostViewModel by featureViewModels()
 	private val topLevelDestinations = setOf(R.id.home_fragment, R.id.update_fragment, R.id.settings_fragment)
 	private val appBarConfiguration = AppBarConfiguration(topLevelDestinations)
 
@@ -44,8 +43,8 @@ class HostActivity : AppCompatActivity(R.layout.okkei_nav_host), FeatureView<Hos
 		setContentView(binding.root)
 		setSupportActionBar(binding.toolbar)
 		val navController = binding.contentNavHost.getFragment<NavHostFragment>().navController
-		binding.bottomNavigationViewNavHost?.apply {
-			setupWithNavController(navController)
+		binding.bottomNavigationViewNavHost?.let {
+			it.setupWithNavController(navController)
 			showBottomNavigationOnDestinationChanged(navController)
 		}
 		binding.navigationRailViewNavHost?.setupWithNavController(navController)
@@ -56,7 +55,7 @@ class HostActivity : AppCompatActivity(R.layout.okkei_nav_host), FeatureView<Hos
 
 	override fun onSupportNavigateUp() = navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
 
-	override fun render(uiState: HostUiState) {
+	override fun render(uiState: NavHostUiState) {
 		if (uiState.permissionsRequired) {
 			navigateToPermissionsScreen()
 		}

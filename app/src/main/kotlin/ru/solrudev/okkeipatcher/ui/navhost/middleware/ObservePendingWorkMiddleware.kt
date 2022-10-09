@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.ui.host.middleware
+package ru.solrudev.okkeipatcher.ui.navhost.middleware
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
@@ -7,9 +7,9 @@ import kotlinx.coroutines.flow.filterIsInstance
 import ru.solrudev.okkeipatcher.domain.usecase.work.CancelWorkUseCase
 import ru.solrudev.okkeipatcher.domain.usecase.work.GetPendingWorkFlowUseCase
 import ru.solrudev.okkeipatcher.ui.core.Middleware
-import ru.solrudev.okkeipatcher.ui.host.model.HostEvent
-import ru.solrudev.okkeipatcher.ui.host.model.HostEvent.PermissionsChecked
-import ru.solrudev.okkeipatcher.ui.host.model.HostEvent.WorkIsPending
+import ru.solrudev.okkeipatcher.ui.navhost.model.HostEvent
+import ru.solrudev.okkeipatcher.ui.navhost.model.HostEvent.PermissionsChecked
+import ru.solrudev.okkeipatcher.ui.navhost.model.HostEvent.WorkIsPending
 import javax.inject.Inject
 
 class ObservePendingWorkMiddleware @Inject constructor(

@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.ui.host.model
+package ru.solrudev.okkeipatcher.ui.navhost.model
 
 import ru.solrudev.okkeipatcher.domain.model.Work
 import ru.solrudev.okkeipatcher.ui.core.Effect

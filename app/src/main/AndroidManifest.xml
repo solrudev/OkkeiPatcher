@@ -25,7 +25,7 @@
 		android:theme="@style/Theme.OkkeiPatcher"
 		tools:ignore="UnusedAttribute">
 		<activity
-			android:name=".ui.host.HostActivity"
+			android:name=".ui.navhost.NavHostActivity"
 			android:exported="true"
 			android:theme="@style/Theme.OkkeiPatcher.NoActionBar">
 			<intent-filter>

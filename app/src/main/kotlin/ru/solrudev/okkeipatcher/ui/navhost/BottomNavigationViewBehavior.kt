@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.ui.util
+package ru.solrudev.okkeipatcher.ui.navhost
 
 import android.content.Context
 import android.util.AttributeSet
