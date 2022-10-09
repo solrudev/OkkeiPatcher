@@ -15,7 +15,6 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -28,6 +27,7 @@ import ru.solrudev.okkeipatcher.ui.core.FeatureView
 import ru.solrudev.okkeipatcher.ui.core.featureViewModels
 import ru.solrudev.okkeipatcher.ui.host.model.HostEvent.*
 import ru.solrudev.okkeipatcher.ui.host.model.HostUiState
+import ru.solrudev.okkeipatcher.ui.util.BottomNavigationViewBehavior
 import ru.solrudev.okkeipatcher.ui.util.navigateSafely
 
 private const val PREVIOUS_DESTINATION_ID = "PREVIOUS_DESTINATION_ID"
@@ -119,8 +119,9 @@ class HostActivity : AppCompatActivity(R.layout.okkei_nav_host), FeatureView<Hos
 		navController.addOnDestinationChangedListener { _, _, _ ->
 			binding.bottomNavigationViewNavHost?.let {
 				val params = it.layoutParams as CoordinatorLayout.LayoutParams
-				val behavior = params.behavior as HideBottomViewOnScrollBehavior
+				val behavior = params.behavior as BottomNavigationViewBehavior
 				if (behavior.isScrolledDown) {
+					behavior.ignoreScroll()
 					behavior.slideUp(it)
 				}
 			}
