@@ -7,17 +7,17 @@ import kotlinx.coroutines.flow.filterIsInstance
 import ru.solrudev.okkeipatcher.domain.usecase.work.CancelWorkUseCase
 import ru.solrudev.okkeipatcher.domain.usecase.work.GetPendingWorkFlowUseCase
 import ru.solrudev.okkeipatcher.ui.core.Middleware
-import ru.solrudev.okkeipatcher.ui.navhost.model.HostEvent
-import ru.solrudev.okkeipatcher.ui.navhost.model.HostEvent.PermissionsChecked
-import ru.solrudev.okkeipatcher.ui.navhost.model.HostEvent.WorkIsPending
+import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostEvent
+import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostEvent.PermissionsChecked
+import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostEvent.WorkIsPending
 import javax.inject.Inject
 
 class ObservePendingWorkMiddleware @Inject constructor(
 	private val getPendingWorkFlowUseCase: GetPendingWorkFlowUseCase,
 	private val cancelWorkUseCase: CancelWorkUseCase
-) : Middleware<HostEvent> {
+) : Middleware<NavHostEvent> {
 
-	override fun apply(events: Flow<HostEvent>) = channelFlow {
+	override fun apply(events: Flow<NavHostEvent>) = channelFlow {
 		events
 			.filterIsInstance<PermissionsChecked>()
 			.collectLatest { event ->
