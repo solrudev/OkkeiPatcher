@@ -1,7 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.host
 
 import android.os.Bundle
-import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.Lifecycle
@@ -15,7 +14,6 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import ru.solrudev.okkeipatcher.OkkeiNavGraphDirections
@@ -30,8 +28,6 @@ import ru.solrudev.okkeipatcher.ui.host.model.HostUiState
 import ru.solrudev.okkeipatcher.ui.util.BottomNavigationViewBehavior
 import ru.solrudev.okkeipatcher.ui.util.navigateSafely
 
-private const val PREVIOUS_DESTINATION_ID = "PREVIOUS_DESTINATION_ID"
-
 @AndroidEntryPoint
 class HostActivity : AppCompatActivity(R.layout.okkei_nav_host), FeatureView<HostUiState> {
 
@@ -43,9 +39,6 @@ class HostActivity : AppCompatActivity(R.layout.okkei_nav_host), FeatureView<Hos
 	private val navController: NavController
 		get() = findNavController(R.id.content_nav_host)
 
-	@IdRes
-	private var previousDestinationId = 0
-
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(binding.root)
@@ -53,18 +46,12 @@ class HostActivity : AppCompatActivity(R.layout.okkei_nav_host), FeatureView<Hos
 		val navController = binding.contentNavHost.getFragment<NavHostFragment>().navController
 		binding.bottomNavigationViewNavHost?.apply {
 			setupWithNavController(navController)
-			slideUpOnDestinationChanged(navController)
+			showBottomNavigationOnDestinationChanged(navController)
 		}
 		binding.navigationRailViewNavHost?.setupWithNavController(navController)
 		binding.navigationViewNavHost?.setupWithNavController(navController)
 		setupActionBarWithNavController(navController, appBarConfiguration)
-		checkPermissionsWithNavController(navController)
-		previousDestinationId = savedInstanceState?.getInt(PREVIOUS_DESTINATION_ID) ?: 0
-	}
-
-	override fun onSaveInstanceState(outState: Bundle) {
-		super.onSaveInstanceState(outState)
-		outState.putInt(PREVIOUS_DESTINATION_ID, previousDestinationId)
+		viewModel.dispatchEvent(PermissionsCheckRequested)
 	}
 
 	override fun onSupportNavigateUp() = navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
@@ -76,28 +63,6 @@ class HostActivity : AppCompatActivity(R.layout.okkei_nav_host), FeatureView<Hos
 		if (uiState.pendingWork != null) {
 			navigateToWorkScreen(uiState.pendingWork)
 		}
-	}
-
-	private fun checkPermissionsWithNavController(navController: NavController) = lifecycleScope.launch {
-		navController
-			.currentBackStackEntryFlow
-			.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
-			.collect { navBackStackEntry ->
-				val previousDestination = previousDestinationId
-				val currentDestination = navBackStackEntry.destination.id
-				if (shouldCheckPermissions(previousDestination, currentDestination)) {
-					viewModel.dispatchEvent(PermissionsCheckRequested)
-				}
-				previousDestinationId = currentDestination
-			}
-	}
-
-	private fun shouldCheckPermissions(@IdRes previousDestination: Int, @IdRes currentDestination: Int): Boolean {
-		val noPreviousDestination = previousDestination == 0
-		val returnedFromPermissionsScreen =
-			previousDestination == R.id.permissions_activity && previousDestination != currentDestination
-		val isStartDestination = currentDestination == navController.graph.startDestinationId
-		return noPreviousDestination || returnedFromPermissionsScreen || isStartDestination
 	}
 
 	private fun navigateToPermissionsScreen() {
@@ -114,8 +79,7 @@ class HostActivity : AppCompatActivity(R.layout.okkei_nav_host), FeatureView<Hos
 		viewModel.dispatchEvent(NavigatedToWorkScreen)
 	}
 
-	@Suppress("UNUSED")
-	private fun BottomNavigationView.slideUpOnDestinationChanged(navController: NavController) = lifecycleScope.launch {
+	private fun showBottomNavigationOnDestinationChanged(navController: NavController) = lifecycleScope.launch {
 		navController.currentBackStackEntryFlow
 			.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
 			.collect {
