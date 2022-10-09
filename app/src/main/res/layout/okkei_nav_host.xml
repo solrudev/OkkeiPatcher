@@ -1,45 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/container_nav_host"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent">
+	android:layout_height="match_parent"
+	android:fitsSystemWindows="true">
 
-	<androidx.coordinatorlayout.widget.CoordinatorLayout
+	<com.google.android.material.appbar.AppBarLayout
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
+		android:layout_height="wrap_content"
 		android:fitsSystemWindows="true">
 
-		<com.google.android.material.appbar.AppBarLayout
+		<com.google.android.material.appbar.MaterialToolbar
+			android:id="@+id/toolbar"
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:fitsSystemWindows="true">
+			android:layout_height="?attr/actionBarSize" />
 
-			<com.google.android.material.appbar.MaterialToolbar
-				android:id="@+id/toolbar"
-				android:layout_width="match_parent"
-				android:layout_height="?attr/actionBarSize" />
+	</com.google.android.material.appbar.AppBarLayout>
 
-		</com.google.android.material.appbar.AppBarLayout>
+	<androidx.fragment.app.FragmentContainerView
+		android:id="@+id/content_nav_host"
+		android:name="androidx.navigation.fragment.NavHostFragment"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		app:defaultNavHost="true"
+		app:layout_behavior="@string/appbar_scrolling_view_behavior"
+		app:navGraph="@navigation/okkei_nav_graph"
+		tools:layout="@layout/fragment_home" />
 
-		<androidx.fragment.app.FragmentContainerView
-			android:id="@+id/content_nav_host"
-			android:name="androidx.navigation.fragment.NavHostFragment"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			app:defaultNavHost="true"
-			app:layout_behavior="@string/appbar_scrolling_view_behavior"
-			app:navGraph="@navigation/okkei_nav_graph"
-			tools:layout="@layout/fragment_home" />
+	<com.google.android.material.bottomnavigation.BottomNavigationView
+		android:id="@+id/bottomNavigationView_nav_host"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_gravity="bottom"
+		app:layout_behavior="ru.solrudev.okkeipatcher.ui.util.BottomNavigationViewBehavior"
+		app:menu="@menu/okkei_menu" />
 
-		<com.google.android.material.bottomnavigation.BottomNavigationView
-			android:id="@+id/bottomNavigationView_nav_host"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_gravity="bottom"
-			app:layout_behavior="ru.solrudev.okkeipatcher.ui.util.BottomNavigationViewBehavior"
-			app:menu="@menu/okkei_menu" />
-
-	</androidx.coordinatorlayout.widget.CoordinatorLayout>
-</FrameLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
