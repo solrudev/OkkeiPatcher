@@ -115,16 +115,18 @@ class HostActivity : AppCompatActivity(R.layout.okkei_nav_host), FeatureView<Hos
 	}
 
 	@Suppress("UNUSED")
-	private fun BottomNavigationView.slideUpOnDestinationChanged(navController: NavController) {
-		navController.addOnDestinationChangedListener { _, _, _ ->
-			binding.bottomNavigationViewNavHost?.let {
-				val params = it.layoutParams as CoordinatorLayout.LayoutParams
-				val behavior = params.behavior as BottomNavigationViewBehavior
-				if (behavior.isScrolledDown) {
-					behavior.ignoreScroll()
-					behavior.slideUp(it)
+	private fun BottomNavigationView.slideUpOnDestinationChanged(navController: NavController) = lifecycleScope.launch {
+		navController.currentBackStackEntryFlow
+			.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+			.collect {
+				binding.bottomNavigationViewNavHost?.let {
+					val params = it.layoutParams as CoordinatorLayout.LayoutParams
+					val behavior = params.behavior as BottomNavigationViewBehavior
+					if (behavior.isScrolledDown) {
+						behavior.ignoreScroll()
+						behavior.slideUp(it)
+					}
 				}
 			}
-		}
 	}
 }
