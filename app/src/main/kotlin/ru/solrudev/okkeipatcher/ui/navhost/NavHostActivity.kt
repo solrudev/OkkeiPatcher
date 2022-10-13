@@ -15,7 +15,8 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import ru.solrudev.okkeipatcher.OkkeiNavGraphDirections
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.core.resolve
@@ -78,18 +79,18 @@ class NavHostActivity : AppCompatActivity(R.layout.okkei_nav_host), FeatureView<
 		viewModel.dispatchEvent(NavigatedToWorkScreen)
 	}
 
-	private fun showBottomNavigationOnDestinationChanged(navController: NavController) = lifecycleScope.launch {
-		navController.currentBackStackEntryFlow
-			.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
-			.collect {
-				binding.bottomNavigationViewNavHost?.let {
-					val params = it.layoutParams as CoordinatorLayout.LayoutParams
-					val behavior = params.behavior as BottomNavigationViewBehavior
-					if (behavior.isScrolledDown) {
-						behavior.ignoreScroll()
-						behavior.slideUp(it)
-					}
+	private fun showBottomNavigationOnDestinationChanged(navController: NavController) = navController
+		.currentBackStackEntryFlow
+		.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+		.onEach {
+			binding.bottomNavigationViewNavHost?.let {
+				val params = it.layoutParams as CoordinatorLayout.LayoutParams
+				val behavior = params.behavior as BottomNavigationViewBehavior
+				if (behavior.isScrolledDown) {
+					behavior.ignoreScroll()
+					behavior.slideUp(it)
 				}
 			}
-	}
+		}
+		.launchIn(lifecycleScope)
 }
