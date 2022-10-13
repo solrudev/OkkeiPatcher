@@ -51,6 +51,10 @@ class NavHostActivity : AppCompatActivity(R.layout.okkei_nav_host), FeatureView<
 		binding.navigationRailViewNavHost?.setupWithNavController(navController)
 		binding.navigationViewNavHost?.setupWithNavController(navController)
 		setupActionBarWithNavController(navController, appBarConfiguration)
+	}
+
+	override fun onStart() {
+		super.onStart()
 		viewModel.dispatchEvent(PermissionsCheckRequested)
 	}
 
