@@ -1,6 +1,7 @@
 ﻿<resources>
 	<!--General-->
 	<string name="about_version">Версия %s\nby solrudev</string>
+	<string name="not_available">Н/Д</string>
 	<string name="patcher">Патчер</string>
 	<string name="settings">Настройки</string>
 	<string name="update">Обновление</string>
@@ -16,6 +17,13 @@
 	<string name="button_text_patch">Пропатчить</string>
 	<string name="button_text_restore">Восстановить</string>
 	<string name="button_text_start">Начать</string>
+	<string name="button_text_update_patch">Обновить патч</string>
+
+	<!--Cards-->
+	<string name="card_actions_title">Действия</string>
+	<string name="card_game_title">Сведения об игре</string>
+	<string name="card_game_version">Версия: %s</string>
+	<string name="card_patch_version">Патч: %s</string>
 
 	<!--Errors-->
 	<string name="error">Ошибка</string>
@@ -56,6 +64,11 @@
 	<string name="notification_title_patch_completed">Патч завершён</string>
 	<string name="notification_title_restore_completed">Восстановление завершено</string>
 
+	<!--Patch statuses-->
+	<string name="patch_status_not_patched">Патч для CHAOS;CHILD не установлен.</string>
+	<string name="patch_status_patched">Патч для CHAOS;CHILD установлен.</string>
+	<string name="patch_status_update_available">Доступно обновление патча!</string>
+
 	<!--Permissions-->
 	<string name="permissions_screen_title">Разрешения</string>
 	<string name="permissions_screen_subtitle">Данные разрешения необходимы для работы Okkei Patcher</string>
@@ -78,7 +91,6 @@
 
 	<!--Snackbars-->
 	<string name="snackbar_data_cleared">Данные очищены</string>
-	<string name="snackbar_patch_update_available">Доступно обновление патча</string>
 
 	<!--Statuses-->
 	<string name="status_backing_up_apk">Создание резервной копии APK</string>

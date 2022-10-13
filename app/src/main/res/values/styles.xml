@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<style name="Widget.OkkeiPatcher.CardView" parent="Widget.Material3.CardView.Elevated">
+		<item name="cardElevation">8dp</item>
+		<item name="shapeAppearance">@style/ShapeAppearance.OkkeiPatcher.MediumComponent</item>
+	</style>
+
+	<style name="ShapeAppearance.OkkeiPatcher.MediumComponent" parent="ShapeAppearance.Material3.MediumComponent">
+		<item name="cornerSize">16dp</item>
+	</style>
+</resources>

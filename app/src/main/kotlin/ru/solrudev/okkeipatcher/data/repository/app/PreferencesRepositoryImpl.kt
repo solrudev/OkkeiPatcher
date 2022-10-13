@@ -41,7 +41,7 @@ class PreferencesRepositoryImpl @Inject constructor(
 		preferences
 	)
 
-	override val patchVersion = Preference(key = PATCH_VERSION, defaultValue = { "-" }, preferences)
+	override val patchVersion = Preference(key = PATCH_VERSION, defaultValue = { "" }, preferences)
 
 	override suspend fun reset() {
 		preferences.edit {

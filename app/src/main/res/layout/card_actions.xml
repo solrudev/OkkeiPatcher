@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/container_card_actions"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:layout_marginHorizontal="@dimen/card_margin_horizontal"
+	android:layout_marginVertical="@dimen/card_margin_vertical"
+	tools:showIn="@layout/fragment_home">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		android:padding="@dimen/card_padding">
+
+		<Button
+			android:id="@+id/button_card_actions_patch"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/button_text_patch" />
+
+		<Button
+			android:id="@+id/button_card_actions_restore"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/button_text_restore" />
+
+	</LinearLayout>
+</com.google.android.material.card.MaterialCardView>

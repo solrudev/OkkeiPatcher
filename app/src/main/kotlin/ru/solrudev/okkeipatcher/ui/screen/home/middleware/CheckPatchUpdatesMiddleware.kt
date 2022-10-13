@@ -6,7 +6,9 @@ import ru.solrudev.okkeipatcher.domain.usecase.work.GetIsWorkPendingFlowUseCase
 import ru.solrudev.okkeipatcher.ui.core.Middleware
 import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeEvent
 import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeEvent.PatchStatusChanged
-import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeEvent.PatchUpdatesAvailable
+import ru.solrudev.okkeipatcher.ui.screen.home.model.PatchStatus.Patched
+import ru.solrudev.okkeipatcher.ui.screen.home.model.PatchStatus.UpdateAvailable
+import ru.solrudev.okkeipatcher.ui.screen.home.model.PersistentPatchStatus
 import javax.inject.Inject
 
 class CheckPatchUpdatesMiddleware @Inject constructor(
@@ -17,11 +19,14 @@ class CheckPatchUpdatesMiddleware @Inject constructor(
 	override fun apply(events: Flow<HomeEvent>) = flow {
 		events
 			.filterIsInstance<PatchStatusChanged>()
-			.filter { event -> event.isPatched }
-			.combine(getIsWorkPendingFlowUseCase()) { _, isWorkPending -> isWorkPending }
-			.filterNot { it }
+			.map { event -> event.patchStatus }
+			.filterIsInstance<PersistentPatchStatus>()
+			.combine(getIsWorkPendingFlowUseCase()) { patchStatus, isWorkPending ->
+				!isWorkPending && patchStatus is Patched
+			}
+			.filter { it }
 			.map { getPatchUpdatesUseCase() }
 			.filter { it.available }
-			.collect { emit(PatchUpdatesAvailable) }
+			.collect { emit(PatchStatusChanged(UpdateAvailable)) }
 	}
 }

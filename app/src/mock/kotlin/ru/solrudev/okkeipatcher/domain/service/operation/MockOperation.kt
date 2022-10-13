@@ -22,7 +22,7 @@ fun MockOperation(
 		progressDelta(100)
 	}
 	if (isPatchWork) {
-		patchVersion.persist("Patch version")
+		patchVersion.persist("1.0(mock)")
 	} else {
 		patchVersion.clear()
 	}

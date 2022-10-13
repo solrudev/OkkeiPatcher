@@ -2,9 +2,11 @@
 	<!--General-->
 	<string name="app_name" translatable="false">Okkei Patcher</string>
 	<string name="app_icon_content_description" translatable="false">App icon</string>
+	<string name="game_title" translatable="false">CHAOS;CHILD</string>
 	<string name="okkei" translatable="false">Okkei</string>
 	<string name="percent_done" translatable="false">%d%%</string>
 	<string name="about_version">Version %s\nby solrudev</string>
+	<string name="not_available">N/A</string>
 	<string name="patcher">Patcher</string>
 	<string name="settings">Settings</string>
 	<string name="update">Update</string>
@@ -20,6 +22,13 @@
 	<string name="button_text_patch">Patch</string>
 	<string name="button_text_restore">Restore</string>
 	<string name="button_text_start">Start</string>
+	<string name="button_text_update_patch">Update patch</string>
+
+	<!--Cards-->
+	<string name="card_actions_title">Actions</string>
+	<string name="card_game_title">Game info</string>
+	<string name="card_game_version">Version: %s</string>
+	<string name="card_patch_version">Patch: %s</string>
 
 	<!--Errors-->
 	<string name="error">Error</string>
@@ -62,6 +71,11 @@
 	<string name="notification_title_patch_completed">Patching completed</string>
 	<string name="notification_title_restore_completed">Restoring completed</string>
 
+	<!--Patch statuses-->
+	<string name="patch_status_not_patched">Patch for CHAOS;CHILD is not installed.</string>
+	<string name="patch_status_patched">CHAOS;CHILD is patched.</string>
+	<string name="patch_status_update_available">Patch update is available!</string>
+
 	<!--Permissions-->
 	<string name="permissions_screen_title">Permissions</string>
 	<string name="permissions_screen_subtitle">These permissions are required for Okkei Patcher to work</string>
@@ -88,7 +102,6 @@
 
 	<!--Snackbars-->
 	<string name="snackbar_data_cleared">All data cleared</string>
-	<string name="snackbar_patch_update_available">Patch update is available</string>
 
 	<!--Statuses-->
 	<string name="status_backing_up_apk">Backing up APK</string>

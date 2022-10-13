@@ -15,7 +15,7 @@
 	<fragment
 		android:id="@+id/home_fragment"
 		android:name="ru.solrudev.okkeipatcher.ui.screen.home.HomeFragment"
-		android:label="@string/app_name"
+		android:label="@string/patcher"
 		tools:layout="@layout/fragment_home" />
 	<fragment
 		android:id="@+id/update_fragment"

@@ -4,10 +4,8 @@ import ru.solrudev.okkeipatcher.ui.core.Effect
 import ru.solrudev.okkeipatcher.ui.core.Event
 
 sealed interface HomeEvent : Event {
-	data class PatchStatusChanged(val isPatched: Boolean) : HomeEvent
+	data class PatchStatusChanged(val patchStatus: PatchStatus) : HomeEvent
 	data class PatchVersionChanged(val patchVersion: String) : HomeEvent
-	object PatchUpdatesAvailable : HomeEvent
-	object PatchUpdatesMessageShown : HomeEvent
 	object ViewHidden : HomeEvent
 }
 

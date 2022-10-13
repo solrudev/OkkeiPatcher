@@ -32,7 +32,9 @@
 
 	<style name="Base.Theme.OkkeiPatcher" parent="Base.V19.Theme.OkkeiPatcher" />
 
-	<style name="Theme.OkkeiPatcher" parent="Base.Theme.OkkeiPatcher" />
+	<style name="Theme.OkkeiPatcher" parent="Base.Theme.OkkeiPatcher">
+		<item name="materialCardViewStyle">@style/Widget.OkkeiPatcher.CardView</item>
+	</style>
 
 	<style name="Theme.OkkeiPatcher.NoActionBar">
 		<item name="windowActionBar">false</item>

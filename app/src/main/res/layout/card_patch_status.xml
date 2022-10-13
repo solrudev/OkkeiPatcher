@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/container_card_patch"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:layout_marginHorizontal="@dimen/card_margin_horizontal"
+	android:layout_marginVertical="@dimen/card_margin_vertical"
+	tools:showIn="@layout/fragment_home">
+
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:padding="@dimen/card_padding">
+
+		<ImageView
+			android:id="@+id/imageview_card_patch_icon"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:importantForAccessibility="no"
+			android:src="@drawable/ic_sparkles"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
+
+		<androidx.constraintlayout.widget.Barrier
+			android:id="@+id/barrier_card_patch"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			app:barrierDirection="end"
+			app:barrierMargin="@dimen/card_padding"
+			app:constraint_referenced_ids="imageview_card_patch_icon" />
+
+		<TextView
+			android:id="@+id/textview_card_patch_status"
+			style="?textAppearanceTitleMedium"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:text="@string/patch_status_update_available"
+			app:layout_constraintBottom_toTopOf="@id/textview_card_patch_update"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toEndOf="@id/barrier_card_patch"
+			app:layout_constraintTop_toTopOf="parent" />
+
+		<TextView
+			android:id="@+id/textview_card_patch_update"
+			style="?textAppearanceTitleMedium"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/text_paragraph_margin"
+			android:text="@string/button_text_update_patch"
+			android:textColor="?colorPrimary"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintStart_toEndOf="@id/barrier_card_patch"
+			app:layout_constraintTop_toBottomOf="@id/textview_card_patch_status" />
+
+	</androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>
