@@ -42,7 +42,7 @@ class NavHostActivity : AppCompatActivity(R.layout.okkei_nav_host), FeatureView<
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(binding.root)
-		setSupportActionBar(binding.toolbar)
+		setSupportActionBar(binding.toolbarNavHost)
 		val navController = binding.contentNavHost.getFragment<NavHostFragment>().navController
 		binding.bottomNavigationViewNavHost?.let {
 			it.setupWithNavController(navController)
