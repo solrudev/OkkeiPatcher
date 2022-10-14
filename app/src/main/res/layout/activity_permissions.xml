@@ -19,7 +19,6 @@
 		android:orientation="vertical">
 
 		<TextView
-			android:layout_marginBottom="@dimen/card_margin_vertical"
 			style="?textAppearanceBodyLarge"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
@@ -30,6 +29,8 @@
 			android:id="@+id/recyclerview_permissions"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
+			android:clipToPadding="false"
+			android:paddingVertical="@dimen/card_margin_vertical"
 			android:overScrollMode="never"
 			app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
 			tools:listitem="@layout/item_permission" />

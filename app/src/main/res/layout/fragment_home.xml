@@ -6,7 +6,8 @@
 	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:layout_marginVertical="@dimen/card_margin_vertical"
+		android:clipToPadding="false"
+		android:paddingVertical="@dimen/card_margin_vertical"
 		android:orientation="vertical">
 
 		<TextView
@@ -31,10 +32,6 @@
 		<include layout="@layout/card_actions" />
 
 		<include layout="@layout/card_patch_status" />
-
-		<Space
-			android:layout_width="match_parent"
-			android:layout_height="@dimen/card_margin_vertical" />
 
 	</LinearLayout>
 </androidx.core.widget.NestedScrollView>
