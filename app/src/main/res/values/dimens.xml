@@ -1,9 +1,11 @@
 <resources>
+	<dimen name="button_margin_vertical">4dp</dimen>
 	<dimen name="card_padding">24dp</dimen>
 	<dimen name="card_margin_horizontal">32dp</dimen>
-	<dimen name="card_margin_vertical">12dp</dimen>
+	<dimen name="card_margin_vertical">8dp</dimen>
 	<dimen name="content_padding">16dp</dimen>
+	<dimen name="content_category_margin">16dp</dimen>
+	<dimen name="icon_game_size">64dp</dimen>
 	<dimen name="text_paragraph_margin">8dp</dimen>
 	<dimen name="text_margin_end">12dp</dimen>
-	<dimen name="icon_game_size">64dp</dimen>
 </resources>

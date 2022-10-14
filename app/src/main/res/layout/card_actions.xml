@@ -18,6 +18,7 @@
 			android:id="@+id/button_card_actions_patch"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
+			android:layout_marginBottom="@dimen/button_margin_vertical"
 			android:text="@string/button_text_patch" />
 
 		<Button

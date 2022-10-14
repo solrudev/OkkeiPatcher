@@ -13,6 +13,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginHorizontal="@dimen/card_margin_horizontal"
+			android:layout_marginVertical="@dimen/card_margin_vertical"
 			android:text="@string/card_game_title"
 			android:textAppearance="?textAppearanceHeadline6" />
 
@@ -22,13 +23,18 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginHorizontal="@dimen/card_margin_horizontal"
-			android:layout_marginTop="@dimen/card_margin_vertical"
+			android:layout_marginTop="@dimen/content_category_margin"
+			android:layout_marginBottom="@dimen/card_margin_vertical"
 			android:text="@string/card_actions_title"
 			android:textAppearance="?textAppearanceHeadline6" />
 
 		<include layout="@layout/card_actions" />
 
 		<include layout="@layout/card_patch_status" />
+
+		<Space
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/card_margin_vertical" />
 
 	</LinearLayout>
 </androidx.core.widget.NestedScrollView>
