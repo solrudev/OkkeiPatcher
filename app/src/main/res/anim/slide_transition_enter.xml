@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+	<alpha android:duration="@integer/slide_transition_alpha_duration"
+		android:startOffset="@integer/slide_transition_enter_alpha_offset"
+		android:interpolator="@android:anim/accelerate_interpolator"
+		android:fromAlpha="0"
+		android:toAlpha="1" />
+	<translate android:duration="@integer/slide_transition_translate_duration"
+		android:interpolator="@anim/slide_transition_interpolator"
+		android:fromXDelta="@fraction/slide_transition_enter_translate_delta"
+		android:toXDelta="0%" />
+</set>

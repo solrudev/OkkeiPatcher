@@ -23,17 +23,17 @@
 		<action
 			android:id="@+id/action_settingsFragment_to_aboutFragment"
 			app:destination="@id/about_fragment"
-			app:enterAnim="@anim/slide_enter"
-			app:exitAnim="@anim/slide_exit"
-			app:popEnterAnim="@anim/slide_pop_enter"
-			app:popExitAnim="@anim/slide_pop_exit" />
+			app:enterAnim="@anim/slide_transition_enter"
+			app:exitAnim="@anim/slide_transition_exit"
+			app:popEnterAnim="@anim/slide_transition_pop_enter"
+			app:popExitAnim="@anim/slide_transition_pop_exit" />
 		<action
 			android:id="@+id/action_settingsFragment_to_licensesFragment"
 			app:destination="@id/licenses_fragment"
-			app:enterAnim="@anim/slide_enter"
-			app:exitAnim="@anim/slide_exit"
-			app:popEnterAnim="@anim/slide_pop_enter"
-			app:popExitAnim="@anim/slide_pop_exit" />
+			app:enterAnim="@anim/slide_transition_enter"
+			app:exitAnim="@anim/slide_transition_exit"
+			app:popEnterAnim="@anim/slide_transition_pop_enter"
+			app:popExitAnim="@anim/slide_transition_pop_exit" />
 	</fragment>
 	<fragment
 		android:id="@+id/about_fragment"
