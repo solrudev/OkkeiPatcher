@@ -10,7 +10,7 @@
 	<com.google.android.material.appbar.MaterialToolbar
 		android:id="@+id/toolbar_permissions"
 		android:layout_width="match_parent"
-		android:layout_height="?attr/actionBarSize"
+		android:layout_height="?actionBarSize"
 		app:title="@string/permissions_screen_title" />
 
 	<TextView
