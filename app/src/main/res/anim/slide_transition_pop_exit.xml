@@ -5,7 +5,7 @@
 		android:fromAlpha="1"
 		android:toAlpha="0" />
 	<translate android:duration="@integer/material_motion_duration_long_1"
-		android:interpolator="@anim/slide_transition_interpolator"
+		android:interpolator="@anim/slide_transition_translate_interpolator"
 		android:fromXDelta="0%"
 		android:toXDelta="@fraction/slide_transition_enter_translate_delta" />
 </set>

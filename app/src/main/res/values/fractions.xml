@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<integer name="slide_transition_alpha_duration">150</integer>
-	<integer name="slide_transition_enter_alpha_offset">150</integer>
-	<integer name="slide_transition_translate_duration">300</integer>
 	<fraction name="slide_transition_enter_translate_delta">10%</fraction>
 	<fraction name="slide_transition_exit_translate_delta">-10%</fraction>
 </resources>
