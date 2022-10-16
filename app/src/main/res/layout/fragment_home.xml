@@ -7,14 +7,14 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:clipToPadding="false"
-		android:paddingVertical="@dimen/card_margin_vertical"
+		android:paddingHorizontal="@dimen/card_layout_padding_horizontal"
+		android:paddingVertical="@dimen/card_margin"
 		android:orientation="vertical">
 
 		<TextView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_marginHorizontal="@dimen/card_margin_horizontal"
-			android:layout_marginVertical="@dimen/card_margin_vertical"
+			android:layout_margin="@dimen/card_margin"
 			android:text="@string/card_game_title"
 			android:textAppearance="?textAppearanceHeadline6" />
 
@@ -23,9 +23,9 @@
 		<TextView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_marginHorizontal="@dimen/card_margin_horizontal"
+			android:layout_marginHorizontal="@dimen/card_margin"
 			android:layout_marginTop="@dimen/content_category_margin"
-			android:layout_marginBottom="@dimen/card_margin_vertical"
+			android:layout_marginBottom="@dimen/card_margin"
 			android:text="@string/card_actions_title"
 			android:textAppearance="?textAppearanceHeadline6" />
 
