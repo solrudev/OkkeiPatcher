@@ -1,3 +1,6 @@
+-keepattributes LineNumberTable,SourceFile
+-renamesourcefileattribute Source
+
 #### OkHttp, Retrofit and Moshi
 -keepclasseswithmembers class * {
     @retrofit2.http.* <methods>;
