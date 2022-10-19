@@ -5,5 +5,6 @@ import ru.solrudev.okkeipatcher.ui.core.UiState
 
 data class NavHostUiState(
 	val permissionsRequired: Boolean = false,
-	val pendingWork: Work? = null
+	val pendingWork: Work? = null,
+	val isUpdateAvailable: Boolean = false
 ) : UiState

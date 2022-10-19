@@ -1,5 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.navhost
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -14,6 +15,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.color.MaterialColors
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -67,6 +69,7 @@ class NavHostActivity : AppCompatActivity(R.layout.okkei_nav_host), FeatureView<
 		if (uiState.pendingWork != null) {
 			navigateToWorkScreen(uiState.pendingWork)
 		}
+		displayUpdateBadge(uiState.isUpdateAvailable)
 	}
 
 	private fun navigateToPermissionsScreen() {
@@ -97,4 +100,19 @@ class NavHostActivity : AppCompatActivity(R.layout.okkei_nav_host), FeatureView<
 			}
 		}
 		.launchIn(lifecycleScope)
+
+	private fun displayUpdateBadge(isUpdateAvailable: Boolean) {
+		if (isUpdateAvailable) {
+			val color = MaterialColors.getColor(this, com.google.android.material.R.attr.colorError, Color.RED)
+			binding.bottomNavigationViewNavHost?.getOrCreateBadge(R.id.update_fragment)?.apply {
+				backgroundColor = color
+			}
+			binding.navigationRailViewNavHost?.getOrCreateBadge(R.id.update_fragment)?.apply {
+				backgroundColor = color
+			}
+		} else {
+			binding.bottomNavigationViewNavHost?.removeBadge(R.id.update_fragment)
+			binding.navigationRailViewNavHost?.removeBadge(R.id.update_fragment)
+		}
+	}
 }

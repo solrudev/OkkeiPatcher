@@ -1,66 +1,62 @@
 package ru.solrudev.okkeipatcher.data.repository.app
 
 import android.content.Context
-import androidx.core.os.ConfigurationCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.github.solrudev.simpleinstaller.PackageInstaller
 import io.github.solrudev.simpleinstaller.data.ConfirmationStrategy
 import io.github.solrudev.simpleinstaller.installPackage
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import ru.solrudev.okkeipatcher.data.core.InMemoryCache
-import ru.solrudev.okkeipatcher.data.network.api.OkkeiPatcherApi
-import ru.solrudev.okkeipatcher.data.network.model.exception.NetworkNotAvailableException
-import ru.solrudev.okkeipatcher.data.service.FileDownloader
-import ru.solrudev.okkeipatcher.data.util.download
-import ru.solrudev.okkeipatcher.data.util.versionCode
+import ru.solrudev.okkeipatcher.data.service.StreamCopier
+import ru.solrudev.okkeipatcher.data.service.copy
 import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.model.OkkeiPatcherUpdateData
 import ru.solrudev.okkeipatcher.domain.model.OkkeiPatcherVersion
 import ru.solrudev.okkeipatcher.domain.model.Work
-import ru.solrudev.okkeipatcher.domain.model.exception.AppUpdateCorruptedException
-import ru.solrudev.okkeipatcher.domain.model.exception.NoNetworkException
 import ru.solrudev.okkeipatcher.domain.model.exception.wrapDomainExceptions
 import ru.solrudev.okkeipatcher.domain.repository.app.OkkeiPatcherRepository
 import ru.solrudev.okkeipatcher.domain.repository.work.DownloadUpdateWorkRepository
 import java.io.File
-import java.util.*
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 
 private const val APP_UPDATE_FILE_NAME = "OkkeiPatcher.apk"
 
-class OkkeiPatcherRepositoryImpl @Inject constructor(
+class MockOkkeiPatcherRepository @Inject constructor(
 	@ApplicationContext private val applicationContext: Context,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-	private val okkeiPatcherApi: OkkeiPatcherApi,
 	private val downloadUpdateWorkRepository: DownloadUpdateWorkRepository,
-	private val fileDownloader: FileDownloader,
+	private val streamCopier: StreamCopier,
 	private val packageInstaller: PackageInstaller
 ) : OkkeiPatcherRepository {
 
-	private val changelogCache = InMemoryCache {
-		val locale = ConfigurationCompat.getLocales(applicationContext.resources.configuration)[0] ?: Locale.ENGLISH
-		okkeiPatcherApi.getChangelog(applicationContext.versionCode, locale.language)
-	}
+	private var checksCount = 0
 
-	private val okkeiPatcherDataCache = InMemoryCache(okkeiPatcherApi::getOkkeiPatcherData)
+	private val changelog = listOf(
+		OkkeiPatcherVersion(versionName = "1.0", changes = listOf("Change 1", "Change 2")),
+		OkkeiPatcherVersion(versionName = "1.1", changes = listOf("Change 1")),
+		OkkeiPatcherVersion(versionName = "1.2", changes = listOf("Change 1", "Change 2", "Change 3"))
+	)
+
+	private val updateData = OkkeiPatcherUpdateData(isAvailable = true, sizeInMb = 3.14, changelog)
 	private val updateFile = File(applicationContext.filesDir, APP_UPDATE_FILE_NAME)
 	private val _isUpdateAvailable = MutableStateFlow(false)
 	override val isUpdateAvailable = _isUpdateAvailable.asStateFlow()
 
 	override suspend fun getUpdateData(refresh: Boolean): OkkeiPatcherUpdateData {
-		val okkeiPatcherData = okkeiPatcherDataCache.retrieve(refresh)
-		val changelog = changelogCache.retrieve(refresh)
-		val isUpdateAvailable = okkeiPatcherData.version > applicationContext.versionCode
-		_isUpdateAvailable.value = isUpdateAvailable
-		return OkkeiPatcherUpdateData(
-			isAvailable = isUpdateAvailable,
-			sizeInMb = okkeiPatcherData.size / 1_048_576.0,
-			changelog = changelog.map { OkkeiPatcherVersion(it.versionName, it.changes) }
-		)
+		checksCount++
+		if (refresh) {
+			delay(3.seconds)
+		}
+		if (checksCount < 3) {
+			return OkkeiPatcherUpdateData(isAvailable = false, sizeInMb = 0.0, changelog = emptyList())
+		}
+		_isUpdateAvailable.value = updateData.isAvailable
+		return updateData
 	}
 
 	override suspend fun enqueueUpdateDownloadWork(): Work {
@@ -73,21 +69,18 @@ class OkkeiPatcherRepositoryImpl @Inject constructor(
 		}
 	}
 
-	override fun downloadUpdate() = operation(progressMax = fileDownloader.progressMax) {
+	override fun downloadUpdate() = operation(progressMax = streamCopier.progressMax) {
 		wrapDomainExceptions {
 			try {
-				val updateData = okkeiPatcherApi.getOkkeiPatcherData()
-				val updateHash =
-					fileDownloader.download(updateData.url, updateFile, ioDispatcher, hashing = true, ::progressDelta)
-				if (updateHash != updateData.hash) {
-					throw AppUpdateCorruptedException()
-				}
+				val installedApkPath = applicationContext.packageManager
+					.getPackageInfo(applicationContext.packageName, 0)
+					.applicationInfo
+					.publicSourceDir
+				val installedApk = File(installedApkPath)
+				streamCopier.copy(installedApk, updateFile, ioDispatcher, onProgressDeltaChanged = ::progressDelta)
 			} catch (t: Throwable) {
 				if (updateFile.exists()) {
 					updateFile.delete()
-				}
-				if (t is NetworkNotAvailableException) {
-					throw NoNetworkException()
 				}
 				throw t
 			}

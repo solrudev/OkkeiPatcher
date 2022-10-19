@@ -134,6 +134,7 @@ dependencies {
 	implementation("androidx.room:room-ktx:$roomVersion")
 	implementation("com.google.android.material:material:1.6.1")
 	implementation("androidx.datastore:datastore-preferences:1.0.0")
+	implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 
 	// I/O
 	val excludeOkHttp = Action<ExternalModuleDependency> {

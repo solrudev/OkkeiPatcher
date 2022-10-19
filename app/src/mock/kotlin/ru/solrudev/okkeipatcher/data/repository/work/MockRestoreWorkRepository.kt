@@ -4,18 +4,18 @@ import androidx.work.WorkManager
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.worker.MockWorker
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
-import ru.solrudev.okkeipatcher.domain.repository.work.PatchWorkRepository
+import ru.solrudev.okkeipatcher.domain.repository.work.RestoreWorkRepository
 import ru.solrudev.okkeipatcher.domain.repository.work.WorkRepository
 import javax.inject.Inject
 
-private const val PATCH_WORK_NAME = "PatchWork"
-private val workLabel = LocalizedString.resource(R.string.work_label_patch)
+private const val RESTORE_WORK_NAME = "RestoreWork"
+private val workLabel = LocalizedString.resource(R.string.work_label_restoring)
 
-class MockPatchWorkRepositoryImpl @Inject constructor(
+class MockRestoreWorkRepository @Inject constructor(
 	workRepository: WorkRepository,
 	workManager: WorkManager
-) : PatchWorkRepository, ConcreteWorkRepositoryImpl<MockWorker>(
-	workName = PATCH_WORK_NAME,
+) : RestoreWorkRepository, ConcreteWorkRepositoryImpl<MockWorker>(
+	workName = RESTORE_WORK_NAME,
 	workLabel = workLabel,
 	workerClass = MockWorker::class.java,
 	workRepository,

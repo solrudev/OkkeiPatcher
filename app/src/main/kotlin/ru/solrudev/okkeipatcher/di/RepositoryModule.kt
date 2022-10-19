@@ -20,12 +20,6 @@ interface RepositoryModule {
 
 	@Binds
 	@Singleton
-	fun bindOkkeiPatcherRepository(
-		okkeiPatcherRepository: OkkeiPatcherRepositoryImpl
-	): OkkeiPatcherRepository
-
-	@Binds
-	@Singleton
 	fun bindWorkRepository(
 		workRepository: WorkRepositoryImpl
 	): WorkRepository

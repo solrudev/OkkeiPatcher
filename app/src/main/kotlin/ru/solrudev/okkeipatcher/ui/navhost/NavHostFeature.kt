@@ -1,6 +1,7 @@
 package ru.solrudev.okkeipatcher.ui.navhost
 
 import ru.solrudev.okkeipatcher.ui.core.Feature
+import ru.solrudev.okkeipatcher.ui.navhost.middleware.CheckAndObserveUpdateMiddleware
 import ru.solrudev.okkeipatcher.ui.navhost.middleware.CheckPermissionsMiddleware
 import ru.solrudev.okkeipatcher.ui.navhost.middleware.CheckSaveDataAccessMiddleware
 import ru.solrudev.okkeipatcher.ui.navhost.middleware.ObservePendingWorkMiddleware
@@ -13,12 +14,14 @@ class NavHostFeature @Inject constructor(
 	checkPermissionsMiddleware: CheckPermissionsMiddleware,
 	observePendingWorkMiddleware: ObservePendingWorkMiddleware,
 	checkSaveDataAccessMiddleware: CheckSaveDataAccessMiddleware,
+	checkAndObserveUpdateMiddleware: CheckAndObserveUpdateMiddleware,
 	navHostReducer: NavHostReducer
 ) : Feature<NavHostEvent, NavHostUiState>(
 	middlewares = listOf(
 		checkPermissionsMiddleware,
 		observePendingWorkMiddleware,
-		checkSaveDataAccessMiddleware
+		checkSaveDataAccessMiddleware,
+		checkAndObserveUpdateMiddleware
 	),
 	reducer = navHostReducer,
 	initialUiState = NavHostUiState()

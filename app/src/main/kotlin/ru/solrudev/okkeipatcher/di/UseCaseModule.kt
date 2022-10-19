@@ -96,6 +96,11 @@ interface UseCaseModule {
 	): GetLicensesUseCase
 
 	@Binds
+	fun bindGetIsUpdateAvailableFlowUseCase(
+		getIsUpdateAvailableFlowUseCase: GetIsUpdateAvailableFlowUseCaseImpl
+	): GetIsUpdateAvailableFlowUseCase
+
+	@Binds
 	fun bindGetUpdateDataUseCase(
 		getUpdateDataUseCase: GetUpdateDataUseCaseImpl
 	): GetUpdateDataUseCase

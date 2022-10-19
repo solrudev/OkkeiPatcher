@@ -7,6 +7,7 @@ import ru.solrudev.okkeipatcher.domain.model.OkkeiPatcherUpdateData
 import ru.solrudev.okkeipatcher.domain.model.Work
 
 interface OkkeiPatcherRepository {
+	val isUpdateAvailable: Flow<Boolean>
 	suspend fun getUpdateData(refresh: Boolean): OkkeiPatcherUpdateData
 	suspend fun enqueueUpdateDownloadWork(): Work
 	suspend fun installUpdate()

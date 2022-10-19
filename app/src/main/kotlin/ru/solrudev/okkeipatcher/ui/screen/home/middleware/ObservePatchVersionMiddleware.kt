@@ -9,7 +9,6 @@ import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeEvent
 import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeEvent.PatchVersionChanged
 import javax.inject.Inject
 
-// TODO: don't forget to render patch version in UI
 class ObservePatchVersionMiddleware @Inject constructor(
 	private val getPatchVersionFlowUseCase: GetPatchVersionFlowUseCase
 ) : Middleware<HomeEvent> {
