@@ -11,13 +11,12 @@ class LoadUpdateDataMiddleware @Inject constructor(
 	private val getUpdateDataUseCase: GetUpdateDataUseCase
 ) : Middleware<UpdateEvent> {
 
-	override fun apply(events: Flow<UpdateEvent>) = channelFlow {
+	override fun apply(events: Flow<UpdateEvent>) = flow {
 		events
 			.filterIsInstance<UpdateDataRequested>()
-			.onEach { send(UpdateDataLoadingStarted) }
+			.onEach { emit(UpdateDataLoadingStarted) }
 			.map { event -> getUpdateDataUseCase(refresh = event.refresh) }
 			.map(::UpdateDataLoaded)
-			.onEach(::send)
-			.launchIn(this)
+			.collect(::emit)
 	}
 }
