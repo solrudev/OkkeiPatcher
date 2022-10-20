@@ -12,5 +12,5 @@ class ObserveHandleSaveDataMiddleware @Inject constructor(
 	private val getHandleSaveDataFlowUseCase: GetHandleSaveDataFlowUseCase
 ) : Middleware<SettingsEvent> {
 
-	override fun apply(events: Flow<SettingsEvent>) = getHandleSaveDataFlowUseCase().map { HandleSaveDataChanged(it) }
+	override fun apply(events: Flow<SettingsEvent>) = getHandleSaveDataFlowUseCase().map(::HandleSaveDataChanged)
 }

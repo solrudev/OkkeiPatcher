@@ -33,5 +33,4 @@
 			app:title="@string/preference_licenses_title" />
 
 	</PreferenceCategory>
-
 </PreferenceScreen>
