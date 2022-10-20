@@ -8,7 +8,6 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.DialogFragmentNavigator
@@ -124,15 +123,11 @@ class NavHostActivity : AppCompatActivity(R.layout.okkei_nav_host), FeatureView<
 	private fun hideBottomNavigationOnNonTopLevelDestinations(navController: NavController) = navController
 		.currentBackStackEntryFlow
 		.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
-		.ignoreDialogs()
+		.filterNot { it.destination is DialogFragmentNavigator.Destination }
 		.map { it.destination.id in topLevelDestinations }
 		.distinctUntilChanged()
 		.onEach { isTopLevelDestination ->
 			binding.bottomNavigationViewNavHost?.isVisible = isTopLevelDestination
 		}
 		.launchIn(lifecycleScope)
-
-	private fun Flow<NavBackStackEntry>.ignoreDialogs() = distinctUntilChanged { old, new ->
-		old == new || new.destination is DialogFragmentNavigator.Destination
-	}
 }
