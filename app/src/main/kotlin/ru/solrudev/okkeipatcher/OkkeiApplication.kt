@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.getSystemService
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
@@ -26,6 +27,7 @@ class OkkeiApplication : Application(), Configuration.Provider {
 		super.onCreate()
 		connectivityRepository.startNetworkMonitoring()
 		createNotificationChannels()
+		AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
 	}
 
 	private fun createNotificationChannels() {
