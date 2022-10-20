@@ -24,10 +24,7 @@ import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeEvent.ViewHidden
 import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeUiState
 import ru.solrudev.okkeipatcher.ui.screen.home.model.PatchEvent.*
 import ru.solrudev.okkeipatcher.ui.screen.home.model.RestoreEvent.*
-import ru.solrudev.okkeipatcher.ui.util.animateLayoutChanges
-import ru.solrudev.okkeipatcher.ui.util.createDialogBuilder
-import ru.solrudev.okkeipatcher.ui.util.setLoading
-import ru.solrudev.okkeipatcher.ui.util.showWithLifecycle
+import ru.solrudev.okkeipatcher.ui.util.*
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home), FeatureView<HomeUiState> {
@@ -77,8 +74,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), FeatureView<HomeUiState> 
 			viewModel.dispatchEvent(RestoreRequested)
 		}
 		patchStatusBinding.textviewCardPatchUpdate.setOnClickListener {
-			actionsBinding.buttonCardActionsPatch.isPressed = true
-			actionsBinding.buttonCardActionsPatch.isPressed = false
+			actionsBinding.buttonCardActionsPatch.showRippleEffect()
 		}
 	}
 
