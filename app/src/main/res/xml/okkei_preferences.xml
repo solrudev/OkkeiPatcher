@@ -27,7 +27,7 @@
 			app:title="@string/preference_about_title" />
 
 		<Preference
-			app:icon="@drawable/ic_text_snippet"
+			app:icon="@drawable/ic_licenses"
 			app:key="@string/preference_key_licenses"
 			app:persistent="false"
 			app:title="@string/preference_licenses_title" />
