@@ -6,6 +6,7 @@
 			app:icon="@drawable/ic_save"
 			app:key="@string/preference_key_handle_save_data"
 			app:persistent="false"
+			app:widgetLayout="@layout/preference_material_switch"
 			app:summary="@string/preference_save_data_summary"
 			app:title="@string/preference_save_data_title" />
 
