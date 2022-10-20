@@ -6,11 +6,13 @@
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:layout_margin="@dimen/card_margin"
+	android:animateLayoutChanges="true"
 	tools:showIn="@layout/fragment_home">
 
 	<androidx.constraintlayout.widget.ConstraintLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:animateLayoutChanges="true"
 		android:padding="@dimen/card_padding">
 
 		<ImageView
