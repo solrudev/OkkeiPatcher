@@ -1,6 +1,7 @@
 package ru.solrudev.okkeipatcher.domain.usecase.patch
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import ru.solrudev.okkeipatcher.domain.repository.app.PreferencesRepository
 import javax.inject.Inject
 
@@ -12,5 +13,5 @@ class GetPatchVersionFlowUseCaseImpl @Inject constructor(
 	private val preferencesRepository: PreferencesRepository
 ) : GetPatchVersionFlowUseCase {
 
-	override fun invoke() = preferencesRepository.patchVersion.flow
+	override fun invoke() = preferencesRepository.patchVersion.flow.distinctUntilChanged()
 }
