@@ -51,6 +51,8 @@ class HomeFragment : Fragment(R.layout.fragment_home), FeatureView<HomeUiState> 
 		actionsBinding.buttonCardActionsPatch.isEnabled = uiState.isPatchEnabled
 		actionsBinding.buttonCardActionsRestore.isEnabled = uiState.isRestoreEnabled
 		actionsBinding.buttonCardActionsPatch.setLoading(uiState.isPatchSizeLoading, R.string.button_text_patch)
+		patchStatusBinding.textviewCardPatchStatus.text = uiState.patchStatus.resolve(requireContext())
+		patchStatusBinding.textviewCardPatchUpdate.isVisible = uiState.patchUpdatesAvailable
 		displayPatchVersion(uiState.patchVersion)
 		if (uiState.startPatchMessage.shouldShow) {
 			showStartPatchMessage(uiState.startPatchMessage.data)
@@ -58,8 +60,6 @@ class HomeFragment : Fragment(R.layout.fragment_home), FeatureView<HomeUiState> 
 		if (uiState.startRestoreMessage.shouldShow) {
 			showStartRestoreMessage(uiState.startRestoreMessage.data)
 		}
-		patchStatusBinding.textviewCardPatchStatus.text = uiState.patchStatus.resolve(requireContext())
-		patchStatusBinding.textviewCardPatchUpdate.isVisible = uiState.patchUpdatesAvailable
 	}
 
 	private fun setupNavigation() {
