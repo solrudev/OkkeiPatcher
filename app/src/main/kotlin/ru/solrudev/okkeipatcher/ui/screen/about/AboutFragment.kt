@@ -18,6 +18,7 @@ class AboutFragment : Fragment(R.layout.fragment_about) {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		val versionName = requireContext().run {
+			@Suppress("DEPRECATION")
 			packageManager.getPackageInfo(packageName, PackageManager.GET_META_DATA).versionName
 		}
 		val versionCode = requireContext().versionCode

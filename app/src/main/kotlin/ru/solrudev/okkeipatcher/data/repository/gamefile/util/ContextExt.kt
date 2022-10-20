@@ -10,6 +10,7 @@ val Context.backupDir: File
 
 val Context.isGameInstalled: Boolean
 	get() = try {
+		@Suppress("DEPRECATION")
 		packageManager.getPackageInfo(GAME_PACKAGE_NAME, PackageManager.GET_ACTIVITIES)
 		true
 	} catch (_: PackageManager.NameNotFoundException) {

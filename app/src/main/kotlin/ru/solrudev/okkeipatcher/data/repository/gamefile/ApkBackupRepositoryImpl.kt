@@ -39,6 +39,7 @@ class ApkBackupRepositoryImpl @Inject constructor(
 		if (!applicationContext.isGameInstalled) {
 			throw GameNotFoundException()
 		}
+		@Suppress("DEPRECATION")
 		val installedApkPath = applicationContext.packageManager
 			.getPackageInfo(GAME_PACKAGE_NAME, 0)
 			.applicationInfo

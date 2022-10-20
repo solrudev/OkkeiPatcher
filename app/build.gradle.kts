@@ -1,3 +1,4 @@
+import android.annotation.SuppressLint
 import java.io.FileInputStream
 import java.util.*
 
@@ -22,13 +23,14 @@ base {
 }
 
 android {
-	compileSdk = 32
+	compileSdk = 33
 	buildToolsVersion = "33.0.0"
 	namespace = packageName
 
 	defaultConfig {
 		applicationId = packageName
 		minSdk = 19
+		@SuppressLint("OldTargetApi")
 		targetSdk = 32
 		versionCode = 42
 		versionName = "2.0.0"
@@ -123,7 +125,7 @@ dependencies {
 
 	// Jetpack
 	implementation("com.google.dagger:hilt-android:$hiltVersion")
-	implementation("androidx.activity:activity-ktx:1.5.1")
+	implementation("androidx.activity:activity-ktx:1.6.0")
 	implementation("androidx.preference:preference-ktx:1.2.0")
 	implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.5.1")
 	implementation("androidx.fragment:fragment-ktx:1.5.3")
@@ -132,7 +134,7 @@ dependencies {
 	implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
 	implementation("androidx.navigation:navigation-ui-ktx:$navigationVersion")
 	implementation("androidx.room:room-ktx:$roomVersion")
-	implementation("com.google.android.material:material:1.6.1")
+	implementation("com.google.android.material:material:1.7.0")
 	implementation("androidx.datastore:datastore-preferences:1.0.0")
 	implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 

@@ -16,6 +16,7 @@ data class GameUiState(
 
 fun GameUiState(context: Context): GameUiState {
 	val packageInfo = try {
+		@Suppress("DEPRECATION")
 		context.packageManager.getPackageInfo(GAME_PACKAGE_NAME, PackageManager.GET_META_DATA)
 	} catch (_: PackageManager.NameNotFoundException) {
 		null

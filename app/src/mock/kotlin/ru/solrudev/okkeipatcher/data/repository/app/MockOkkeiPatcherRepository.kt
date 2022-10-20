@@ -72,6 +72,7 @@ class MockOkkeiPatcherRepository @Inject constructor(
 	override fun downloadUpdate() = operation(progressMax = streamCopier.progressMax) {
 		wrapDomainExceptions {
 			try {
+				@Suppress("DEPRECATION")
 				val installedApkPath = applicationContext.packageManager
 					.getPackageInfo(applicationContext.packageName, 0)
 					.applicationInfo
