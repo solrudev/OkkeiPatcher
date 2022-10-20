@@ -4,11 +4,14 @@ import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.DialogFragmentNavigator
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -17,8 +20,7 @@ import androidx.navigation.ui.setupWithNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.color.MaterialColors
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import ru.solrudev.okkeipatcher.OkkeiNavGraphDirections
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.core.resolve
@@ -28,6 +30,7 @@ import ru.solrudev.okkeipatcher.ui.core.FeatureView
 import ru.solrudev.okkeipatcher.ui.core.featureViewModels
 import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostEvent.*
 import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostUiState
+import ru.solrudev.okkeipatcher.ui.util.animateLayoutChanges
 import ru.solrudev.okkeipatcher.ui.util.navigateSafely
 
 @AndroidEntryPoint
@@ -45,10 +48,12 @@ class NavHostActivity : AppCompatActivity(R.layout.okkei_nav_host), FeatureView<
 		super.onCreate(savedInstanceState)
 		setContentView(binding.root)
 		setSupportActionBar(binding.toolbarNavHost)
+		binding.containerNavHost.animateLayoutChanges()
 		val navController = binding.contentNavHost.getFragment<NavHostFragment>().navController
 		binding.bottomNavigationViewNavHost?.let {
 			it.setupWithNavController(navController)
 			showBottomNavigationOnDestinationChanged(navController)
+			hideBottomNavigationOnNonTopLevelDestinations(navController)
 		}
 		binding.navigationRailViewNavHost?.setupWithNavController(navController)
 		binding.navigationViewNavHost?.setupWithNavController(navController)
@@ -114,5 +119,20 @@ class NavHostActivity : AppCompatActivity(R.layout.okkei_nav_host), FeatureView<
 			binding.bottomNavigationViewNavHost?.removeBadge(R.id.update_fragment)
 			binding.navigationRailViewNavHost?.removeBadge(R.id.update_fragment)
 		}
+	}
+
+	private fun hideBottomNavigationOnNonTopLevelDestinations(navController: NavController) = navController
+		.currentBackStackEntryFlow
+		.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+		.ignoreDialogs()
+		.map { it.destination.id in topLevelDestinations }
+		.distinctUntilChanged()
+		.onEach { isTopLevelDestination ->
+			binding.bottomNavigationViewNavHost?.isVisible = isTopLevelDestination
+		}
+		.launchIn(lifecycleScope)
+
+	private fun Flow<NavBackStackEntry>.ignoreDialogs() = distinctUntilChanged { old, new ->
+		old == new || new.destination is DialogFragmentNavigator.Destination
 	}
 }
