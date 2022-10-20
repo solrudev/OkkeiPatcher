@@ -1,10 +1,9 @@
 <resources>
 	<!--General-->
 	<string name="app_name" translatable="false">Okkei Patcher</string>
-	<string name="app_icon_content_description" translatable="false">App icon</string>
 	<string name="game_title" translatable="false">CHAOS;CHILD</string>
-	<string name="okkei" translatable="false">Okkei</string>
 	<string name="percent_done" translatable="false">%d%%</string>
+	<string name="source_code_link" translatable="false">https://github.com/solrudev/OkkeiPatcher</string>
 	<string name="about_version">Version %s\nby solrudev</string>
 	<string name="not_available">N/A</string>
 	<string name="patcher">Patcher</string>
@@ -21,6 +20,7 @@
 	<string name="button_text_ok">OK</string>
 	<string name="button_text_patch">Patch</string>
 	<string name="button_text_restore">Restore</string>
+	<string name="button_text_source_code">Source code</string>
 	<string name="button_text_start">Start</string>
 	<string name="button_text_update_patch">Update patch</string>
 
