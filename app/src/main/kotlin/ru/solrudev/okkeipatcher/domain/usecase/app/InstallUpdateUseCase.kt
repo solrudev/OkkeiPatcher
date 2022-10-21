@@ -1,10 +1,11 @@
 package ru.solrudev.okkeipatcher.domain.usecase.app
 
+import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.repository.app.OkkeiPatcherRepository
 import javax.inject.Inject
 
 interface InstallUpdateUseCase {
-	suspend operator fun invoke()
+	suspend operator fun invoke(): Result
 }
 
 class InstallUpdateUseCaseImpl @Inject constructor(

@@ -4,8 +4,6 @@ import android.content.Context
 import androidx.core.os.ConfigurationCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.github.solrudev.simpleinstaller.PackageInstaller
-import io.github.solrudev.simpleinstaller.data.ConfirmationStrategy
-import io.github.solrudev.simpleinstaller.installPackage
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,6 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import ru.solrudev.okkeipatcher.data.core.InMemoryCache
 import ru.solrudev.okkeipatcher.data.network.api.OkkeiPatcherApi
 import ru.solrudev.okkeipatcher.data.network.model.exception.NetworkNotAvailableException
+import ru.solrudev.okkeipatcher.data.repository.util.install
 import ru.solrudev.okkeipatcher.data.service.FileDownloader
 import ru.solrudev.okkeipatcher.data.util.download
 import ru.solrudev.okkeipatcher.data.util.versionCode
@@ -51,27 +50,25 @@ class OkkeiPatcherRepositoryImpl @Inject constructor(
 	private val _isUpdateAvailable = MutableStateFlow(false)
 	override val isUpdateAvailable = _isUpdateAvailable.asStateFlow()
 
-	override suspend fun getUpdateData(refresh: Boolean): OkkeiPatcherUpdateData {
+	override suspend fun getUpdateData(refresh: Boolean) = try {
 		val okkeiPatcherData = okkeiPatcherDataCache.retrieve(refresh)
 		val changelog = changelogCache.retrieve(refresh)
 		val isUpdateAvailable = okkeiPatcherData.version > applicationContext.versionCode
 		_isUpdateAvailable.value = isUpdateAvailable
-		return OkkeiPatcherUpdateData(
+		OkkeiPatcherUpdateData(
 			isAvailable = isUpdateAvailable,
 			sizeInMb = okkeiPatcherData.size / 1_048_576.0,
 			changelog = changelog.map { OkkeiPatcherVersion(it.versionName, it.changes) }
 		)
+	} catch (_: Throwable) {
+		OkkeiPatcherUpdateData(isAvailable = false, sizeInMb = 0.0, changelog = emptyList())
 	}
 
 	override suspend fun enqueueUpdateDownloadWork(): Work {
 		return downloadUpdateWorkRepository.enqueueWork()
 	}
 
-	override suspend fun installUpdate() {
-		packageInstaller.installPackage(updateFile) {
-			confirmationStrategy = ConfirmationStrategy.IMMEDIATE
-		}
-	}
+	override suspend fun installUpdate() = packageInstaller.install(updateFile, immediate = true)
 
 	override fun downloadUpdate() = operation(progressMax = fileDownloader.progressMax) {
 		wrapDomainExceptions {

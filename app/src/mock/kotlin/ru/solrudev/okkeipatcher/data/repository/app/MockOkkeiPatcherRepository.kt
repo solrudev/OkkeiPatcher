@@ -3,13 +3,12 @@ package ru.solrudev.okkeipatcher.data.repository.app
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.github.solrudev.simpleinstaller.PackageInstaller
-import io.github.solrudev.simpleinstaller.data.ConfirmationStrategy
-import io.github.solrudev.simpleinstaller.installPackage
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import ru.solrudev.okkeipatcher.data.repository.util.install
 import ru.solrudev.okkeipatcher.data.service.StreamCopier
 import ru.solrudev.okkeipatcher.data.service.copy
 import ru.solrudev.okkeipatcher.di.IoDispatcher
@@ -63,11 +62,7 @@ class MockOkkeiPatcherRepository @Inject constructor(
 		return downloadUpdateWorkRepository.enqueueWork()
 	}
 
-	override suspend fun installUpdate() {
-		packageInstaller.installPackage(updateFile) {
-			confirmationStrategy = ConfirmationStrategy.IMMEDIATE
-		}
-	}
+	override suspend fun installUpdate() = packageInstaller.install(updateFile, immediate = true)
 
 	override fun downloadUpdate() = operation(progressMax = streamCopier.progressMax) {
 		wrapDomainExceptions {
