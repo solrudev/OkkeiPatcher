@@ -99,6 +99,7 @@ class WorkActivity : AppCompatActivity(R.layout.activity_work), FeatureView<Work
 
 	private fun onError(error: Message) {
 		binding.buttonWork.isEnabled = false
+		currentCancelDialog?.dismiss()
 		showErrorMessage(error)
 		clearNotifications()
 	}
