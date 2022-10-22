@@ -23,22 +23,15 @@
 			app:layout_constraintTop_toTopOf="parent"
 			app:shapeAppearance="?shapeAppearanceMediumComponent" />
 
-		<androidx.constraintlayout.widget.Barrier
-			android:id="@+id/barrier_card_game"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			app:barrierDirection="end"
-			app:barrierMargin="@dimen/card_padding"
-			app:constraint_referenced_ids="imageview_card_game_icon" />
-
 		<TextView
 			android:id="@+id/textview_card_game_title"
 			style="?textAppearanceTitleMedium"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="@string/game_title"
+			android:layout_marginStart="@dimen/card_padding"
 			app:layout_constraintBottom_toTopOf="@id/textview_card_game_version"
-			app:layout_constraintStart_toEndOf="@id/barrier_card_game"
+			app:layout_constraintStart_toEndOf="@id/imageview_card_game_icon"
 			app:layout_constraintTop_toTopOf="parent" />
 
 		<TextView
@@ -48,7 +41,7 @@
 			android:layout_height="wrap_content"
 			android:text="@string/card_game_version"
 			app:layout_constraintBottom_toTopOf="@id/textview_card_game_patch"
-			app:layout_constraintStart_toEndOf="@id/barrier_card_game"
+			app:layout_constraintStart_toStartOf="@id/textview_card_game_title"
 			app:layout_constraintTop_toBottomOf="@id/textview_card_game_title" />
 
 		<TextView
@@ -58,7 +51,7 @@
 			android:layout_height="wrap_content"
 			android:text="@string/card_patch_version"
 			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintStart_toEndOf="@id/barrier_card_game"
+			app:layout_constraintStart_toStartOf="@id/textview_card_game_title"
 			app:layout_constraintTop_toBottomOf="@id/textview_card_game_version" />
 
 	</androidx.constraintlayout.widget.ConstraintLayout>

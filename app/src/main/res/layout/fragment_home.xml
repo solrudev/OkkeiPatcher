@@ -18,7 +18,7 @@
 			android:layout_height="wrap_content"
 			android:layout_margin="@dimen/card_margin"
 			android:text="@string/card_game_title"
-			android:textAppearance="?textAppearanceHeadline6" />
+			android:textAppearance="?textAppearanceTitleLarge" />
 
 		<include layout="@layout/card_game_info" />
 
@@ -29,7 +29,7 @@
 			android:layout_marginTop="@dimen/content_category_margin"
 			android:layout_marginBottom="@dimen/card_margin"
 			android:text="@string/card_actions_title"
-			android:textAppearance="?textAppearanceHeadline6" />
+			android:textAppearance="?textAppearanceTitleLarge" />
 
 		<include layout="@layout/card_actions" />
 

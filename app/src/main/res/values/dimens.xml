@@ -1,7 +1,5 @@
 <resources>
 	<dimen name="about_screen_elements_margin">8dp</dimen>
-	<dimen name="about_screen_app_name_size">24sp</dimen>
-	<dimen name="about_screen_app_version_size">16sp</dimen>
 	<dimen name="button_margin_vertical">4dp</dimen>
 	<dimen name="card_layout_padding_horizontal">24dp</dimen>
 	<dimen name="card_padding">24dp</dimen>

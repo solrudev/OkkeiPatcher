@@ -20,7 +20,7 @@
 		android:layout_height="wrap_content"
 		android:layout_marginBottom="@dimen/about_screen_elements_margin"
 		android:text="@string/app_name"
-		android:textSize="@dimen/about_screen_app_name_size" />
+		style="?textAppearanceHeadlineSmall" />
 
 	<TextView
 		android:id="@+id/textview_about_version"
@@ -29,7 +29,7 @@
 		android:text="@string/about_version"
 		android:textAlignment="center"
 		android:layout_marginBottom="@dimen/about_screen_elements_margin"
-		android:textSize="@dimen/about_screen_app_version_size" />
+		style="?textAppearanceBodyLarge" />
 
 	<Button
 		android:id="@+id/button_about_source_code"

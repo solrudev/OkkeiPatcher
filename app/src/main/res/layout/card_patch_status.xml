@@ -25,23 +25,16 @@
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent" />
 
-		<androidx.constraintlayout.widget.Barrier
-			android:id="@+id/barrier_card_patch"
-			android:layout_width="0dp"
-			android:layout_height="0dp"
-			app:barrierDirection="end"
-			app:barrierMargin="@dimen/card_padding"
-			app:constraint_referenced_ids="imageview_card_patch_icon" />
-
 		<TextView
 			android:id="@+id/textview_card_patch_status"
 			style="?textAppearanceTitleMedium"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:text="@string/patch_status_update_available"
+			android:layout_marginStart="@dimen/card_padding"
 			app:layout_constraintBottom_toTopOf="@id/textview_card_patch_update"
 			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toEndOf="@id/barrier_card_patch"
+			app:layout_constraintStart_toEndOf="@id/imageview_card_patch_icon"
 			app:layout_constraintTop_toTopOf="parent" />
 
 		<TextView
@@ -54,7 +47,7 @@
 			android:textColor="?colorPrimary"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintStart_toEndOf="@id/barrier_card_patch"
+			app:layout_constraintStart_toStartOf="@id/textview_card_patch_status"
 			app:layout_constraintTop_toBottomOf="@id/textview_card_patch_status" />
 
 	</androidx.constraintlayout.widget.ConstraintLayout>
