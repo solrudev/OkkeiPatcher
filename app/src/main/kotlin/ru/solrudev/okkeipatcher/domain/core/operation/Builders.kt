@@ -44,10 +44,8 @@ fun <R> operation(
 fun aggregateOperation(vararg operations: Operation<*>): Operation<Unit> = OperationImpl(
 	operations,
 	canInvokeDelegate = lambda@{
-		for (operation in operations) {
-			operation
-				.canInvoke()
-				.onFailure { return@lambda it }
+		operations.forEach { operation ->
+			operation.canInvoke().onFailure { return@lambda it }
 		}
 		Result.Success
 	},
