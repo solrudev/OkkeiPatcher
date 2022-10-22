@@ -93,6 +93,7 @@ class NavHostActivity : AppCompatActivity(R.layout.okkei_nav_host), FeatureView<
 	private fun showBottomNavigationOnDestinationChanged(navController: NavController) = navController
 		.currentBackStackEntryFlow
 		.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+		.filterNot { it.destination is DialogFragmentNavigator.Destination }
 		.onEach {
 			binding.bottomNavigationViewNavHost?.let {
 				val params = it.layoutParams as CoordinatorLayout.LayoutParams
