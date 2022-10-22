@@ -8,17 +8,17 @@
 
 	<TextView
 		android:id="@+id/textview_license_subject"
-		style="?textAppearanceHeadlineSmall"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:textAppearance="?textAppearanceHeadlineSmall"
 		tools:text="License Subject" />
 
 	<TextView
 		android:id="@+id/textview_license_text"
-		style="?textAppearanceBodyMedium"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:autoLink="web"
+		android:textAppearance="?textAppearanceBodyMedium"
 		tools:text="License text" />
 
 </LinearLayout>

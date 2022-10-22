@@ -13,23 +13,24 @@
 
 		<TextView
 			android:id="@+id/textView_permission_title"
-			style="?textAppearanceListItem"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginEnd="@dimen/text_margin_end"
 			android:layout_marginBottom="@dimen/text_paragraph_margin"
+			android:textAppearance="?textAppearanceListItem"
 			app:layout_constraintBottom_toTopOf="@id/textView_permission_description"
 			app:layout_constraintEnd_toStartOf="@+id/button_permission_grant"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintVertical_chainStyle="packed"
 			tools:text="@string/permission_storage_title" />
 
 		<TextView
 			android:id="@+id/textView_permission_description"
-			style="?textAppearanceListItemSecondary"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginEnd="@dimen/text_margin_end"
+			android:textAppearance="?textAppearanceListItemSecondary"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toStartOf="@+id/button_permission_grant"
 			app:layout_constraintStart_toStartOf="parent"
@@ -38,10 +39,10 @@
 
 		<Button
 			android:id="@+id/button_permission_grant"
-			style="?borderlessButtonStyle"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="@string/button_text_grant"
+			style="?borderlessButtonStyle"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintTop_toTopOf="parent" />

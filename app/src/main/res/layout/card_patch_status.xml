@@ -11,7 +11,7 @@
 
 	<androidx.constraintlayout.widget.ConstraintLayout
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
+		android:layout_height="match_parent"
 		android:animateLayoutChanges="true"
 		android:padding="@dimen/card_padding">
 
@@ -20,22 +20,23 @@
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:importantForAccessibility="no"
-			app:srcCompat="@drawable/ic_sparkles"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="parent" />
+			app:layout_constraintTop_toTopOf="parent"
+			app:srcCompat="@drawable/ic_sparkles" />
 
 		<TextView
 			android:id="@+id/textview_card_patch_status"
 			style="?textAppearanceTitleMedium"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:text="@string/patch_status_update_available"
 			android:layout_marginStart="@dimen/card_padding"
+			android:text="@string/patch_status_update_available"
 			app:layout_constraintBottom_toTopOf="@id/textview_card_patch_update"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toEndOf="@id/imageview_card_patch_icon"
-			app:layout_constraintTop_toTopOf="parent" />
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintVertical_chainStyle="packed" />
 
 		<TextView
 			android:id="@+id/textview_card_patch_update"
@@ -45,8 +46,8 @@
 			android:layout_marginTop="@dimen/text_paragraph_margin"
 			android:text="@string/button_text_update_patch"
 			android:textColor="?colorPrimary"
-			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="@id/textview_card_patch_status"
 			app:layout_constraintTop_toBottomOf="@id/textview_card_patch_status" />
 

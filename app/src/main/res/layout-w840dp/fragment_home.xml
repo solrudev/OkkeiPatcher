@@ -8,10 +8,11 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:animateLayoutChanges="true"
+		android:clipChildren="false"
 		android:clipToPadding="false"
+		android:orientation="vertical"
 		android:paddingHorizontal="@dimen/card_layout_padding_horizontal"
-		android:paddingVertical="@dimen/card_margin"
-		android:orientation="vertical">
+		android:paddingVertical="@dimen/card_margin">
 
 		<TextView
 			android:layout_width="match_parent"
@@ -33,13 +34,28 @@
 			android:text="@string/card_actions_title"
 			android:textAppearance="?textAppearanceTitleLarge" />
 
-		<include
-			android:id="@+id/card_home_actions"
-			layout="@layout/card_actions" />
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:baselineAligned="false"
+			android:orientation="horizontal">
 
-		<include
-			android:id="@+id/card_home_patch_status"
-			layout="@layout/card_patch_status" />
+			<include
+				android:id="@+id/card_home_actions"
+				layout="@layout/card_actions"
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:layout_margin="@dimen/card_margin"
+				android:layout_weight="1" />
 
+			<include
+				android:id="@+id/card_home_patch_status"
+				layout="@layout/card_patch_status"
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:layout_margin="@dimen/card_margin"
+				android:layout_weight="1" />
+
+		</LinearLayout>
 	</LinearLayout>
 </androidx.core.widget.NestedScrollView>

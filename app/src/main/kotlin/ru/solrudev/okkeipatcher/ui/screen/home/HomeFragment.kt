@@ -31,9 +31,15 @@ class HomeFragment : Fragment(R.layout.fragment_home), FeatureView<HomeUiState> 
 
 	private val viewModel: HomeViewModel by featureViewModels()
 	private val binding by viewBinding(FragmentHomeBinding::bind)
-	private val gameInfoBinding by viewBinding(CardGameInfoBinding::bind, R.id.container_card_game)
-	private val actionsBinding by viewBinding(CardActionsBinding::bind, R.id.container_card_actions)
-	private val patchStatusBinding by viewBinding(CardPatchStatusBinding::bind, R.id.container_card_patch)
+
+	private val gameInfoBinding: CardGameInfoBinding
+		get() = binding.cardHomeGameInfo
+
+	private val actionsBinding: CardActionsBinding
+		get() = binding.cardHomeActions
+
+	private val patchStatusBinding: CardPatchStatusBinding
+		get() = binding.cardHomePatchStatus
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		setupNavigation()

@@ -10,7 +10,7 @@
 
 	<androidx.constraintlayout.widget.ConstraintLayout
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
+		android:layout_height="match_parent"
 		android:padding="@dimen/card_padding">
 
 		<com.google.android.material.imageview.ShapeableImageView
@@ -21,36 +21,41 @@
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
-			app:shapeAppearance="?shapeAppearanceMediumComponent" />
+			app:shapeAppearance="?shapeAppearanceMediumComponent"
+			tools:ignore="ImageContrastCheck" />
 
 		<TextView
 			android:id="@+id/textview_card_game_title"
 			style="?textAppearanceTitleMedium"
-			android:layout_width="wrap_content"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:text="@string/game_title"
 			android:layout_marginStart="@dimen/card_padding"
+			android:text="@string/game_title"
 			app:layout_constraintBottom_toTopOf="@id/textview_card_game_version"
+			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toEndOf="@id/imageview_card_game_icon"
-			app:layout_constraintTop_toTopOf="parent" />
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintVertical_chainStyle="packed" />
 
 		<TextView
 			android:id="@+id/textview_card_game_version"
 			style="?textAppearanceBodyMedium"
-			android:layout_width="wrap_content"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:text="@string/card_game_version"
 			app:layout_constraintBottom_toTopOf="@id/textview_card_game_patch"
+			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="@id/textview_card_game_title"
 			app:layout_constraintTop_toBottomOf="@id/textview_card_game_title" />
 
 		<TextView
 			android:id="@+id/textview_card_game_patch"
 			style="?textAppearanceBodyMedium"
-			android:layout_width="wrap_content"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:text="@string/card_patch_version"
 			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="@id/textview_card_game_title"
 			app:layout_constraintTop_toBottomOf="@id/textview_card_game_version" />
 
