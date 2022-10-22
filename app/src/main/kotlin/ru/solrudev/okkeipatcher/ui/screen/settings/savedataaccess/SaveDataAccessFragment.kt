@@ -75,6 +75,7 @@ class SaveDataAccessFragment : DialogFragment(), FeatureView<SaveDataAccessUiSta
 
 	private fun showRationale(message: Message) {
 		requireContext().createDialogBuilder(message)
+			.setIcon(R.drawable.ic_save_data)
 			.setPositiveButton(R.string.button_text_grant) { _, _ ->
 				permissionRequestLauncher.launch()
 			}

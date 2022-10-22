@@ -121,6 +121,7 @@ class WorkActivity : AppCompatActivity(R.layout.activity_work), FeatureView<Work
 
 	private fun showCancelWorkMessage(cancelWorkMessage: Message) {
 		val dialog = createDialogBuilder(cancelWorkMessage)
+			.setIcon(R.drawable.ic_cancel)
 			.setPositiveButton(R.string.button_text_abort) { _, _ ->
 				viewModel.dispatchEvent(CancelWork(args.work))
 			}
@@ -138,6 +139,7 @@ class WorkActivity : AppCompatActivity(R.layout.activity_work), FeatureView<Work
 	private fun showErrorMessage(errorMessage: Message) {
 		val message = errorMessage.text.resolve(this)
 		createDialogBuilder(errorMessage)
+			.setIcon(R.drawable.ic_error)
 			.setNeutralButton(R.string.button_text_copy_to_clipboard) { _, _ ->
 				copyTextToClipboard("Okkei Patcher Exception", message)
 			}

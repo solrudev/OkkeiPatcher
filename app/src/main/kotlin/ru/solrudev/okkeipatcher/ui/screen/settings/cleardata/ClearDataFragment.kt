@@ -62,6 +62,7 @@ class ClearDataFragment : DialogFragment(), FeatureView<ClearDataUiState> {
 
 	private fun showWarning(message: Message) {
 		requireContext().createDialogBuilder(message)
+			.setIcon(R.drawable.ic_clear_data)
 			.setPositiveButton(R.string.button_text_clear) { _, _ ->
 				viewModel.dispatchEvent(ClearingRequested)
 			}

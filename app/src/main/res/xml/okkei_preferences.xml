@@ -3,7 +3,7 @@
 	<PreferenceCategory app:title="@string/preference_general_header">
 
 		<SwitchPreferenceCompat
-			app:icon="@drawable/ic_save"
+			app:icon="@drawable/ic_save_data_preference"
 			app:key="@string/preference_key_handle_save_data"
 			app:persistent="false"
 			app:widgetLayout="@layout/preference_material_switch"
@@ -11,7 +11,7 @@
 			app:title="@string/preference_save_data_title" />
 
 		<Preference
-			app:icon="@drawable/ic_clear"
+			app:icon="@drawable/ic_clear_data_preference"
 			app:key="@string/preference_key_clear_data"
 			app:persistent="false"
 			app:summary="@string/preference_clear_data_summary"
@@ -22,13 +22,13 @@
 	<PreferenceCategory app:title="@string/preference_miscellaneous_header">
 
 		<Preference
-			app:icon="@drawable/ic_info"
+			app:icon="@drawable/ic_info_preference"
 			app:key="@string/preference_key_about"
 			app:persistent="false"
 			app:title="@string/preference_about_title" />
 
 		<Preference
-			app:icon="@drawable/ic_licenses"
+			app:icon="@drawable/ic_licenses_preference"
 			app:key="@string/preference_key_licenses"
 			app:persistent="false"
 			app:title="@string/preference_licenses_title" />

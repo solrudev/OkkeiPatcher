@@ -92,6 +92,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), FeatureView<HomeUiState> 
 
 	private fun showStartPatchMessage(startPatchMessage: Message) {
 		requireContext().createDialogBuilder(startPatchMessage)
+			.setIcon(R.drawable.ic_start_work)
 			.setPositiveButton(R.string.button_text_start) { _, _ ->
 				viewModel.dispatchEvent(StartPatch)
 			}
@@ -105,6 +106,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), FeatureView<HomeUiState> 
 
 	private fun showStartRestoreMessage(startRestoreMessage: Message) {
 		requireContext().createDialogBuilder(startRestoreMessage)
+			.setIcon(R.drawable.ic_start_work)
 			.setPositiveButton(R.string.button_text_start) { _, _ ->
 				viewModel.dispatchEvent(StartRestore)
 			}
