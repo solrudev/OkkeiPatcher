@@ -16,6 +16,8 @@ import ru.solrudev.okkeipatcher.data.service.FileDownloader
 import ru.solrudev.okkeipatcher.data.util.download
 import ru.solrudev.okkeipatcher.data.util.versionCode
 import ru.solrudev.okkeipatcher.di.IoDispatcher
+import ru.solrudev.okkeipatcher.domain.core.LocalizedString
+import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.model.OkkeiPatcherUpdateData
 import ru.solrudev.okkeipatcher.domain.model.OkkeiPatcherVersion
@@ -68,7 +70,11 @@ class OkkeiPatcherRepositoryImpl @Inject constructor(
 		return downloadUpdateWorkRepository.enqueueWork()
 	}
 
-	override suspend fun installUpdate() = packageInstaller.install(updateFile, immediate = true)
+	override suspend fun installUpdate() = try {
+		packageInstaller.install(updateFile, immediate = true)
+	} catch (t: Throwable) {
+		Result.Failure(LocalizedString.raw(t.stackTraceToString()))
+	}
 
 	override fun downloadUpdate() = operation(progressMax = fileDownloader.progressMax) {
 		wrapDomainExceptions {

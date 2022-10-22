@@ -12,6 +12,8 @@ import ru.solrudev.okkeipatcher.data.repository.util.install
 import ru.solrudev.okkeipatcher.data.service.StreamCopier
 import ru.solrudev.okkeipatcher.data.service.copy
 import ru.solrudev.okkeipatcher.di.IoDispatcher
+import ru.solrudev.okkeipatcher.domain.core.LocalizedString
+import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.model.OkkeiPatcherUpdateData
 import ru.solrudev.okkeipatcher.domain.model.OkkeiPatcherVersion
@@ -62,7 +64,11 @@ class MockOkkeiPatcherRepository @Inject constructor(
 		return downloadUpdateWorkRepository.enqueueWork()
 	}
 
-	override suspend fun installUpdate() = packageInstaller.install(updateFile, immediate = true)
+	override suspend fun installUpdate() = try {
+		packageInstaller.install(updateFile, immediate = true)
+	} catch (t: Throwable) {
+		Result.Failure(LocalizedString.raw(t.stackTraceToString()))
+	}
 
 	override fun downloadUpdate() = operation(progressMax = streamCopier.progressMax) {
 		wrapDomainExceptions {
