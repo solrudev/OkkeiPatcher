@@ -41,7 +41,7 @@ class DefaultPatchRepositoryImpl @Inject constructor(
 	override suspend fun getDisplayVersion() = try {
 		patchDataCache.retrieve().displayVersion
 	} catch (_: Throwable) {
-		"-"
+		""
 	}
 
 	override suspend fun getPatchUpdates() = DefaultPatchUpdates(
