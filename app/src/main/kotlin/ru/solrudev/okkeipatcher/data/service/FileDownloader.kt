@@ -13,10 +13,13 @@ import okhttp3.OkHttpClient
 import okio.HashingSink
 import okio.Sink
 import okio.buffer
+import okio.sink
 import ru.solrudev.okkeipatcher.data.network.model.exception.NetworkNotAvailableException
 import ru.solrudev.okkeipatcher.data.service.util.calculateProgressRatio
+import ru.solrudev.okkeipatcher.data.util.recreate
 import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.model.exception.NoNetworkException
+import java.io.File
 import javax.inject.Inject
 import kotlin.io.use
 import kotlin.math.ceil
@@ -38,6 +41,23 @@ interface FileDownloader {
 		hashing: Boolean = false,
 		onProgressDeltaChanged: suspend (Int) -> Unit = {}
 	): String
+}
+
+/**
+ * @param hashing Does output stream need to be hashed. Default is `false`.
+ * @return File hash. Empty string if [hashing] is `false`.
+ */
+@Suppress("BlockingMethodInNonBlockingContext")
+suspend inline fun FileDownloader.download(
+	url: String,
+	outputFile: File,
+	ioDispatcher: CoroutineDispatcher,
+	hashing: Boolean = false,
+	noinline onProgressDeltaChanged: suspend (Int) -> Unit
+): String {
+	outputFile.recreate()
+	val sink = withContext(ioDispatcher) { outputFile.sink() }
+	return download(url, sink, hashing, onProgressDeltaChanged)
 }
 
 class FileDownloaderImpl @Inject constructor(

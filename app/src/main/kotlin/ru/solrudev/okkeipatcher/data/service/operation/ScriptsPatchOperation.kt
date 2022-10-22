@@ -5,9 +5,9 @@ import kotlinx.coroutines.withContext
 import net.lingala.zip4j.ZipFile
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.service.FileDownloader
+import ru.solrudev.okkeipatcher.data.service.download
 import ru.solrudev.okkeipatcher.data.service.factory.ApkZipPackageFactory
 import ru.solrudev.okkeipatcher.data.service.util.use
-import ru.solrudev.okkeipatcher.data.util.download
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.aggregateOperation
