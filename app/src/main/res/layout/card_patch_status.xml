@@ -27,11 +27,11 @@
 
 		<TextView
 			android:id="@+id/textview_card_patch_status"
-			style="?textAppearanceTitleMedium"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/card_padding"
 			android:text="@string/patch_status_update_available"
+			android:textAppearance="?textAppearanceTitleMedium"
 			app:layout_constraintBottom_toTopOf="@id/textview_card_patch_update"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toEndOf="@id/imageview_card_patch_icon"
@@ -40,11 +40,11 @@
 
 		<TextView
 			android:id="@+id/textview_card_patch_update"
-			style="?textAppearanceTitleMedium"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="@dimen/text_paragraph_margin"
 			android:text="@string/button_text_update_patch"
+			android:textAppearance="?textAppearanceTitleMedium"
 			android:textColor="?colorPrimary"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"

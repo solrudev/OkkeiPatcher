@@ -14,11 +14,11 @@
 		app:title="@string/permissions_screen_title" />
 
 	<TextView
-		style="?textAppearanceBodyLarge"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:paddingHorizontal="@dimen/content_padding"
-		android:text="@string/permissions_screen_subtitle" />
+		android:text="@string/permissions_screen_subtitle"
+		android:textAppearance="?textAppearanceBodyLarge" />
 
 	<androidx.recyclerview.widget.RecyclerView
 		android:id="@+id/recyclerview_permissions"
