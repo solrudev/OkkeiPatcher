@@ -13,7 +13,7 @@
 	<fragment
 		android:id="@+id/settings_fragment"
 		android:name="ru.solrudev.okkeipatcher.ui.screen.settings.SettingsFragment"
-		android:label="@string/settings">
+		android:label="@string/screen_title_settings">
 		<action
 			android:id="@+id/action_settingsFragment_to_saveDataAccessFragment"
 			app:destination="@id/save_data_access_fragment" />

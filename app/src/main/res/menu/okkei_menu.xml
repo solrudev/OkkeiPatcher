@@ -4,13 +4,13 @@
 	<item
 		android:id="@+id/home_fragment"
 		android:icon="@drawable/ic_patcher"
-		android:title="@string/patcher" />
+		android:title="@string/screen_title_patcher" />
 	<item
 		android:id="@+id/update_fragment"
 		android:icon="@drawable/ic_update"
-		android:title="@string/update" />
+		android:title="@string/screen_title_update" />
 	<item
 		android:id="@+id/settings_nav_graph"
 		android:icon="@drawable/ic_settings"
-		android:title="@string/settings" />
+		android:title="@string/screen_title_settings" />
 </menu>

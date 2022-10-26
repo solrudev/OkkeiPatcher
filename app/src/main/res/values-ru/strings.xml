@@ -1,10 +1,9 @@
 ﻿<resources>
 	<!--General-->
-	<string name="about_version">Версия %s\nby solrudev</string>
 	<string name="not_available">Н/Д</string>
-	<string name="patcher">Патчер</string>
-	<string name="settings">Настройки</string>
-	<string name="update">Обновление</string>
+
+	<!--About screen-->
+	<string name="about_screen_version">Версия %s\nby solrudev</string>
 
 	<!--Button texts-->
 	<string name="button_text_abort">Стоп</string>
@@ -34,10 +33,8 @@
 	<string name="error_game_not_found">CHAOS;CHILD не найден на этом устройстве.</string>
 	<string name="error_hash_obb_mismatch">OBB повреждён.</string>
 	<string name="error_hash_scripts_mismatch">Скрипты повреждены.</string>
-	<string name="error_http_file_download">Во время загрузки файла произошла ошибка.</string>
 	<string name="error_install">Произошла ошибка при установке APK.\n%s</string>
 	<string name="error_no_free_space">Недостаточно свободного места. Убедитесь, что на устройстве свободно как минимум 2 ГБ.</string>
-	<string name="error_no_install_permission">Okkei Patcher не может получить разрешение на установку пакетов приложений.</string>
 	<string name="error_no_network">Отсутствует интернет-соединение.</string>
 	<string name="error_not_patched">Патч ещё не был применён к CHAOS;CHILD.</string>
 	<string name="error_not_trustworthy_apk">Возможно, APK для установки не был создан с помощью Okkei Patcher.</string>
@@ -71,14 +68,19 @@
 	<string name="patch_status_update_available">Доступно обновление патча!</string>
 
 	<!--Permissions-->
-	<string name="permissions_screen_title">Разрешения</string>
-	<string name="permissions_screen_subtitle">Данные разрешения необходимы для работы Okkei Patcher</string>
+	<string name="permissions_description">Данные разрешения необходимы для работы Okkei Patcher</string>
 	<string name="permission_install_title">Установка пакетов</string>
 	<string name="permission_install_description">Для установки и удаления CHAOS;CHILD, а также доступа к игровым файлам</string>
 	<string name="permission_save_data_access_title">Доступ к сохранениям</string>
 	<string name="permission_save_data_access_description">На Android 11+ требуется специальное разрешение для доступа к игровым сохранениям CHAOS;CHILD. После клика по кнопке \"Выдать\" нажмите \"Использовать эту папку\" и разрешите доступ.</string>
 	<string name="permission_storage_title">Доступ к памяти</string>
 	<string name="permission_storage_description">Для доступа к данным CHAOS;CHILD, необходимо для патча, создания и восстановления резервной копии</string>
+
+	<!--Screen titles-->
+	<string name="screen_title_patcher">Патчер</string>
+	<string name="screen_title_permissions">Разрешения</string>
+	<string name="screen_title_settings">Настройки</string>
+	<string name="screen_title_update">Обновление</string>
 
 	<!--Settings-->
 	<string name="preference_general_header">Общие</string>

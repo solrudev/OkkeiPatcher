@@ -22,9 +22,9 @@ class AboutFragment : Fragment(R.layout.fragment_about) {
 			packageManager.getPackageInfo(packageName, PackageManager.GET_META_DATA).versionName
 		}
 		val versionCode = requireContext().versionCode
-		binding.textviewAboutVersion.text = getString(R.string.about_version, "$versionName($versionCode)")
+		binding.textviewAboutVersion.text = getString(R.string.about_screen_version, "$versionName($versionCode)")
 		binding.buttonAboutSourceCode.setOnClickListener {
-			val sourceCodeUri = Uri.parse(getString(R.string.source_code_link))
+			val sourceCodeUri = Uri.parse(getString(R.string.about_screen_source_code_link))
 			startActivity(Intent(ACTION_VIEW).setData(sourceCodeUri))
 		}
 	}
