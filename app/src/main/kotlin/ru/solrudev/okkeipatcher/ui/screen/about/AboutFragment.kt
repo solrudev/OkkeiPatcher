@@ -16,14 +16,14 @@ class AboutFragment : Fragment(R.layout.fragment_about) {
 
 	private val binding by viewBinding(FragmentAboutBinding::bind)
 
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
 		val versionName = requireContext().run {
 			@Suppress("DEPRECATION")
 			packageManager.getPackageInfo(packageName, PackageManager.GET_META_DATA).versionName
 		}
 		val versionCode = requireContext().versionCode
-		binding.textviewAboutVersion.text = getString(R.string.about_screen_version, "$versionName($versionCode)")
-		binding.buttonAboutSourceCode.setOnClickListener {
+		textviewAboutVersion.text = getString(R.string.about_screen_version, "$versionName($versionCode)")
+		buttonAboutSourceCode.setOnClickListener {
 			val sourceCodeUri = Uri.parse(getString(R.string.about_screen_source_code_link))
 			startActivity(Intent(ACTION_VIEW).setData(sourceCodeUri))
 		}

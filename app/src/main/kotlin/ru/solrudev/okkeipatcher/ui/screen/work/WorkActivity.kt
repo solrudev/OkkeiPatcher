@@ -38,7 +38,7 @@ class WorkActivity : AppCompatActivity(R.layout.activity_work), FeatureView<Work
 			finishAffinity()
 		}
 		setupNavigation()
-		binding.toolbarWork.title = args.work.label.resolve(this)
+		setWorkLabel()
 	}
 
 	override fun onStart() {
@@ -52,9 +52,9 @@ class WorkActivity : AppCompatActivity(R.layout.activity_work), FeatureView<Work
 		viewModel.dispatchEvent(ViewHidden)
 	}
 
-	override fun render(uiState: WorkUiState) {
-		binding.textviewWorkStatus.localizedText = uiState.status
-		binding.textviewWorkPercentDone.text = getString(R.string.percent_done, uiState.percentDone)
+	override fun render(uiState: WorkUiState) = with(binding) {
+		textviewWorkStatus.localizedText = uiState.status
+		textviewWorkPercentDone.text = getString(R.string.percent_done, uiState.percentDone)
 		setProgress(uiState.progressData)
 		if (uiState.isWorkSuccessful) {
 			onWorkSucceeded(playAnimations = !uiState.animationsPlayed)
@@ -70,10 +70,14 @@ class WorkActivity : AppCompatActivity(R.layout.activity_work), FeatureView<Work
 		}
 	}
 
-	private fun setupNavigation() {
-		binding.buttonWork.setOnClickListener {
+	private fun setupNavigation() = with(binding) {
+		buttonWork.setOnClickListener {
 			viewModel.dispatchEvent(CancelRequested)
 		}
+	}
+
+	private fun setWorkLabel() {
+		binding.toolbarWork.title = args.work.label.resolve(this)
 	}
 
 	private fun clearNotifications() {
@@ -81,14 +85,14 @@ class WorkActivity : AppCompatActivity(R.layout.activity_work), FeatureView<Work
 		notificationManager?.cancelAll()
 	}
 
-	private fun onWorkSucceeded(playAnimations: Boolean) {
+	private fun onWorkSucceeded(playAnimations: Boolean) = with(binding) {
 		if (playAnimations) {
 			startSuccessAnimations()
 		}
-		binding.buttonWork.setOnClickListener {
+		buttonWork.setOnClickListener {
 			finish()
 		}
-		binding.buttonWork.setText(R.string.button_text_ok)
+		buttonWork.setText(R.string.button_text_ok)
 		currentCancelDialog?.dismiss()
 		clearNotifications()
 	}
@@ -97,16 +101,16 @@ class WorkActivity : AppCompatActivity(R.layout.activity_work), FeatureView<Work
 		finish()
 	}
 
-	private fun onError(error: Message) {
-		binding.buttonWork.isEnabled = false
+	private fun onError(error: Message) = with(binding) {
+		buttonWork.isEnabled = false
 		currentCancelDialog?.dismiss()
 		showErrorMessage(error)
 		clearNotifications()
 	}
 
-	private fun startSuccessAnimations() {
-		binding.buttonWork.alpha = 0f
-		binding.buttonWork
+	private fun startSuccessAnimations() = with(binding) {
+		buttonWork.alpha = 0f
+		buttonWork
 			.animate()
 			.alpha(1f)
 			.setDuration(500)
@@ -115,9 +119,9 @@ class WorkActivity : AppCompatActivity(R.layout.activity_work), FeatureView<Work
 		viewModel.dispatchEvent(AnimationsPlayed)
 	}
 
-	private fun setProgress(progressData: ProgressData) {
-		binding.progressbarWork.max = progressData.max
-		binding.progressbarWork.setProgressCompat(progressData.progress, true)
+	private fun setProgress(progressData: ProgressData) = with(binding) {
+		progressbarWork.max = progressData.max
+		progressbarWork.setProgressCompat(progressData.progress, true)
 	}
 
 	private fun showCancelWorkMessage(cancelWorkMessage: Message) {

@@ -23,10 +23,13 @@ class WorkRepositoryImpl @Inject constructor(
 		workDao.insert(workModel)
 	}
 
-	override suspend fun updateIsPending(workId: UUID, isPending: Boolean) =
+	override suspend fun updateIsPending(workId: UUID, isPending: Boolean) {
 		workDao.updateIsPendingByWorkId(workId, isPending)
+	}
 
-	override suspend fun getIsPending(workId: UUID) = workDao.getIsPendingByWorkId(workId) ?: false
+	override suspend fun getIsPending(workId: UUID): Boolean {
+		return workDao.getIsPendingByWorkId(workId) ?: false
+	}
 
 	override fun cancelWork(workId: UUID) {
 		workManager.cancelWorkById(workId)

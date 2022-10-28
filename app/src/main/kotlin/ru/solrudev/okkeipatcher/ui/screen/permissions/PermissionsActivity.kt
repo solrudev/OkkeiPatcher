@@ -3,7 +3,7 @@ package ru.solrudev.okkeipatcher.ui.screen.permissions
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.os.Bundle
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions
 import androidx.activity.result.launch
 import androidx.appcompat.app.AppCompatActivity
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -25,24 +25,16 @@ class PermissionsActivity : AppCompatActivity(R.layout.activity_permissions), Fe
 	private val binding by viewBinding(ActivityPermissionsBinding::bind, R.id.container_permissions)
 	private val viewModel: PermissionsViewModel by featureViewModels()
 
-	private val storagePermissionLauncher = registerForActivityResult(
-		ActivityResultContracts.RequestMultiplePermissions()
-	) { storagePermissions ->
-		val isGranted = storagePermissions.all { (_, isGranted) -> isGranted }
+	private val storagePermissionLauncher = registerForActivityResult(RequestMultiplePermissions()) { permissions ->
+		val isGranted = permissions.all { (_, isGranted) -> isGranted }
 		if (isGranted) {
-			viewModel.dispatchEvent(
-				PermissionStateChanged(Permission.Storage, isGranted = true)
-			)
+			viewModel.dispatchEvent(PermissionStateChanged(Permission.Storage, isGranted = true))
 		}
 	}
 
-	private val installPermissionLauncher = registerForActivityResult(
-		InstallPermissionContract()
-	) { isGranted ->
+	private val installPermissionLauncher = registerForActivityResult(InstallPermissionContract()) { isGranted ->
 		if (isGranted) {
-			viewModel.dispatchEvent(
-				PermissionStateChanged(Permission.Install, isGranted = true)
-			)
+			viewModel.dispatchEvent(PermissionStateChanged(Permission.Install, isGranted = true))
 		}
 	}
 

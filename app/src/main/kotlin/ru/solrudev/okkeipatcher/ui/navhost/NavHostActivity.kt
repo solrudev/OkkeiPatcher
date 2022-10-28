@@ -17,7 +17,6 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.google.android.material.color.MaterialColors
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.*
 import ru.solrudev.okkeipatcher.OkkeiNavGraphDirections
@@ -30,6 +29,7 @@ import ru.solrudev.okkeipatcher.ui.core.featureViewModels
 import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostEvent.*
 import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostUiState
 import ru.solrudev.okkeipatcher.ui.util.animateLayoutChanges
+import ru.solrudev.okkeipatcher.ui.util.getMaterialColor
 import ru.solrudev.okkeipatcher.ui.util.navigateSafely
 
 @AndroidEntryPoint
@@ -45,18 +45,20 @@ class NavHostActivity : AppCompatActivity(R.layout.okkei_nav_host), FeatureView<
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		setContentView(binding.root)
-		setSupportActionBar(binding.toolbarNavHost)
-		binding.containerNavHost.animateLayoutChanges()
-		val navController = binding.contentNavHost.getFragment<NavHostFragment>().navController
-		binding.bottomNavigationViewNavHost?.let {
-			it.setupWithNavController(navController)
-			showBottomNavigationOnDestinationChanged(navController)
-			hideBottomNavigationOnNonTopLevelDestinations(navController)
+		with(binding) {
+			setContentView(root)
+			setSupportActionBar(toolbarNavHost)
+			containerNavHost.animateLayoutChanges()
+			val navController = contentNavHost.getFragment<NavHostFragment>().navController
+			bottomNavigationViewNavHost?.let {
+				it.setupWithNavController(navController)
+				showBottomNavigationOnDestinationChanged(navController)
+				hideBottomNavigationOnNonTopLevelDestinations(navController)
+			}
+			navigationRailViewNavHost?.setupWithNavController(navController)
+			navigationViewNavHost?.setupWithNavController(navController)
+			setupActionBarWithNavController(navController, appBarConfiguration)
 		}
-		binding.navigationRailViewNavHost?.setupWithNavController(navController)
-		binding.navigationViewNavHost?.setupWithNavController(navController)
-		setupActionBarWithNavController(navController, appBarConfiguration)
 	}
 
 	override fun onStart() {
@@ -106,18 +108,18 @@ class NavHostActivity : AppCompatActivity(R.layout.okkei_nav_host), FeatureView<
 		}
 		.launchIn(lifecycleScope)
 
-	private fun displayUpdateBadge(isUpdateAvailable: Boolean) {
+	private fun displayUpdateBadge(isUpdateAvailable: Boolean) = with(binding) {
 		if (isUpdateAvailable) {
-			val color = MaterialColors.getColor(this, com.google.android.material.R.attr.colorError, Color.RED)
-			binding.bottomNavigationViewNavHost?.getOrCreateBadge(R.id.update_fragment)?.apply {
+			val color = getMaterialColor(com.google.android.material.R.attr.colorError, Color.RED)
+			bottomNavigationViewNavHost?.getOrCreateBadge(R.id.update_fragment)?.apply {
 				backgroundColor = color
 			}
-			binding.navigationRailViewNavHost?.getOrCreateBadge(R.id.update_fragment)?.apply {
+			navigationRailViewNavHost?.getOrCreateBadge(R.id.update_fragment)?.apply {
 				backgroundColor = color
 			}
 		} else {
-			binding.bottomNavigationViewNavHost?.removeBadge(R.id.update_fragment)
-			binding.navigationRailViewNavHost?.removeBadge(R.id.update_fragment)
+			bottomNavigationViewNavHost?.removeBadge(R.id.update_fragment)
+			navigationRailViewNavHost?.removeBadge(R.id.update_fragment)
 		}
 	}
 

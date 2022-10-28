@@ -4,17 +4,15 @@ import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.core.resolve
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Message
 import ru.solrudev.okkeipatcher.ui.core.FeatureView
+import ru.solrudev.okkeipatcher.ui.core.bindHeadless
 import ru.solrudev.okkeipatcher.ui.model.shouldShow
 import ru.solrudev.okkeipatcher.ui.screen.settings.cleardata.model.ClearDataEvent.*
 import ru.solrudev.okkeipatcher.ui.screen.settings.cleardata.model.ClearDataUiState
@@ -30,7 +28,7 @@ class ClearDataFragment : DialogFragment(), FeatureView<ClearDataUiState> {
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		startRender()
+		viewModel.bindHeadless(this)
 	}
 
 	override fun onStop() {
@@ -49,14 +47,6 @@ class ClearDataFragment : DialogFragment(), FeatureView<ClearDataUiState> {
 		if (uiState.shouldShowErrorMessage) {
 			showErrorMessage(uiState.error)
 			findNavController().popBackStack()
-		}
-	}
-
-	private fun startRender() {
-		lifecycleScope.launch {
-			repeatOnLifecycle(Lifecycle.State.STARTED) {
-				viewModel.collect(::render)
-			}
 		}
 	}
 
@@ -80,15 +70,15 @@ class ClearDataFragment : DialogFragment(), FeatureView<ClearDataUiState> {
 	}
 
 	private fun showSuccessMessage() {
-		parentFragment?.view?.let {
-			showSnackbar(it, R.string.snackbar_data_cleared, Snackbar.LENGTH_SHORT)
+		parentFragment?.view?.let { parentView ->
+			showSnackbar(parentView, R.string.snackbar_data_cleared, Snackbar.LENGTH_SHORT)
 		}
 	}
 
 	private fun showErrorMessage(error: LocalizedString) {
-		val errorString = error.resolve(requireContext())
-		parentFragment?.view?.let {
-			showSnackbar(it, errorString, Snackbar.LENGTH_SHORT)
+		parentFragment?.view?.let { parentView ->
+			val errorString = error.resolve(requireContext())
+			showSnackbar(parentView, errorString, Snackbar.LENGTH_SHORT)
 		}
 		viewModel.dispatchEvent(ErrorMessageShown)
 	}

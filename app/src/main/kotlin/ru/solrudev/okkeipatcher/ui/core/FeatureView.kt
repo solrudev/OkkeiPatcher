@@ -45,3 +45,20 @@ fun <S : UiState, V> Flow<S>.bind(featureView: V): Job
 		}
 	}
 }
+
+/**
+ * Launches lifecycle-aware collection of the [Flow] of [UiState] for non-UI fragment which will re-render it each
+ * time new state is emitted.
+ *
+ * **Use only in non-UI fragments, as it doesn't respect fragment's view lifecycle.**
+ * @return [Job] of the flow collection.
+ */
+fun <S : UiState, V> Flow<S>.bindHeadless(featureView: V): Job
+		where V : FeatureView<S>,
+			  V : Fragment {
+	return featureView.lifecycleScope.launch {
+		featureView.repeatOnLifecycle(Lifecycle.State.STARTED) {
+			collect(featureView::render)
+		}
+	}
+}

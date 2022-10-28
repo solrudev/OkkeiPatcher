@@ -34,9 +34,9 @@ open class ConcreteWorkRepositoryImpl<T : ForegroundOperationWorker>(
 		.getWorkInfosForUniqueWorkLiveData(workName)
 		.asFlow()
 		.mapNotNull { workInfoList -> workInfoList.firstOrNull() }
-		.onEach {
-			if (it.state == WorkInfo.State.CANCELLED) {
-				workRepository.updateIsPending(it.id, isPending = false)
+		.onEach { workInfo ->
+			if (workInfo.state == WorkInfo.State.CANCELLED) {
+				workRepository.updateIsPending(workInfo.id, isPending = false)
 			}
 		}
 		.distinctUntilChangedBy { it.id }

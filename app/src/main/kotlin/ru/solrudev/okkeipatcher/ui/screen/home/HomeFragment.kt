@@ -6,14 +6,9 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.github.razir.progressbutton.attachTextChangeAnimator
-import com.github.razir.progressbutton.bindProgressButton
 import dagger.hilt.android.AndroidEntryPoint
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.core.resolve
-import ru.solrudev.okkeipatcher.databinding.CardActionsBinding
-import ru.solrudev.okkeipatcher.databinding.CardGameInfoBinding
-import ru.solrudev.okkeipatcher.databinding.CardPatchStatusBinding
 import ru.solrudev.okkeipatcher.databinding.FragmentHomeBinding
 import ru.solrudev.okkeipatcher.domain.core.Message
 import ru.solrudev.okkeipatcher.ui.core.FeatureView
@@ -32,19 +27,10 @@ class HomeFragment : Fragment(R.layout.fragment_home), FeatureView<HomeUiState> 
 	private val viewModel: HomeViewModel by featureViewModels()
 	private val binding by viewBinding(FragmentHomeBinding::bind)
 
-	private val gameInfoBinding: CardGameInfoBinding
-		get() = binding.cardHomeGameInfo
-
-	private val actionsBinding: CardActionsBinding
-		get() = binding.cardHomeActions
-
-	private val patchStatusBinding: CardPatchStatusBinding
-		get() = binding.cardHomePatchStatus
-
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
 		setupNavigation()
-		binding.containerHome.animateLayoutChanges()
-		viewLifecycleOwner.bindProgressButton(actionsBinding.buttonCardActionsPatch)
+		cardHomeActions.buttonCardActionsPatch.setupProgressButton(viewLifecycleOwner)
+		containerHome.animateLayoutChanges()
 		loadGameInfo()
 	}
 
@@ -54,11 +40,8 @@ class HomeFragment : Fragment(R.layout.fragment_home), FeatureView<HomeUiState> 
 	}
 
 	override fun render(uiState: HomeUiState) {
-		actionsBinding.buttonCardActionsPatch.isEnabled = uiState.isPatchEnabled
-		actionsBinding.buttonCardActionsRestore.isEnabled = uiState.isRestoreEnabled
-		actionsBinding.buttonCardActionsPatch.setLoading(uiState.isPatchSizeLoading, R.string.button_text_patch)
-		patchStatusBinding.textviewCardPatchStatus.text = uiState.patchStatus.resolve(requireContext())
-		patchStatusBinding.textviewCardPatchUpdate.isVisible = uiState.patchUpdatesAvailable
+		renderActions(uiState)
+		renderPatchStatus(uiState)
 		displayPatchVersion(uiState.patchVersion)
 		if (uiState.startPatchMessage.shouldShow) {
 			showStartPatchMessage(uiState.startPatchMessage.data)
@@ -68,32 +51,43 @@ class HomeFragment : Fragment(R.layout.fragment_home), FeatureView<HomeUiState> 
 		}
 	}
 
-	private fun setupNavigation() {
-		actionsBinding.buttonCardActionsPatch.attachTextChangeAnimator {
-			fadeInMills = 150
-			fadeOutMills = 150
+	private fun renderActions(uiState: HomeUiState) = with(binding.cardHomeActions) {
+		buttonCardActionsPatch.isEnabled = uiState.isPatchEnabled
+		buttonCardActionsRestore.isEnabled = uiState.isRestoreEnabled
+		buttonCardActionsPatch.setLoading(uiState.isPatchSizeLoading, R.string.button_text_patch)
+	}
+
+	private fun renderPatchStatus(uiState: HomeUiState) = with(binding.cardHomePatchStatus) {
+		textviewCardPatchStatus.text = uiState.patchStatus.resolve(requireContext())
+		textviewCardPatchUpdate.isVisible = uiState.patchUpdatesAvailable
+	}
+
+	private fun setupNavigation() = with(binding) {
+		setupActionsNavigation()
+		cardHomePatchStatus.textviewCardPatchUpdate.setOnClickListener {
+			cardHomeActions.buttonCardActionsPatch.showRippleEffect()
 		}
-		actionsBinding.buttonCardActionsPatch.setOnClickListener {
+	}
+
+	private fun setupActionsNavigation() = with(binding.cardHomeActions) {
+		buttonCardActionsPatch.setOnClickListener {
 			viewModel.dispatchEvent(PatchRequested)
 		}
-		actionsBinding.buttonCardActionsRestore.setOnClickListener {
+		buttonCardActionsRestore.setOnClickListener {
 			viewModel.dispatchEvent(RestoreRequested)
 		}
-		patchStatusBinding.textviewCardPatchUpdate.setOnClickListener {
-			actionsBinding.buttonCardActionsPatch.showRippleEffect()
-		}
 	}
 
-	private fun loadGameInfo() {
+	private fun loadGameInfo() = with(binding.cardHomeGameInfo) {
 		val gameUiState = GameUiState(requireContext())
-		gameInfoBinding.textviewCardGameTitle.text = gameUiState.title
-		gameInfoBinding.textviewCardGameVersion.text = getString(R.string.card_game_version, gameUiState.version)
-		gameInfoBinding.imageviewCardGameIcon.setImageDrawable(gameUiState.icon)
+		textviewCardGameTitle.text = gameUiState.title
+		textviewCardGameVersion.text = getString(R.string.card_game_version, gameUiState.version)
+		imageviewCardGameIcon.setImageDrawable(gameUiState.icon)
 	}
 
-	private fun displayPatchVersion(patchVersion: String) {
+	private fun displayPatchVersion(patchVersion: String) = with(binding.cardHomeGameInfo) {
 		val version = patchVersion.ifEmpty { getString(R.string.not_available) }
-		gameInfoBinding.textviewCardGamePatch.text = getString(R.string.card_patch_version, version)
+		textviewCardGamePatch.text = getString(R.string.card_patch_version, version)
 	}
 
 	private fun showStartPatchMessage(startPatchMessage: Message) {
