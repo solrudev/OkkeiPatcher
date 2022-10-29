@@ -10,17 +10,13 @@ import ru.solrudev.okkeipatcher.R
 fun Fragment.showSnackbar(view: View, @StringRes resId: Int, @Duration duration: Int) {
 	val bottomNavigationView = requireActivity().findViewById<View>(R.id.bottomNavigationView_nav_host)
 	Snackbar.make(view, resId, duration).apply {
-		if (bottomNavigationView != null) {
-			anchorView = bottomNavigationView
-		}
+		bottomNavigationView?.let(::setAnchorView)
 	}.show()
 }
 
 fun Fragment.showSnackbar(view: View, text: CharSequence, @Duration duration: Int) {
 	val bottomNavigationView = requireActivity().findViewById<View>(R.id.bottomNavigationView_nav_host)
 	Snackbar.make(view, text, duration).apply {
-		if (bottomNavigationView != null) {
-			anchorView = bottomNavigationView
-		}
+		bottomNavigationView?.let(::setAnchorView)
 	}.show()
 }
