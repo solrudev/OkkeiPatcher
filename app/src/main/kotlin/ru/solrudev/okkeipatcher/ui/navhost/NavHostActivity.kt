@@ -21,7 +21,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.*
 import ru.solrudev.okkeipatcher.OkkeiNavGraphDirections
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.data.core.resolve
 import ru.solrudev.okkeipatcher.databinding.OkkeiNavHostBinding
 import ru.solrudev.okkeipatcher.domain.model.Work
 import ru.solrudev.okkeipatcher.ui.core.FeatureView
@@ -66,15 +65,15 @@ class NavHostActivity : AppCompatActivity(R.layout.okkei_nav_host), FeatureView<
 		viewModel.dispatchEvent(PermissionsCheckRequested)
 	}
 
-	override fun onSupportNavigateUp() = navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+	override fun onSupportNavigateUp(): Boolean {
+		return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+	}
 
 	override fun render(uiState: NavHostUiState) {
 		if (uiState.permissionsRequired) {
 			navigateToPermissionsScreen()
 		}
-		if (uiState.pendingWork != null) {
-			navigateToWorkScreen(uiState.pendingWork)
-		}
+		uiState.pendingWork?.let(::navigateToWorkScreen)
 		displayUpdateBadge(uiState.isUpdateAvailable)
 	}
 
@@ -85,8 +84,6 @@ class NavHostActivity : AppCompatActivity(R.layout.okkei_nav_host), FeatureView<
 	}
 
 	private fun navigateToWorkScreen(work: Work) {
-		val workScreen = navController.findDestination(R.id.work_activity)
-		workScreen?.label = work.label.resolve(this)
 		val toWorkScreen = OkkeiNavGraphDirections.actionGlobalWork(work)
 		navController.navigateSafely(toWorkScreen)
 		viewModel.dispatchEvent(NavigatedToWorkScreen)
