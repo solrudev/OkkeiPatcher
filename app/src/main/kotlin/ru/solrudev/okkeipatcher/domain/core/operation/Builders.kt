@@ -22,7 +22,7 @@ import ru.solrudev.okkeipatcher.domain.core.onFailure
  * be summed.
  * @param progressMax max progress of the operation (cannot be negative, defaults to zero). Provided value should
  * account only for actions executed in [block], without nested operations' max progress values.
- * @param canInvoke lambda which returns if the operation can be invoked at the moment. By default returns
+ * @param canInvoke lambda which returns if the operation can be invoked at the moment. By default, returns
  * [Result.Success].
  */
 fun <R> operation(

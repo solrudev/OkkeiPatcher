@@ -27,8 +27,9 @@ interface ProgressOperation<out R> {
 /**
  * Converts [ProgressOperation] to [Operation].
  */
-fun <R> ProgressOperation<R>.toOperation(): Operation<R> =
-	if (this is Operation) this else ProgressOperationWrapper(this)
+fun <R> ProgressOperation<R>.asOperation(): Operation<R> {
+	return if (this is Operation) this else ProgressOperationWrapper(this)
+}
 
 @JvmInline
 private value class ProgressOperationWrapper<out R>(
