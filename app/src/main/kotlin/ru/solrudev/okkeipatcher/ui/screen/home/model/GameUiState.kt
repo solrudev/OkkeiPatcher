@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable
 import androidx.core.content.ContextCompat
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.repository.gamefile.util.GAME_PACKAGE_NAME
+import ru.solrudev.okkeipatcher.data.util.getPackageInfoCompat
 
 data class GameUiState(
 	val title: CharSequence,
@@ -16,8 +17,7 @@ data class GameUiState(
 
 fun GameUiState(context: Context): GameUiState {
 	val packageInfo = try {
-		@Suppress("DEPRECATION")
-		context.packageManager.getPackageInfo(GAME_PACKAGE_NAME, PackageManager.GET_META_DATA)
+		context.packageManager.getPackageInfoCompat(GAME_PACKAGE_NAME, PackageManager.GET_META_DATA)
 	} catch (_: PackageManager.NameNotFoundException) {
 		null
 	}

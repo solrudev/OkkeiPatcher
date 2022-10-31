@@ -16,7 +16,6 @@ class LicensesRepositoryImpl @Inject constructor(
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : LicensesRepository {
 
-	@Suppress("BlockingMethodInNonBlockingContext")
 	override suspend fun getLicenses() = withContext(ioDispatcher) {
 		val assets = applicationContext.assets
 		val licenses = assets.list(LICENSES_DIR) ?: return@withContext emptyList()

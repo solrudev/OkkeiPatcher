@@ -1,6 +1,7 @@
 package ru.solrudev.okkeipatcher.data.util
 
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Environment
 import java.io.File
@@ -18,7 +19,10 @@ val Context.externalDir: File
 @Suppress("DEPRECATION")
 val Context.versionCode: Int
 	get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-		packageManager.getPackageInfo(packageName, 0).longVersionCode.toInt()
+		packageManager.getPackageInfoCompat(packageName, 0).longVersionCode.toInt()
 	} else {
-		packageManager.getPackageInfo(packageName, 0).versionCode
+		packageManager.getPackageInfoCompat(packageName, 0).versionCode
 	}
+
+val Context.versionName: String
+	get() = packageManager.getPackageInfoCompat(packageName, PackageManager.GET_META_DATA).versionName

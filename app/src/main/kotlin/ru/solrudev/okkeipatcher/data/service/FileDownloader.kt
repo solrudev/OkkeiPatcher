@@ -47,7 +47,6 @@ interface FileDownloader {
  * @param hashing Does output stream need to be hashed. Default is `false`.
  * @return File hash. Empty string if [hashing] is `false`.
  */
-@Suppress("BlockingMethodInNonBlockingContext")
 suspend inline fun FileDownloader.download(
 	url: String,
 	outputFile: File,
@@ -55,8 +54,10 @@ suspend inline fun FileDownloader.download(
 	hashing: Boolean = false,
 	noinline onProgressDeltaChanged: suspend (Int) -> Unit
 ): String {
-	outputFile.recreate()
-	val sink = withContext(ioDispatcher) { outputFile.sink() }
+	val sink = withContext(ioDispatcher) {
+		outputFile.recreate()
+		outputFile.sink()
+	}
 	return download(url, sink, hashing, onProgressDeltaChanged)
 }
 
@@ -75,7 +76,6 @@ class FileDownloaderImpl @Inject constructor(
 		}
 	}
 
-	@Suppress("BlockingMethodInNonBlockingContext")
 	override suspend fun download(
 		url: String,
 		sink: Sink,

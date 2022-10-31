@@ -26,13 +26,11 @@ class ApkZipPackage(
 		zipFile.close()
 	}
 
-	@Suppress("BlockingMethodInNonBlockingContext")
 	override suspend fun addFiles(files: List<File>, root: String) = withContext(ioDispatcher) {
 		val parameters = ZipParameters().apply { rootFolderNameInZip = root }
 		zipFile.addFiles(files, parameters)
 	}
 
-	@Suppress("BlockingMethodInNonBlockingContext")
 	override suspend fun removeFiles(files: List<String>) = withContext(ioDispatcher) {
 		zipFile.removeFiles(files)
 	}

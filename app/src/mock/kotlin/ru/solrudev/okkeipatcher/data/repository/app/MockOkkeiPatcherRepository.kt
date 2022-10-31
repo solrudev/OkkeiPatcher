@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import ru.solrudev.okkeipatcher.data.repository.util.install
 import ru.solrudev.okkeipatcher.data.service.StreamCopier
 import ru.solrudev.okkeipatcher.data.service.copy
+import ru.solrudev.okkeipatcher.data.util.getPackageInfoCompat
 import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Result
@@ -73,9 +74,8 @@ class MockOkkeiPatcherRepository @Inject constructor(
 	override fun downloadUpdate() = operation(progressMax = streamCopier.progressMax) {
 		wrapDomainExceptions {
 			try {
-				@Suppress("DEPRECATION")
 				val installedApkPath = applicationContext.packageManager
-					.getPackageInfo(applicationContext.packageName, 0)
+					.getPackageInfoCompat(applicationContext.packageName, 0)
 					.applicationInfo
 					.publicSourceDir
 				val installedApk = File(installedApkPath)

@@ -11,6 +11,7 @@ import ru.solrudev.okkeipatcher.data.repository.util.install
 import ru.solrudev.okkeipatcher.data.service.StreamCopier
 import ru.solrudev.okkeipatcher.data.service.computeHash
 import ru.solrudev.okkeipatcher.data.service.copy
+import ru.solrudev.okkeipatcher.data.util.getPackageInfoCompat
 import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.model.exception.GameNotFoundException
 import ru.solrudev.okkeipatcher.domain.repository.app.CommonFilesHashRepository
@@ -39,9 +40,8 @@ class ApkBackupRepositoryImpl @Inject constructor(
 		if (!applicationContext.isGameInstalled) {
 			throw GameNotFoundException()
 		}
-		@Suppress("DEPRECATION")
 		val installedApkPath = applicationContext.packageManager
-			.getPackageInfo(GAME_PACKAGE_NAME, 0)
+			.getPackageInfoCompat(GAME_PACKAGE_NAME, 0)
 			.applicationInfo
 			.publicSourceDir
 		val installedApk = File(installedApkPath)

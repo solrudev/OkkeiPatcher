@@ -61,7 +61,6 @@ class SaveDataRepositoryImpl @Inject constructor(
 		temp.delete()
 	}
 
-	@Suppress("BlockingMethodInNonBlockingContext")
 	override suspend fun createTemp(): Result {
 		val failure = Result.Failure(
 			LocalizedString.resource(R.string.warning_could_not_backup_save_data)
@@ -71,7 +70,7 @@ class SaveDataRepositoryImpl @Inject constructor(
 		}
 		temp.recreate()
 		try {
-			val currentSource = current.inputStream()?.source() ?: return failure
+			val currentSource = withContext(ioDispatcher) { current.inputStream()?.source() } ?: return failure
 			currentSource.use { source ->
 				val sink = withContext(ioDispatcher) { temp.sink() }
 				streamCopier.copy(source, sink, current.length)
@@ -91,14 +90,13 @@ class SaveDataRepositoryImpl @Inject constructor(
 		return backupHash == savedHash
 	}
 
-	@Suppress("BlockingMethodInNonBlockingContext")
 	override suspend fun restoreBackup(): Result {
 		val failure = Result.Failure(
 			LocalizedString.resource(R.string.warning_could_not_restore_save_data)
 		)
 		try {
 			current.recreate()
-			val currentSink = current.outputStream()?.sink() ?: return failure
+			val currentSink = withContext(ioDispatcher) { current.outputStream()?.sink() } ?: return failure
 			currentSink.use { sink ->
 				val source = withContext(ioDispatcher) { backup.source() }
 				streamCopier.copy(source, sink, backup.length())

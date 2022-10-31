@@ -56,7 +56,6 @@ class ApkSignerImpl @Inject constructor(
 		}
 	}
 
-	@Suppress("BlockingMethodInNonBlockingContext")
 	private suspend inline fun signWithApkSig(apk: File, outputApk: File) {
 		val certificate = getSigningCertificate()
 		val privateKey = getSigningPrivateKey()
@@ -85,7 +84,6 @@ class ApkSignerImpl @Inject constructor(
 		}
 	}
 
-	@Suppress("BlockingMethodInNonBlockingContext")
 	private suspend inline fun getSigningCertificate() = withContext(ioDispatcher) {
 		val assets = applicationContext.assets
 		assets.open(CERTIFICATE_FILE_NAME).use { certificateStream ->
@@ -94,7 +92,6 @@ class ApkSignerImpl @Inject constructor(
 		}
 	}
 
-	@Suppress("BlockingMethodInNonBlockingContext")
 	private suspend inline fun getSigningPrivateKey() = withContext(ioDispatcher) {
 		val assets = applicationContext.assets
 		assets.openFd(PRIVATE_KEY_FILE_NAME).use { keyFd ->
@@ -111,7 +108,6 @@ class ApkSignerImpl @Inject constructor(
 	private suspend inline fun getSigningPrivateKeyFile() = extractAssetFile(PRIVATE_KEY_FILE_NAME)
 	private suspend inline fun getSigningTemplateFile() = extractAssetFile(TEMPLATE_FILE_NAME)
 
-	@Suppress("BlockingMethodInNonBlockingContext")
 	private suspend inline fun extractAssetFile(fileName: String) = withContext(ioDispatcher) {
 		val file = File(applicationContext.filesDir, fileName)
 		if (file.exists()) {

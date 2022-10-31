@@ -32,7 +32,6 @@ interface StreamCopier {
 	): String
 }
 
-@Suppress("BlockingMethodInNonBlockingContext")
 suspend inline fun StreamCopier.copy(
 	inputFile: File,
 	outputFile: File,
@@ -40,14 +39,15 @@ suspend inline fun StreamCopier.copy(
 	hashing: Boolean = false,
 	noinline onProgressDeltaChanged: suspend (Int) -> Unit = {}
 ): String {
-	outputFile.recreate()
 	withContext(ioDispatcher) { inputFile.source() }.use { source ->
-		val sink = withContext(ioDispatcher) { outputFile.sink() }
+		val sink = withContext(ioDispatcher) {
+			outputFile.recreate()
+			outputFile.sink()
+		}
 		return copy(source, sink, inputFile.length(), hashing, onProgressDeltaChanged)
 	}
 }
 
-@Suppress("BlockingMethodInNonBlockingContext")
 suspend inline fun StreamCopier.computeHash(
 	file: File,
 	ioDispatcher: CoroutineDispatcher,
@@ -63,7 +63,6 @@ class StreamCopierImpl @Inject constructor(
 
 	override val progressMax = 100
 
-	@Suppress("BlockingMethodInNonBlockingContext")
 	override suspend fun copy(
 		source: Source,
 		sink: Sink,
