@@ -115,7 +115,7 @@ android {
 
 dependencies {
 	val retrofitVersion = "2.9.0"
-	val moshiVersion = "1.13.0"
+	val moshiVersion = "1.14.0"
 	val roomVersion = "2.4.2"
 
 	kapt("com.google.dagger:hilt-compiler:$hiltVersion")
@@ -146,7 +146,7 @@ dependencies {
 	implementation("com.squareup.moshi:moshi:$moshiVersion")
 	implementation("com.squareup.retrofit2:retrofit:$retrofitVersion", excludeOkHttp)
 	implementation("com.squareup.retrofit2:converter-moshi:$retrofitVersion", excludeOkHttp)
-	implementation("io.ktor:ktor-client-okhttp:2.0.3", excludeOkHttp)
+	implementation("io.ktor:ktor-client-okhttp:2.1.3", excludeOkHttp)
 	implementation("com.squareup.okhttp3:okhttp:3.12.13") {
 		because("Android 4.4 support")
 	}
