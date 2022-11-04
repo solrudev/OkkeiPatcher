@@ -1,6 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.navhost.reducer
 
-import ru.solrudev.okkeipatcher.ui.core.Reducer
+import io.github.solrudev.jetmvi.Reducer
 import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostEffect
 import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostEvent
 import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostEvent.*

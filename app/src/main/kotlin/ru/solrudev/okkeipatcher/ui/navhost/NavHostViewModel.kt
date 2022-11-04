@@ -1,7 +1,7 @@
 package ru.solrudev.okkeipatcher.ui.navhost
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ru.solrudev.okkeipatcher.ui.core.FeatureViewModel
+import io.github.solrudev.jetmvi.FeatureViewModel
 import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostEvent
 import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostUiState
 import javax.inject.Inject

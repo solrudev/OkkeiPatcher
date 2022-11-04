@@ -1,8 +1,8 @@
 package ru.solrudev.okkeipatcher.ui.navhost.model
 
+import io.github.solrudev.jetmvi.Effect
+import io.github.solrudev.jetmvi.Event
 import ru.solrudev.okkeipatcher.domain.model.Work
-import ru.solrudev.okkeipatcher.ui.core.Effect
-import ru.solrudev.okkeipatcher.ui.core.Event
 
 sealed interface NavHostEvent : Event {
 	object NavigatedToWorkScreen : NavHostEvent
