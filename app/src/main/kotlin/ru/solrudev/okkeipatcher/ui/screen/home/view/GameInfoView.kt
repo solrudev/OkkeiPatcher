@@ -13,7 +13,7 @@ class GameInfoView(private val binding: CardGameInfoBinding) : FeatureView<HomeU
 		get() = binding.root.context
 
 	init {
-		loadGameInfo(context)
+		loadGameInfo()
 	}
 
 	override fun render(uiState: HomeUiState) = with(binding) {
@@ -21,7 +21,7 @@ class GameInfoView(private val binding: CardGameInfoBinding) : FeatureView<HomeU
 		textviewCardGamePatch.text = context.getString(R.string.card_patch_version, version)
 	}
 
-	private fun loadGameInfo(context: Context) = with(binding) {
+	private fun loadGameInfo() = with(binding) {
 		val gameUiState = GameUiState(context)
 		textviewCardGameTitle.text = gameUiState.title
 		textviewCardGameVersion.text = context.getString(R.string.card_game_version, gameUiState.version)
