@@ -16,12 +16,16 @@ import androidx.lifecycle.LifecycleOwner
  *
  * Example:
  * ```
- * val someView by derivedView { SomeView(viewBinding, viewModel) }
- * val viewModel: MyFeatureViewModel by featureViewModels(MyFragment::someView)
+ * val derivedView1 by derivedView { DerivedView1(viewBinding, viewModel) }
+ * val derivedView2 by derivedView { DerivedView2(viewBinding, viewModel) }
+ * val viewModel: MyFeatureViewModel by featureViewModels(MyFragment::derivedView1, MyFragment::derivedView2)
  * ```
  * or
  * ```
- * val viewModel: MyFeatureViewModel by featureViewModels({ myFragment -> myFragment.someView })
+ * val viewModel: MyFeatureViewModel by featureViewModels(
+ *     { myFragment -> myFragment.derivedView1 },
+ *     { myFragment -> myFragment.derivedView2 }
+ * )
  * ```
  *
  * @param derivedViewProducer function which returns view derived from this fragment. Derived view will be bound to the

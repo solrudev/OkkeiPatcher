@@ -13,12 +13,16 @@ import androidx.lifecycle.LifecycleOwner
  *
  * Example:
  * ```
- * val someView by derivedView { SomeView(viewBinding, viewModel) }
- * val viewModel: MyFeatureViewModel by featureViewModels(MyActivity::someView)
+ * val derivedView1 by derivedView { DerivedView1(viewBinding, viewModel) }
+ * val derivedView2 by derivedView { DerivedView2(viewBinding, viewModel) }
+ * val viewModel: MyFeatureViewModel by featureViewModels(MyActivity::derivedView1, MyActivity::derivedView2)
  * ```
  * or
  * ```
- * val viewModel: MyFeatureViewModel by featureViewModels({ myActivity -> myActivity.someView })
+ * val viewModel: MyFeatureViewModel by featureViewModels(
+ *     { myActivity -> myActivity.derivedView1 },
+ *     { myActivity -> myActivity.derivedView2 }
+ * )
  * ```
  *
  * @param derivedViewProducer function which returns view derived from this activity. Derived view will be bound to the
