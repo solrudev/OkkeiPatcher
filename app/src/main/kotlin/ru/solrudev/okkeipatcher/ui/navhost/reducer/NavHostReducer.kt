@@ -7,9 +7,9 @@ import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostEvent.*
 import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostUiState
 import javax.inject.Inject
 
-class NavHostReducer @Inject constructor() : Reducer<NavHostUiState, NavHostEvent> {
+class NavHostReducer @Inject constructor() : Reducer<NavHostEvent, NavHostUiState> {
 
-	override fun reduce(state: NavHostUiState, event: NavHostEvent) = when (event) {
+	override fun reduce(event: NavHostEvent, state: NavHostUiState) = when (event) {
 		is NavHostEffect -> state
 		is NavigatedToWorkScreen -> state.copy(pendingWork = null)
 		is NavigatedToPermissionsScreen -> state.copy(permissionsRequired = false)

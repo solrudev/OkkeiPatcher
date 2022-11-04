@@ -11,9 +11,9 @@ import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkStateEvent.*
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkUiState
 import javax.inject.Inject
 
-class WorkStateEventReducer @Inject constructor() : Reducer<WorkUiState, WorkStateEvent> {
+class WorkStateEventReducer @Inject constructor() : Reducer<WorkStateEvent, WorkUiState> {
 
-	override fun reduce(state: WorkUiState, event: WorkStateEvent) = when (event) {
+	override fun reduce(event: WorkStateEvent, state: WorkUiState) = when (event) {
 		is Running -> state.copy(
 			status = event.status,
 			progressData = event.progressData

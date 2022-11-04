@@ -14,11 +14,11 @@ import javax.inject.Inject
 
 class WorkReducer @Inject constructor(
 	private val workStateEventReducer: WorkStateEventReducer
-) : Reducer<WorkUiState, WorkEvent> {
+) : Reducer<WorkEvent, WorkUiState> {
 
-	override fun reduce(state: WorkUiState, event: WorkEvent) = when (event) {
+	override fun reduce(event: WorkEvent, state: WorkUiState) = when (event) {
 		is WorkEffect -> state
-		is WorkStateEvent -> workStateEventReducer.reduce(state, event)
+		is WorkStateEvent -> workStateEventReducer.reduce(event, state)
 		is CancelRequested -> {
 			val title = LocalizedString.resource(R.string.warning_abort_title)
 			val message = LocalizedString.resource(R.string.warning_abort)

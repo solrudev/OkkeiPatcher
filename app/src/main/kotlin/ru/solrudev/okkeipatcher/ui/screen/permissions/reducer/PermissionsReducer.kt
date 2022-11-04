@@ -8,9 +8,9 @@ import ru.solrudev.okkeipatcher.ui.screen.permissions.model.PermissionsEvent.Req
 import ru.solrudev.okkeipatcher.ui.screen.permissions.model.PermissionsUiState
 import javax.inject.Inject
 
-class PermissionsReducer @Inject constructor() : Reducer<PermissionsUiState, PermissionsEvent> {
+class PermissionsReducer @Inject constructor() : Reducer<PermissionsEvent, PermissionsUiState> {
 
-	override fun reduce(state: PermissionsUiState, event: PermissionsEvent) = when (event) {
+	override fun reduce(event: PermissionsEvent, state: PermissionsUiState) = when (event) {
 		is PermissionStateChanged -> {
 			val permissions = state.permissions.map {
 				if (it.permission == event.permission) it.copy(isGranted = event.isGranted) else it

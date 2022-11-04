@@ -8,9 +8,9 @@ import ru.solrudev.okkeipatcher.ui.screen.update.model.UpdateEvent.UpdateDataLoa
 import ru.solrudev.okkeipatcher.ui.screen.update.model.UpdateUiState
 import javax.inject.Inject
 
-class UpdateReducer @Inject constructor() : Reducer<UpdateUiState, UpdateEvent> {
+class UpdateReducer @Inject constructor() : Reducer<UpdateEvent, UpdateUiState> {
 
-	override fun reduce(state: UpdateUiState, event: UpdateEvent) = when (event) {
+	override fun reduce(event: UpdateEvent, state: UpdateUiState) = when (event) {
 		is UpdateEffect -> state
 		is UpdateDataLoadingStarted -> state.copy(isLoading = true)
 		is UpdateDataLoaded -> state.copy(

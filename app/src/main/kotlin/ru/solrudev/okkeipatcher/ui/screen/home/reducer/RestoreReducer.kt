@@ -11,9 +11,9 @@ import ru.solrudev.okkeipatcher.ui.screen.home.model.RestoreEvent
 import ru.solrudev.okkeipatcher.ui.screen.home.model.RestoreEvent.*
 import javax.inject.Inject
 
-class RestoreReducer @Inject constructor() : Reducer<HomeUiState, RestoreEvent> {
+class RestoreReducer @Inject constructor() : Reducer<RestoreEvent, HomeUiState> {
 
-	override fun reduce(state: HomeUiState, event: RestoreEvent) = when (event) {
+	override fun reduce(event: RestoreEvent, state: HomeUiState) = when (event) {
 		is RestoreEffect -> state
 		is RestoreRequested -> {
 			val title = LocalizedString.resource(R.string.warning_start_restore_title)

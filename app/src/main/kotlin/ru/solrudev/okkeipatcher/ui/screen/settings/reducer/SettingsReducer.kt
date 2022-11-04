@@ -7,9 +7,9 @@ import ru.solrudev.okkeipatcher.ui.screen.settings.model.SettingsEvent.*
 import ru.solrudev.okkeipatcher.ui.screen.settings.model.SettingsUiState
 import javax.inject.Inject
 
-class SettingsReducer @Inject constructor() : Reducer<SettingsUiState, SettingsEvent> {
+class SettingsReducer @Inject constructor() : Reducer<SettingsEvent, SettingsUiState> {
 
-	override fun reduce(state: SettingsUiState, event: SettingsEvent) = when (event) {
+	override fun reduce(event: SettingsEvent, state: SettingsUiState) = when (event) {
 		is SettingsEffect -> state
 		is HandleSaveDataChanged -> state.copy(handleSaveData = event.handleSaveData)
 		is SaveDataAccessRequested -> state.copy(requestSaveDataAccess = true)

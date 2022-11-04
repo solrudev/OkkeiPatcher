@@ -11,9 +11,9 @@ import ru.solrudev.okkeipatcher.ui.screen.home.model.PatchEvent
 import ru.solrudev.okkeipatcher.ui.screen.home.model.PatchEvent.*
 import javax.inject.Inject
 
-class PatchReducer @Inject constructor() : Reducer<HomeUiState, PatchEvent> {
+class PatchReducer @Inject constructor() : Reducer<PatchEvent, HomeUiState> {
 
-	override fun reduce(state: HomeUiState, event: PatchEvent) = when (event) {
+	override fun reduce(event: PatchEvent, state: HomeUiState) = when (event) {
 		is PatchEffect -> state
 		is PatchSizeLoadingStarted -> state.copy(isPatchSizeLoading = true)
 		is PatchSizeLoaded -> {

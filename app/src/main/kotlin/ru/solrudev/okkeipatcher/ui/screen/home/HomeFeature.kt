@@ -1,6 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.screen.home
 
-import ru.solrudev.okkeipatcher.ui.core.Feature
+import ru.solrudev.okkeipatcher.ui.core.AssemblyFeature
 import ru.solrudev.okkeipatcher.ui.screen.home.middleware.*
 import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeEvent
 import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeUiState
@@ -15,7 +15,7 @@ class HomeFeature @Inject constructor(
 	enqueueRestoreWorkMiddleware: EnqueueRestoreWorkMiddleware,
 	getPatchSizeMiddleware: GetPatchSizeMiddleware,
 	homeReducer: HomeReducer
-) : Feature<HomeEvent, HomeUiState>(
+) : AssemblyFeature<HomeEvent, HomeUiState>(
 	middlewares = listOf(
 		observePatchStatusMiddleware,
 		observePatchVersionMiddleware,

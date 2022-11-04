@@ -8,9 +8,9 @@ import ru.solrudev.okkeipatcher.ui.screen.settings.savedataaccess.model.SaveData
 import ru.solrudev.okkeipatcher.ui.screen.settings.savedataaccess.model.SaveDataAccessUiState
 import javax.inject.Inject
 
-class SaveDataAccessReducer @Inject constructor() : Reducer<SaveDataAccessUiState, SaveDataAccessEvent> {
+class SaveDataAccessReducer @Inject constructor() : Reducer<SaveDataAccessEvent, SaveDataAccessUiState> {
 
-	override fun reduce(state: SaveDataAccessUiState, event: SaveDataAccessEvent) = when (event) {
+	override fun reduce(event: SaveDataAccessEvent, state: SaveDataAccessUiState) = when (event) {
 		is SaveDataAccessEffect -> state
 		is RationaleShown -> {
 			val rationale = state.rationale.copy(isVisible = true)

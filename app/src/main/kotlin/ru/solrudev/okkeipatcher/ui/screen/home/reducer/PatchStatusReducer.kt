@@ -9,9 +9,9 @@ import ru.solrudev.okkeipatcher.ui.screen.home.model.PatchStatus.*
 import ru.solrudev.okkeipatcher.ui.screen.home.model.PersistentPatchStatus
 import javax.inject.Inject
 
-class PatchStatusReducer @Inject constructor() : Reducer<HomeUiState, PatchStatusChanged> {
+class PatchStatusReducer @Inject constructor() : Reducer<PatchStatusChanged, HomeUiState> {
 
-	override fun reduce(state: HomeUiState, event: PatchStatusChanged): HomeUiState = when (event.patchStatus) {
+	override fun reduce(event: PatchStatusChanged, state: HomeUiState): HomeUiState = when (event.patchStatus) {
 		is PersistentPatchStatus -> reduce(state, event.patchStatus)
 		is WorkStarted -> reduce(state, event.patchStatus.currentStatus)
 		is UpdateAvailable -> state.copy(

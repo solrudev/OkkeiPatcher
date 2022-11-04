@@ -5,9 +5,9 @@ import ru.solrudev.okkeipatcher.ui.screen.licenses.model.LicensesEvent
 import ru.solrudev.okkeipatcher.ui.screen.licenses.model.LicensesUiState
 import javax.inject.Inject
 
-class LicensesReducer @Inject constructor() : Reducer<LicensesUiState, LicensesEvent> {
+class LicensesReducer @Inject constructor() : Reducer<LicensesEvent, LicensesUiState> {
 
-	override fun reduce(state: LicensesUiState, event: LicensesEvent) = when (event) {
+	override fun reduce(event: LicensesEvent, state: LicensesUiState) = when (event) {
 		is LicensesEvent.LicensesLoaded -> state.copy(licenses = event.licenses)
 	}
 }

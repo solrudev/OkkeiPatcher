@@ -8,9 +8,9 @@ import ru.solrudev.okkeipatcher.ui.screen.settings.cleardata.model.ClearDataEven
 import ru.solrudev.okkeipatcher.ui.screen.settings.cleardata.model.ClearDataUiState
 import javax.inject.Inject
 
-class ClearDataReducer @Inject constructor() : Reducer<ClearDataUiState, ClearDataEvent> {
+class ClearDataReducer @Inject constructor() : Reducer<ClearDataEvent, ClearDataUiState> {
 
-	override fun reduce(state: ClearDataUiState, event: ClearDataEvent) = when (event) {
+	override fun reduce(event: ClearDataEvent, state: ClearDataUiState) = when (event) {
 		is ClearDataEffect -> state
 		is WarningShown -> {
 			val warning = state.warning.copy(isVisible = true)
