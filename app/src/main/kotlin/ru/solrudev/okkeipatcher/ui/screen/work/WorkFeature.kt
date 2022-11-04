@@ -1,6 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.screen.work
 
-import ru.solrudev.okkeipatcher.ui.core.AssemblyFeature
+import io.github.solrudev.jetmvi.AssemblyFeature
 import ru.solrudev.okkeipatcher.ui.screen.work.middleware.CancelWorkMiddleware
 import ru.solrudev.okkeipatcher.ui.screen.work.middleware.ObserveWorkMiddleware
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEvent

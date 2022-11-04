@@ -8,12 +8,12 @@ import androidx.activity.result.launch
 import androidx.appcompat.app.AppCompatActivity
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
+import io.github.solrudev.jetmvi.FeatureView
+import io.github.solrudev.jetmvi.featureViewModels
 import io.github.solrudev.simpleinstaller.activityresult.InstallPermissionContract
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.databinding.ActivityPermissionsBinding
 import ru.solrudev.okkeipatcher.domain.model.Permission
-import ru.solrudev.okkeipatcher.ui.core.FeatureView
-import ru.solrudev.okkeipatcher.ui.core.featureViewModels
 import ru.solrudev.okkeipatcher.ui.screen.permissions.model.PermissionsEvent.PermissionStateChanged
 import ru.solrudev.okkeipatcher.ui.screen.permissions.model.PermissionsUiState
 import ru.solrudev.okkeipatcher.ui.screen.permissions.model.allPermissionsGranted

@@ -1,9 +1,9 @@
 package ru.solrudev.okkeipatcher.ui.screen.home.view
 
 import androidx.lifecycle.LifecycleOwner
+import io.github.solrudev.jetmvi.FeatureView
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.databinding.CardActionsBinding
-import ru.solrudev.okkeipatcher.ui.core.FeatureView
 import ru.solrudev.okkeipatcher.ui.screen.home.HomeViewModel
 import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeUiState
 import ru.solrudev.okkeipatcher.ui.screen.home.model.PatchEvent.PatchRequested

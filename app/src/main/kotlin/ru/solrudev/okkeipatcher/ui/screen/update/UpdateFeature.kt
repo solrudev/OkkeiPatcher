@@ -1,6 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.screen.update
 
-import ru.solrudev.okkeipatcher.ui.core.AssemblyFeature
+import io.github.solrudev.jetmvi.AssemblyFeature
 import ru.solrudev.okkeipatcher.ui.screen.update.middleware.LoadUpdateDataMiddleware
 import ru.solrudev.okkeipatcher.ui.screen.update.model.UpdateEvent
 import ru.solrudev.okkeipatcher.ui.screen.update.model.UpdateUiState

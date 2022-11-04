@@ -1,6 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.screen.settings.cleardata.reducer
 
-import ru.solrudev.okkeipatcher.ui.core.Reducer
+import io.github.solrudev.jetmvi.Reducer
 import ru.solrudev.okkeipatcher.ui.model.MessageUiState
 import ru.solrudev.okkeipatcher.ui.screen.settings.cleardata.model.ClearDataEffect
 import ru.solrudev.okkeipatcher.ui.screen.settings.cleardata.model.ClearDataEvent

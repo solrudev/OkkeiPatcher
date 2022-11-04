@@ -1,6 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.screen.home
 
-import ru.solrudev.okkeipatcher.ui.core.AssemblyFeature
+import io.github.solrudev.jetmvi.AssemblyFeature
 import ru.solrudev.okkeipatcher.ui.screen.home.middleware.*
 import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeEvent
 import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeUiState

@@ -1,13 +1,13 @@
 package ru.solrudev.okkeipatcher.ui.screen.settings.middleware
 
+import io.github.solrudev.jetmvi.Middleware
+import io.github.solrudev.jetmvi.collectEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import ru.solrudev.okkeipatcher.domain.usecase.app.GetHandleSaveDataFlowUseCase
 import ru.solrudev.okkeipatcher.domain.usecase.app.GetIsSaveDataAccessGrantedUseCase
 import ru.solrudev.okkeipatcher.domain.usecase.app.PersistHandleSaveDataUseCase
-import ru.solrudev.okkeipatcher.ui.core.Middleware
-import ru.solrudev.okkeipatcher.ui.core.collectEvent
 import ru.solrudev.okkeipatcher.ui.screen.settings.model.SettingsEvent
 import ru.solrudev.okkeipatcher.ui.screen.settings.model.SettingsEvent.HandleSaveDataClicked
 import ru.solrudev.okkeipatcher.ui.screen.settings.model.SettingsEvent.SaveDataAccessRequested

@@ -1,6 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.screen.settings
 
-import ru.solrudev.okkeipatcher.ui.core.AssemblyFeature
+import io.github.solrudev.jetmvi.AssemblyFeature
 import ru.solrudev.okkeipatcher.ui.screen.settings.middleware.ObserveHandleSaveDataMiddleware
 import ru.solrudev.okkeipatcher.ui.screen.settings.middleware.OnHandleSaveDataClickMiddleware
 import ru.solrudev.okkeipatcher.ui.screen.settings.model.SettingsEvent

@@ -1,6 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.screen.licenses
 
-import ru.solrudev.okkeipatcher.ui.core.AssemblyFeature
+import io.github.solrudev.jetmvi.AssemblyFeature
 import ru.solrudev.okkeipatcher.ui.screen.licenses.middleware.LicensesMiddleware
 import ru.solrudev.okkeipatcher.ui.screen.licenses.model.LicensesEvent
 import ru.solrudev.okkeipatcher.ui.screen.licenses.model.LicensesUiState

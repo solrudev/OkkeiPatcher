@@ -1,6 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.screen.settings.savedataaccess.reducer
 
-import ru.solrudev.okkeipatcher.ui.core.Reducer
+import io.github.solrudev.jetmvi.Reducer
 import ru.solrudev.okkeipatcher.ui.model.MessageUiState
 import ru.solrudev.okkeipatcher.ui.screen.settings.savedataaccess.model.SaveDataAccessEffect
 import ru.solrudev.okkeipatcher.ui.screen.settings.savedataaccess.model.SaveDataAccessEvent

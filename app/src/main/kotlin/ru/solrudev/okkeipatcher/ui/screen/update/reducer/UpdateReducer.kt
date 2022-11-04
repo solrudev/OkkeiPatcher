@@ -1,6 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.screen.update.reducer
 
-import ru.solrudev.okkeipatcher.ui.core.Reducer
+import io.github.solrudev.jetmvi.Reducer
 import ru.solrudev.okkeipatcher.ui.screen.update.model.UpdateEffect
 import ru.solrudev.okkeipatcher.ui.screen.update.model.UpdateEvent
 import ru.solrudev.okkeipatcher.ui.screen.update.model.UpdateEvent.UpdateDataLoaded

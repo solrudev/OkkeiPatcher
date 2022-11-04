@@ -1,12 +1,12 @@
 package ru.solrudev.okkeipatcher.ui.screen.home.middleware
 
+import io.github.solrudev.jetmvi.Middleware
+import io.github.solrudev.jetmvi.collectEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import ru.solrudev.okkeipatcher.domain.usecase.patch.GetPatchStatusFlowUseCase
 import ru.solrudev.okkeipatcher.domain.usecase.work.EnqueuePatchWorkUseCase
-import ru.solrudev.okkeipatcher.ui.core.Middleware
-import ru.solrudev.okkeipatcher.ui.core.collectEvent
 import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeEvent
 import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeEvent.PatchStatusChanged
 import ru.solrudev.okkeipatcher.ui.screen.home.model.PatchEvent.StartPatch

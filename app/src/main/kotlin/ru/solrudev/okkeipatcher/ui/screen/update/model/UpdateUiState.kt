@@ -1,6 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.screen.update.model
 
-import ru.solrudev.okkeipatcher.ui.core.UiState
+import io.github.solrudev.jetmvi.UiState
 
 data class UpdateUiState(
 	val isLoading: Boolean = false,

@@ -1,6 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.screen.settings.reducer
 
-import ru.solrudev.okkeipatcher.ui.core.Reducer
+import io.github.solrudev.jetmvi.Reducer
 import ru.solrudev.okkeipatcher.ui.screen.settings.model.SettingsEffect
 import ru.solrudev.okkeipatcher.ui.screen.settings.model.SettingsEvent
 import ru.solrudev.okkeipatcher.ui.screen.settings.model.SettingsEvent.*

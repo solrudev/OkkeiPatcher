@@ -1,6 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.screen.home.reducer
 
-import ru.solrudev.okkeipatcher.ui.core.Reducer
+import io.github.solrudev.jetmvi.Reducer
 import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeEvent
 import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeEvent.*
 import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeUiState

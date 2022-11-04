@@ -1,7 +1,7 @@
 package ru.solrudev.okkeipatcher.ui.model
 
+import io.github.solrudev.jetmvi.UiState
 import ru.solrudev.okkeipatcher.domain.core.Message
-import ru.solrudev.okkeipatcher.ui.core.UiState
 
 data class MessageUiState(
 	val isVisible: Boolean = false,

@@ -1,6 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.screen.settings.model
 
-import ru.solrudev.okkeipatcher.ui.core.UiState
+import io.github.solrudev.jetmvi.UiState
 
 data class SettingsUiState(
 	val handleSaveData: Boolean = true,

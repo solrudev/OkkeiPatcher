@@ -1,6 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.screen.permissions.reducer
 
-import ru.solrudev.okkeipatcher.ui.core.Reducer
+import io.github.solrudev.jetmvi.Reducer
 import ru.solrudev.okkeipatcher.ui.screen.permissions.model.PermissionUiState
 import ru.solrudev.okkeipatcher.ui.screen.permissions.model.PermissionsEvent
 import ru.solrudev.okkeipatcher.ui.screen.permissions.model.PermissionsEvent.PermissionStateChanged

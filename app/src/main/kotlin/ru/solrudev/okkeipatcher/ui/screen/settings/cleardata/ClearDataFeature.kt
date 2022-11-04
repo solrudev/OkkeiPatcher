@@ -1,6 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.screen.settings.cleardata
 
-import ru.solrudev.okkeipatcher.ui.core.AssemblyFeature
+import io.github.solrudev.jetmvi.AssemblyFeature
 import ru.solrudev.okkeipatcher.ui.screen.settings.cleardata.middleware.ClearDataMiddleware
 import ru.solrudev.okkeipatcher.ui.screen.settings.cleardata.model.ClearDataEvent
 import ru.solrudev.okkeipatcher.ui.screen.settings.cleardata.model.ClearDataUiState

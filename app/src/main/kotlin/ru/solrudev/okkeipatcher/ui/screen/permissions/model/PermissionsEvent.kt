@@ -1,7 +1,7 @@
 package ru.solrudev.okkeipatcher.ui.screen.permissions.model
 
+import io.github.solrudev.jetmvi.Event
 import ru.solrudev.okkeipatcher.domain.model.Permission
-import ru.solrudev.okkeipatcher.ui.core.Event
 
 sealed interface PermissionsEvent : Event {
 	data class RequiredPermissionsLoaded(val permissions: Map<Permission, Boolean>) : PermissionsEvent

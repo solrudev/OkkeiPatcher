@@ -1,9 +1,9 @@
 package ru.solrudev.okkeipatcher.ui.screen.licenses.middleware
 
+import io.github.solrudev.jetmvi.Middleware
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.solrudev.okkeipatcher.domain.usecase.app.GetLicensesUseCase
-import ru.solrudev.okkeipatcher.ui.core.Middleware
 import ru.solrudev.okkeipatcher.ui.screen.licenses.model.LicensesEvent
 import ru.solrudev.okkeipatcher.ui.screen.licenses.model.LicensesEvent.LicensesLoaded
 import javax.inject.Inject

@@ -1,7 +1,7 @@
 package ru.solrudev.okkeipatcher.ui.screen.licenses.model
 
+import io.github.solrudev.jetmvi.UiState
 import ru.solrudev.okkeipatcher.domain.model.License
-import ru.solrudev.okkeipatcher.ui.core.UiState
 
 data class LicensesUiState(
 	val licenses: List<License> = emptyList()

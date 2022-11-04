@@ -1,11 +1,11 @@
 package ru.solrudev.okkeipatcher.ui.screen.work.reducer
 
+import io.github.solrudev.jetmvi.Reducer
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.core.EmptyString
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Message
 import ru.solrudev.okkeipatcher.domain.core.plus
-import ru.solrudev.okkeipatcher.ui.core.Reducer
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkStateEvent
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkStateEvent.*
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkUiState

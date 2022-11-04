@@ -7,12 +7,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import io.github.solrudev.jetmvi.FeatureView
+import io.github.solrudev.jetmvi.bindHeadless
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.core.resolve
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Message
-import ru.solrudev.okkeipatcher.ui.core.FeatureView
-import ru.solrudev.okkeipatcher.ui.core.bindHeadless
 import ru.solrudev.okkeipatcher.ui.model.shouldShow
 import ru.solrudev.okkeipatcher.ui.screen.settings.cleardata.model.ClearDataEvent.*
 import ru.solrudev.okkeipatcher.ui.screen.settings.cleardata.model.ClearDataUiState

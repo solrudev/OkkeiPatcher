@@ -1,6 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.screen.permissions
 
-import ru.solrudev.okkeipatcher.ui.core.AssemblyFeature
+import io.github.solrudev.jetmvi.AssemblyFeature
 import ru.solrudev.okkeipatcher.ui.screen.permissions.middleware.LoadRequiredPermissionsMiddleware
 import ru.solrudev.okkeipatcher.ui.screen.permissions.model.PermissionsEvent
 import ru.solrudev.okkeipatcher.ui.screen.permissions.model.PermissionsUiState

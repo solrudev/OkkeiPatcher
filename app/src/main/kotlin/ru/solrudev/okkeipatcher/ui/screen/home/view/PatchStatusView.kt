@@ -2,9 +2,9 @@ package ru.solrudev.okkeipatcher.ui.screen.home.view
 
 import android.content.Context
 import androidx.core.view.isVisible
+import io.github.solrudev.jetmvi.FeatureView
 import ru.solrudev.okkeipatcher.data.core.resolve
 import ru.solrudev.okkeipatcher.databinding.CardPatchStatusBinding
-import ru.solrudev.okkeipatcher.ui.core.FeatureView
 import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeUiState
 
 class PatchStatusView(private val binding: CardPatchStatusBinding) : FeatureView<HomeUiState> {

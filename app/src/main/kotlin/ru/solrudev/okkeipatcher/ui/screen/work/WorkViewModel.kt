@@ -1,7 +1,7 @@
 package ru.solrudev.okkeipatcher.ui.screen.work
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ru.solrudev.okkeipatcher.ui.core.FeatureViewModel
+import io.github.solrudev.jetmvi.FeatureViewModel
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEvent
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkUiState
 import javax.inject.Inject

@@ -1,8 +1,8 @@
 package ru.solrudev.okkeipatcher.ui.screen.home.reducer
 
+import io.github.solrudev.jetmvi.Reducer
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
-import ru.solrudev.okkeipatcher.ui.core.Reducer
 import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeEvent.PatchStatusChanged
 import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeUiState
 import ru.solrudev.okkeipatcher.ui.screen.home.model.PatchStatus.*

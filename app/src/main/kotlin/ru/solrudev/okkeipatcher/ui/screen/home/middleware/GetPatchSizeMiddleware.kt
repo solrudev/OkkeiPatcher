@@ -1,8 +1,8 @@
 package ru.solrudev.okkeipatcher.ui.screen.home.middleware
 
+import io.github.solrudev.jetmvi.Middleware
 import kotlinx.coroutines.flow.*
 import ru.solrudev.okkeipatcher.domain.usecase.patch.GetPatchSizeInMbUseCase
-import ru.solrudev.okkeipatcher.ui.core.Middleware
 import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeEvent
 import ru.solrudev.okkeipatcher.ui.screen.home.model.PatchEvent.*
 import javax.inject.Inject

@@ -1,7 +1,7 @@
 package ru.solrudev.okkeipatcher.ui.screen.settings.model
 
-import ru.solrudev.okkeipatcher.ui.core.Effect
-import ru.solrudev.okkeipatcher.ui.core.Event
+import io.github.solrudev.jetmvi.Effect
+import io.github.solrudev.jetmvi.Event
 
 sealed interface SettingsEvent : Event {
 	object HandleSaveDataClicked : SettingsEvent, SettingsEffect

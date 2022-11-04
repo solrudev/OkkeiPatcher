@@ -2,9 +2,9 @@ package ru.solrudev.okkeipatcher.ui.screen.home.view
 
 import android.content.Context
 import androidx.lifecycle.Lifecycle
+import io.github.solrudev.jetmvi.FeatureView
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.core.Message
-import ru.solrudev.okkeipatcher.ui.core.FeatureView
 import ru.solrudev.okkeipatcher.ui.model.shouldShow
 import ru.solrudev.okkeipatcher.ui.screen.home.HomeViewModel
 import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeUiState

@@ -1,8 +1,8 @@
 package ru.solrudev.okkeipatcher.ui.screen.update.middleware
 
+import io.github.solrudev.jetmvi.Middleware
 import kotlinx.coroutines.flow.*
 import ru.solrudev.okkeipatcher.domain.usecase.app.GetUpdateDataUseCase
-import ru.solrudev.okkeipatcher.ui.core.Middleware
 import ru.solrudev.okkeipatcher.ui.screen.update.model.UpdateEvent
 import ru.solrudev.okkeipatcher.ui.screen.update.model.UpdateEvent.*
 import javax.inject.Inject

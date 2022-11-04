@@ -1,9 +1,9 @@
 package ru.solrudev.okkeipatcher.ui.screen.settings.middleware
 
+import io.github.solrudev.jetmvi.Middleware
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import ru.solrudev.okkeipatcher.domain.usecase.app.GetHandleSaveDataFlowUseCase
-import ru.solrudev.okkeipatcher.ui.core.Middleware
 import ru.solrudev.okkeipatcher.ui.screen.settings.model.SettingsEvent
 import ru.solrudev.okkeipatcher.ui.screen.settings.model.SettingsEvent.HandleSaveDataChanged
 import javax.inject.Inject

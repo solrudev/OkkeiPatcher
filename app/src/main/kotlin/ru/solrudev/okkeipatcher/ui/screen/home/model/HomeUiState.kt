@@ -1,8 +1,8 @@
 package ru.solrudev.okkeipatcher.ui.screen.home.model
 
+import io.github.solrudev.jetmvi.UiState
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
-import ru.solrudev.okkeipatcher.ui.core.UiState
 import ru.solrudev.okkeipatcher.ui.model.MessageUiState
 
 data class HomeUiState(

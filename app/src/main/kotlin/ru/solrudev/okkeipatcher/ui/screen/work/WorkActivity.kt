@@ -10,13 +10,13 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
+import io.github.solrudev.jetmvi.FeatureView
+import io.github.solrudev.jetmvi.featureViewModels
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.core.resolve
 import ru.solrudev.okkeipatcher.databinding.ActivityWorkBinding
 import ru.solrudev.okkeipatcher.domain.core.Message
 import ru.solrudev.okkeipatcher.domain.model.ProgressData
-import ru.solrudev.okkeipatcher.ui.core.FeatureView
-import ru.solrudev.okkeipatcher.ui.core.featureViewModels
 import ru.solrudev.okkeipatcher.ui.model.shouldShow
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEvent.*
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkUiState

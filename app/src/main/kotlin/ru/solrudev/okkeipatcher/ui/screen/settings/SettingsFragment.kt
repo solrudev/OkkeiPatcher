@@ -6,9 +6,9 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import dagger.hilt.android.AndroidEntryPoint
+import io.github.solrudev.jetmvi.FeatureView
+import io.github.solrudev.jetmvi.featureViewModels
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.ui.core.FeatureView
-import ru.solrudev.okkeipatcher.ui.core.featureViewModels
 import ru.solrudev.okkeipatcher.ui.screen.settings.model.SettingsEvent.HandleSaveDataClicked
 import ru.solrudev.okkeipatcher.ui.screen.settings.model.SettingsEvent.SaveDataAccessRequestHandled
 import ru.solrudev.okkeipatcher.ui.screen.settings.model.SettingsUiState

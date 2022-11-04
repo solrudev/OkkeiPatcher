@@ -1,6 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.screen.settings.savedataaccess
 
-import ru.solrudev.okkeipatcher.ui.core.AssemblyFeature
+import io.github.solrudev.jetmvi.AssemblyFeature
 import ru.solrudev.okkeipatcher.ui.screen.settings.savedataaccess.middleware.PersistHandleSaveDataMiddleware
 import ru.solrudev.okkeipatcher.ui.screen.settings.savedataaccess.model.SaveDataAccessEvent
 import ru.solrudev.okkeipatcher.ui.screen.settings.savedataaccess.model.SaveDataAccessUiState

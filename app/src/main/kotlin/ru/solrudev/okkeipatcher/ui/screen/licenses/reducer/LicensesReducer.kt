@@ -1,6 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.screen.licenses.reducer
 
-import ru.solrudev.okkeipatcher.ui.core.Reducer
+import io.github.solrudev.jetmvi.Reducer
 import ru.solrudev.okkeipatcher.ui.screen.licenses.model.LicensesEvent
 import ru.solrudev.okkeipatcher.ui.screen.licenses.model.LicensesUiState
 import javax.inject.Inject
