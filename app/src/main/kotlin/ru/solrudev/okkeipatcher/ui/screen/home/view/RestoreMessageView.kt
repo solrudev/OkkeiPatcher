@@ -18,6 +18,8 @@ class RestoreMessageView(
 	private val viewModel: HomeViewModel
 ) : FeatureView<HomeUiState> {
 
+	override val trackedUiState = arrayOf(HomeUiState::startRestoreMessage)
+
 	override fun render(uiState: HomeUiState) {
 		if (uiState.startRestoreMessage.shouldShow) {
 			showStartRestoreMessage(uiState.startRestoreMessage.data)

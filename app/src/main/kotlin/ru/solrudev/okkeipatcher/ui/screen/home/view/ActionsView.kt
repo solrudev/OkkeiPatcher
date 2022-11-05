@@ -22,6 +22,12 @@ class ActionsView(
 		setupNavigation()
 	}
 
+	override val trackedUiState = arrayOf(
+		HomeUiState::isPatchEnabled,
+		HomeUiState::isRestoreEnabled,
+		HomeUiState::isPatchSizeLoading,
+	)
+
 	override fun render(uiState: HomeUiState) = with(binding) {
 		buttonCardActionsPatch.isEnabled = uiState.isPatchEnabled
 		buttonCardActionsRestore.isEnabled = uiState.isRestoreEnabled

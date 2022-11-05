@@ -16,6 +16,8 @@ class GameInfoView(private val binding: CardGameInfoBinding) : FeatureView<HomeU
 		loadGameInfo()
 	}
 
+	override val trackedUiState = arrayOf(HomeUiState::patchVersion)
+
 	override fun render(uiState: HomeUiState) = with(binding) {
 		val version = uiState.patchVersion.ifEmpty { context.getString(R.string.not_available) }
 		textviewCardGamePatch.text = context.getString(R.string.card_patch_version, version)

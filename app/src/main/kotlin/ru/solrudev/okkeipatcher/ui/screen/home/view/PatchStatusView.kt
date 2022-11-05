@@ -12,6 +12,8 @@ class PatchStatusView(private val binding: CardPatchStatusBinding) : FeatureView
 	private val context: Context
 		get() = binding.root.context
 
+	override val trackedUiState = arrayOf(HomeUiState::patchStatus, HomeUiState::patchUpdatesAvailable)
+
 	override fun render(uiState: HomeUiState) = with(binding) {
 		textviewCardPatchStatus.text = uiState.patchStatus.resolve(context)
 		textviewCardPatchUpdate.isVisible = uiState.patchUpdatesAvailable
