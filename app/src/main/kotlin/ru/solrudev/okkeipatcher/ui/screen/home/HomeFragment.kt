@@ -7,7 +7,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.solrudev.jetmvi.HostFeatureView
 import io.github.solrudev.jetmvi.derivedView
-import io.github.solrudev.jetmvi.featureViewModels
+import io.github.solrudev.jetmvi.jetViewModels
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.databinding.FragmentHomeBinding
 import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeEvent.ViewHidden
@@ -41,7 +41,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), HostFeatureView<HomeUiSta
 		RestoreMessageView(requireContext(), viewLifecycleOwner.lifecycle, viewModel)
 	}
 
-	private val viewModel: HomeViewModel by featureViewModels(
+	private val viewModel: HomeViewModel by jetViewModels(
 		HomeFragment::gameInfoView,
 		HomeFragment::actionsView,
 		HomeFragment::patchStatusView,

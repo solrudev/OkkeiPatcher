@@ -11,7 +11,7 @@ import androidx.navigation.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.solrudev.jetmvi.FeatureView
-import io.github.solrudev.jetmvi.featureViewModels
+import io.github.solrudev.jetmvi.jetViewModels
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.core.resolve
 import ru.solrudev.okkeipatcher.databinding.ActivityWorkBinding
@@ -26,7 +26,7 @@ import ru.solrudev.okkeipatcher.ui.util.*
 @AndroidEntryPoint
 class WorkActivity : AppCompatActivity(R.layout.activity_work), FeatureView<WorkUiState> {
 
-	private val viewModel: WorkViewModel by featureViewModels()
+	private val viewModel: WorkViewModel by jetViewModels()
 	private val args by navArgs<WorkActivityArgs>()
 	private val binding by viewBinding(ActivityWorkBinding::bind, R.id.container_work)
 	private var currentCancelDialog: Dialog? = null

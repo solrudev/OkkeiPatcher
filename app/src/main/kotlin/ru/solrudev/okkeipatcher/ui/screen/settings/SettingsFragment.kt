@@ -7,7 +7,7 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.solrudev.jetmvi.FeatureView
-import io.github.solrudev.jetmvi.featureViewModels
+import io.github.solrudev.jetmvi.jetViewModels
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.ui.screen.settings.model.SettingsEvent.HandleSaveDataClicked
 import ru.solrudev.okkeipatcher.ui.screen.settings.model.SettingsEvent.SaveDataAccessRequestHandled
@@ -17,7 +17,7 @@ import ru.solrudev.okkeipatcher.ui.util.navigateSafely
 @AndroidEntryPoint
 class SettingsFragment : PreferenceFragmentCompat(), FeatureView<SettingsUiState> {
 
-	private val viewModel: SettingsViewModel by featureViewModels()
+	private val viewModel: SettingsViewModel by jetViewModels()
 
 	private val handleSaveData: SwitchPreferenceCompat?
 		get() = findPreference(getString(R.string.preference_key_handle_save_data))
