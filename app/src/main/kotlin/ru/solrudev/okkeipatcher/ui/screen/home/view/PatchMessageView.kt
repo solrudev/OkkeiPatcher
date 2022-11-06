@@ -18,7 +18,7 @@ class PatchMessageView(
 	private val viewModel: HomeViewModel
 ) : FeatureView<HomeUiState> {
 
-	override val trackedUiState = arrayOf(HomeUiState::startPatchMessage)
+	override val trackedUiState = listOf(HomeUiState::startPatchMessage)
 
 	override fun render(uiState: HomeUiState) {
 		if (uiState.startPatchMessage.shouldShow) {

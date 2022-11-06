@@ -22,7 +22,7 @@ class ActionsView(
 		setupNavigation()
 	}
 
-	override val trackedUiState = arrayOf(
+	override val trackedUiState = listOf(
 		HomeUiState::isPatchEnabled,
 		HomeUiState::isRestoreEnabled,
 		HomeUiState::isPatchSizeLoading,
