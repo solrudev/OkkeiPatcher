@@ -154,7 +154,7 @@ dependencies {
 	implementation("com.android.tools.build:apksig:$androidGradleVersion")
 	implementation("net.lingala.zip4j:zip4j:2.11.1")
 	implementation("io.github.solrudev:simpleinstaller:4.2.1")
-	implementation("io.github.solrudev:jetmvi:0.0.8")
+	implementation("io.github.solrudev:jetmvi:0.0.9")
 	implementation("com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.6")
 	implementation("com.github.razir.progressbutton:progressbutton:2.1.0")
 	implementation(files("libs/Base64.jar")) // java.util.Base64 for apksig on API 24-25
