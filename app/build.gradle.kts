@@ -41,32 +41,29 @@ android {
 	signingConfigs {
 		register("release") {
 			val keystorePropertiesFile = rootProject.file("keystore.properties")
-			val keystoreProperties = Properties().apply {
-				load(FileInputStream(keystorePropertiesFile))
+			if (keystorePropertiesFile.exists()) {
+				val keystoreProperties = Properties().apply {
+					load(FileInputStream(keystorePropertiesFile))
+				}
+				keyAlias = keystoreProperties["keyAlias"] as? String
+				keyPassword = keystoreProperties["keyPassword"] as? String
+				storeFile = keystoreProperties["storeFile"]?.let(::file)
+				storePassword = keystoreProperties["storePassword"] as? String
+				enableV3Signing = true
+				enableV4Signing = true
 			}
-			keyAlias = keystoreProperties["keyAlias"] as String?
-			keyPassword = keystoreProperties["keyPassword"] as String?
-			storeFile = keystoreProperties["storeFile"]?.let { file(it) }
-			storePassword = keystoreProperties["storePassword"] as String?
-			enableV3Signing = true
-			enableV4Signing = true
 		}
 	}
 
 	buildTypes {
-		named("debug") {
+		debug {
 			multiDexEnabled = true
 		}
-		named("release") {
+		release {
 			isMinifyEnabled = true
 			isShrinkResources = true
 			signingConfig = signingConfigs.getByName("release")
-			setProguardFiles(
-				listOf(
-					getDefaultProguardFile("proguard-android-optimize.txt"),
-					"proguard-rules.pro"
-				)
-			)
+			proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
 		}
 	}
 
@@ -134,9 +131,11 @@ dependencies {
 	implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
 	implementation("androidx.navigation:navigation-ui-ktx:$navigationVersion")
 	implementation("androidx.room:room-ktx:$roomVersion")
-	implementation("com.google.android.material:material:1.7.0")
 	implementation("androidx.datastore:datastore-preferences:1.0.0")
 	implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
+	// Material Components
+	implementation("com.google.android.material:material:1.7.0")
 
 	// I/O
 	val excludeOkHttp = Action<ExternalModuleDependency> {
