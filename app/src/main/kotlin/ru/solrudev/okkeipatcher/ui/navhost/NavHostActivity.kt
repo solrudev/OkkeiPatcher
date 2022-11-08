@@ -18,7 +18,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import io.github.solrudev.jetmvi.FeatureView
+import io.github.solrudev.jetmvi.JetView
 import io.github.solrudev.jetmvi.jetViewModels
 import kotlinx.coroutines.flow.*
 import ru.solrudev.okkeipatcher.OkkeiNavGraphDirections
@@ -32,7 +32,7 @@ import ru.solrudev.okkeipatcher.ui.util.getMaterialColor
 import ru.solrudev.okkeipatcher.ui.util.navigateSafely
 
 @AndroidEntryPoint
-class NavHostActivity : AppCompatActivity(R.layout.okkei_nav_host), FeatureView<NavHostUiState> {
+class NavHostActivity : AppCompatActivity(R.layout.okkei_nav_host), JetView<NavHostUiState> {
 
 	private val binding by viewBinding(OkkeiNavHostBinding::bind, R.id.container_nav_host)
 	private val viewModel: NavHostViewModel by jetViewModels()

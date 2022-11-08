@@ -7,7 +7,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import io.github.solrudev.jetmvi.FeatureView
+import io.github.solrudev.jetmvi.JetView
 import io.github.solrudev.jetmvi.bindHeadless
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.core.resolve
@@ -22,7 +22,7 @@ import ru.solrudev.okkeipatcher.ui.util.showSnackbar
 import ru.solrudev.okkeipatcher.ui.util.showWithLifecycle
 
 @AndroidEntryPoint
-class ClearDataFragment : DialogFragment(), FeatureView<ClearDataUiState> {
+class ClearDataFragment : DialogFragment(), JetView<ClearDataUiState> {
 
 	private val viewModel by viewModels<ClearDataViewModel>()
 

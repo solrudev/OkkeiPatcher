@@ -1,10 +1,10 @@
 package ru.solrudev.okkeipatcher.ui.screen.settings.cleardata.model
 
-import io.github.solrudev.jetmvi.Effect
-import io.github.solrudev.jetmvi.Event
+import io.github.solrudev.jetmvi.JetEffect
+import io.github.solrudev.jetmvi.JetEvent
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 
-sealed interface ClearDataEvent : Event {
+sealed interface ClearDataEvent : JetEvent {
 	object WarningShown : ClearDataEvent
 	object WarningDismissed : ClearDataEvent
 	object ClearingRequested : ClearDataEvent, ClearDataEffect
@@ -14,4 +14,4 @@ sealed interface ClearDataEvent : Event {
 	object ViewHidden : ClearDataEvent
 }
 
-sealed interface ClearDataEffect : Effect
+sealed interface ClearDataEffect : JetEffect

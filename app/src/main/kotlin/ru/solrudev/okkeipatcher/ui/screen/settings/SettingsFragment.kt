@@ -6,7 +6,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import dagger.hilt.android.AndroidEntryPoint
-import io.github.solrudev.jetmvi.FeatureView
+import io.github.solrudev.jetmvi.JetView
 import io.github.solrudev.jetmvi.jetViewModels
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.ui.screen.settings.model.SettingsEvent.HandleSaveDataClicked
@@ -15,7 +15,7 @@ import ru.solrudev.okkeipatcher.ui.screen.settings.model.SettingsUiState
 import ru.solrudev.okkeipatcher.ui.util.navigateSafely
 
 @AndroidEntryPoint
-class SettingsFragment : PreferenceFragmentCompat(), FeatureView<SettingsUiState> {
+class SettingsFragment : PreferenceFragmentCompat(), JetView<SettingsUiState> {
 
 	private val viewModel: SettingsViewModel by jetViewModels()
 

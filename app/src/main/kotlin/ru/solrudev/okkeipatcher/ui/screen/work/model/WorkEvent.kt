@@ -1,12 +1,12 @@
 package ru.solrudev.okkeipatcher.ui.screen.work.model
 
-import io.github.solrudev.jetmvi.Effect
-import io.github.solrudev.jetmvi.Event
+import io.github.solrudev.jetmvi.JetEffect
+import io.github.solrudev.jetmvi.JetEvent
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.ProgressData
 import ru.solrudev.okkeipatcher.domain.model.Work
 
-sealed interface WorkEvent : Event {
+sealed interface WorkEvent : JetEvent {
 	data class CancelWork(val work: Work) : WorkEvent, WorkEffect
 	data class StartObservingWork(val work: Work) : ObserveWorkEvent, WorkEffect
 	object CancelRequested : WorkEvent
@@ -27,4 +27,4 @@ sealed interface WorkStateEvent : WorkEvent {
 }
 
 sealed interface ObserveWorkEvent : WorkEvent
-sealed interface WorkEffect : Effect
+sealed interface WorkEffect : JetEffect

@@ -1,6 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.screen.work.model
 
-import io.github.solrudev.jetmvi.UiState
+import io.github.solrudev.jetmvi.JetState
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.model.ProgressData
 import ru.solrudev.okkeipatcher.ui.model.MessageUiState
@@ -13,7 +13,7 @@ data class WorkUiState(
 	val cancelWorkMessage: MessageUiState = MessageUiState(),
 	val errorMessage: MessageUiState = MessageUiState(),
 	val animationsPlayed: Boolean = false
-) : UiState
+) : JetState
 
 val WorkUiState.percentDone: Int
 	get() = (progressData.progress.toDouble() / progressData.max * 100).toInt()

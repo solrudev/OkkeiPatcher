@@ -2,12 +2,12 @@ package ru.solrudev.okkeipatcher.ui.screen.home.view
 
 import android.content.Context
 import androidx.core.view.isVisible
-import io.github.solrudev.jetmvi.FeatureView
+import io.github.solrudev.jetmvi.JetView
 import ru.solrudev.okkeipatcher.data.core.resolve
 import ru.solrudev.okkeipatcher.databinding.CardPatchStatusBinding
 import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeUiState
 
-class PatchStatusView(private val binding: CardPatchStatusBinding) : FeatureView<HomeUiState> {
+class PatchStatusView(private val binding: CardPatchStatusBinding) : JetView<HomeUiState> {
 
 	private val context: Context
 		get() = binding.root.context

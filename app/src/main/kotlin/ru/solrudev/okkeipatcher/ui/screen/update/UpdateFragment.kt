@@ -5,7 +5,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import io.github.solrudev.jetmvi.FeatureView
+import io.github.solrudev.jetmvi.JetView
 import io.github.solrudev.jetmvi.jetViewModels
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.databinding.FragmentUpdateBinding
@@ -13,7 +13,7 @@ import ru.solrudev.okkeipatcher.ui.screen.update.model.UpdateEvent.UpdateDataReq
 import ru.solrudev.okkeipatcher.ui.screen.update.model.UpdateUiState
 
 @AndroidEntryPoint
-class UpdateFragment : Fragment(R.layout.fragment_update), FeatureView<UpdateUiState> {
+class UpdateFragment : Fragment(R.layout.fragment_update), JetView<UpdateUiState> {
 
 	private val viewModel: UpdateViewModel by jetViewModels()
 	private val binding by viewBinding(FragmentUpdateBinding::bind)

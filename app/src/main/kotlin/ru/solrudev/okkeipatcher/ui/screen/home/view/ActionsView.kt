@@ -1,7 +1,7 @@
 package ru.solrudev.okkeipatcher.ui.screen.home.view
 
 import androidx.lifecycle.LifecycleOwner
-import io.github.solrudev.jetmvi.FeatureView
+import io.github.solrudev.jetmvi.JetView
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.databinding.CardActionsBinding
 import ru.solrudev.okkeipatcher.ui.screen.home.HomeViewModel
@@ -15,7 +15,7 @@ class ActionsView(
 	lifecycleOwner: LifecycleOwner,
 	private val binding: CardActionsBinding,
 	private val viewModel: HomeViewModel
-) : FeatureView<HomeUiState> {
+) : JetView<HomeUiState> {
 
 	init {
 		binding.buttonCardActionsPatch.setupProgressButton(lifecycleOwner)

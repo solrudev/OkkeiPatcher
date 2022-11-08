@@ -2,7 +2,7 @@ package ru.solrudev.okkeipatcher.ui.screen.home.view
 
 import android.content.Context
 import androidx.lifecycle.Lifecycle
-import io.github.solrudev.jetmvi.FeatureView
+import io.github.solrudev.jetmvi.JetView
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.core.Message
 import ru.solrudev.okkeipatcher.ui.model.shouldShow
@@ -16,7 +16,7 @@ class RestoreMessageView(
 	private val context: Context,
 	private val viewLifecycle: Lifecycle,
 	private val viewModel: HomeViewModel
-) : FeatureView<HomeUiState> {
+) : JetView<HomeUiState> {
 
 	override val trackedState = listOf(HomeUiState::startRestoreMessage)
 

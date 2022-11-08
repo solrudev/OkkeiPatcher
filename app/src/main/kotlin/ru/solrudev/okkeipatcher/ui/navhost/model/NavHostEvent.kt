@@ -1,10 +1,10 @@
 package ru.solrudev.okkeipatcher.ui.navhost.model
 
-import io.github.solrudev.jetmvi.Effect
-import io.github.solrudev.jetmvi.Event
+import io.github.solrudev.jetmvi.JetEffect
+import io.github.solrudev.jetmvi.JetEvent
 import ru.solrudev.okkeipatcher.domain.model.Work
 
-sealed interface NavHostEvent : Event {
+sealed interface NavHostEvent : JetEvent {
 	object NavigatedToWorkScreen : NavHostEvent
 	object NavigatedToPermissionsScreen : NavHostEvent
 	object PermissionsCheckRequested : NavHostEvent, NavHostEffect
@@ -13,4 +13,4 @@ sealed interface NavHostEvent : Event {
 	data class UpdateAvailabilityChanged(val isUpdateAvailable: Boolean) : NavHostEvent
 }
 
-sealed interface NavHostEffect : Effect
+sealed interface NavHostEffect : JetEffect

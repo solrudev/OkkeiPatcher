@@ -1,6 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.screen.home.model
 
-import io.github.solrudev.jetmvi.UiState
+import io.github.solrudev.jetmvi.JetState
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.ui.model.MessageUiState
@@ -14,4 +14,4 @@ data class HomeUiState(
 	val startPatchMessage: MessageUiState = MessageUiState(),
 	val startRestoreMessage: MessageUiState = MessageUiState(),
 	val patchUpdatesAvailable: Boolean = false
-) : UiState
+) : JetState

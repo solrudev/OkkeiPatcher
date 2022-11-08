@@ -8,7 +8,7 @@ import androidx.activity.result.launch
 import androidx.appcompat.app.AppCompatActivity
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import io.github.solrudev.jetmvi.FeatureView
+import io.github.solrudev.jetmvi.JetView
 import io.github.solrudev.jetmvi.jetViewModels
 import io.github.solrudev.simpleinstaller.activityresult.InstallPermissionContract
 import ru.solrudev.okkeipatcher.R
@@ -20,7 +20,7 @@ import ru.solrudev.okkeipatcher.ui.screen.permissions.model.allPermissionsGrante
 import ru.solrudev.okkeipatcher.ui.util.onBackPressed
 
 @AndroidEntryPoint
-class PermissionsActivity : AppCompatActivity(R.layout.activity_permissions), FeatureView<PermissionsUiState> {
+class PermissionsActivity : AppCompatActivity(R.layout.activity_permissions), JetView<PermissionsUiState> {
 
 	private val binding by viewBinding(ActivityPermissionsBinding::bind, R.id.container_permissions)
 	private val viewModel: PermissionsViewModel by jetViewModels()

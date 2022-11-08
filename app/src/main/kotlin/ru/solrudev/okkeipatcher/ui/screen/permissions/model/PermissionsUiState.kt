@@ -1,11 +1,11 @@
 package ru.solrudev.okkeipatcher.ui.screen.permissions.model
 
-import io.github.solrudev.jetmvi.UiState
+import io.github.solrudev.jetmvi.JetState
 import ru.solrudev.okkeipatcher.domain.model.Permission
 
 data class PermissionsUiState(
 	val permissions: List<PermissionUiState> = emptyList()
-) : UiState
+) : JetState
 
 val PermissionsUiState.allPermissionsGranted: Boolean
 	get() = permissions.all { it.isGranted }

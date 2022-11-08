@@ -1,9 +1,9 @@
 package ru.solrudev.okkeipatcher.ui.screen.settings.savedataaccess.model
 
-import io.github.solrudev.jetmvi.Effect
-import io.github.solrudev.jetmvi.Event
+import io.github.solrudev.jetmvi.JetEffect
+import io.github.solrudev.jetmvi.JetEvent
 
-sealed interface SaveDataAccessEvent : Event {
+sealed interface SaveDataAccessEvent : JetEvent {
 	object RationaleShown : SaveDataAccessEvent
 	object RationaleDismissed : SaveDataAccessEvent
 	object PermissionGranted : SaveDataAccessEvent, SaveDataAccessEffect
@@ -11,4 +11,4 @@ sealed interface SaveDataAccessEvent : Event {
 	object ViewHidden : SaveDataAccessEvent
 }
 
-sealed interface SaveDataAccessEffect : Effect
+sealed interface SaveDataAccessEffect : JetEffect

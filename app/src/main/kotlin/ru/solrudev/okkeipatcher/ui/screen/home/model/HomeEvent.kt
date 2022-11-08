@@ -1,9 +1,9 @@
 package ru.solrudev.okkeipatcher.ui.screen.home.model
 
-import io.github.solrudev.jetmvi.Effect
-import io.github.solrudev.jetmvi.Event
+import io.github.solrudev.jetmvi.JetEffect
+import io.github.solrudev.jetmvi.JetEvent
 
-sealed interface HomeEvent : Event {
+sealed interface HomeEvent : JetEvent {
 	data class PatchStatusChanged(val patchStatus: PatchStatus) : HomeEvent
 	data class PatchVersionChanged(val patchVersion: String) : HomeEvent
 	object ViewHidden : HomeEvent
@@ -25,5 +25,5 @@ sealed interface RestoreEvent : HomeEvent {
 	object StartRestoreMessageDismissed : RestoreEvent
 }
 
-sealed interface PatchEffect : Effect
-sealed interface RestoreEffect : Effect
+sealed interface PatchEffect : JetEffect
+sealed interface RestoreEffect : JetEffect

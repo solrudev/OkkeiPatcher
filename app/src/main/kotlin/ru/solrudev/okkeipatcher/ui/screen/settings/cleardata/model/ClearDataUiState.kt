@@ -1,6 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.screen.settings.cleardata.model
 
-import io.github.solrudev.jetmvi.UiState
+import io.github.solrudev.jetmvi.JetState
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.core.EmptyString
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
@@ -17,7 +17,7 @@ data class ClearDataUiState(
 	val isCleared: Boolean = false,
 	val error: LocalizedString = LocalizedString.empty(),
 	val canShowErrorMessage: Boolean = true
-) : UiState
+) : JetState
 
 val ClearDataUiState.shouldShowErrorMessage: Boolean
 	get() = error !is EmptyString && canShowErrorMessage

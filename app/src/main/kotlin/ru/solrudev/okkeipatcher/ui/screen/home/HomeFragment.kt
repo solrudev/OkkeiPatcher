@@ -5,7 +5,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import io.github.solrudev.jetmvi.HostFeatureView
+import io.github.solrudev.jetmvi.HostJetView
 import io.github.solrudev.jetmvi.derivedView
 import io.github.solrudev.jetmvi.jetViewModels
 import ru.solrudev.okkeipatcher.R
@@ -17,7 +17,7 @@ import ru.solrudev.okkeipatcher.ui.util.animateLayoutChanges
 import ru.solrudev.okkeipatcher.ui.util.showRippleEffect
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(R.layout.fragment_home), HostFeatureView<HomeUiState> {
+class HomeFragment : Fragment(R.layout.fragment_home), HostJetView<HomeUiState> {
 
 	private val binding by viewBinding(FragmentHomeBinding::bind)
 

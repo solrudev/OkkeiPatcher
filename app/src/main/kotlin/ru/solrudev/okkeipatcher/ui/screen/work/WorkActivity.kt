@@ -10,7 +10,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import io.github.solrudev.jetmvi.FeatureView
+import io.github.solrudev.jetmvi.JetView
 import io.github.solrudev.jetmvi.jetViewModels
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.core.resolve
@@ -24,7 +24,7 @@ import ru.solrudev.okkeipatcher.ui.screen.work.model.percentDone
 import ru.solrudev.okkeipatcher.ui.util.*
 
 @AndroidEntryPoint
-class WorkActivity : AppCompatActivity(R.layout.activity_work), FeatureView<WorkUiState> {
+class WorkActivity : AppCompatActivity(R.layout.activity_work), JetView<WorkUiState> {
 
 	private val viewModel: WorkViewModel by jetViewModels()
 	private val args by navArgs<WorkActivityArgs>()

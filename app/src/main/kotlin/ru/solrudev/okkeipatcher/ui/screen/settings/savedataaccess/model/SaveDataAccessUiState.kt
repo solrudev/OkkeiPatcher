@@ -1,6 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.screen.settings.savedataaccess.model
 
-import io.github.solrudev.jetmvi.UiState
+import io.github.solrudev.jetmvi.JetState
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Message
@@ -14,4 +14,4 @@ data class SaveDataAccessUiState(
 		)
 	),
 	val handleSaveDataEnabled: Boolean = false
-) : UiState
+) : JetState

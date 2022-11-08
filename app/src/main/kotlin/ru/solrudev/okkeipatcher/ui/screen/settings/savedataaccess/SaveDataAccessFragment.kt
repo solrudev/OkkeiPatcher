@@ -11,7 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import io.github.solrudev.jetmvi.FeatureView
+import io.github.solrudev.jetmvi.JetView
 import io.github.solrudev.jetmvi.bindHeadless
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.core.Message
@@ -23,7 +23,7 @@ import ru.solrudev.okkeipatcher.ui.util.showWithLifecycle
 
 @RequiresApi(Build.VERSION_CODES.O)
 @AndroidEntryPoint
-class SaveDataAccessFragment : DialogFragment(), FeatureView<SaveDataAccessUiState> {
+class SaveDataAccessFragment : DialogFragment(), JetView<SaveDataAccessUiState> {
 
 	private val viewModel by viewModels<SaveDataAccessViewModel>()
 
