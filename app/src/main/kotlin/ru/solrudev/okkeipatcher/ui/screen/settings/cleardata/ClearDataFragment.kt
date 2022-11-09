@@ -2,13 +2,12 @@ package ru.solrudev.okkeipatcher.ui.screen.settings.cleardata
 
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.solrudev.jetmvi.JetView
-import io.github.solrudev.jetmvi.bindHeadless
+import io.github.solrudev.jetmvi.jetViewModels
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.core.resolve
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
@@ -24,12 +23,11 @@ import ru.solrudev.okkeipatcher.ui.util.showWithLifecycle
 @AndroidEntryPoint
 class ClearDataFragment : DialogFragment(), JetView<ClearDataUiState> {
 
-	private val viewModel by viewModels<ClearDataViewModel>()
+	private val viewModel: ClearDataViewModel by jetViewModels()
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setStyle(STYLE_NO_FRAME, theme)
-		viewModel.bindHeadless(this)
 	}
 
 	override fun onStop() {

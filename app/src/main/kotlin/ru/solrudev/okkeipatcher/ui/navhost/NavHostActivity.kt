@@ -1,6 +1,5 @@
 package ru.solrudev.okkeipatcher.ui.navhost
 
-import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -19,6 +18,7 @@ import androidx.navigation.ui.setupWithNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.solrudev.jetmvi.JetView
+import io.github.solrudev.jetmvi.derivedView
 import io.github.solrudev.jetmvi.jetViewModels
 import kotlinx.coroutines.flow.*
 import ru.solrudev.okkeipatcher.OkkeiNavGraphDirections
@@ -27,20 +27,23 @@ import ru.solrudev.okkeipatcher.databinding.OkkeiNavHostBinding
 import ru.solrudev.okkeipatcher.domain.model.Work
 import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostEvent.*
 import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostUiState
+import ru.solrudev.okkeipatcher.ui.navhost.view.UpdateBadgeView
 import ru.solrudev.okkeipatcher.ui.util.animateLayoutChanges
-import ru.solrudev.okkeipatcher.ui.util.getMaterialColor
 import ru.solrudev.okkeipatcher.ui.util.navigateSafely
 
 @AndroidEntryPoint
 class NavHostActivity : AppCompatActivity(R.layout.okkei_nav_host), JetView<NavHostUiState> {
 
 	private val binding by viewBinding(OkkeiNavHostBinding::bind, R.id.container_nav_host)
-	private val viewModel: NavHostViewModel by jetViewModels()
+	private val updateBadgeView by derivedView { UpdateBadgeView(binding) }
+	private val viewModel: NavHostViewModel by jetViewModels(NavHostActivity::updateBadgeView)
 	private val topLevelDestinations = setOf(R.id.home_fragment, R.id.update_fragment, R.id.settings_fragment)
 	private val appBarConfiguration = AppBarConfiguration(topLevelDestinations)
 
 	private val navController: NavController
 		get() = findNavController(R.id.content_nav_host)
+
+	override val trackedState = listOf(NavHostUiState::permissionsRequired, NavHostUiState::pendingWork)
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -74,7 +77,6 @@ class NavHostActivity : AppCompatActivity(R.layout.okkei_nav_host), JetView<NavH
 			navigateToPermissionsScreen()
 		}
 		uiState.pendingWork?.let(::navigateToWorkScreen)
-		displayUpdateBadge(uiState.isUpdateAvailable)
 	}
 
 	private fun navigateToPermissionsScreen() {
@@ -104,21 +106,6 @@ class NavHostActivity : AppCompatActivity(R.layout.okkei_nav_host), JetView<NavH
 			}
 		}
 		.launchIn(lifecycleScope)
-
-	private fun displayUpdateBadge(isUpdateAvailable: Boolean) = with(binding) {
-		if (isUpdateAvailable) {
-			val color = getMaterialColor(com.google.android.material.R.attr.colorError, Color.RED)
-			bottomNavigationViewNavHost?.getOrCreateBadge(R.id.update_fragment)?.apply {
-				backgroundColor = color
-			}
-			navigationRailViewNavHost?.getOrCreateBadge(R.id.update_fragment)?.apply {
-				backgroundColor = color
-			}
-		} else {
-			bottomNavigationViewNavHost?.removeBadge(R.id.update_fragment)
-			navigationRailViewNavHost?.removeBadge(R.id.update_fragment)
-		}
-	}
 
 	private fun hideBottomNavigationOnNonTopLevelDestinations(navController: NavController) = navController
 		.currentBackStackEntryFlow

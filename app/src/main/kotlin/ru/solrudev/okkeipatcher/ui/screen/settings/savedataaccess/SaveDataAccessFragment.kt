@@ -7,12 +7,11 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.launch
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.solrudev.jetmvi.JetView
-import io.github.solrudev.jetmvi.bindHeadless
+import io.github.solrudev.jetmvi.jetViewModels
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.core.Message
 import ru.solrudev.okkeipatcher.ui.model.shouldShow
@@ -25,7 +24,7 @@ import ru.solrudev.okkeipatcher.ui.util.showWithLifecycle
 @AndroidEntryPoint
 class SaveDataAccessFragment : DialogFragment(), JetView<SaveDataAccessUiState> {
 
-	private val viewModel by viewModels<SaveDataAccessViewModel>()
+	private val viewModel: SaveDataAccessViewModel by jetViewModels()
 
 	// Needs context to be initialized.
 	private lateinit var permissionRequestLauncher: ActivityResultLauncher<Unit>
@@ -38,7 +37,6 @@ class SaveDataAccessFragment : DialogFragment(), JetView<SaveDataAccessUiState> 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setStyle(STYLE_NO_FRAME, theme)
-		viewModel.bindHeadless(this)
 	}
 
 	override fun onStop() {
