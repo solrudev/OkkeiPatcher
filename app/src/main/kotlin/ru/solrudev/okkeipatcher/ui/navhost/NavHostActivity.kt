@@ -5,8 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.DialogFragmentNavigator
@@ -21,6 +21,7 @@ import io.github.solrudev.jetmvi.JetView
 import io.github.solrudev.jetmvi.derivedView
 import io.github.solrudev.jetmvi.jetViewModels
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import ru.solrudev.okkeipatcher.OkkeiNavGraphDirections
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.databinding.OkkeiNavHostBinding
@@ -54,8 +55,7 @@ class NavHostActivity : AppCompatActivity(R.layout.okkei_nav_host), JetView<NavH
 			val navController = contentNavHost.getFragment<NavHostFragment>().navController
 			bottomNavigationViewNavHost?.let {
 				it.setupWithNavController(navController)
-				showBottomNavigationOnDestinationChanged(navController)
-				hideBottomNavigationOnNonTopLevelDestinations(navController)
+				launchBottomNavigationFlows(navController)
 			}
 			navigationRailViewNavHost?.setupWithNavController(navController)
 			navigationViewNavHost?.setupWithNavController(navController)
@@ -91,9 +91,15 @@ class NavHostActivity : AppCompatActivity(R.layout.okkei_nav_host), JetView<NavH
 		viewModel.dispatchEvent(NavigatedToWorkScreen)
 	}
 
+	private fun launchBottomNavigationFlows(navController: NavController) = lifecycleScope.launch {
+		lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+			showBottomNavigationOnDestinationChanged(navController).launchIn(this)
+			hideBottomNavigationOnNonTopLevelDestinations(navController).launchIn(this)
+		}
+	}
+
 	private fun showBottomNavigationOnDestinationChanged(navController: NavController) = navController
 		.currentBackStackEntryFlow
-		.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
 		.filterNot { it.destination is DialogFragmentNavigator.Destination }
 		.onEach {
 			binding.bottomNavigationViewNavHost?.let {
@@ -105,16 +111,13 @@ class NavHostActivity : AppCompatActivity(R.layout.okkei_nav_host), JetView<NavH
 				}
 			}
 		}
-		.launchIn(lifecycleScope)
 
 	private fun hideBottomNavigationOnNonTopLevelDestinations(navController: NavController) = navController
 		.currentBackStackEntryFlow
-		.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
 		.filterNot { it.destination is DialogFragmentNavigator.Destination }
 		.map { it.destination.id in topLevelDestinations }
 		.distinctUntilChanged()
 		.onEach { isTopLevelDestination ->
 			binding.bottomNavigationViewNavHost?.isVisible = isTopLevelDestination
 		}
-		.launchIn(lifecycleScope)
 }
