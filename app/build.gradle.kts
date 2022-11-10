@@ -15,7 +15,7 @@ plugins {
 	kotlin("kapt")
 	id("dagger.hilt.android.plugin")
 	id("androidx.navigation.safeargs.kotlin")
-	id("com.google.devtools.ksp") version "1.7.20-1.0.7"
+	id("com.google.devtools.ksp") version "1.7.21-1.0.8"
 }
 
 base {
