@@ -25,7 +25,7 @@ class ActionsView(
 	override val trackedState = listOf(
 		HomeUiState::isPatchEnabled,
 		HomeUiState::isRestoreEnabled,
-		HomeUiState::isPatchSizeLoading,
+		HomeUiState::isPatchSizeLoading
 	)
 
 	override fun render(uiState: HomeUiState) = with(binding) {
