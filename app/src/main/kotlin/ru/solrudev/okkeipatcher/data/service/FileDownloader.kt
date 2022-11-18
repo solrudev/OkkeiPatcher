@@ -60,18 +60,20 @@ class FileDownloaderImpl @Inject constructor(
 		hashing: Boolean,
 		onProgressDeltaChanged: suspend (Int) -> Unit
 	): String {
-		try {
-			val request = Request.Builder().url(url).build()
-			val responseBody = okHttpClient.newCall(request).await().body() ?: return ""
-			return streamCopier.copy(
-				responseBody.source(),
-				sink,
-				responseBody.contentLength(),
-				hashing,
-				onProgressDeltaChanged
-			)
-		} catch (_: NetworkNotAvailableException) {
-			throw NoNetworkException()
+		sink.use { downloadSink ->
+			try {
+				val request = Request.Builder().url(url).build()
+				val responseBody = okHttpClient.newCall(request).await().body() ?: return ""
+				return streamCopier.copy(
+					responseBody.source(),
+					downloadSink,
+					responseBody.contentLength(),
+					hashing,
+					onProgressDeltaChanged
+				)
+			} catch (_: NetworkNotAvailableException) {
+				throw NoNetworkException()
+			}
 		}
 	}
 }
