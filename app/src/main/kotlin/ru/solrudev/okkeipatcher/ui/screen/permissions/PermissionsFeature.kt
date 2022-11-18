@@ -1,6 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.screen.permissions
 
-import io.github.solrudev.jetmvi.AssemblyFeature
+import io.github.solrudev.jetmvi.BaseFeature
 import ru.solrudev.okkeipatcher.ui.screen.permissions.middleware.LoadRequiredPermissionsMiddleware
 import ru.solrudev.okkeipatcher.ui.screen.permissions.model.PermissionsEvent
 import ru.solrudev.okkeipatcher.ui.screen.permissions.model.PermissionsUiState
@@ -10,7 +10,7 @@ import javax.inject.Inject
 class PermissionsFeature @Inject constructor(
 	loadRequiredPermissionsMiddleware: LoadRequiredPermissionsMiddleware,
 	permissionsReducer: PermissionsReducer
-) : AssemblyFeature<PermissionsEvent, PermissionsUiState>(
+) : BaseFeature<PermissionsEvent, PermissionsUiState>(
 	middlewares = listOf(loadRequiredPermissionsMiddleware),
 	reducer = permissionsReducer,
 	initialUiState = PermissionsUiState()

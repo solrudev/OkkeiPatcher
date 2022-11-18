@@ -154,7 +154,7 @@ dependencies {
 	implementation("com.android.tools.build:apksig:$androidGradleVersion")
 	implementation("net.lingala.zip4j:zip4j:2.11.1")
 	implementation("io.github.solrudev:simpleinstaller:4.2.1")
-	implementation("io.github.solrudev:jetmvi:0.1.0")
+	implementation("io.github.solrudev:jetmvi:0.1.1")
 	implementation("com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.6")
 	implementation("com.github.razir.progressbutton:progressbutton:2.1.0")
 	implementation(files("libs/Base64.jar")) // java.util.Base64 for apksig on API 24-25
@@ -162,8 +162,8 @@ dependencies {
 	debugImplementation("androidx.multidex:multidex:2.0.1")
 
 	testImplementation("junit:junit:4.13.2")
-	androidTestImplementation("androidx.test.ext:junit:1.1.3")
-	androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+	androidTestImplementation("androidx.test.ext:junit:1.1.4")
+	androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")
 }
 
 kapt {

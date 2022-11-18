@@ -1,6 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.navhost
 
-import io.github.solrudev.jetmvi.AssemblyFeature
+import io.github.solrudev.jetmvi.BaseFeature
 import ru.solrudev.okkeipatcher.ui.navhost.middleware.CheckAndObserveUpdateMiddleware
 import ru.solrudev.okkeipatcher.ui.navhost.middleware.CheckPermissionsMiddleware
 import ru.solrudev.okkeipatcher.ui.navhost.middleware.CheckSaveDataAccessMiddleware
@@ -16,7 +16,7 @@ class NavHostFeature @Inject constructor(
 	checkSaveDataAccessMiddleware: CheckSaveDataAccessMiddleware,
 	checkAndObserveUpdateMiddleware: CheckAndObserveUpdateMiddleware,
 	navHostReducer: NavHostReducer
-) : AssemblyFeature<NavHostEvent, NavHostUiState>(
+) : BaseFeature<NavHostEvent, NavHostUiState>(
 	middlewares = listOf(
 		checkPermissionsMiddleware,
 		observePendingWorkMiddleware,

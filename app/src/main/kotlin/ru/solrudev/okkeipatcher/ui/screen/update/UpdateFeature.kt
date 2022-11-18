@@ -1,6 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.screen.update
 
-import io.github.solrudev.jetmvi.AssemblyFeature
+import io.github.solrudev.jetmvi.BaseFeature
 import ru.solrudev.okkeipatcher.ui.screen.update.middleware.LoadUpdateDataMiddleware
 import ru.solrudev.okkeipatcher.ui.screen.update.model.UpdateEvent
 import ru.solrudev.okkeipatcher.ui.screen.update.model.UpdateUiState
@@ -10,7 +10,7 @@ import javax.inject.Inject
 class UpdateFeature @Inject constructor(
 	loadUpdateDataMiddleware: LoadUpdateDataMiddleware,
 	updateReducer: UpdateReducer
-) : AssemblyFeature<UpdateEvent, UpdateUiState>(
+) : BaseFeature<UpdateEvent, UpdateUiState>(
 	middlewares = listOf(loadUpdateDataMiddleware),
 	reducer = updateReducer,
 	initialUiState = UpdateUiState()

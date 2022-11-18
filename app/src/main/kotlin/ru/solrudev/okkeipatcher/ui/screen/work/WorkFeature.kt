@@ -1,6 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.screen.work
 
-import io.github.solrudev.jetmvi.AssemblyFeature
+import io.github.solrudev.jetmvi.BaseFeature
 import ru.solrudev.okkeipatcher.ui.screen.work.middleware.CancelWorkMiddleware
 import ru.solrudev.okkeipatcher.ui.screen.work.middleware.ObserveWorkMiddleware
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEvent
@@ -12,7 +12,7 @@ class WorkFeature @Inject constructor(
 	observeWorkMiddleware: ObserveWorkMiddleware,
 	cancelWorkMiddleware: CancelWorkMiddleware,
 	workReducer: WorkReducer
-) : AssemblyFeature<WorkEvent, WorkUiState>(
+) : BaseFeature<WorkEvent, WorkUiState>(
 	middlewares = listOf(observeWorkMiddleware, cancelWorkMiddleware),
 	reducer = workReducer,
 	initialUiState = WorkUiState()

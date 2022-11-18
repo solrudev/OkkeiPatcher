@@ -1,6 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.screen.licenses
 
-import io.github.solrudev.jetmvi.AssemblyFeature
+import io.github.solrudev.jetmvi.BaseFeature
 import ru.solrudev.okkeipatcher.ui.screen.licenses.middleware.LicensesMiddleware
 import ru.solrudev.okkeipatcher.ui.screen.licenses.model.LicensesEvent
 import ru.solrudev.okkeipatcher.ui.screen.licenses.model.LicensesUiState
@@ -10,7 +10,7 @@ import javax.inject.Inject
 class LicensesFeature @Inject constructor(
 	licensesMiddleware: LicensesMiddleware,
 	licensesReducer: LicensesReducer
-) : AssemblyFeature<LicensesEvent, LicensesUiState>(
+) : BaseFeature<LicensesEvent, LicensesUiState>(
 	middlewares = listOf(licensesMiddleware),
 	reducer = licensesReducer,
 	initialUiState = LicensesUiState()
