@@ -9,9 +9,9 @@
 		android:layout_height="match_parent"
 		android:animateLayoutChanges="true"
 		android:clipToPadding="false"
+		android:orientation="vertical"
 		android:paddingHorizontal="@dimen/card_layout_padding_horizontal"
-		android:paddingVertical="@dimen/card_margin"
-		android:orientation="vertical">
+		android:paddingVertical="@dimen/card_margin">
 
 		<TextView
 			android:layout_width="match_parent"
