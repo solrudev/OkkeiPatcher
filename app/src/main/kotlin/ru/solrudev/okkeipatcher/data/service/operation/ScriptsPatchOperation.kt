@@ -37,8 +37,8 @@ class ScriptsPatchOperation(
 	override val messages = operation.messages
 	override val progressDelta = operation.progressDelta
 	override val progressMax = operation.progressMax
-	private val scriptsFile = externalDir.resolve("scripts.zip")
-	private val extractedScriptsDirectory = externalDir.resolve("script")
+	private val scriptsFile = externalDir / "scripts.zip"
+	private val extractedScriptsDirectory = externalDir / "script"
 
 	override suspend fun invoke() = try {
 		operation()
@@ -70,7 +70,7 @@ class ScriptsPatchOperation(
 		withContext(ioDispatcher) {
 			val scriptsZip = fileSystem.openZip(scriptsFile)
 			scriptsZip.list("/".toPath()).forEach { script ->
-				val extractedScript = extractedScriptsDirectory.resolve(script.name)
+				val extractedScript = extractedScriptsDirectory / script.name
 				scriptsZip.source(script).use { source ->
 					fileSystem.prepareRecreate(extractedScript)
 					fileSystem.sink(extractedScript).buffer().use { sink ->
