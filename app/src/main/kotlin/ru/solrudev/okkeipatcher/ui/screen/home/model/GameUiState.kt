@@ -6,7 +6,7 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import androidx.core.content.ContextCompat
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.data.repository.gamefile.util.GAME_PACKAGE_NAME
+import ru.solrudev.okkeipatcher.data.util.GAME_PACKAGE_NAME
 import ru.solrudev.okkeipatcher.data.util.getPackageInfoCompat
 
 data class GameUiState(

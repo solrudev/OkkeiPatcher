@@ -7,9 +7,11 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import net.lingala.zip4j.ZipFile
+import okio.buffer
 import okio.sink
 import okio.source
 import ru.solrudev.okkeipatcher.data.service.util.use
+import ru.solrudev.okkeipatcher.data.util.computeHash
 import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.repository.app.CommonFilesHashRepository
 import java.io.File
@@ -33,8 +35,7 @@ interface ApkSigner {
 class ApkSignerImpl @Inject constructor(
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	@ApplicationContext private val applicationContext: Context,
-	private val commonFilesHashRepository: CommonFilesHashRepository,
-	private val streamCopier: StreamCopier
+	private val commonFilesHashRepository: CommonFilesHashRepository
 ) : ApkSigner {
 
 	override suspend fun sign(apk: File) {
@@ -44,7 +45,7 @@ class ApkSignerImpl @Inject constructor(
 		} else {
 			signWithPseudoApkSigner(apk, outputApk)
 		}
-		val outputApkHash = streamCopier.computeHash(outputApk, ioDispatcher)
+		val outputApkHash = withContext(ioDispatcher) { outputApk.computeHash() }
 		commonFilesHashRepository.signedApkHash.persist(outputApkHash)
 		apk.delete()
 		outputApk.renameTo(apk)
@@ -113,10 +114,10 @@ class ApkSignerImpl @Inject constructor(
 		if (file.exists()) {
 			return@withContext file
 		}
-		val assets = applicationContext.assets
-		assets.openFd(fileName).use { fd ->
-			fd.createInputStream().source().use { source ->
-				streamCopier.copy(source, file.sink(), fd.declaredLength)
+		applicationContext.assets.open(fileName).source().use { source ->
+			file.sink().buffer().use { sink ->
+				sink.writeAll(source)
+				sink.flush()
 			}
 		}
 		return@withContext file

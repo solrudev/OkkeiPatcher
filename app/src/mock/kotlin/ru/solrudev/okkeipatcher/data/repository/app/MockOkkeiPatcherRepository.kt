@@ -8,9 +8,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.withContext
+import okio.sink
+import okio.source
 import ru.solrudev.okkeipatcher.data.repository.util.install
-import ru.solrudev.okkeipatcher.data.service.StreamCopier
-import ru.solrudev.okkeipatcher.data.service.copy
+import ru.solrudev.okkeipatcher.data.util.STREAM_COPY_PROGRESS_MAX
+import ru.solrudev.okkeipatcher.data.util.copyTo
 import ru.solrudev.okkeipatcher.data.util.getPackageInfoCompat
 import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
@@ -32,7 +35,6 @@ class MockOkkeiPatcherRepository @Inject constructor(
 	@ApplicationContext private val applicationContext: Context,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	private val downloadUpdateWorkRepository: DownloadUpdateWorkRepository,
-	private val streamCopier: StreamCopier,
 	private val packageInstaller: PackageInstaller
 ) : OkkeiPatcherRepository {
 
@@ -52,7 +54,7 @@ class MockOkkeiPatcherRepository @Inject constructor(
 	override suspend fun getUpdateData(refresh: Boolean): OkkeiPatcherUpdateData {
 		checksCount++
 		if (refresh) {
-			delay(3.seconds)
+			delay(2.seconds)
 		}
 		if (checksCount < 3) {
 			return OkkeiPatcherUpdateData(isAvailable = false, sizeInMb = 0.0, changelog = emptyList())
@@ -71,7 +73,7 @@ class MockOkkeiPatcherRepository @Inject constructor(
 		Result.Failure(LocalizedString.raw(t.stackTraceToString()))
 	}
 
-	override fun downloadUpdate() = operation(progressMax = streamCopier.progressMax) {
+	override fun downloadUpdate() = operation(progressMax = STREAM_COPY_PROGRESS_MAX) {
 		wrapDomainExceptions {
 			try {
 				val installedApkPath = applicationContext.packageManager
@@ -79,7 +81,10 @@ class MockOkkeiPatcherRepository @Inject constructor(
 					.applicationInfo
 					.publicSourceDir
 				val installedApk = File(installedApkPath)
-				streamCopier.copy(installedApk, updateFile, ioDispatcher, onProgressDeltaChanged = ::progressDelta)
+				withContext(ioDispatcher) { installedApk.source() }.use { source ->
+					val sink = withContext(ioDispatcher) { updateFile.sink() }
+					source.copyTo(sink, updateFile.length(), onProgressDeltaChanged = { progressDelta(it) })
+				}
 			} catch (t: Throwable) {
 				if (updateFile.exists()) {
 					updateFile.delete()

@@ -1,44 +1,42 @@
 package ru.solrudev.okkeipatcher.data.repository.gamefile
 
-import android.content.Context
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import okio.FileSystem
+import okio.buffer
 import okio.sink
 import okio.source
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.data.repository.gamefile.util.backupDir
-import ru.solrudev.okkeipatcher.data.service.StreamCopier
-import ru.solrudev.okkeipatcher.data.service.computeHash
-import ru.solrudev.okkeipatcher.data.util.recreate
+import ru.solrudev.okkeipatcher.data.repository.gamefile.paths.SaveDataPaths
+import ru.solrudev.okkeipatcher.data.util.computeHash
+import ru.solrudev.okkeipatcher.data.util.prepareRecreate
 import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.repository.app.CommonFilesHashRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.SaveDataRepository
-import java.io.File
 import javax.inject.Inject
 
 class SaveDataRepositoryImpl @Inject constructor(
-	@ApplicationContext applicationContext: Context,
+	saveDataPaths: SaveDataPaths,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	private val saveDataFile: SaveDataFile,
-	private val streamCopier: StreamCopier,
-	private val commonFilesHashRepository: CommonFilesHashRepository
+	private val commonFilesHashRepository: CommonFilesHashRepository,
+	private val fileSystem: FileSystem
 ) : SaveDataRepository {
 
-	private val backup = File(applicationContext.backupDir, "SAVEDATA.DAT")
-	private val temp = File(applicationContext.backupDir, "SAVEDATA_TEMP.DAT")
-
 	override val backupExists: Boolean
-		get() = backup.exists()
+		get() = fileSystem.exists(backup)
+
+	private val backup = saveDataPaths.backup
+	private val temp = saveDataPaths.temp
 
 	override fun deleteBackup() {
-		backup.delete()
+		fileSystem.delete(backup)
 	}
 
 	override fun deleteTemp() {
-		temp.delete()
+		fileSystem.delete(temp)
 	}
 
 	override suspend fun createTemp(): Result {
@@ -48,13 +46,17 @@ class SaveDataRepositoryImpl @Inject constructor(
 		if (!saveDataFile.exists) {
 			return failure
 		}
-		temp.recreate()
 		try {
-			val currentSource = withContext(ioDispatcher) { saveDataFile.inputStream()?.source() } ?: return failure
-			currentSource.use { source ->
-				val sink = withContext(ioDispatcher) { temp.sink() }
-				streamCopier.copy(source, sink, saveDataFile.length)
-				return Result.Success
+			return withContext(ioDispatcher) {
+				val saveDataSource = saveDataFile.inputStream()?.source() ?: return@withContext failure
+				saveDataSource.use { source ->
+					fileSystem.prepareRecreate(temp)
+					fileSystem.sink(temp).buffer().use { sink ->
+						sink.writeAll(source)
+						sink.flush()
+						return@withContext Result.Success
+					}
+				}
 			}
 		} catch (t: Throwable) {
 			return failure
@@ -63,10 +65,10 @@ class SaveDataRepositoryImpl @Inject constructor(
 
 	override suspend fun verifyBackup(): Boolean {
 		val savedHash = commonFilesHashRepository.saveDataHash.retrieve()
-		if (savedHash.isEmpty() || !backup.exists()) {
+		if (savedHash.isEmpty() || !fileSystem.exists(backup)) {
 			return false
 		}
-		val backupHash = streamCopier.computeHash(backup, ioDispatcher)
+		val backupHash = withContext(ioDispatcher) { fileSystem.computeHash(backup) }
 		return backupHash == savedHash
 	}
 
@@ -75,12 +77,16 @@ class SaveDataRepositoryImpl @Inject constructor(
 			LocalizedString.resource(R.string.warning_could_not_restore_save_data)
 		)
 		try {
-			saveDataFile.recreate()
-			val currentSink = withContext(ioDispatcher) { saveDataFile.outputStream()?.sink() } ?: return failure
-			currentSink.use { sink ->
-				val source = withContext(ioDispatcher) { backup.source() }
-				streamCopier.copy(source, sink, backup.length())
-				return Result.Success
+			return withContext(ioDispatcher) {
+				saveDataFile.recreate()
+				val saveDataSink = saveDataFile.outputStream()?.sink() ?: return@withContext failure
+				saveDataSink.buffer().use { sink ->
+					fileSystem.source(backup).use { source ->
+						sink.writeAll(source)
+						sink.flush()
+						return@withContext Result.Success
+					}
+				}
 			}
 		} catch (t: Throwable) {
 			return failure
@@ -88,12 +94,12 @@ class SaveDataRepositoryImpl @Inject constructor(
 	}
 
 	override suspend fun persistTempAsBackup() {
-		if (temp.exists()) {
-			backup.delete()
-			temp.renameTo(backup)
+		if (fileSystem.exists(temp)) {
+			fileSystem.delete(backup)
+			fileSystem.atomicMove(temp, backup)
 		}
-		if (backup.exists()) {
-			val backupHash = streamCopier.computeHash(backup, ioDispatcher)
+		if (fileSystem.exists(backup)) {
+			val backupHash = withContext(ioDispatcher) { fileSystem.computeHash(backup) }
 			commonFilesHashRepository.saveDataHash.persist(backupHash)
 		}
 	}

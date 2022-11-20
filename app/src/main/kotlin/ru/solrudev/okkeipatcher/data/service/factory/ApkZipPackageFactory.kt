@@ -1,6 +1,7 @@
 package ru.solrudev.okkeipatcher.data.service.factory
 
 import kotlinx.coroutines.CoroutineDispatcher
+import ru.solrudev.okkeipatcher.data.repository.gamefile.paths.ApkPaths
 import ru.solrudev.okkeipatcher.data.service.ApkSigner
 import ru.solrudev.okkeipatcher.data.service.ApkZipPackage
 import ru.solrudev.okkeipatcher.data.service.ZipPackage
@@ -14,13 +15,14 @@ interface ApkZipPackageFactory : SuspendFactory<ZipPackage>
 class ApkZipPackageFactoryImpl @Inject constructor(
 	private val apkRepository: ApkRepository,
 	private val apkSigner: ApkSigner,
-	@IoDispatcher private val ioDispatcher: CoroutineDispatcher
+	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+	private val apkPaths: ApkPaths
 ) : ApkZipPackageFactory {
 
 	override suspend fun create(): ZipPackage {
 		if (!apkRepository.tempExists) {
 			apkRepository.createTemp()
 		}
-		return ApkZipPackage(apkRepository.tempPath, apkSigner, ioDispatcher)
+		return ApkZipPackage(apkPaths.temp, apkSigner, ioDispatcher)
 	}
 }

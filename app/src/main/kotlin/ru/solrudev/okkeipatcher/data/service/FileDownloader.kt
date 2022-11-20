@@ -1,16 +1,13 @@
 package ru.solrudev.okkeipatcher.data.service
 
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okio.Sink
-import okio.sink
 import ru.solrudev.okkeipatcher.data.network.model.exception.NetworkNotAvailableException
 import ru.solrudev.okkeipatcher.data.service.util.await
-import ru.solrudev.okkeipatcher.data.util.recreate
+import ru.solrudev.okkeipatcher.data.util.STREAM_COPY_PROGRESS_MAX
+import ru.solrudev.okkeipatcher.data.util.copyTo
 import ru.solrudev.okkeipatcher.domain.model.exception.NoNetworkException
-import java.io.File
 import javax.inject.Inject
 
 interface FileDownloader {
@@ -29,30 +26,9 @@ interface FileDownloader {
 	): String
 }
 
-/**
- * @param hashing Does output stream need to be hashed. Default is `false`.
- * @return File hash. Empty string if [hashing] is `false`.
- */
-suspend inline fun FileDownloader.download(
-	url: String,
-	outputFile: File,
-	ioDispatcher: CoroutineDispatcher,
-	hashing: Boolean = false,
-	noinline onProgressDeltaChanged: suspend (Int) -> Unit
-): String {
-	val sink = withContext(ioDispatcher) {
-		outputFile.recreate()
-		outputFile.sink()
-	}
-	return download(url, sink, hashing, onProgressDeltaChanged)
-}
+class FileDownloaderImpl @Inject constructor(private val okHttpClient: OkHttpClient) : FileDownloader {
 
-class FileDownloaderImpl @Inject constructor(
-	private val okHttpClient: OkHttpClient,
-	private val streamCopier: StreamCopier
-) : FileDownloader {
-
-	override val progressMax = 100
+	override val progressMax = STREAM_COPY_PROGRESS_MAX
 
 	override suspend fun download(
 		url: String,
@@ -64,12 +40,11 @@ class FileDownloaderImpl @Inject constructor(
 			try {
 				val request = Request.Builder().url(url).build()
 				val responseBody = okHttpClient.newCall(request).await().body() ?: return ""
-				return streamCopier.copy(
-					responseBody.source(),
+				return responseBody.source().copyTo(
 					downloadSink,
 					responseBody.contentLength(),
 					hashing,
-					onProgressDeltaChanged
+					onProgressDeltaChanged = { onProgressDeltaChanged(it) }
 				)
 			} catch (_: NetworkNotAvailableException) {
 				throw NoNetworkException()

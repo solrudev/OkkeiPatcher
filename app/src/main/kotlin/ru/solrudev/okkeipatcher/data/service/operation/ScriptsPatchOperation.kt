@@ -2,28 +2,29 @@ package ru.solrudev.okkeipatcher.data.service.operation
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import net.lingala.zip4j.ZipFile
+import okio.FileSystem
+import okio.Path
+import okio.Path.Companion.toPath
+import okio.buffer
+import okio.openZip
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.service.FileDownloader
-import ru.solrudev.okkeipatcher.data.service.download
 import ru.solrudev.okkeipatcher.data.service.factory.ApkZipPackageFactory
-import ru.solrudev.okkeipatcher.data.service.util.use
+import ru.solrudev.okkeipatcher.data.util.prepareRecreate
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.aggregateOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.model.exception.ScriptsCorruptedException
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFile
-import java.io.File
-
-private val tempZipFilesRegex = Regex("(apk|zip)\\d+")
 
 class ScriptsPatchOperation(
 	private val scriptsPatchFile: PatchFile,
 	private val apkZipPackageFactory: ApkZipPackageFactory,
 	private val ioDispatcher: CoroutineDispatcher,
-	private val externalDir: File,
-	private val fileDownloader: FileDownloader
+	externalDir: Path,
+	private val fileDownloader: FileDownloader,
+	private val fileSystem: FileSystem
 ) : Operation<Unit> {
 
 	private val operation = aggregateOperation(
@@ -36,24 +37,28 @@ class ScriptsPatchOperation(
 	override val messages = operation.messages
 	override val progressDelta = operation.progressDelta
 	override val progressMax = operation.progressMax
-	private val scriptsFile = File(externalDir, "scripts.zip")
-	private val extractedScriptsDirectory = File(externalDir, "script")
+	private val scriptsFile = externalDir.resolve("scripts.zip")
+	private val extractedScriptsDirectory = externalDir.resolve("script")
 
 	override suspend fun invoke() = try {
 		operation()
 	} finally {
-		deleteTempZipFiles()
-		if (extractedScriptsDirectory.exists()) {
-			extractedScriptsDirectory.deleteRecursively()
+		if (fileSystem.exists(extractedScriptsDirectory)) {
+			fileSystem.deleteRecursively(extractedScriptsDirectory)
 		}
-		scriptsFile.delete()
+		fileSystem.delete(scriptsFile)
 	}
 
 	private fun downloadScripts() = operation(progressMax = fileDownloader.progressMax) {
 		status(LocalizedString.resource(R.string.status_downloading_scripts))
 		val scriptsData = scriptsPatchFile.getData()
-		val scriptsHash =
-			fileDownloader.download(scriptsData.url, scriptsFile, ioDispatcher, hashing = true, ::progressDelta)
+		val sink = withContext(ioDispatcher) {
+			fileSystem.prepareRecreate(scriptsFile)
+			fileSystem.sink(scriptsFile)
+		}
+		val scriptsHash = fileDownloader.download(
+			scriptsData.url, sink, hashing = true, onProgressDeltaChanged = ::progressDelta
+		)
 		if (scriptsHash != scriptsData.hash) {
 			throw ScriptsCorruptedException()
 		}
@@ -62,9 +67,17 @@ class ScriptsPatchOperation(
 
 	private fun extractScripts() = operation(progressMax = 100) {
 		status(LocalizedString.resource(R.string.status_extracting_scripts))
-		ZipFile(scriptsFile).use {
-			withContext(ioDispatcher) {
-				it.extractAll(extractedScriptsDirectory.absolutePath)
+		withContext(ioDispatcher) {
+			val scriptsZip = fileSystem.openZip(scriptsFile)
+			scriptsZip.list("/".toPath()).forEach { script ->
+				val extractedScript = extractedScriptsDirectory.resolve(script.name)
+				scriptsZip.source(script).use { source ->
+					fileSystem.prepareRecreate(extractedScript)
+					fileSystem.sink(extractedScript).buffer().use { sink ->
+						sink.writeAll(source)
+						sink.flush()
+					}
+				}
 			}
 		}
 	}
@@ -72,9 +85,7 @@ class ScriptsPatchOperation(
 	private fun replaceScripts() = operation(progressMax = 100) {
 		status(LocalizedString.resource(R.string.status_replacing_scripts))
 		val scriptsFolder = "assets/script/"
-		val newScripts = extractedScriptsDirectory
-			.listFiles()!!
-			.filter { it.isFile }
+		val newScripts = fileSystem.list(extractedScriptsDirectory)
 		val oldScripts = newScripts.map { "$scriptsFolder${it.name}" }
 		apkZipPackageFactory.create().use { apk ->
 			apk.removeFiles(oldScripts)
@@ -83,12 +94,5 @@ class ScriptsPatchOperation(
 			apk.removeSignature()
 			apk.sign()
 		}
-	}
-
-	private fun deleteTempZipFiles() {
-		externalDir.listFiles()
-			?.filter { it.extension.matches(tempZipFilesRegex) }
-			?.filter { it.parentFile?.canWrite() == true }
-			?.forEach { it.delete() }
 	}
 }

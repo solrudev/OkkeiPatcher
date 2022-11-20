@@ -22,10 +22,9 @@ fun ObbDownloadOperation(
 		val obbHash = fileDownloader.download(
 			obbData.url,
 			obbRepository.obbSink(),
-			hashing = true
-		) { progressDelta ->
-			progressDelta(progressDelta * PROGRESS_MULTIPLIER)
-		}
+			hashing = true,
+			onProgressDeltaChanged = { progressDelta(it * PROGRESS_MULTIPLIER) }
+		)
 		if (obbHash != obbData.hash) {
 			throw ObbCorruptedException()
 		}

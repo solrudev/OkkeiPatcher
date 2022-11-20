@@ -14,6 +14,12 @@ interface ServiceBindModule {
 
 	@Binds
 	@Reusable
+	fun bindGameInstallationProvider(
+		gameInstallationProvider: GameInstallationProviderImpl
+	): GameInstallationProvider
+
+	@Binds
+	@Reusable
 	fun bindStorageChecker(
 		storageChecker: StorageCheckerImpl
 	): StorageChecker
@@ -29,12 +35,6 @@ interface ServiceBindModule {
 	fun bindFileDownloader(
 		fileDownloader: FileDownloaderImpl
 	): FileDownloader
-
-	@Binds
-	@Reusable
-	fun bindStreamCopier(
-		streamCopier: StreamCopierImpl
-	): StreamCopier
 
 	@Binds
 	fun bindNotificationService(

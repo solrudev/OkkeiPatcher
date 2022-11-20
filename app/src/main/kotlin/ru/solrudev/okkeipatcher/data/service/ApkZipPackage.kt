@@ -4,31 +4,31 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import net.lingala.zip4j.ZipFile
 import net.lingala.zip4j.model.ZipParameters
-import java.io.File
+import okio.Path
 
 interface ZipPackage : AutoCloseable {
-	suspend fun addFiles(files: List<File>, root: String)
+	suspend fun addFiles(files: List<Path>, root: String)
 	suspend fun removeFiles(files: List<String>)
 	suspend fun sign()
 	suspend fun removeSignature()
 }
 
 class ApkZipPackage(
-	private val apkPath: String,
+	private val apkPath: Path,
 	private val apkSigner: ApkSigner,
 	private val ioDispatcher: CoroutineDispatcher
 ) : ZipPackage {
 
-	private val zipFile = ZipFile(apkPath)
+	private val zipFile = ZipFile(apkPath.toString())
 
 	override fun close() {
 		zipFile.executorService?.shutdownNow()
 		zipFile.close()
 	}
 
-	override suspend fun addFiles(files: List<File>, root: String) = withContext(ioDispatcher) {
+	override suspend fun addFiles(files: List<Path>, root: String) = withContext(ioDispatcher) {
 		val parameters = ZipParameters().apply { rootFolderNameInZip = root }
-		zipFile.addFiles(files, parameters)
+		zipFile.addFiles(files.map { it.toFile() }, parameters)
 	}
 
 	override suspend fun removeFiles(files: List<String>) = withContext(ioDispatcher) {
@@ -36,12 +36,10 @@ class ApkZipPackage(
 	}
 
 	override suspend fun sign() {
-		val apk = File(apkPath)
-		apkSigner.sign(apk)
+		apkSigner.sign(apkPath.toFile())
 	}
 
 	override suspend fun removeSignature() {
-		val apk = File(apkPath)
-		apkSigner.removeSignature(apk)
+		apkSigner.removeSignature(apkPath.toFile())
 	}
 }
