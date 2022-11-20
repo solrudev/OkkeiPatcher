@@ -9,18 +9,18 @@ import okio.buffer
 import okio.openZip
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.service.FileDownloader
-import ru.solrudev.okkeipatcher.data.service.factory.ApkZipPackageFactory
 import ru.solrudev.okkeipatcher.data.util.prepareRecreate
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.aggregateOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.model.exception.ScriptsCorruptedException
+import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFile
 
 class ScriptsPatchOperation(
 	private val scriptsPatchFile: PatchFile,
-	private val apkZipPackageFactory: ApkZipPackageFactory,
+	private val apkRepository: ApkRepository,
 	private val ioDispatcher: CoroutineDispatcher,
 	externalDir: Path,
 	private val fileDownloader: FileDownloader,
@@ -87,7 +87,7 @@ class ScriptsPatchOperation(
 		val scriptsFolder = "assets/script/"
 		val newScripts = fileSystem.list(extractedScriptsDirectory)
 		val oldScripts = newScripts.map { "$scriptsFolder${it.name}" }
-		apkZipPackageFactory.create().use { apk ->
+		apkRepository.createTemp().use { apk ->
 			apk.removeFiles(oldScripts)
 			apk.addFiles(newScripts, root = scriptsFolder)
 			status(LocalizedString.resource(R.string.status_signing_apk))

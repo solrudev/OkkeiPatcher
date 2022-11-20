@@ -5,13 +5,7 @@ import kotlinx.coroutines.withContext
 import net.lingala.zip4j.ZipFile
 import net.lingala.zip4j.model.ZipParameters
 import okio.Path
-
-interface ZipPackage : AutoCloseable {
-	suspend fun addFiles(files: List<Path>, root: String)
-	suspend fun removeFiles(files: List<String>)
-	suspend fun sign()
-	suspend fun removeSignature()
-}
+import ru.solrudev.okkeipatcher.domain.service.ZipPackage
 
 class ApkZipPackage(
 	private val apkPath: Path,

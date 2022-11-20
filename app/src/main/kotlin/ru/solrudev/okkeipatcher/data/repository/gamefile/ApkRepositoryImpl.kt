@@ -12,11 +12,13 @@ import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.repository.gamefile.paths.ApkPaths
 import ru.solrudev.okkeipatcher.data.repository.util.install
 import ru.solrudev.okkeipatcher.data.service.GameInstallationProvider
+import ru.solrudev.okkeipatcher.data.service.factory.ApkZipPackageFactory
 import ru.solrudev.okkeipatcher.data.util.GAME_PACKAGE_NAME
 import ru.solrudev.okkeipatcher.data.util.computeHash
 import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.repository.app.CommonFilesHashRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
+import ru.solrudev.okkeipatcher.domain.service.ZipPackage
 import javax.inject.Inject
 
 class ApkRepositoryImpl @Inject constructor(
@@ -26,6 +28,7 @@ class ApkRepositoryImpl @Inject constructor(
 	private val packageUninstaller: PackageUninstaller,
 	private val packageInstaller: PackageInstaller,
 	private val commonFilesHashRepository: CommonFilesHashRepository,
+	private val apkZipPackageFactory: ApkZipPackageFactory,
 	private val fileSystem: FileSystem
 ) : ApkRepository {
 
@@ -44,11 +47,14 @@ class ApkRepositoryImpl @Inject constructor(
 		fileSystem.delete(temp)
 	}
 
-	override suspend fun createTemp() {
+	override suspend fun createTemp(): ZipPackage {
 		try {
-			withContext(ioDispatcher) {
-				fileSystem.copy(installed, temp)
+			if (!fileSystem.exists(temp)) {
+				withContext(ioDispatcher) {
+					fileSystem.copy(installed, temp)
+				}
 			}
+			return apkZipPackageFactory.create(temp)
 		} catch (t: Throwable) {
 			fileSystem.delete(temp)
 			throw t

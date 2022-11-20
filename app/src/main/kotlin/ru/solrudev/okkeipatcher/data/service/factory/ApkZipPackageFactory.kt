@@ -1,28 +1,23 @@
 package ru.solrudev.okkeipatcher.data.service.factory
 
 import kotlinx.coroutines.CoroutineDispatcher
-import ru.solrudev.okkeipatcher.data.repository.gamefile.paths.ApkPaths
+import okio.Path
 import ru.solrudev.okkeipatcher.data.service.ApkSigner
 import ru.solrudev.okkeipatcher.data.service.ApkZipPackage
-import ru.solrudev.okkeipatcher.data.service.ZipPackage
 import ru.solrudev.okkeipatcher.di.IoDispatcher
-import ru.solrudev.okkeipatcher.domain.core.factory.SuspendFactory
-import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
+import ru.solrudev.okkeipatcher.domain.service.ZipPackage
 import javax.inject.Inject
 
-interface ApkZipPackageFactory : SuspendFactory<ZipPackage>
+interface ApkZipPackageFactory {
+	fun create(tempPath: Path): ZipPackage
+}
 
 class ApkZipPackageFactoryImpl @Inject constructor(
-	private val apkRepository: ApkRepository,
 	private val apkSigner: ApkSigner,
-	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-	private val apkPaths: ApkPaths
+	@IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ApkZipPackageFactory {
 
-	override suspend fun create(): ZipPackage {
-		if (!apkRepository.tempExists) {
-			apkRepository.createTemp()
-		}
-		return ApkZipPackage(apkPaths.temp, apkSigner, ioDispatcher)
+	override fun create(tempPath: Path): ZipPackage {
+		return ApkZipPackage(tempPath, apkSigner, ioDispatcher)
 	}
 }
