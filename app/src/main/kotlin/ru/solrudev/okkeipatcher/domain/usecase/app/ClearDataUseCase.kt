@@ -4,7 +4,7 @@ import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.model.Language
-import ru.solrudev.okkeipatcher.domain.repository.app.CommonFilesHashRepository
+import ru.solrudev.okkeipatcher.domain.repository.app.HashRepository
 import ru.solrudev.okkeipatcher.domain.repository.app.PreferencesRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkBackupRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
@@ -24,7 +24,7 @@ class ClearDataUseCaseImpl @Inject constructor(
 	private val obbBackupRepository: ObbBackupRepository,
 	private val saveDataRepository: SaveDataRepository,
 	private val preferencesRepository: PreferencesRepository,
-	private val commonFilesHashRepository: CommonFilesHashRepository,
+	private val hashRepository: HashRepository,
 	private val patchRepositories: Map<Language, @JvmSuppressWildcards Provider<PatchRepository>>
 ) : ClearDataUseCase {
 
@@ -34,7 +34,7 @@ class ClearDataUseCaseImpl @Inject constructor(
 		obbBackupRepository.deleteBackup()
 		saveDataRepository.deleteBackup()
 		preferencesRepository.reset()
-		commonFilesHashRepository.clear()
+		hashRepository.clear()
 		patchRepositories.values.forEach {
 			it.get().clearPersistedData()
 		}

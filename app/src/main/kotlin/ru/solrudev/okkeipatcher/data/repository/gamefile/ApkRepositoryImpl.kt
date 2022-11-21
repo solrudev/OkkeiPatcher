@@ -16,7 +16,7 @@ import ru.solrudev.okkeipatcher.data.service.factory.ApkZipPackageFactory
 import ru.solrudev.okkeipatcher.data.util.GAME_PACKAGE_NAME
 import ru.solrudev.okkeipatcher.data.util.computeHash
 import ru.solrudev.okkeipatcher.di.IoDispatcher
-import ru.solrudev.okkeipatcher.domain.repository.app.CommonFilesHashRepository
+import ru.solrudev.okkeipatcher.domain.repository.app.HashRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
 import ru.solrudev.okkeipatcher.domain.service.ZipPackage
 import javax.inject.Inject
@@ -27,7 +27,7 @@ class ApkRepositoryImpl @Inject constructor(
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	private val packageUninstaller: PackageUninstaller,
 	private val packageInstaller: PackageInstaller,
-	private val commonFilesHashRepository: CommonFilesHashRepository,
+	private val hashRepository: HashRepository,
 	private val apkZipPackageFactory: ApkZipPackageFactory,
 	private val fileSystem: FileSystem
 ) : ApkRepository {
@@ -65,7 +65,7 @@ class ApkRepositoryImpl @Inject constructor(
 		if (!fileSystem.exists(temp)) {
 			return false
 		}
-		val savedHash = commonFilesHashRepository.signedApkHash.retrieve()
+		val savedHash = hashRepository.signedApkHash.retrieve()
 		if (savedHash.isEmpty()) {
 			return false
 		}

@@ -13,7 +13,7 @@ import okio.source
 import ru.solrudev.okkeipatcher.data.service.util.use
 import ru.solrudev.okkeipatcher.data.util.computeHash
 import ru.solrudev.okkeipatcher.di.IoDispatcher
-import ru.solrudev.okkeipatcher.domain.repository.app.CommonFilesHashRepository
+import ru.solrudev.okkeipatcher.domain.repository.app.HashRepository
 import java.io.File
 import java.security.KeyFactory
 import java.security.cert.CertificateFactory
@@ -35,7 +35,7 @@ interface ApkSigner {
 class ApkSignerImpl @Inject constructor(
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	@ApplicationContext private val applicationContext: Context,
-	private val commonFilesHashRepository: CommonFilesHashRepository
+	private val hashRepository: HashRepository
 ) : ApkSigner {
 
 	override suspend fun sign(apk: File) {
@@ -46,7 +46,7 @@ class ApkSignerImpl @Inject constructor(
 			signWithPseudoApkSigner(apk, outputApk)
 		}
 		val outputApkHash = withContext(ioDispatcher) { outputApk.computeHash() }
-		commonFilesHashRepository.signedApkHash.persist(outputApkHash)
+		hashRepository.signedApkHash.persist(outputApkHash)
 		apk.delete()
 		outputApk.renameTo(apk)
 	}

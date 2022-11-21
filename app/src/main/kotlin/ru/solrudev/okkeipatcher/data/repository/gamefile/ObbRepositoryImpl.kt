@@ -13,7 +13,7 @@ import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.core.operation.ProgressOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.model.exception.ObbNotFoundException
-import ru.solrudev.okkeipatcher.domain.repository.app.CommonFilesHashRepository
+import ru.solrudev.okkeipatcher.domain.repository.app.HashRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbBackupRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbRepository
 import javax.inject.Inject
@@ -41,7 +41,7 @@ class ObbRepositoryImpl @Inject constructor(
 class ObbBackupRepositoryImpl @Inject constructor(
 	obbPaths: ObbPaths,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-	private val commonFilesHashRepository: CommonFilesHashRepository,
+	private val hashRepository: HashRepository,
 	private val fileSystem: FileSystem
 ) : ObbBackupRepository {
 
@@ -68,7 +68,7 @@ class ObbBackupRepositoryImpl @Inject constructor(
 						onProgressDeltaChanged = { progressDelta(it * progressMultiplier) }
 					)
 				}
-				commonFilesHashRepository.backupObbHash.persist(hash)
+				hashRepository.backupObbHash.persist(hash)
 			} catch (t: Throwable) {
 				fileSystem.delete(backup)
 				throw t
@@ -94,7 +94,7 @@ class ObbBackupRepositoryImpl @Inject constructor(
 	}
 
 	override fun verifyBackup() = operation(progressMax = STREAM_COPY_PROGRESS_MAX) {
-		val savedHash = commonFilesHashRepository.backupObbHash.retrieve()
+		val savedHash = hashRepository.backupObbHash.retrieve()
 		if (savedHash.isEmpty() || !fileSystem.exists(backup)) {
 			return@operation false
 		}

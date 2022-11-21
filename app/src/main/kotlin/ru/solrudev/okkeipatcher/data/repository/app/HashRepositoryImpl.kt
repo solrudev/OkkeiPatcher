@@ -6,7 +6,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import ru.solrudev.okkeipatcher.data.preference.Preference
-import ru.solrudev.okkeipatcher.domain.repository.app.CommonFilesHashRepository
+import ru.solrudev.okkeipatcher.domain.repository.app.HashRepository
 import javax.inject.Inject
 
 private val SIGNED_APK = stringPreferencesKey("signed_apk_hash")
@@ -14,8 +14,7 @@ private val BACKUP_APK = stringPreferencesKey("backup_apk_hash")
 private val BACKUP_OBB = stringPreferencesKey("backup_obb_hash")
 private val SAVE_DATA = stringPreferencesKey("save_data_hash")
 
-class CommonFilesHashRepositoryImpl @Inject constructor(@ApplicationContext applicationContext: Context) :
-	CommonFilesHashRepository {
+class HashRepositoryImpl @Inject constructor(@ApplicationContext applicationContext: Context) : HashRepository {
 
 	private val Context.dataStore by preferencesDataStore(name = "common_files_hash")
 	private val preferences = applicationContext.dataStore

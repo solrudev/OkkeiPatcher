@@ -68,9 +68,9 @@ interface RepositoryModule {
 
 	@Binds
 	@Singleton
-	fun bindCommonFilesHashRepository(
-		commonFilesHashRepository: CommonFilesHashRepositoryImpl
-	): CommonFilesHashRepository
+	fun bindHashRepository(
+		hashRepository: HashRepositoryImpl
+	): HashRepository
 
 	@Binds
 	@Singleton

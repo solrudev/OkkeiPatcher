@@ -2,7 +2,7 @@ package ru.solrudev.okkeipatcher.domain.repository.app
 
 import ru.solrudev.okkeipatcher.domain.core.persistence.Dao
 
-interface CommonFilesHashRepository {
+interface HashRepository {
 	val signedApkHash: Dao<String>
 	val backupApkHash: Dao<String>
 	val backupObbHash: Dao<String>

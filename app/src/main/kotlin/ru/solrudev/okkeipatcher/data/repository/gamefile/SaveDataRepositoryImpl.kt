@@ -13,7 +13,7 @@ import ru.solrudev.okkeipatcher.data.util.prepareRecreate
 import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Result
-import ru.solrudev.okkeipatcher.domain.repository.app.CommonFilesHashRepository
+import ru.solrudev.okkeipatcher.domain.repository.app.HashRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.SaveDataRepository
 import javax.inject.Inject
 
@@ -21,7 +21,7 @@ class SaveDataRepositoryImpl @Inject constructor(
 	saveDataPaths: SaveDataPaths,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	private val saveDataFile: SaveDataFile,
-	private val commonFilesHashRepository: CommonFilesHashRepository,
+	private val hashRepository: HashRepository,
 	private val fileSystem: FileSystem
 ) : SaveDataRepository {
 
@@ -64,7 +64,7 @@ class SaveDataRepositoryImpl @Inject constructor(
 	}
 
 	override suspend fun verifyBackup(): Boolean {
-		val savedHash = commonFilesHashRepository.saveDataHash.retrieve()
+		val savedHash = hashRepository.saveDataHash.retrieve()
 		if (savedHash.isEmpty() || !fileSystem.exists(backup)) {
 			return false
 		}
@@ -100,7 +100,7 @@ class SaveDataRepositoryImpl @Inject constructor(
 		}
 		if (fileSystem.exists(backup)) {
 			val backupHash = withContext(ioDispatcher) { fileSystem.computeHash(backup) }
-			commonFilesHashRepository.saveDataHash.persist(backupHash)
+			hashRepository.saveDataHash.persist(backupHash)
 		}
 	}
 }

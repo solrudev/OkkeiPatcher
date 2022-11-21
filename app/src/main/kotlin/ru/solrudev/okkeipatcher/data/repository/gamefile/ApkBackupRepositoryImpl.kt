@@ -11,7 +11,7 @@ import ru.solrudev.okkeipatcher.data.service.GameInstallationProvider
 import ru.solrudev.okkeipatcher.data.util.computeHash
 import ru.solrudev.okkeipatcher.data.util.copy
 import ru.solrudev.okkeipatcher.di.IoDispatcher
-import ru.solrudev.okkeipatcher.domain.repository.app.CommonFilesHashRepository
+import ru.solrudev.okkeipatcher.domain.repository.app.HashRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkBackupRepository
 import javax.inject.Inject
 
@@ -20,7 +20,7 @@ class ApkBackupRepositoryImpl @Inject constructor(
 	private val gameInstallationProvider: GameInstallationProvider,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	private val packageInstaller: PackageInstaller,
-	private val commonFilesHashRepository: CommonFilesHashRepository,
+	private val hashRepository: HashRepository,
 	private val fileSystem: FileSystem
 ) : ApkBackupRepository {
 
@@ -38,7 +38,7 @@ class ApkBackupRepositoryImpl @Inject constructor(
 
 	override suspend fun createBackup() = try {
 		val hash = withContext(ioDispatcher) { fileSystem.copy(installed, backup, hashing = true) }
-		commonFilesHashRepository.backupApkHash.persist(hash)
+		hashRepository.backupApkHash.persist(hash)
 	} catch (t: Throwable) {
 		fileSystem.delete(backup)
 		throw t
@@ -48,7 +48,7 @@ class ApkBackupRepositoryImpl @Inject constructor(
 		if (!fileSystem.exists(backup)) {
 			return false
 		}
-		val savedHash = commonFilesHashRepository.backupApkHash.retrieve()
+		val savedHash = hashRepository.backupApkHash.retrieve()
 		if (savedHash.isEmpty()) {
 			return false
 		}
