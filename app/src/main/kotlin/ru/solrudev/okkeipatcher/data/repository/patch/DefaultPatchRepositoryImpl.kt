@@ -1,11 +1,9 @@
 package ru.solrudev.okkeipatcher.data.repository.patch
 
-import android.content.Context
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.preferencesDataStore
-import dagger.hilt.android.qualifiers.ApplicationContext
 import ru.solrudev.okkeipatcher.data.core.InMemoryCache
 import ru.solrudev.okkeipatcher.data.network.api.patch.DefaultPatchApi
+import ru.solrudev.okkeipatcher.data.preference.PreferencesDataStoreFactory
 import ru.solrudev.okkeipatcher.data.repository.patch.mapper.toPatchFileData
 import ru.solrudev.okkeipatcher.domain.model.patchupdates.DefaultPatchUpdates
 import ru.solrudev.okkeipatcher.domain.repository.app.PreferencesRepository
@@ -15,11 +13,10 @@ import javax.inject.Inject
 class DefaultPatchRepositoryImpl @Inject constructor(
 	defaultPatchApi: DefaultPatchApi,
 	preferencesRepository: PreferencesRepository,
-	@ApplicationContext applicationContext: Context
+	preferencesDataStoreFactory: PreferencesDataStoreFactory
 ) : DefaultPatchRepository {
 
-	private val Context.dataStore by preferencesDataStore(name = "patch_files_en_hash")
-	private val preferences = applicationContext.dataStore
+	private val preferences = preferencesDataStoreFactory.create("patch_files_en_hash")
 	private val patchDataCache = InMemoryCache(defaultPatchApi::getPatchData)
 
 	override val scripts = PatchFileImpl(

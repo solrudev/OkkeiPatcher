@@ -4,6 +4,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import ru.solrudev.okkeipatcher.data.preference.PreferencesDataStoreFactory
+import ru.solrudev.okkeipatcher.data.preference.PreferencesDataStoreFactoryImpl
 import ru.solrudev.okkeipatcher.data.service.factory.ApkZipPackageFactory
 import ru.solrudev.okkeipatcher.data.service.factory.ApkZipPackageFactoryImpl
 import ru.solrudev.okkeipatcher.data.service.factory.NotificationServiceFactory
@@ -50,4 +52,9 @@ interface FactoryBindModule {
 	fun bindApkZipPackageFactory(
 		apkZipPackageFactory: ApkZipPackageFactoryImpl
 	): ApkZipPackageFactory
+
+	@Binds
+	fun bindPreferencesDataStoreFactory(
+		preferencesDataStoreFactory: PreferencesDataStoreFactoryImpl
+	): PreferencesDataStoreFactory
 }
