@@ -9,7 +9,7 @@ import kotlinx.coroutines.withContext
 import okio.FileSystem
 import okio.Path
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.data.repository.gamefile.paths.ApkPaths
+import ru.solrudev.okkeipatcher.data.OkkeiEnvironment
 import ru.solrudev.okkeipatcher.data.repository.util.install
 import ru.solrudev.okkeipatcher.data.service.GameInstallationProvider
 import ru.solrudev.okkeipatcher.data.service.factory.ApkZipPackageFactory
@@ -22,7 +22,7 @@ import ru.solrudev.okkeipatcher.domain.service.ZipPackage
 import javax.inject.Inject
 
 class ApkRepositoryImpl @Inject constructor(
-	apkPaths: ApkPaths,
+	environment: OkkeiEnvironment,
 	private val gameInstallationProvider: GameInstallationProvider,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	private val packageUninstaller: PackageUninstaller,
@@ -38,7 +38,7 @@ class ApkRepositoryImpl @Inject constructor(
 	override val tempExists: Boolean
 		get() = fileSystem.exists(temp)
 
-	private val temp = apkPaths.temp
+	private val temp = environment.externalFilesPath / "temp.apk"
 
 	private val installed: Path
 		get() = gameInstallationProvider.getApkPath()

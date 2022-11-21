@@ -7,7 +7,8 @@ import okio.buffer
 import okio.sink
 import okio.source
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.data.repository.gamefile.paths.SaveDataPaths
+import ru.solrudev.okkeipatcher.data.OkkeiEnvironment
+import ru.solrudev.okkeipatcher.data.repository.gamefile.util.backupPath
 import ru.solrudev.okkeipatcher.data.util.computeHash
 import ru.solrudev.okkeipatcher.data.util.prepareRecreate
 import ru.solrudev.okkeipatcher.di.IoDispatcher
@@ -18,7 +19,7 @@ import ru.solrudev.okkeipatcher.domain.repository.gamefile.SaveDataRepository
 import javax.inject.Inject
 
 class SaveDataRepositoryImpl @Inject constructor(
-	saveDataPaths: SaveDataPaths,
+	environment: OkkeiEnvironment,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	private val saveDataFile: SaveDataFile,
 	private val hashRepository: HashRepository,
@@ -28,8 +29,8 @@ class SaveDataRepositoryImpl @Inject constructor(
 	override val backupExists: Boolean
 		get() = fileSystem.exists(backup)
 
-	private val backup = saveDataPaths.backup
-	private val temp = saveDataPaths.temp
+	private val backup = environment.backupPath / "SAVEDATA.DAT"
+	private val temp = environment.backupPath / "SAVEDATA_TEMP.DAT"
 
 	override fun deleteBackup() {
 		fileSystem.delete(backup)

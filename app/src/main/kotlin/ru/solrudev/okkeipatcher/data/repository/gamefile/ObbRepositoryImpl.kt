@@ -3,12 +3,11 @@ package ru.solrudev.okkeipatcher.data.repository.gamefile
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import okio.FileSystem
+import okio.Path
 import okio.Sink
-import ru.solrudev.okkeipatcher.data.repository.gamefile.paths.ObbPaths
-import ru.solrudev.okkeipatcher.data.util.STREAM_COPY_PROGRESS_MAX
-import ru.solrudev.okkeipatcher.data.util.computeHash
-import ru.solrudev.okkeipatcher.data.util.copy
-import ru.solrudev.okkeipatcher.data.util.prepareRecreate
+import ru.solrudev.okkeipatcher.data.OkkeiEnvironment
+import ru.solrudev.okkeipatcher.data.repository.gamefile.util.backupPath
+import ru.solrudev.okkeipatcher.data.util.*
 import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.core.operation.ProgressOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
@@ -18,15 +17,20 @@ import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbBackupRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbRepository
 import javax.inject.Inject
 
+private const val OBB_FILE_NAME = "main.87.com.mages.chaoschild_jp.obb"
+
+private val OkkeiEnvironment.obbPath: Path
+	get() = externalStoragePath / "Android" / "obb" / GAME_PACKAGE_NAME / OBB_FILE_NAME
+
 class ObbRepositoryImpl @Inject constructor(
-	obbPaths: ObbPaths,
+	environment: OkkeiEnvironment,
 	private val fileSystem: FileSystem
 ) : ObbRepository {
 
 	override val obbExists: Boolean
 		get() = fileSystem.exists(obb)
 
-	private val obb = obbPaths.obb
+	private val obb = environment.obbPath
 
 	override fun deleteObb() {
 		fileSystem.delete(obb)
@@ -39,7 +43,7 @@ class ObbRepositoryImpl @Inject constructor(
 }
 
 class ObbBackupRepositoryImpl @Inject constructor(
-	obbPaths: ObbPaths,
+	environment: OkkeiEnvironment,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	private val hashRepository: HashRepository,
 	private val fileSystem: FileSystem
@@ -48,8 +52,8 @@ class ObbBackupRepositoryImpl @Inject constructor(
 	override val backupExists: Boolean
 		get() = fileSystem.exists(backup)
 
-	private val obb = obbPaths.obb
-	private val backup = obbPaths.backup
+	private val obb = environment.obbPath
+	private val backup = environment.backupPath / OBB_FILE_NAME
 
 	override fun deleteBackup() {
 		fileSystem.delete(backup)

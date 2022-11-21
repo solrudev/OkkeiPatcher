@@ -5,7 +5,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import okio.FileSystem
 import okio.Path
-import ru.solrudev.okkeipatcher.data.repository.gamefile.paths.ApkPaths
+import ru.solrudev.okkeipatcher.data.OkkeiEnvironment
+import ru.solrudev.okkeipatcher.data.repository.gamefile.util.backupPath
 import ru.solrudev.okkeipatcher.data.repository.util.install
 import ru.solrudev.okkeipatcher.data.service.GameInstallationProvider
 import ru.solrudev.okkeipatcher.data.util.computeHash
@@ -16,7 +17,7 @@ import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkBackupRepository
 import javax.inject.Inject
 
 class ApkBackupRepositoryImpl @Inject constructor(
-	apkPaths: ApkPaths,
+	environment: OkkeiEnvironment,
 	private val gameInstallationProvider: GameInstallationProvider,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	private val packageInstaller: PackageInstaller,
@@ -27,7 +28,7 @@ class ApkBackupRepositoryImpl @Inject constructor(
 	override val backupExists: Boolean
 		get() = fileSystem.exists(backup)
 
-	private val backup = apkPaths.backup
+	private val backup = environment.backupPath / "backup.apk"
 
 	private val installed: Path
 		get() = gameInstallationProvider.getApkPath()

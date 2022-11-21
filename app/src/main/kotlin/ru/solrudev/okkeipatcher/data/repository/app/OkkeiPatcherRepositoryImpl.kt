@@ -1,8 +1,5 @@
 package ru.solrudev.okkeipatcher.data.repository.app
 
-import android.content.Context
-import androidx.core.os.ConfigurationCompat
-import dagger.hilt.android.qualifiers.ApplicationContext
 import io.github.solrudev.simpleinstaller.PackageInstaller
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -10,14 +7,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 import okio.FileSystem
-import okio.Path.Companion.toOkioPath
+import ru.solrudev.okkeipatcher.data.OkkeiEnvironment
 import ru.solrudev.okkeipatcher.data.core.InMemoryCache
 import ru.solrudev.okkeipatcher.data.network.api.OkkeiPatcherApi
 import ru.solrudev.okkeipatcher.data.network.model.exception.NetworkNotAvailableException
 import ru.solrudev.okkeipatcher.data.repository.util.install
 import ru.solrudev.okkeipatcher.data.service.FileDownloader
 import ru.solrudev.okkeipatcher.data.util.prepareRecreate
-import ru.solrudev.okkeipatcher.data.util.versionCode
 import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Result
@@ -30,14 +26,12 @@ import ru.solrudev.okkeipatcher.domain.model.exception.NoNetworkException
 import ru.solrudev.okkeipatcher.domain.model.exception.wrapDomainExceptions
 import ru.solrudev.okkeipatcher.domain.repository.app.OkkeiPatcherRepository
 import ru.solrudev.okkeipatcher.domain.repository.work.DownloadUpdateWorkRepository
-import java.io.File
-import java.util.*
 import javax.inject.Inject
 
 private const val APP_UPDATE_FILE_NAME = "OkkeiPatcher.apk"
 
 class OkkeiPatcherRepositoryImpl @Inject constructor(
-	@ApplicationContext private val applicationContext: Context,
+	private val environment: OkkeiEnvironment,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	private val okkeiPatcherApi: OkkeiPatcherApi,
 	private val downloadUpdateWorkRepository: DownloadUpdateWorkRepository,
@@ -47,19 +41,18 @@ class OkkeiPatcherRepositoryImpl @Inject constructor(
 ) : OkkeiPatcherRepository {
 
 	private val changelogCache = InMemoryCache {
-		val locale = ConfigurationCompat.getLocales(applicationContext.resources.configuration)[0] ?: Locale.ENGLISH
-		okkeiPatcherApi.getChangelog(applicationContext.versionCode, locale.language)
+		okkeiPatcherApi.getChangelog(environment.versionCode, environment.locale.language)
 	}
 
 	private val okkeiPatcherDataCache = InMemoryCache(okkeiPatcherApi::getOkkeiPatcherData)
-	private val updateFile = File(applicationContext.filesDir, APP_UPDATE_FILE_NAME).toOkioPath()
+	private val updateFile = environment.filesPath / APP_UPDATE_FILE_NAME
 	private val _isUpdateAvailable = MutableStateFlow(false)
 	override val isUpdateAvailable = _isUpdateAvailable.asStateFlow()
 
 	override suspend fun getUpdateData(refresh: Boolean) = try {
 		val okkeiPatcherData = okkeiPatcherDataCache.retrieve(refresh)
 		val changelog = changelogCache.retrieve(refresh)
-		val isUpdateAvailable = okkeiPatcherData.version > applicationContext.versionCode
+		val isUpdateAvailable = okkeiPatcherData.version > environment.versionCode
 		_isUpdateAvailable.value = isUpdateAvailable
 		OkkeiPatcherUpdateData(
 			isAvailable = isUpdateAvailable,
