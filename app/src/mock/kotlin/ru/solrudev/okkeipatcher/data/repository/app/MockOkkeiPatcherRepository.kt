@@ -1,7 +1,5 @@
 package ru.solrudev.okkeipatcher.data.repository.app
 
-import android.content.Context
-import dagger.hilt.android.qualifiers.ApplicationContext
 import io.github.solrudev.simpleinstaller.PackageInstaller
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
@@ -9,12 +7,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
-import okio.sink
-import okio.source
+import okio.FileSystem
+import ru.solrudev.okkeipatcher.data.OkkeiEnvironment
 import ru.solrudev.okkeipatcher.data.repository.util.install
+import ru.solrudev.okkeipatcher.data.service.OkkeiPatcherApkProvider
 import ru.solrudev.okkeipatcher.data.util.STREAM_COPY_PROGRESS_MAX
-import ru.solrudev.okkeipatcher.data.util.copyTo
-import ru.solrudev.okkeipatcher.data.util.getPackageInfoCompat
+import ru.solrudev.okkeipatcher.data.util.copy
 import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Result
@@ -25,17 +23,18 @@ import ru.solrudev.okkeipatcher.domain.model.Work
 import ru.solrudev.okkeipatcher.domain.model.exception.wrapDomainExceptions
 import ru.solrudev.okkeipatcher.domain.repository.app.OkkeiPatcherRepository
 import ru.solrudev.okkeipatcher.domain.repository.work.DownloadUpdateWorkRepository
-import java.io.File
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
 private const val APP_UPDATE_FILE_NAME = "OkkeiPatcher.apk"
 
 class MockOkkeiPatcherRepository @Inject constructor(
-	@ApplicationContext private val applicationContext: Context,
+	environment: OkkeiEnvironment,
+	private val okkeiPatcherApkProvider: OkkeiPatcherApkProvider,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	private val downloadUpdateWorkRepository: DownloadUpdateWorkRepository,
-	private val packageInstaller: PackageInstaller
+	private val packageInstaller: PackageInstaller,
+	private val fileSystem: FileSystem
 ) : OkkeiPatcherRepository {
 
 	private var checksCount = 0
@@ -47,7 +46,7 @@ class MockOkkeiPatcherRepository @Inject constructor(
 	)
 
 	private val updateData = OkkeiPatcherUpdateData(isAvailable = true, sizeInMb = 3.14, changelog)
-	private val updateFile = File(applicationContext.filesDir, APP_UPDATE_FILE_NAME)
+	private val updateFile = environment.filesPath / APP_UPDATE_FILE_NAME
 	private val _isUpdateAvailable = MutableStateFlow(false)
 	override val isUpdateAvailable = _isUpdateAvailable.asStateFlow()
 
@@ -68,7 +67,7 @@ class MockOkkeiPatcherRepository @Inject constructor(
 	}
 
 	override suspend fun installUpdate() = try {
-		packageInstaller.install(updateFile, immediate = true)
+		packageInstaller.install(updateFile.toFile(), immediate = true)
 	} catch (t: Throwable) {
 		Result.Failure(LocalizedString.raw(t.stackTraceToString()))
 	}
@@ -76,18 +75,13 @@ class MockOkkeiPatcherRepository @Inject constructor(
 	override fun downloadUpdate() = operation(progressMax = STREAM_COPY_PROGRESS_MAX) {
 		wrapDomainExceptions {
 			try {
-				val installedApkPath = applicationContext.packageManager
-					.getPackageInfoCompat(applicationContext.packageName, 0)
-					.applicationInfo
-					.publicSourceDir
-				val installedApk = File(installedApkPath)
-				withContext(ioDispatcher) { installedApk.source() }.use { source ->
-					val sink = withContext(ioDispatcher) { updateFile.sink() }
-					source.copyTo(sink, updateFile.length(), onProgressDeltaChanged = { progressDelta(it) })
+				withContext(ioDispatcher) {
+					val installedApk = okkeiPatcherApkProvider.getOkkeiPatcherApkPath()
+					fileSystem.copy(installedApk, updateFile, onProgressDeltaChanged = { progressDelta(it) })
 				}
 			} catch (t: Throwable) {
-				if (updateFile.exists()) {
-					updateFile.delete()
+				if (fileSystem.exists(updateFile)) {
+					fileSystem.delete(updateFile)
 				}
 				throw t
 			}
