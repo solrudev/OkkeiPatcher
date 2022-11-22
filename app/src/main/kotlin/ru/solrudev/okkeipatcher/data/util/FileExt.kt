@@ -6,12 +6,6 @@ import okio.buffer
 import okio.source
 import java.io.File
 
-fun File.recreate() {
-	delete()
-	parentFile?.mkdirs()
-	createNewFile()
-}
-
 inline fun File.computeHash(onProgressDeltaChanged: (Int) -> Unit = {}): String {
 	source().buffer().use { source ->
 		val hashingSink = sha256(blackholeSink())
