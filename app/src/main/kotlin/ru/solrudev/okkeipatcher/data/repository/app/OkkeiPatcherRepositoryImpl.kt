@@ -1,11 +1,9 @@
 package ru.solrudev.okkeipatcher.data.repository.app
 
 import io.github.solrudev.simpleinstaller.PackageInstaller
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.withContext
 import okio.FileSystem
 import ru.solrudev.okkeipatcher.data.OkkeiEnvironment
 import ru.solrudev.okkeipatcher.data.core.InMemoryCache
@@ -13,8 +11,6 @@ import ru.solrudev.okkeipatcher.data.network.api.OkkeiPatcherApi
 import ru.solrudev.okkeipatcher.data.network.model.exception.NetworkNotAvailableException
 import ru.solrudev.okkeipatcher.data.repository.util.install
 import ru.solrudev.okkeipatcher.data.service.FileDownloader
-import ru.solrudev.okkeipatcher.data.util.prepareRecreate
-import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
@@ -32,7 +28,6 @@ private const val APP_UPDATE_FILE_NAME = "OkkeiPatcher.apk"
 
 class OkkeiPatcherRepositoryImpl @Inject constructor(
 	private val environment: OkkeiEnvironment,
-	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	private val okkeiPatcherApi: OkkeiPatcherApi,
 	private val downloadUpdateWorkRepository: DownloadUpdateWorkRepository,
 	private val fileDownloader: FileDownloader,
@@ -77,12 +72,8 @@ class OkkeiPatcherRepositoryImpl @Inject constructor(
 		wrapDomainExceptions {
 			try {
 				val updateData = okkeiPatcherApi.getOkkeiPatcherData()
-				val sink = withContext(ioDispatcher) {
-					fileSystem.prepareRecreate(updateFile)
-					fileSystem.sink(updateFile)
-				}
 				val updateHash = fileDownloader.download(
-					updateData.url, sink, hashing = true, onProgressDeltaChanged = ::progressDelta
+					updateData.url, updateFile, hashing = true, onProgressDeltaChanged = ::progressDelta
 				)
 				if (updateHash != updateData.hash) {
 					throw AppUpdateCorruptedException()

@@ -5,7 +5,7 @@ import io.github.solrudev.simpleinstaller.PackageUninstaller
 import io.github.solrudev.simpleinstaller.data.notification
 import io.github.solrudev.simpleinstaller.uninstallPackage
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.runInterruptible
 import okio.FileSystem
 import okio.Path
 import ru.solrudev.okkeipatcher.R
@@ -50,7 +50,7 @@ class ApkRepositoryImpl @Inject constructor(
 	override suspend fun createTemp(): ZipPackage {
 		try {
 			if (!fileSystem.exists(temp)) {
-				withContext(ioDispatcher) {
+				runInterruptible(ioDispatcher) {
 					fileSystem.copy(installed, temp)
 				}
 			}
@@ -69,7 +69,9 @@ class ApkRepositoryImpl @Inject constructor(
 		if (savedHash.isEmpty()) {
 			return false
 		}
-		val fileHash = withContext(ioDispatcher) { fileSystem.computeHash(temp) }
+		val fileHash = runInterruptible(ioDispatcher) {
+			fileSystem.computeHash(temp)
+		}
 		return fileHash == savedHash
 	}
 

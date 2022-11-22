@@ -4,10 +4,12 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import okio.FileSystem
 import okio.Path
-import okio.Sink
 import ru.solrudev.okkeipatcher.data.OkkeiEnvironment
 import ru.solrudev.okkeipatcher.data.repository.gamefile.util.backupPath
-import ru.solrudev.okkeipatcher.data.util.*
+import ru.solrudev.okkeipatcher.data.util.GAME_PACKAGE_NAME
+import ru.solrudev.okkeipatcher.data.util.STREAM_COPY_PROGRESS_MAX
+import ru.solrudev.okkeipatcher.data.util.computeHash
+import ru.solrudev.okkeipatcher.data.util.copy
 import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.core.operation.ProgressOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
@@ -28,17 +30,12 @@ class ObbRepositoryImpl @Inject constructor(
 ) : ObbRepository {
 
 	override val obbExists: Boolean
-		get() = fileSystem.exists(obb)
+		get() = fileSystem.exists(obbPath)
 
-	private val obb = environment.obbPath
+	override val obbPath = environment.obbPath
 
 	override fun deleteObb() {
-		fileSystem.delete(obb)
-	}
-
-	override fun obbSink(): Sink {
-		fileSystem.prepareRecreate(obb)
-		return fileSystem.sink(obb)
+		fileSystem.delete(obbPath)
 	}
 }
 

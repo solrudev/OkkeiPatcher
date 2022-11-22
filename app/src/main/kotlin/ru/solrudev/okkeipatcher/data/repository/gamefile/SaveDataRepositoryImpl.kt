@@ -1,7 +1,7 @@
 package ru.solrudev.okkeipatcher.data.repository.gamefile
 
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.runInterruptible
 import okio.FileSystem
 import okio.buffer
 import okio.sink
@@ -48,14 +48,14 @@ class SaveDataRepositoryImpl @Inject constructor(
 			return failure
 		}
 		try {
-			return withContext(ioDispatcher) {
-				val saveDataSource = saveDataFile.inputStream()?.source() ?: return@withContext failure
+			return runInterruptible(ioDispatcher) {
+				val saveDataSource = saveDataFile.inputStream()?.source() ?: return@runInterruptible failure
 				saveDataSource.use { source ->
 					fileSystem.prepareRecreate(temp)
 					fileSystem.sink(temp).buffer().use { sink ->
 						sink.writeAll(source)
 						sink.flush()
-						return@withContext Result.Success
+						return@runInterruptible Result.Success
 					}
 				}
 			}
@@ -69,7 +69,9 @@ class SaveDataRepositoryImpl @Inject constructor(
 		if (savedHash.isEmpty() || !fileSystem.exists(backup)) {
 			return false
 		}
-		val backupHash = withContext(ioDispatcher) { fileSystem.computeHash(backup) }
+		val backupHash = runInterruptible(ioDispatcher) {
+			fileSystem.computeHash(backup)
+		}
 		return backupHash == savedHash
 	}
 
@@ -78,14 +80,14 @@ class SaveDataRepositoryImpl @Inject constructor(
 			LocalizedString.resource(R.string.warning_could_not_restore_save_data)
 		)
 		try {
-			return withContext(ioDispatcher) {
+			return runInterruptible(ioDispatcher) {
 				saveDataFile.recreate()
-				val saveDataSink = saveDataFile.outputStream()?.sink() ?: return@withContext failure
+				val saveDataSink = saveDataFile.outputStream()?.sink() ?: return@runInterruptible failure
 				saveDataSink.buffer().use { sink ->
 					fileSystem.source(backup).use { source ->
 						sink.writeAll(source)
 						sink.flush()
-						return@withContext Result.Success
+						return@runInterruptible Result.Success
 					}
 				}
 			}
@@ -100,7 +102,9 @@ class SaveDataRepositoryImpl @Inject constructor(
 			fileSystem.atomicMove(temp, backup)
 		}
 		if (fileSystem.exists(backup)) {
-			val backupHash = withContext(ioDispatcher) { fileSystem.computeHash(backup) }
+			val backupHash = runInterruptible(ioDispatcher) {
+				fileSystem.computeHash(backup)
+			}
 			hashRepository.saveDataHash.persist(backupHash)
 		}
 	}

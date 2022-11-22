@@ -20,9 +20,7 @@ fun ObbDownloadOperation(
 		status(LocalizedString.resource(R.string.status_downloading_obb))
 		val obbData = obbPatchFile.getData()
 		val obbHash = fileDownloader.download(
-			obbData.url,
-			obbRepository.obbSink(),
-			hashing = true,
+			obbData.url, obbRepository.obbPath, hashing = true,
 			onProgressDeltaChanged = { progressDelta(it * PROGRESS_MULTIPLIER) }
 		)
 		if (obbHash != obbData.hash) {

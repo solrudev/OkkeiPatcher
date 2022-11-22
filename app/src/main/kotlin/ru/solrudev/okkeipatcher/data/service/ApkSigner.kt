@@ -5,7 +5,7 @@ import android.os.Build
 import com.aefyr.pseudoapksigner.PseudoApkSigner
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.runInterruptible
 import net.lingala.zip4j.ZipFile
 import okio.buffer
 import okio.sink
@@ -46,7 +46,9 @@ class ApkSignerImpl @Inject constructor(
 			} else {
 				signWithPseudoApkSigner(apk, outputApk)
 			}
-			val outputApkHash = withContext(ioDispatcher) { outputApk.computeHash() }
+			val outputApkHash = runInterruptible(ioDispatcher) {
+				outputApk.computeHash()
+			}
 			hashRepository.signedApkHash.persist(outputApkHash)
 			apk.delete()
 			outputApk.renameTo(apk)
@@ -56,7 +58,7 @@ class ApkSignerImpl @Inject constructor(
 		}
 	}
 
-	override suspend fun removeSignature(apk: File) = withContext(ioDispatcher) {
+	override suspend fun removeSignature(apk: File) = runInterruptible(ioDispatcher) {
 		ZipFile(apk).use { zipFile ->
 			zipFile.removeFile("META-INF/")
 		}
@@ -75,7 +77,7 @@ class ApkSignerImpl @Inject constructor(
 			.setInputApk(apk)
 			.setOutputApk(outputApk)
 			.build()
-		withContext(ioDispatcher) {
+		runInterruptible(ioDispatcher) {
 			apkSigner.sign()
 		}
 	}
@@ -83,22 +85,22 @@ class ApkSignerImpl @Inject constructor(
 	private suspend inline fun signWithPseudoApkSigner(apk: File, outputApk: File) {
 		val templateFile = getSigningTemplateFile()
 		val privateKeyFile = getSigningPrivateKeyFile()
-		withContext(ioDispatcher) {
+		runInterruptible(ioDispatcher) {
 			PseudoApkSigner(templateFile, privateKeyFile)
 				.apply { setSignerName(SIGNER_NAME) }
 				.sign(apk, outputApk)
 		}
 	}
 
-	private suspend inline fun getSigningCertificate() = withContext(ioDispatcher) {
+	private suspend inline fun getSigningCertificate() = runInterruptible(ioDispatcher) {
 		val assets = applicationContext.assets
 		assets.open(CERTIFICATE_FILE_NAME).use { certificateStream ->
 			val certificateFactory = CertificateFactory.getInstance("X.509")
-			return@withContext certificateFactory.generateCertificate(certificateStream) as X509Certificate
+			return@runInterruptible certificateFactory.generateCertificate(certificateStream) as X509Certificate
 		}
 	}
 
-	private suspend inline fun getSigningPrivateKey() = withContext(ioDispatcher) {
+	private suspend inline fun getSigningPrivateKey() = runInterruptible(ioDispatcher) {
 		val assets = applicationContext.assets
 		assets.openFd(PRIVATE_KEY_FILE_NAME).use { keyFd ->
 			val keyByteArray = ByteArray(keyFd.declaredLength.toInt())
@@ -107,17 +109,17 @@ class ApkSignerImpl @Inject constructor(
 			}
 			val keySpec = PKCS8EncodedKeySpec(keyByteArray)
 			val keyFactory = KeyFactory.getInstance("RSA")
-			return@withContext keyFactory.generatePrivate(keySpec)
+			return@runInterruptible keyFactory.generatePrivate(keySpec)
 		}
 	}
 
 	private suspend inline fun getSigningPrivateKeyFile() = extractAssetFile(PRIVATE_KEY_FILE_NAME)
 	private suspend inline fun getSigningTemplateFile() = extractAssetFile(TEMPLATE_FILE_NAME)
 
-	private suspend inline fun extractAssetFile(fileName: String) = withContext(ioDispatcher) {
+	private suspend inline fun extractAssetFile(fileName: String) = runInterruptible(ioDispatcher) {
 		val file = File(applicationContext.filesDir, fileName)
 		if (file.exists()) {
-			return@withContext file
+			return@runInterruptible file
 		}
 		applicationContext.assets.open(fileName).source().use { source ->
 			file.sink().buffer().use { sink ->
@@ -125,6 +127,6 @@ class ApkSignerImpl @Inject constructor(
 				sink.flush()
 			}
 		}
-		return@withContext file
+		return@runInterruptible file
 	}
 }

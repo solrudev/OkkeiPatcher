@@ -2,7 +2,7 @@ package ru.solrudev.okkeipatcher.data.repository.gamefile
 
 import io.github.solrudev.simpleinstaller.PackageInstaller
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.runInterruptible
 import okio.FileSystem
 import okio.Path
 import ru.solrudev.okkeipatcher.data.OkkeiEnvironment
@@ -38,7 +38,9 @@ class ApkBackupRepositoryImpl @Inject constructor(
 	}
 
 	override suspend fun createBackup() = try {
-		val hash = withContext(ioDispatcher) { fileSystem.copy(installed, backup, hashing = true) }
+		val hash = runInterruptible(ioDispatcher) {
+			fileSystem.copy(installed, backup, hashing = true)
+		}
 		hashRepository.backupApkHash.persist(hash)
 	} catch (t: Throwable) {
 		fileSystem.delete(backup)
@@ -53,7 +55,9 @@ class ApkBackupRepositoryImpl @Inject constructor(
 		if (savedHash.isEmpty()) {
 			return false
 		}
-		val fileHash = withContext(ioDispatcher) { fileSystem.computeHash(backup) }
+		val fileHash = runInterruptible(ioDispatcher) {
+			fileSystem.computeHash(backup)
+		}
 		return fileHash == savedHash
 	}
 
