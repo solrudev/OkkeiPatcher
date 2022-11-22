@@ -16,7 +16,7 @@ class DefaultPatchRepositoryImpl @Inject constructor(
 	preferencesDataStoreFactory: PreferencesDataStoreFactory
 ) : DefaultPatchRepository {
 
-	private val preferences = preferencesDataStoreFactory.create("patch_files_en_hash")
+	private val preferences = preferencesDataStoreFactory.create("patch_files_en")
 	private val patchDataCache = InMemoryCache(defaultPatchApi::getPatchData)
 
 	override val scripts = PatchFileImpl(

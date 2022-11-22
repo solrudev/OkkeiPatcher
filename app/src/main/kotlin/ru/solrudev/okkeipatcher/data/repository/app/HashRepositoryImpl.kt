@@ -16,7 +16,7 @@ class HashRepositoryImpl @Inject constructor(
 	preferencesDataStoreFactory: PreferencesDataStoreFactory
 ) : HashRepository {
 
-	private val preferences = preferencesDataStoreFactory.create("common_files_hash")
+	private val preferences = preferencesDataStoreFactory.create("files_hash")
 	override val signedApkHash = Preference(key = SIGNED_APK, defaultValue = { "" }, preferences)
 	override val backupApkHash = Preference(key = BACKUP_APK, defaultValue = { "" }, preferences)
 	override val backupObbHash = Preference(key = BACKUP_OBB, defaultValue = { "" }, preferences)
