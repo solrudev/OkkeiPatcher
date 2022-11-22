@@ -4,8 +4,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.runInterruptible
 import okio.FileSystem
 import okio.buffer
-import okio.sink
-import okio.source
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.OkkeiEnvironment
 import ru.solrudev.okkeipatcher.data.repository.gamefile.util.backupPath
@@ -49,7 +47,7 @@ class SaveDataRepositoryImpl @Inject constructor(
 		}
 		try {
 			return runInterruptible(ioDispatcher) {
-				val saveDataSource = saveDataFile.inputStream()?.source() ?: return@runInterruptible failure
+				val saveDataSource = saveDataFile.source() ?: return@runInterruptible failure
 				saveDataSource.use { source ->
 					fileSystem.prepareRecreate(temp)
 					fileSystem.sink(temp).buffer().use { sink ->
@@ -82,7 +80,7 @@ class SaveDataRepositoryImpl @Inject constructor(
 		try {
 			return runInterruptible(ioDispatcher) {
 				saveDataFile.recreate()
-				val saveDataSink = saveDataFile.outputStream()?.sink() ?: return@runInterruptible failure
+				val saveDataSink = saveDataFile.sink() ?: return@runInterruptible failure
 				saveDataSink.buffer().use { sink ->
 					fileSystem.source(backup).use { source ->
 						sink.writeAll(source)
