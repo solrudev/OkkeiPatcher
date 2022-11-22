@@ -40,15 +40,20 @@ class ApkSignerImpl @Inject constructor(
 
 	override suspend fun sign(apk: File) {
 		val outputApk = File(apk.parent, "${apk.nameWithoutExtension}-signed.apk")
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-			signWithApkSig(apk, outputApk)
-		} else {
-			signWithPseudoApkSigner(apk, outputApk)
+		try {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+				signWithApkSig(apk, outputApk)
+			} else {
+				signWithPseudoApkSigner(apk, outputApk)
+			}
+			val outputApkHash = withContext(ioDispatcher) { outputApk.computeHash() }
+			hashRepository.signedApkHash.persist(outputApkHash)
+			apk.delete()
+			outputApk.renameTo(apk)
+		} catch (t: Throwable) {
+			outputApk.delete()
+			throw t
 		}
-		val outputApkHash = withContext(ioDispatcher) { outputApk.computeHash() }
-		hashRepository.signedApkHash.persist(outputApkHash)
-		apk.delete()
-		outputApk.renameTo(apk)
 	}
 
 	override suspend fun removeSignature(apk: File) = withContext(ioDispatcher) {
@@ -89,7 +94,7 @@ class ApkSignerImpl @Inject constructor(
 		val assets = applicationContext.assets
 		assets.open(CERTIFICATE_FILE_NAME).use { certificateStream ->
 			val certificateFactory = CertificateFactory.getInstance("X.509")
-			certificateFactory.generateCertificate(certificateStream) as X509Certificate
+			return@withContext certificateFactory.generateCertificate(certificateStream) as X509Certificate
 		}
 	}
 
@@ -102,7 +107,7 @@ class ApkSignerImpl @Inject constructor(
 			}
 			val keySpec = PKCS8EncodedKeySpec(keyByteArray)
 			val keyFactory = KeyFactory.getInstance("RSA")
-			keyFactory.generatePrivate(keySpec)
+			return@withContext keyFactory.generatePrivate(keySpec)
 		}
 	}
 
