@@ -61,7 +61,7 @@ class ObbBackupRepositoryImpl @Inject constructor(
 
 	override fun createBackup(): ProgressOperation<Unit> {
 		val progressMultiplier = 6
-		return operation(progressMax = 100 * progressMultiplier) {
+		return operation(progressMax = STREAM_COPY_PROGRESS_MAX * progressMultiplier) {
 			if (!fileSystem.exists(obb)) {
 				throw ObbNotFoundException()
 			}
