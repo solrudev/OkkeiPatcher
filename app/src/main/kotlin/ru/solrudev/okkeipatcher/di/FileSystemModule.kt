@@ -1,3 +1,5 @@
+@file:Suppress("UNUSED")
+
 package ru.solrudev.okkeipatcher.di
 
 import dagger.Module
