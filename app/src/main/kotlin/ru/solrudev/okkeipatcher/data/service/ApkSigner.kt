@@ -124,7 +124,6 @@ class ApkSignerImpl @Inject constructor(
 		applicationContext.assets.open(fileName).source().use { source ->
 			file.sink().buffer().use { sink ->
 				sink.writeAll(source)
-				sink.flush()
 			}
 		}
 		return@runInterruptible file

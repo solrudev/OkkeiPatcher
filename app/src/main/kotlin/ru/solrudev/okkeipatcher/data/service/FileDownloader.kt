@@ -60,8 +60,8 @@ class FileDownloaderImpl @Inject constructor(
 							bufferedSink, responseBody.contentLength(),
 							onProgressDeltaChanged = { onProgressDeltaChanged(it) }
 						)
-						return@withContext if (sink is HashingSink) sink.hash.hex() else ""
 					}
+					return@withContext if (sink is HashingSink) sink.hash.hex() else ""
 				}
 			}
 		} catch (_: NetworkNotAvailableException) {

@@ -29,7 +29,6 @@ inline fun BufferedSource.copyTo(sink: BufferedSink, size: Long, onProgressDelta
 			}
 		}
 		onProgressDeltaChanged(STREAM_COPY_PROGRESS_MAX - currentProgress / progressRatio)
-		sink.flush()
 	}
 }
 

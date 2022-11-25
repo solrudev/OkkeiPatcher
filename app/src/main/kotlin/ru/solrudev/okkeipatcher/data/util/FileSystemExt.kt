@@ -25,8 +25,8 @@ inline fun FileSystem.copy(
 		val sink = if (hashing) sha256(sink(target)) else sink(target)
 		sink.buffer().use { bufferedSink ->
 			bufferedSource.copyTo(bufferedSink, size, onProgressDeltaChanged)
-			return if (sink is HashingSink) sink.hash.hex() else ""
 		}
+		return if (sink is HashingSink) sink.hash.hex() else ""
 	}
 }
 
@@ -36,7 +36,7 @@ inline fun FileSystem.computeHash(path: Path, onProgressDeltaChanged: (Int) -> U
 		val hashingSink = sha256(blackholeSink())
 		hashingSink.buffer().use { sink ->
 			source.copyTo(sink, size, onProgressDeltaChanged)
-			return hashingSink.hash.hex()
 		}
+		return hashingSink.hash.hex()
 	}
 }

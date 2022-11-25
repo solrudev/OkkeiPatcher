@@ -49,7 +49,7 @@ class ScriptsPatchOperation(
 		fileSystem.delete(scriptsFile)
 	}
 
-	private fun downloadScripts() = operation(progressMax = fileDownloader.progressMax) {
+	private fun downloadScripts(): Operation<Unit> = operation(progressMax = fileDownloader.progressMax) {
 		status(LocalizedString.resource(R.string.status_downloading_scripts))
 		val scriptsData = scriptsPatchFile.getData()
 		val scriptsHash = fileDownloader.download(
@@ -61,7 +61,7 @@ class ScriptsPatchOperation(
 		scriptsPatchFile.installedVersion.persist(scriptsData.version)
 	}
 
-	private fun extractScripts() = operation(progressMax = 100) {
+	private fun extractScripts(): Operation<Unit> = operation(progressMax = 100) {
 		status(LocalizedString.resource(R.string.status_extracting_scripts))
 		runInterruptible(ioDispatcher) {
 			val scriptsZip = fileSystem.openZip(scriptsFile)
@@ -71,14 +71,13 @@ class ScriptsPatchOperation(
 					fileSystem.prepareRecreate(extractedScript)
 					fileSystem.sink(extractedScript).buffer().use { sink ->
 						sink.writeAll(source)
-						sink.flush()
 					}
 				}
 			}
 		}
 	}
 
-	private fun replaceScripts() = operation(progressMax = 100) {
+	private fun replaceScripts(): Operation<Unit> = operation(progressMax = 100) {
 		status(LocalizedString.resource(R.string.status_replacing_scripts))
 		val scriptsFolder = "assets/script/"
 		val newScripts = fileSystem.list(extractedScriptsDirectory)

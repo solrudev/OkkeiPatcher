@@ -52,7 +52,6 @@ class SaveDataRepositoryImpl @Inject constructor(
 					fileSystem.prepareRecreate(temp)
 					fileSystem.sink(temp).buffer().use { sink ->
 						sink.writeAll(source)
-						sink.flush()
 						return@runInterruptible Result.Success
 					}
 				}
@@ -84,7 +83,6 @@ class SaveDataRepositoryImpl @Inject constructor(
 				saveDataSink.buffer().use { sink ->
 					fileSystem.source(backup).use { source ->
 						sink.writeAll(source)
-						sink.flush()
 						return@runInterruptible Result.Success
 					}
 				}

@@ -11,7 +11,7 @@ inline fun File.computeHash(onProgressDeltaChanged: (Int) -> Unit = {}): String 
 		val hashingSink = sha256(blackholeSink())
 		hashingSink.buffer().use { sink ->
 			source.copyTo(sink, length(), onProgressDeltaChanged)
-			return hashingSink.hash.hex()
 		}
+		return hashingSink.hash.hex()
 	}
 }
