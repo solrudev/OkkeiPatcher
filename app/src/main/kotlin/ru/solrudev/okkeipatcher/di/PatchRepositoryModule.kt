@@ -12,19 +12,10 @@ import ru.solrudev.okkeipatcher.domain.repository.patch.PatchRepository
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
-@Module
+@Module(includes = [PatchRepositoryFlavorModule::class])
 interface PatchRepositoryModule {
 
 	@Binds
-	@IntoMap
-	@LanguageKey(Language.English)
-	fun bindDefaultPatchRepositoryIntoMap(
-		defaultPatchRepository: DefaultPatchRepository
-	): PatchRepository
-
-	@Binds
 	@Singleton
-	fun bindDefaultPatchRepository(
-		defaultPatchRepository: DefaultPatchRepositoryImpl
-	): DefaultPatchRepository
+	fun bindDefaultPatchRepository(defaultPatchRepository: DefaultPatchRepositoryImpl): DefaultPatchRepository
 }

@@ -6,17 +6,13 @@ import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 
-interface GetIsWorkPendingFlowUseCase {
-	operator fun invoke(): Flow<Boolean>
-}
-
-class GetIsWorkPendingFlowUseCaseImpl @Inject constructor(
+class GetIsWorkPendingFlowUseCase @Inject constructor(
 	private val getPendingWorkFlowUseCase: GetPendingWorkFlowUseCase,
 	private val getWorkStateFlowUseCase: GetWorkStateFlowUseCase
-) : GetIsWorkPendingFlowUseCase {
+) {
 
 	@OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
-	override fun invoke() = channelFlow {
+	operator fun invoke() = channelFlow {
 		send(false)
 		getPendingWorkFlowUseCase()
 			.onEach { send(true) }

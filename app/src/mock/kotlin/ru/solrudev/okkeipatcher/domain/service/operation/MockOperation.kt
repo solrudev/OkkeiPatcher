@@ -5,12 +5,14 @@ import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.core.persistence.Persistable
+import ru.solrudev.okkeipatcher.domain.repository.patch.PatchRepository
 import kotlin.time.Duration.Companion.seconds
 
 private const val STEPS_COUNT = 5
 
 @Suppress("FunctionName")
 fun MockOperation(
+	patchRepository: PatchRepository,
 	patchVersion: Persistable<String>,
 	patchStatus: Persistable<Boolean>,
 	isPatchWork: Boolean
@@ -22,7 +24,7 @@ fun MockOperation(
 		progressDelta(100)
 	}
 	if (isPatchWork) {
-		patchVersion.persist("1.0(mock)")
+		patchVersion.persist(patchRepository.getDisplayVersion())
 	} else {
 		patchVersion.clear()
 	}

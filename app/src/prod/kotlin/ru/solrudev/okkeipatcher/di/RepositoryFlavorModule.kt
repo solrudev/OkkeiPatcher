@@ -18,19 +18,13 @@ interface RepositoryFlavorModule {
 
 	@Binds
 	@Singleton
-	fun bindOkkeiPatcherRepository(
-		okkeiPatcherRepository: OkkeiPatcherRepositoryImpl
-	): OkkeiPatcherRepository
+	fun bindOkkeiPatcherRepository(okkeiPatcherRepository: OkkeiPatcherRepositoryImpl): OkkeiPatcherRepository
 
 	@Binds
 	@Singleton
-	fun bindPatchWorkRepository(
-		patchWorkRepository: PatchWorkRepositoryImpl
-	): PatchWorkRepository
+	fun bindPatchWorkRepository(patchWorkRepository: PatchWorkRepositoryImpl): PatchWorkRepository
 
 	@Binds
 	@Singleton
-	fun bindRestoreWorkRepository(
-		restoreWorkRepository: RestoreWorkRepositoryImpl
-	): RestoreWorkRepository
+	fun bindRestoreWorkRepository(restoreWorkRepository: RestoreWorkRepositoryImpl): RestoreWorkRepository
 }

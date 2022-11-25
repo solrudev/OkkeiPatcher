@@ -14,7 +14,5 @@ interface EnvironmentBindModule {
 
 	@Binds
 	@Reusable
-	fun bindOkkeiEnvironment(
-		okkeiEnvironment: OkkeiEnvironmentImpl
-	): OkkeiEnvironment
+	fun bindOkkeiEnvironment(okkeiEnvironment: OkkeiEnvironmentImpl): OkkeiEnvironment
 }

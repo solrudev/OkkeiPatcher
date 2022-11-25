@@ -14,11 +14,7 @@ import ru.solrudev.okkeipatcher.domain.repository.patch.PatchRepository
 import javax.inject.Inject
 import javax.inject.Provider
 
-interface ClearDataUseCase {
-	suspend operator fun invoke(): Result
-}
-
-class ClearDataUseCaseImpl @Inject constructor(
+class ClearDataUseCase @Inject constructor(
 	private val apkRepository: ApkRepository,
 	private val apkBackupRepository: ApkBackupRepository,
 	private val obbBackupRepository: ObbBackupRepository,
@@ -26,9 +22,9 @@ class ClearDataUseCaseImpl @Inject constructor(
 	private val preferencesRepository: PreferencesRepository,
 	private val hashRepository: HashRepository,
 	private val patchRepositories: Map<Language, @JvmSuppressWildcards Provider<PatchRepository>>
-) : ClearDataUseCase {
+) {
 
-	override suspend fun invoke() = try {
+	suspend operator fun invoke() = try {
 		apkRepository.deleteTemp()
 		apkBackupRepository.deleteBackup()
 		obbBackupRepository.deleteBackup()

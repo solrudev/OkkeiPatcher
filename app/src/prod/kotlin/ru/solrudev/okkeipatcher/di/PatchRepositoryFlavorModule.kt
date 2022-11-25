@@ -6,14 +6,14 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoMap
 import ru.solrudev.okkeipatcher.domain.model.Language
-import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.DefaultGameFileStrategy
-import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.GameFileStrategy
+import ru.solrudev.okkeipatcher.domain.repository.patch.DefaultPatchRepository
+import ru.solrudev.okkeipatcher.domain.repository.patch.PatchRepository
 
 @InstallIn(SingletonComponent::class)
-@Module
-interface GameFileStrategyModule {
+@Module()
+interface PatchRepositoryFlavorModule {
 
 	@[Binds IntoMap]
 	@LanguageKey(Language.English)
-	fun bindDefaultGameFileStrategy(defaultGameFileStrategy: DefaultGameFileStrategy): GameFileStrategy
+	fun bindDefaultPatchRepositoryIntoMap(defaultPatchRepository: DefaultPatchRepository): PatchRepository
 }

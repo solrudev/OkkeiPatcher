@@ -24,40 +24,35 @@ object NetworkModule {
 
 	@Provides
 	@Singleton
-	fun provideOkkeiPatcherApi(
-		retrofit: Retrofit
-	) = retrofit.create<OkkeiPatcherApi>()
+	fun provideOkkeiPatcherApi(retrofit: Retrofit) = retrofit.create<OkkeiPatcherApi>()
 
 	@Provides
 	@Singleton
-	fun provideDefaultPatchApi(
-		retrofit: Retrofit
-	) = retrofit.create<DefaultPatchApi>()
+	fun provideDefaultPatchApi(retrofit: Retrofit) = retrofit.create<DefaultPatchApi>()
 
 	@Provides
 	@Singleton
-	fun provideRetrofit(
-		okHttpClient: OkHttpClient,
-		moshi: Moshi
-	): Retrofit = Retrofit.Builder()
-		.client(okHttpClient)
-		.addConverterFactory(MoshiConverterFactory.create(moshi))
-		.baseUrl(BASE_URL)
-		.build()
+	fun provideRetrofit(okHttpClient: OkHttpClient, moshi: Moshi): Retrofit {
+		return Retrofit.Builder()
+			.client(okHttpClient)
+			.addConverterFactory(MoshiConverterFactory.create(moshi))
+			.baseUrl(BASE_URL)
+			.build()
+	}
 
 	@Provides
 	@Singleton
-	fun provideOkHttpClient(
-		connectivityInterceptor: ConnectivityInterceptor
-	): OkHttpClient = OkHttpClient.Builder().apply {
-		val tlsSocketFactory = TLSSocketFactory()
-		sslSocketFactory(tlsSocketFactory, tlsSocketFactory.trustManager)
-		followRedirects(true)
-		followSslRedirects(true)
-		readTimeout(0, TimeUnit.SECONDS)
-		writeTimeout(0, TimeUnit.SECONDS)
-		addInterceptor(connectivityInterceptor)
-	}.build()
+	fun provideOkHttpClient(connectivityInterceptor: ConnectivityInterceptor): OkHttpClient {
+		return OkHttpClient.Builder().apply {
+			val tlsSocketFactory = TLSSocketFactory()
+			sslSocketFactory(tlsSocketFactory, tlsSocketFactory.trustManager)
+			followRedirects(true)
+			followSslRedirects(true)
+			readTimeout(0, TimeUnit.SECONDS)
+			writeTimeout(0, TimeUnit.SECONDS)
+			addInterceptor(connectivityInterceptor)
+		}.build()
+	}
 
 	@Provides
 	@Singleton

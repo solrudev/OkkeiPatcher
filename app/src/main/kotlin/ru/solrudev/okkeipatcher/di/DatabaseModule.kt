@@ -16,17 +16,11 @@ object DatabaseModule {
 
 	@Provides
 	@Singleton
-	fun provideDatabase(
-		@ApplicationContext applicationContext: Context
-	) = Room.databaseBuilder(
-		applicationContext,
-		OkkeiDatabase::class.java,
-		"okkei.db"
-	).build()
+	fun provideDatabase(@ApplicationContext applicationContext: Context): OkkeiDatabase {
+		return Room.databaseBuilder(applicationContext, OkkeiDatabase::class.java, "okkei.db").build()
+	}
 
 	@Provides
 	@Singleton
-	fun provideWorkDao(
-		database: OkkeiDatabase
-	) = database.workDao()
+	fun provideWorkDao(database: OkkeiDatabase) = database.workDao()
 }

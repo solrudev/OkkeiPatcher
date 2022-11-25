@@ -12,6 +12,7 @@ import ru.solrudev.okkeipatcher.data.worker.model.WorkNotificationsParameters
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Message
 import ru.solrudev.okkeipatcher.domain.repository.app.PreferencesRepository
+import ru.solrudev.okkeipatcher.domain.repository.patch.factory.PatchRepositoryFactory
 import ru.solrudev.okkeipatcher.domain.service.operation.factory.MockOperationFactory
 
 private val workLabel = LocalizedString.resource(R.string.notification_title_test)
@@ -32,10 +33,12 @@ class MockWorker @AssistedInject constructor(
 	@Assisted workerParameters: WorkerParameters,
 	notificationServiceFactory: NotificationServiceFactory,
 	workManager: WorkManager,
-	preferencesRepository: PreferencesRepository
+	preferencesRepository: PreferencesRepository,
+	patchRepositoryFactory: PatchRepositoryFactory
 ) : ForegroundOperationWorker(
 	context, workerParameters, notificationServiceFactory, workManager,
 	MockOperationFactory(
+		patchRepositoryFactory,
 		preferencesRepository.patchVersion,
 		preferencesRepository.patchStatus,
 		isPatchWork = "PatchWork" in workerParameters.tags

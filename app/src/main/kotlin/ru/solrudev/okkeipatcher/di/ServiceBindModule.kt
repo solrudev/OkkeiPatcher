@@ -14,30 +14,20 @@ interface ServiceBindModule {
 
 	@Binds
 	@Reusable
-	fun bindGameInstallationProvider(
-		gameInstallationProvider: GameInstallationProviderImpl
-	): GameInstallationProvider
+	fun bindGameInstallationProvider(gameInstallationProvider: GameInstallationProviderImpl): GameInstallationProvider
 
 	@Binds
 	@Reusable
-	fun bindStorageChecker(
-		storageChecker: StorageCheckerImpl
-	): StorageChecker
+	fun bindStorageChecker(storageChecker: StorageCheckerImpl): StorageChecker
 
 	@Binds
 	@Reusable
-	fun bindApkSigner(
-		apkSigner: ApkSignerImpl
-	): ApkSigner
+	fun bindApkSigner(apkSigner: ApkSignerImpl): ApkSigner
 
 	@Binds
 	@Reusable
-	fun bindFileDownloader(
-		fileDownloader: FileDownloaderImpl
-	): FileDownloader
+	fun bindFileDownloader(fileDownloader: FileDownloaderImpl): FileDownloader
 
 	@Binds
-	fun bindNotificationService(
-		notificationService: NotificationServiceImpl
-	): NotificationService
+	fun bindNotificationService(notificationService: NotificationServiceImpl): NotificationService
 }
