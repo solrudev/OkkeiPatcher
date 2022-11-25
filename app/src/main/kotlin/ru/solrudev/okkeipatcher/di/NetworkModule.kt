@@ -43,15 +43,15 @@ object NetworkModule {
 	@Provides
 	@Singleton
 	fun provideOkHttpClient(connectivityInterceptor: ConnectivityInterceptor): OkHttpClient {
-		return OkHttpClient.Builder().apply {
-			val tlsSocketFactory = TLSSocketFactory()
-			sslSocketFactory(tlsSocketFactory, tlsSocketFactory.trustManager)
-			followRedirects(true)
-			followSslRedirects(true)
-			readTimeout(0, TimeUnit.SECONDS)
-			writeTimeout(0, TimeUnit.SECONDS)
-			addInterceptor(connectivityInterceptor)
-		}.build()
+		val tlsSocketFactory = TLSSocketFactory()
+		return OkHttpClient.Builder()
+			.sslSocketFactory(tlsSocketFactory, tlsSocketFactory.trustManager)
+			.followRedirects(true)
+			.followSslRedirects(true)
+			.readTimeout(0, TimeUnit.SECONDS)
+			.writeTimeout(0, TimeUnit.SECONDS)
+			.addInterceptor(connectivityInterceptor)
+			.build()
 	}
 
 	@Provides
