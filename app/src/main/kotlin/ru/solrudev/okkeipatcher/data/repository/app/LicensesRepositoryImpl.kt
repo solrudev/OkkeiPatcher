@@ -3,7 +3,7 @@ package ru.solrudev.okkeipatcher.data.repository.app
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.runInterruptible
 import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.model.License
 import ru.solrudev.okkeipatcher.domain.repository.app.LicensesRepository
@@ -16,9 +16,9 @@ class LicensesRepositoryImpl @Inject constructor(
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : LicensesRepository {
 
-	override suspend fun getLicenses() = withContext(ioDispatcher) {
+	override suspend fun getLicenses() = runInterruptible(ioDispatcher) {
 		val assets = applicationContext.assets
-		val licenses = assets.list(LICENSES_DIR) ?: return@withContext emptyList()
+		val licenses = assets.list(LICENSES_DIR) ?: return@runInterruptible emptyList()
 		licenses
 			.mapIndexed { index, license ->
 				License(

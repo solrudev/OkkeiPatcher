@@ -1,7 +1,7 @@
 package ru.solrudev.okkeipatcher.data.service.operation
 
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.runInterruptible
 import okio.FileSystem
 import okio.Path
 import okio.Path.Companion.toPath
@@ -63,7 +63,7 @@ class ScriptsPatchOperation(
 
 	private fun extractScripts() = operation(progressMax = 100) {
 		status(LocalizedString.resource(R.string.status_extracting_scripts))
-		withContext(ioDispatcher) {
+		runInterruptible(ioDispatcher) {
 			val scriptsZip = fileSystem.openZip(scriptsFile)
 			scriptsZip.list("/".toPath()).forEach { script ->
 				val extractedScript = extractedScriptsDirectory / script.name

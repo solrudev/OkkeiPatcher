@@ -1,7 +1,7 @@
 package ru.solrudev.okkeipatcher.data.service
 
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.runInterruptible
 import net.lingala.zip4j.ZipFile
 import net.lingala.zip4j.model.ZipParameters
 import okio.Path
@@ -20,12 +20,12 @@ class ApkZipPackage(
 		zipFile.close()
 	}
 
-	override suspend fun addFiles(files: List<Path>, root: String) = withContext(ioDispatcher) {
+	override suspend fun addFiles(files: List<Path>, root: String) = runInterruptible(ioDispatcher) {
 		val parameters = ZipParameters().apply { rootFolderNameInZip = root }
 		zipFile.addFiles(files.map { it.toFile() }, parameters)
 	}
 
-	override suspend fun removeFiles(files: List<String>) = withContext(ioDispatcher) {
+	override suspend fun removeFiles(files: List<String>) = runInterruptible(ioDispatcher) {
 		zipFile.removeFiles(files)
 	}
 
