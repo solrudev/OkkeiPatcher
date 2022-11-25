@@ -1,5 +1,6 @@
 package ru.solrudev.okkeipatcher.ui.screen.home
 
+import dagger.hilt.android.scopes.ViewModelScoped
 import io.github.solrudev.jetmvi.BaseFeature
 import ru.solrudev.okkeipatcher.ui.screen.home.middleware.*
 import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeEvent
@@ -7,6 +8,7 @@ import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeUiState
 import ru.solrudev.okkeipatcher.ui.screen.home.reducer.HomeReducer
 import javax.inject.Inject
 
+@ViewModelScoped
 class HomeFeature @Inject constructor(
 	observePatchStatusMiddleware: ObservePatchStatusMiddleware,
 	observePatchVersionMiddleware: ObservePatchVersionMiddleware,
