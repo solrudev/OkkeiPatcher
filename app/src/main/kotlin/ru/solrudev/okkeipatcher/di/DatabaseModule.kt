@@ -9,7 +9,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import ru.solrudev.okkeipatcher.data.database.OkkeiDatabase
+import ru.solrudev.okkeipatcher.data.database.WorkDatabase
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
@@ -18,11 +18,11 @@ object DatabaseModule {
 
 	@Provides
 	@Singleton
-	fun provideDatabase(@ApplicationContext applicationContext: Context): OkkeiDatabase {
-		return Room.databaseBuilder(applicationContext, OkkeiDatabase::class.java, "okkei.db").build()
+	fun provideDatabase(@ApplicationContext applicationContext: Context): WorkDatabase {
+		return Room.databaseBuilder(applicationContext, WorkDatabase::class.java, "work.db").build()
 	}
 
 	@Provides
 	@Singleton
-	fun provideWorkDao(database: OkkeiDatabase) = database.workDao()
+	fun provideWorkDao(database: WorkDatabase) = database.workDao()
 }

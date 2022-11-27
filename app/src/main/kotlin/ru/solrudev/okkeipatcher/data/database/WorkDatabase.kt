@@ -9,6 +9,6 @@ import ru.solrudev.okkeipatcher.data.database.model.WorkModel
 
 @Database(entities = [WorkModel::class], version = 1)
 @TypeConverters(UuidConverter::class)
-abstract class OkkeiDatabase : RoomDatabase() {
+abstract class WorkDatabase : RoomDatabase() {
 	abstract fun workDao(): WorkDao
 }
