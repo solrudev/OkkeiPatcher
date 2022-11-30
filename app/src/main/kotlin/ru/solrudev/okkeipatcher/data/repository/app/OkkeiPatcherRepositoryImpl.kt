@@ -71,7 +71,7 @@ class OkkeiPatcherRepositoryImpl @Inject constructor(
 	override fun downloadUpdate() = operation(progressMax = fileDownloader.progressMax) {
 		wrapDomainExceptions {
 			try {
-				val updateData = okkeiPatcherApi.getOkkeiPatcherData()
+				val updateData = okkeiPatcherDataCache.retrieve()
 				val updateHash = fileDownloader.download(
 					updateData.url, updateFile, hashing = true, onProgressDeltaChanged = ::progressDelta
 				)
