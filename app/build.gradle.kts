@@ -5,8 +5,6 @@ import java.util.*
 val packageName = "ru.solrudev.okkeipatcher"
 val androidGradleVersion: String by rootProject.extra
 val hiltVersion: String by rootProject.extra
-val ktorVersion: String by rootProject.extra
-val okioVersion: String by rootProject.extra
 val navigationVersion: String by rootProject.extra
 
 plugins {
@@ -125,7 +123,7 @@ dependencies {
 	implementation("androidx.activity:activity-ktx:1.6.1")
 	implementation("androidx.preference:preference-ktx:1.2.0")
 	implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.5.1")
-	implementation("androidx.fragment:fragment-ktx:1.5.4")
+	implementation("androidx.fragment:fragment-ktx:1.5.5")
 	implementation("androidx.hilt:hilt-work:1.0.0")
 	implementation("androidx.work:work-runtime-ktx:2.7.1")
 	implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
