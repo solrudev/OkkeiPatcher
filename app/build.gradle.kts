@@ -107,6 +107,10 @@ android {
 }
 
 dependencies {
+	constraints {
+		implementation(libs.okhttp)
+	}
+
 	kapt(dagger.bundles.hilt.compilers)
 	ksp(libs.moshi.kotlin.codegen)
 	ksp(androidx.room.compiler)
@@ -131,9 +135,7 @@ dependencies {
 	implementation(libs.okio)
 	implementation(libs.moshi)
 	implementation(libs.okhttp)
-	implementation(libs.bundles.retrofit) {
-		exclude(group = "com.squareup.okhttp3", module = "okhttp")
-	}
+	implementation(libs.bundles.retrofit)
 
 	// Miscellaneous
 	implementation(libs.pseudoapksigner)
