@@ -107,10 +107,6 @@ android {
 }
 
 dependencies {
-	constraints {
-		implementation(libs.okhttp)
-	}
-
 	kapt(dagger.bundles.hilt.compilers)
 	ksp(libs.moshi.kotlin.codegen)
 	ksp(androidx.room.compiler)
