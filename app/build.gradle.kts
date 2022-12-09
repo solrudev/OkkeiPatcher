@@ -3,17 +3,15 @@ import java.io.FileInputStream
 import java.util.*
 
 val packageName = "ru.solrudev.okkeipatcher"
-val androidGradleVersion: String by rootProject.extra
-val hiltVersion: String by rootProject.extra
-val navigationVersion: String by rootProject.extra
 
+@Suppress("DSL_SCOPE_VIOLATION") // https://github.com/gradle/gradle/issues/22797
 plugins {
-	id("com.android.application")
-	kotlin("android")
-	kotlin("kapt")
-	id("dagger.hilt.android.plugin")
-	id("androidx.navigation.safeargs.kotlin")
-	id("com.google.devtools.ksp") version "1.7.21-1.0.8"
+	alias(libs.plugins.android.application)
+	alias(libs.plugins.kotlin.android)
+	alias(libs.plugins.kotlin.kapt)
+	alias(libs.plugins.kotlin.ksp)
+	alias(dagger.plugins.hilt.plugin)
+	alias(androidx.plugins.navigation.safeargs)
 }
 
 base {
@@ -109,59 +107,49 @@ android {
 }
 
 dependencies {
-	val retrofitVersion = "2.9.0"
-	val moshiVersion = "1.14.0"
-	val roomVersion = "2.4.2"
-
-	kapt("com.google.dagger:hilt-compiler:$hiltVersion")
-	kapt("androidx.hilt:hilt-compiler:1.0.0")
-	ksp("com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion")
-	ksp("androidx.room:room-compiler:$roomVersion")
+	kapt(dagger.bundles.hilt.compilers)
+	ksp(libs.moshi.kotlin.codegen)
+	ksp(androidx.room.compiler)
 
 	// Jetpack
-	implementation("com.google.dagger:hilt-android:$hiltVersion")
-	implementation("androidx.activity:activity-ktx:1.6.1")
-	implementation("androidx.preference:preference-ktx:1.2.0")
-	implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.5.1")
-	implementation("androidx.fragment:fragment-ktx:1.5.5")
-	implementation("androidx.hilt:hilt-work:1.0.0")
-	implementation("androidx.work:work-runtime-ktx:2.7.1")
-	implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
-	implementation("androidx.navigation:navigation-ui-ktx:$navigationVersion")
-	implementation("androidx.room:room-ktx:$roomVersion")
-	implementation("androidx.datastore:datastore-preferences:1.0.0")
-	implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+	implementation(dagger.hilt.android)
+	implementation(androidx.activity.ktx)
+	implementation(androidx.preference.ktx)
+	implementation(androidx.lifecycle.livedata.ktx)
+	implementation(androidx.fragment.ktx)
+	implementation(androidx.hilt.work)
+	implementation(androidx.work.runtime.ktx)
+	implementation(androidx.bundles.navigation)
+	implementation(androidx.room.ktx)
+	implementation(androidx.datastore.preferences)
+	implementation(androidx.swiperefreshlayout)
 
 	// Material Components
-	implementation("com.google.android.material:material:1.7.0")
+	implementation(libs.materialcomponents)
 
 	// I/O
-	val excludeOkHttp = Action<ExternalModuleDependency> {
+	implementation(libs.okio)
+	implementation(libs.moshi)
+	implementation(libs.okhttp)
+	implementation(libs.bundles.retrofit) {
 		exclude(group = "com.squareup.okhttp3", module = "okhttp")
-	}
-	implementation("com.squareup.okio:okio:3.2.0")
-	implementation("com.squareup.moshi:moshi:$moshiVersion")
-	implementation("com.squareup.retrofit2:retrofit:$retrofitVersion", excludeOkHttp)
-	implementation("com.squareup.retrofit2:converter-moshi:$retrofitVersion", excludeOkHttp)
-	implementation("com.squareup.okhttp3:okhttp:3.12.13") {
-		because("Android 4.4 support")
 	}
 
 	// Miscellaneous
-	implementation("com.github.aefyr:pseudoapksigner:1.6")
-	implementation("com.android.tools.build:apksig:$androidGradleVersion")
-	implementation("net.lingala.zip4j:zip4j:2.11.1")
-	implementation("io.github.solrudev:simpleinstaller:4.2.1")
-	implementation("io.github.solrudev:jetmvi:0.1.1")
-	implementation("com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.6")
-	implementation("com.github.razir.progressbutton:progressbutton:2.1.0")
+	implementation(libs.pseudoapksigner)
+	implementation(libs.apksig)
+	implementation(libs.zip4j)
+	implementation(libs.simpleinstaller)
+	implementation(libs.jetmvi)
+	implementation(libs.viewbindingpropertydelegate)
+	implementation(libs.progressbutton)
 	implementation(files("libs/Base64.jar")) // java.util.Base64 for apksig on API 24-25
 
-	debugImplementation("androidx.multidex:multidex:2.0.1")
+	debugImplementation(androidx.multidex)
 
-	testImplementation("junit:junit:4.13.2")
-	androidTestImplementation("androidx.test.ext:junit:1.1.4")
-	androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")
+	testImplementation(test.junit)
+	androidTestImplementation(androidx.test.ext.junit)
+	androidTestImplementation(androidx.espresso.core)
 }
 
 kapt {

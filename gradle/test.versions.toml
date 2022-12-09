@@ -1,0 +1,2 @@
+[libraries]
+junit = { module = "junit:junit", version = "4.13.2" }
