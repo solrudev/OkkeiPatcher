@@ -1,14 +1,13 @@
 [versions]
 dagger = "2.44.2"
-hilt = "1.0.0"
 
 [libraries]
 dagger-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "dagger" }
-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hilt" }
+androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version = "1.0.0" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "dagger" }
 
 [bundles]
-hilt-compilers = ["dagger-hilt-compiler", "hilt-compiler"]
+hilt-compilers = ["dagger-hilt-compiler", "androidx-hilt-compiler"]
 
 [plugins]
 hilt-plugin = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
