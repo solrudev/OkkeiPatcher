@@ -11,7 +11,7 @@
 	<androidx.constraintlayout.widget.ConstraintLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:padding="@dimen/card_padding">
+		android:padding="@dimen/card_padding_horizontal">
 
 		<com.google.android.material.imageview.ShapeableImageView
 			android:id="@+id/imageview_card_game_icon"
@@ -28,14 +28,13 @@
 			android:id="@+id/textview_card_game_title"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:layout_marginStart="@dimen/card_padding"
+			android:layout_marginStart="@dimen/card_padding_horizontal"
 			android:text="@string/game_title"
 			android:textAppearance="?textAppearanceTitleMedium"
 			app:layout_constraintBottom_toTopOf="@id/textview_card_game_version"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toEndOf="@id/imageview_card_game_icon"
-			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintVertical_chainStyle="packed" />
+			app:layout_constraintTop_toTopOf="parent" />
 
 		<TextView
 			android:id="@+id/textview_card_game_version"

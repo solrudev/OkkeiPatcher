@@ -14,7 +14,6 @@ import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeEvent.ViewHidden
 import ru.solrudev.okkeipatcher.ui.screen.home.model.HomeUiState
 import ru.solrudev.okkeipatcher.ui.screen.home.view.*
 import ru.solrudev.okkeipatcher.ui.util.animateLayoutChanges
-import ru.solrudev.okkeipatcher.ui.util.showRippleEffect
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home), HostJetView<HomeUiState> {
@@ -61,7 +60,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), HostJetView<HomeUiState> 
 
 	private fun setupNavigation() = with(binding) {
 		cardHomePatchStatus.textviewCardPatchUpdate.setOnClickListener {
-			cardHomeActions.buttonCardActionsPatch.showRippleEffect()
+			cardHomeActions.buttonCardActionsPatch.performClick()
 		}
 	}
 }

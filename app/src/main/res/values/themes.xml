@@ -34,6 +34,11 @@
 
 	<style name="Theme.OkkeiPatcher" parent="Base.Theme.OkkeiPatcher">
 		<item name="materialCardViewStyle">@style/Widget.OkkeiPatcher.CardView</item>
+		<item name="materialButtonOutlinedStyle">@style/Widget.OkkeiPatcher.Button.OutlinedButton</item>
+		<item name="materialButtonStyle">@style/Widget.OkkeiPatcher.Button.UnelevatedButton</item>
+		<item name="bottomNavigationStyle">@style/Widget.OkkeiPatcher.BottomNavigationView</item>
+		<item name="navigationRailStyle">@style/Widget.OkkeiPatcher.NavigationRailView</item>
+		<item name="navigationViewStyle">@style/Widget.OkkeiPatcher.NavigationView</item>
 	</style>
 
 	<style name="Theme.OkkeiPatcher.NoActionBar">

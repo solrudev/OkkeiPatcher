@@ -2,11 +2,45 @@
 <resources>
 
 	<style name="Widget.OkkeiPatcher.CardView" parent="Widget.Material3.CardView.Elevated">
-		<item name="cardElevation">8dp</item>
-		<item name="shapeAppearance">@style/ShapeAppearance.OkkeiPatcher.MediumComponent</item>
+		<item name="cardElevation">@dimen/card_elevated_elevation</item>
+		<item name="shapeAppearance">?shapeAppearanceCornerLarge</item>
 	</style>
 
-	<style name="ShapeAppearance.OkkeiPatcher.MediumComponent" parent="ShapeAppearance.Material3.MediumComponent">
-		<item name="cornerSize">16dp</item>
+	<style name="Widget.OkkeiPatcher.Button.OutlinedButton" parent="Widget.Material3.Button.OutlinedButton">
+		<item name="android:insetTop">0dp</item>
+		<item name="android:insetBottom">0dp</item>
+		<item name="strokeColor">@color/button_outlined_outline_color</item>
+		<item name="backgroundTint">@color/button_outlined_bg_color</item>
+	</style>
+
+	<style name="Widget.OkkeiPatcher.Button.UnelevatedButton" parent="Widget.Material3.Button.UnelevatedButton">
+		<item name="android:insetTop">0dp</item>
+		<item name="android:insetBottom">0dp</item>
+	</style>
+
+	<style name="Widget.OkkeiPatcher.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
+		<item name="itemTextColor">@color/navigation_item_label_color</item>
+		<item name="itemActiveIndicatorStyle">@null</item>
+		<item name="itemTextAppearanceActive">@style/TextAppearance.OkkeiPatcher.TitleSmallBold</item>
+		<item name="itemTextAppearanceInactive">@style/TextAppearance.OkkeiPatcher.TitleSmallBold</item>
+	</style>
+
+	<style name="Widget.OkkeiPatcher.NavigationRailView" parent="Widget.Material3.NavigationRailView">
+		<item name="itemTextColor">@color/navigation_item_label_color</item>
+		<item name="itemActiveIndicatorStyle">@null</item>
+		<item name="itemTextAppearanceActive">@style/TextAppearance.OkkeiPatcher.TitleSmallBold</item>
+		<item name="itemTextAppearanceInactive">@style/TextAppearance.OkkeiPatcher.TitleSmallBold</item>
+	</style>
+
+	<style name="Widget.OkkeiPatcher.NavigationView" parent="Widget.Material3.NavigationView">
+		<item name="itemTextAppearance">@style/TextAppearance.OkkeiPatcher.TitleSmallBold</item>
+	</style>
+
+	<style name="TextAppearance.OkkeiPatcher.TitleSmallBold" parent="TextAppearance.Material3.TitleSmall">
+		<item name="android:textStyle">bold</item>
+	</style>
+
+	<style name="TextAppearance.OkkeiPatcher.LabelLargeBold" parent="TextAppearance.Material3.LabelLarge">
+		<item name="android:textStyle">bold</item>
 	</style>
 </resources>

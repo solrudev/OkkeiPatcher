@@ -20,8 +20,6 @@
 	<string name="button_text_update_patch">Обновить патч</string>
 
 	<!--Cards-->
-	<string name="card_actions_title">Действия</string>
-	<string name="card_game_title">Сведения об игре</string>
 	<string name="card_game_version">Версия: %s</string>
 	<string name="card_patch_version">Патч: %s</string>
 
@@ -64,7 +62,7 @@
 
 	<!--Patch statuses-->
 	<string name="patch_status_not_patched">Патч для CHAOS;CHILD не установлен.</string>
-	<string name="patch_status_patched">Патч для CHAOS;CHILD установлен.</string>
+	<string name="patch_status_patched">Установлена последняя версия патча.</string>
 	<string name="patch_status_update_available">Доступно обновление патча!</string>
 
 	<!--Permissions-->

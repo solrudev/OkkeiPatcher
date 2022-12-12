@@ -1,12 +1,27 @@
 <resources>
+	<!-- Styles -->
+	<dimen name="card_elevated_elevation">8dp</dimen>
+	<dimen name="shape_medium_corner_size">16dp</dimen>
+
+	<!-- Margins -->
 	<dimen name="about_screen_elements_margin">8dp</dimen>
-	<dimen name="button_margin_vertical">4dp</dimen>
-	<dimen name="card_layout_padding_horizontal">24dp</dimen>
-	<dimen name="card_padding">24dp</dimen>
+	<dimen name="button_margin_vertical">16dp</dimen>
 	<dimen name="card_margin">8dp</dimen>
-	<dimen name="content_padding">16dp</dimen>
 	<dimen name="content_category_margin">16dp</dimen>
-	<dimen name="icon_game_size">64dp</dimen>
+	<dimen name="patch_status_icon_start_margin">16dp</dimen>
 	<dimen name="text_paragraph_margin">8dp</dimen>
-	<dimen name="text_margin_end">12dp</dimen>
+	<dimen name="text_end_margin">12dp</dimen>
+
+	<!-- Paddings -->
+	<dimen name="card_layout_padding_horizontal">20dp</dimen>
+	<dimen name="card_padding_horizontal">24dp</dimen>
+	<dimen name="card_padding_vertical">30dp</dimen>
+	<dimen name="content_padding">16dp</dimen>
+	<dimen name="cards_content_padding">28dp</dimen>
+
+	<!-- Insets -->
+	<dimen name="button_update_patch_inset">8dp</dimen>
+
+	<!-- Other -->
+	<dimen name="icon_game_size">88dp</dimen>
 </resources>

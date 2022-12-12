@@ -9,13 +9,13 @@
 	<androidx.constraintlayout.widget.ConstraintLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:padding="@dimen/card_padding">
+		android:padding="@dimen/card_padding_horizontal">
 
 		<TextView
 			android:id="@+id/textView_permission_title"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:layout_marginEnd="@dimen/text_margin_end"
+			android:layout_marginEnd="@dimen/text_end_margin"
 			android:layout_marginBottom="@dimen/text_paragraph_margin"
 			android:textAppearance="?textAppearanceListItem"
 			app:layout_constraintBottom_toTopOf="@id/textView_permission_description"
@@ -29,7 +29,7 @@
 			android:id="@+id/textView_permission_description"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:layout_marginEnd="@dimen/text_margin_end"
+			android:layout_marginEnd="@dimen/text_end_margin"
 			android:textAppearance="?textAppearanceListItemSecondary"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toStartOf="@+id/button_permission_grant"

@@ -24,8 +24,6 @@
 	<string name="button_text_update_patch">Update patch</string>
 
 	<!--Cards-->
-	<string name="card_actions_title">Actions</string>
-	<string name="card_game_title">Game info</string>
 	<string name="card_game_version">Version: %s</string>
 	<string name="card_patch_version">Patch: %s</string>
 
@@ -70,7 +68,7 @@
 
 	<!--Patch statuses-->
 	<string name="patch_status_not_patched">Patch for CHAOS;CHILD is not installed.</string>
-	<string name="patch_status_patched">CHAOS;CHILD is patched.</string>
+	<string name="patch_status_patched">Latest patch version is installed.</string>
 	<string name="patch_status_update_available">Patch update is available!</string>
 
 	<!--Permissions-->

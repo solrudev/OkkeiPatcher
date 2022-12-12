@@ -5,11 +5,6 @@ import androidx.lifecycle.LifecycleOwner
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.bindProgressButton
 
-fun Button.showRippleEffect() {
-	isPressed = true
-	isPressed = false
-}
-
 /**
  * Binds button to [lifecycleOwner] and adds fade animations on progress display change.
  */
