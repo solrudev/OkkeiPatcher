@@ -26,7 +26,7 @@ class OnHandleSaveDataClickMiddleware @Inject constructor(
 			when {
 				handleSaveData -> persistHandleSaveDataUseCase(false)
 				isSaveDataAccessGranted -> persistHandleSaveDataUseCase(true)
-				!isSaveDataAccessGranted -> emit(SaveDataAccessRequested)
+				else -> emit(SaveDataAccessRequested)
 			}
 		}
 	}
