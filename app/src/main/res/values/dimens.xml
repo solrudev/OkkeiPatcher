@@ -14,10 +14,10 @@
 
 	<!-- Paddings -->
 	<dimen name="card_layout_padding_horizontal">20dp</dimen>
+	<dimen name="card_layout_padding_vertical">28dp</dimen>
 	<dimen name="card_padding_horizontal">24dp</dimen>
 	<dimen name="card_padding_vertical">30dp</dimen>
 	<dimen name="content_padding">16dp</dimen>
-	<dimen name="cards_content_padding">28dp</dimen>
 
 	<!-- Insets -->
 	<dimen name="button_update_patch_inset">8dp</dimen>

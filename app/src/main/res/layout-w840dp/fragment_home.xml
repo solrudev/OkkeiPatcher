@@ -12,7 +12,7 @@
 		android:clipToPadding="false"
 		android:orientation="vertical"
 		android:paddingHorizontal="@dimen/card_layout_padding_horizontal"
-		android:paddingVertical="@dimen/content_padding">
+		android:paddingVertical="@dimen/card_layout_padding_vertical">
 
 		<include
 			android:id="@+id/card_home_game_info"
