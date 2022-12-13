@@ -36,6 +36,11 @@
 		<item name="itemTextAppearance">@style/TextAppearance.OkkeiPatcher.TitleSmallBold</item>
 	</style>
 
+	<style name="Widget.OkkeiPatcher.LinearProgressIndicator" parent="Widget.Material3.LinearProgressIndicator">
+		<item name="trackThickness">@dimen/linear_progress_indicator_track_thickness</item>
+		<item name="trackCornerRadius">@dimen/linear_progress_indicator_track_thickness</item>
+	</style>
+
 	<style name="TextAppearance.OkkeiPatcher.TitleSmallBold" parent="TextAppearance.Material3.TitleSmall">
 		<item name="android:textStyle">bold</item>
 	</style>

@@ -1,35 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/container_permissions"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:orientation="vertical">
+	android:fitsSystemWindows="true">
 
-	<com.google.android.material.appbar.MaterialToolbar
-		android:id="@+id/toolbar_permissions"
-		android:layout_width="match_parent"
-		android:layout_height="?actionBarSize"
-		app:title="@string/screen_title_permissions" />
-
-	<TextView
+	<com.google.android.material.appbar.AppBarLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:paddingHorizontal="@dimen/content_padding"
-		android:text="@string/permissions_description"
-		android:textAppearance="?textAppearanceBodyLarge" />
+		android:fitsSystemWindows="true">
 
-	<androidx.recyclerview.widget.RecyclerView
-		android:id="@+id/recyclerview_permissions"
+		<com.google.android.material.appbar.MaterialToolbar
+			android:id="@+id/toolbar_permissions"
+			android:layout_width="match_parent"
+			android:layout_height="?actionBarSize"
+			app:title="@string/screen_title_permissions" />
+
+	</com.google.android.material.appbar.AppBarLayout>
+
+	<LinearLayout
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:clipToPadding="false"
-		android:overScrollMode="never"
-		android:paddingHorizontal="@dimen/card_layout_padding_horizontal"
-		android:paddingVertical="@dimen/card_margin"
-		app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-		app:spanCount="@integer/permissions_span_count"
-		tools:listitem="@layout/item_permission" />
+		android:layout_height="match_parent"
+		android:orientation="vertical"
+		android:paddingTop="@dimen/content_padding"
+		app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-</LinearLayout>
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:paddingHorizontal="@dimen/content_padding"
+			android:text="@string/permissions_description"
+			android:textAppearance="?textAppearanceBodyLarge" />
+
+		<androidx.recyclerview.widget.RecyclerView
+			android:id="@+id/recyclerview_permissions"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:clipToPadding="false"
+			android:overScrollMode="never"
+			android:paddingHorizontal="@dimen/card_layout_padding_horizontal"
+			android:paddingVertical="@dimen/card_margin"
+			app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+			app:spanCount="@integer/permissions_span_count"
+			tools:listitem="@layout/item_permission" />
+
+	</LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

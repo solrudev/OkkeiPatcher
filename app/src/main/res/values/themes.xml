@@ -39,6 +39,7 @@
 		<item name="bottomNavigationStyle">@style/Widget.OkkeiPatcher.BottomNavigationView</item>
 		<item name="navigationRailStyle">@style/Widget.OkkeiPatcher.NavigationRailView</item>
 		<item name="navigationViewStyle">@style/Widget.OkkeiPatcher.NavigationView</item>
+		<item name="linearProgressIndicatorStyle">@style/Widget.OkkeiPatcher.LinearProgressIndicator</item>
 	</style>
 
 	<style name="Theme.OkkeiPatcher.NoActionBar">

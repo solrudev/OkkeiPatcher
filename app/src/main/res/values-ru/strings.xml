@@ -6,7 +6,8 @@
 	<string name="about_screen_version">Версия %s\nby solrudev</string>
 
 	<!--Button texts-->
-	<string name="button_text_abort">Стоп</string>
+	<string name="button_text_abort_process">Прервать процесс</string>
+	<string name="button_text_abort">Прервать</string>
 	<string name="button_text_cancel">Отмена</string>
 	<string name="button_text_clear">Очистить</string>
 	<string name="button_text_copy_to_clipboard">Копировать в буфер обмена</string>
@@ -117,7 +118,7 @@
 
 	<!--Warnings-->
 	<string name="warning">Предупреждение</string>
-	<string name="warning_abort_title">Остановить процесс?</string>
+	<string name="warning_abort_title">Прервать процесс?</string>
 	<string name="warning_abort">Если Вы остановите процесс, данные установки CHAOS;CHILD и/или данные Okkei Patcher могут быть повреждены.</string>
 	<string name="warning_clear_data_title">Очистить данные?</string>
 	<string name="warning_clear_data">Вы собираетесь очистить все данные Okkei Patcher, включая резервную копию предыдущей установки CHAOS;CHILD, без возможности восстановления.</string>

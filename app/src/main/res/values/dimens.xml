@@ -1,6 +1,7 @@
 <resources>
 	<!-- Styles -->
 	<dimen name="card_elevated_elevation">8dp</dimen>
+	<dimen name="linear_progress_indicator_track_thickness">8dp</dimen>
 	<dimen name="shape_medium_corner_size">16dp</dimen>
 
 	<!-- Margins -->

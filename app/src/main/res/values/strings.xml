@@ -10,6 +10,7 @@
 	<string name="about_screen_version">Version %s\nby solrudev</string>
 
 	<!--Button texts-->
+	<string name="button_text_abort_process">Abort process</string>
 	<string name="button_text_abort">Abort</string>
 	<string name="button_text_cancel">Cancel</string>
 	<string name="button_text_clear">Clear</string>
