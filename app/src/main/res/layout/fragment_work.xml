@@ -5,8 +5,7 @@
 	android:layout_height="match_parent"
 	android:paddingHorizontal="@dimen/content_padding"
 	android:paddingTop="@dimen/content_padding"
-	android:paddingBottom="32dp"
-	app:layout_behavior="@string/appbar_scrolling_view_behavior">
+	android:paddingBottom="32dp">
 
 	<ImageView
 		android:id="@+id/imageview_work_okkei"
