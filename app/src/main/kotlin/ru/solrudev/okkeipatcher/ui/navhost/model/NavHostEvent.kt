@@ -10,7 +10,6 @@ sealed interface NavHostEvent : JetEvent {
 	object PermissionsCheckRequested : NavHostEvent, NavHostEffect
 	data class PermissionsChecked(val allPermissionsGranted: Boolean) : NavHostEvent
 	data class WorkIsPending(val work: Work) : NavHostEvent
-	data class UpdateAvailabilityChanged(val isUpdateAvailable: Boolean) : NavHostEvent
 }
 
 sealed interface NavHostEffect : JetEffect

@@ -28,14 +28,6 @@
 		app:defaultNavHost="true"
 		app:layout_behavior="@string/appbar_scrolling_view_behavior"
 		app:navGraph="@navigation/okkei_nav_graph"
-		tools:layout="@layout/fragment_home" />
-
-	<com.google.android.material.bottomnavigation.BottomNavigationView
-		android:id="@+id/bottomNavigationView_nav_host"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_gravity="bottom"
-		app:layout_behavior="ru.solrudev.okkeipatcher.ui.navhost.BottomNavigationViewBehavior"
-		app:menu="@menu/okkei_menu" />
+		tools:layout="@layout/fragment_main" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

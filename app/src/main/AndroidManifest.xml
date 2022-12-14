@@ -25,6 +25,7 @@
 		android:supportsRtl="true"
 		android:theme="@style/Theme.OkkeiPatcher"
 		tools:ignore="UnusedAttribute">
+
 		<activity
 			android:name=".ui.navhost.NavHostActivity"
 			android:exported="true"
@@ -34,14 +35,6 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity
-			android:name=".ui.screen.permissions.PermissionsActivity"
-			android:exported="false"
-			android:theme="@style/Theme.OkkeiPatcher.NoActionBar" />
-		<activity
-			android:name=".ui.screen.work.WorkActivity"
-			android:exported="false"
-			android:theme="@style/Theme.OkkeiPatcher.NoActionBar" />
 
 		<provider
 			android:name="androidx.startup.InitializationProvider"
@@ -52,6 +45,6 @@
 				android:name="androidx.work.WorkManagerInitializer"
 				tools:node="remove" />
 		</provider>
-	</application>
 
+	</application>
 </manifest>

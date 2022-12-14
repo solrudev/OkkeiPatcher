@@ -5,6 +5,5 @@ import ru.solrudev.okkeipatcher.domain.model.Work
 
 data class NavHostUiState(
 	val permissionsRequired: Boolean = false,
-	val pendingWork: Work? = null,
-	val isUpdateAvailable: Boolean = false
+	val pendingWork: Work? = null
 ) : JetState

@@ -15,6 +15,5 @@ class NavHostReducer @Inject constructor() : Reducer<NavHostEvent, NavHostUiStat
 		is NavigatedToPermissionsScreen -> state.copy(permissionsRequired = false)
 		is PermissionsChecked -> state.copy(permissionsRequired = !event.allPermissionsGranted)
 		is WorkIsPending -> state.copy(pendingWork = event.work)
-		is UpdateAvailabilityChanged -> state.copy(isUpdateAvailable = event.isUpdateAvailable)
 	}
 }

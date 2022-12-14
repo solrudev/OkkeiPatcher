@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/container_main"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:animateLayoutChanges="true">
+
+	<androidx.fragment.app.FragmentContainerView
+		android:id="@+id/content_main"
+		android:name="androidx.navigation.fragment.NavHostFragment"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		app:defaultNavHost="true"
+		app:navGraph="@navigation/main_nav_graph"
+		tools:layout="@layout/fragment_home" />
+
+	<com.google.android.material.bottomnavigation.BottomNavigationView
+		android:id="@+id/bottomNavigationView_main"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_gravity="bottom"
+		app:layout_behavior="ru.solrudev.okkeipatcher.ui.main.navhost.BottomNavigationViewBehavior"
+		app:menu="@menu/okkei_menu" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
