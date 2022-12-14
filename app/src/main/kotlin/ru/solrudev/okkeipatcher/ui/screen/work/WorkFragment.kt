@@ -33,6 +33,11 @@ class WorkFragment : Fragment(R.layout.fragment_work), JetView<WorkUiState> {
 	private val binding by viewBinding(FragmentWorkBinding::bind)
 	private var currentCancelDialog: Dialog? = null
 
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		setWorkLabel()
+	}
+
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		onBackPressed {
 			requireActivity().finish()
@@ -73,6 +78,10 @@ class WorkFragment : Fragment(R.layout.fragment_work), JetView<WorkUiState> {
 		buttonWork.setOnClickListener {
 			viewModel.dispatchEvent(CancelRequested)
 		}
+	}
+
+	private fun setWorkLabel() {
+		findNavController().currentDestination?.label = args.work.label.resolve(requireContext())
 	}
 
 	private fun clearNotifications() {
