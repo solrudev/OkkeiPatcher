@@ -2,6 +2,7 @@ package ru.solrudev.okkeipatcher.ui.main.navhost
 
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -15,7 +16,6 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.google.android.material.appbar.MaterialToolbar
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.solrudev.jetmvi.HostJetView
 import io.github.solrudev.jetmvi.bindDerived
@@ -46,7 +46,7 @@ class MainFragment : Fragment(R.layout.fragment_main), HostJetView<MainUiState> 
 		}
 		navigationRailViewMain?.setupWithNavController(navController)
 		navigationViewMain?.setupWithNavController(navController)
-		val toolbar = requireActivity().findViewById<MaterialToolbar>(R.id.toolbar_nav_host)
+		val toolbar = requireActivity().findViewById<Toolbar>(R.id.toolbar_nav_host)
 		toolbar.setupWithNavController(navController, appBarConfiguration)
 		viewModel.bindDerived(this@MainFragment, updateBadgeView)
 	}
