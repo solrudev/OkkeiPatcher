@@ -53,15 +53,16 @@ class NavHostActivity : AppCompatActivity(R.layout.okkei_nav_host), JetView<NavH
 	}
 
 	private fun navigateToPermissionsScreen() {
+		viewModel.dispatchEvent(NavigatedToPermissionsScreen)
 		if (navController.currentDestination?.id == R.id.permissions_fragment) {
 			return
 		}
 		val toPermissionsScreen = OkkeiNavGraphDirections.actionGlobalPermissions()
 		navController.navigateSafely(toPermissionsScreen)
-		viewModel.dispatchEvent(NavigatedToPermissionsScreen)
 	}
 
 	private fun navigateToWorkScreen(work: Work) {
+		viewModel.dispatchEvent(NavigatedToWorkScreen)
 		val navController = navController
 		val workScreen = navController.findDestination(R.id.work_fragment)
 		if (navController.currentDestination?.id == workScreen?.id) {
@@ -70,6 +71,5 @@ class NavHostActivity : AppCompatActivity(R.layout.okkei_nav_host), JetView<NavH
 		workScreen?.label = work.label.resolve(this)
 		val toWorkScreen = OkkeiNavGraphDirections.actionGlobalWork(work)
 		navController.navigateSafely(toWorkScreen)
-		viewModel.dispatchEvent(NavigatedToWorkScreen)
 	}
 }

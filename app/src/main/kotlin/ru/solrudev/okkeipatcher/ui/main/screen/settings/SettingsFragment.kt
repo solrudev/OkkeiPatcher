@@ -63,9 +63,9 @@ class SettingsFragment : PreferenceFragmentCompat(), JetView<SettingsUiState> {
 	}
 
 	private fun navigateToSaveDataAccessScreen() {
+		viewModel.dispatchEvent(SaveDataAccessRequestHandled)
 		val toSaveDataAccessScreen = SettingsFragmentDirections.actionSettingsFragmentToSaveDataAccessFragment()
 		findNavController().navigateSafely(toSaveDataAccessScreen)
-		viewModel.dispatchEvent(SaveDataAccessRequestHandled)
 	}
 
 	private fun navigateToClearDataScreen() {
