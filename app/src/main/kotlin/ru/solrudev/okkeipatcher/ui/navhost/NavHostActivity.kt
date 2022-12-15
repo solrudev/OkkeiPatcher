@@ -18,7 +18,6 @@ import ru.solrudev.okkeipatcher.databinding.OkkeiNavHostBinding
 import ru.solrudev.okkeipatcher.domain.model.Work
 import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostEvent.*
 import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostUiState
-import ru.solrudev.okkeipatcher.ui.util.animateLayoutChanges
 import ru.solrudev.okkeipatcher.ui.util.navigateSafely
 
 @AndroidEntryPoint
@@ -36,7 +35,6 @@ class NavHostActivity : AppCompatActivity(R.layout.okkei_nav_host), JetView<NavH
 		super.onCreate(savedInstanceState)
 		with(binding) {
 			setContentView(root)
-			containerNavHost.animateLayoutChanges()
 			val navController = contentNavHost.getFragment<NavHostFragment>().navController
 			toolbarNavHost.setupWithNavController(navController, appBarConfiguration)
 		}
