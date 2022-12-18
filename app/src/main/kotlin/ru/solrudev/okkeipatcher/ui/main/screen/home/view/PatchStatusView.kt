@@ -16,6 +16,6 @@ class PatchStatusView(private val binding: CardPatchStatusBinding) : JetView<Hom
 
 	override fun render(uiState: HomeUiState) = with(binding) {
 		textviewCardPatchStatus.text = uiState.patchStatus.resolve(context)
-		textviewCardPatchUpdate.isVisible = uiState.patchUpdatesAvailable
+		buttonCardPatchUpdate.isVisible = uiState.patchUpdatesAvailable
 	}
 }

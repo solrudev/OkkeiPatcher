@@ -35,7 +35,7 @@
 			android:text="@string/patch_status_update_available"
 			android:textAppearance="?textAppearanceTitleMedium"
 			app:layout_constrainedWidth="true"
-			app:layout_constraintBottom_toTopOf="@id/textview_card_patch_update"
+			app:layout_constraintBottom_toTopOf="@id/button_card_patch_update"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintHorizontal_bias="0"
 			app:layout_constraintStart_toEndOf="@id/imageview_card_patch_icon"
@@ -43,7 +43,7 @@
 			app:layout_constraintVertical_chainStyle="packed" />
 
 		<Button
-			android:id="@+id/textview_card_patch_update"
+			android:id="@+id/button_card_patch_update"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="@dimen/button_margin_vertical"
