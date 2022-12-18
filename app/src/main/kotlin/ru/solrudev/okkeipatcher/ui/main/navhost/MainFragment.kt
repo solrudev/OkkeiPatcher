@@ -61,13 +61,14 @@ class MainFragment : Fragment(R.layout.fragment_main), HostJetView<MainUiState> 
 	private fun showBottomNavigationOnDestinationChanged(navController: NavController) = navController
 		.currentBackStackEntryFlow
 		.filterNot { it.destination is DialogFragmentNavigator.Destination }
-		.onEach {
-			binding.bottomNavigationViewMain?.let {
-				val params = it.layoutParams as CoordinatorLayout.LayoutParams
+		.distinctUntilChangedBy { it.destination }
+		.onEach { _ ->
+			binding.bottomNavigationViewMain?.let { bottomNavigationView ->
+				val params = bottomNavigationView.layoutParams as CoordinatorLayout.LayoutParams
 				val behavior = params.behavior as BottomNavigationViewBehavior
 				if (behavior.isScrolledDown) {
 					behavior.ignoreScroll()
-					behavior.slideUp(it)
+					behavior.slideUp(bottomNavigationView)
 				}
 			}
 		}
