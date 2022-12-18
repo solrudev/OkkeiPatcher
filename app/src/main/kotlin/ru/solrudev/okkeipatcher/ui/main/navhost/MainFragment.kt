@@ -52,7 +52,7 @@ class MainFragment : Fragment(R.layout.fragment_main), HostJetView<MainUiState> 
 	}
 
 	private fun launchBottomNavigationFlows(navController: NavController) = viewLifecycleOwner.lifecycleScope.launch {
-		viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+		viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 			showBottomNavigationOnDestinationChanged(navController).launchIn(this)
 			hideBottomNavigationOnNonTopLevelDestinations(navController).launchIn(this)
 		}
