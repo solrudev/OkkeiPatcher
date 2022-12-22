@@ -63,13 +63,12 @@ class MainFragment : Fragment(R.layout.fragment_main), HostJetView<MainUiState> 
 		.filterNot { it.destination is DialogFragmentNavigator.Destination }
 		.distinctUntilChangedBy { it.destination }
 		.onEach { _ ->
-			binding.bottomNavigationViewMain?.let { bottomNavigationView ->
-				val params = bottomNavigationView.layoutParams as CoordinatorLayout.LayoutParams
-				val behavior = params.behavior as BottomNavigationViewBehavior
-				if (behavior.isScrolledDown) {
-					behavior.ignoreScroll()
-					behavior.slideUp(bottomNavigationView)
-				}
+			val bottomNavigationView = binding.bottomNavigationViewMain ?: return@onEach
+			val params = bottomNavigationView.layoutParams as CoordinatorLayout.LayoutParams
+			val behavior = params.behavior as BottomNavigationViewBehavior
+			if (behavior.isScrolledDown) {
+				behavior.ignoreScroll()
+				behavior.slideUp(bottomNavigationView)
 			}
 		}
 
