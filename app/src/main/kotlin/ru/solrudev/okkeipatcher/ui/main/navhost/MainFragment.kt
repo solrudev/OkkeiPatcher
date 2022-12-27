@@ -3,8 +3,9 @@ package ru.solrudev.okkeipatcher.ui.main.navhost
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.widget.Toolbar
-import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -37,11 +38,17 @@ class MainFragment : Fragment(R.layout.fragment_main), HostJetView<MainUiState> 
 	private val topLevelDestinations = setOf(R.id.home_fragment, R.id.update_fragment, R.id.settings_fragment)
 	private val appBarConfiguration = AppBarConfiguration(topLevelDestinations)
 
+	private val NavController.isTopLevelDestinationFlow: Flow<Boolean>
+		get() = currentBackStackEntryFlow
+			.filterNot { it.destination is DialogFragmentNavigator.Destination }
+			.map { it.destination.id in topLevelDestinations }
+			.distinctUntilChanged()
+
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?): Unit = with(binding) {
 		containerMain.animateLayoutChanges()
 		val navController = contentMain.getFragment<NavHostFragment>().navController
-		bottomNavigationViewMain?.let {
-			it.setupWithNavController(navController)
+		bottomNavigationViewMain?.let { bottomNavigationView ->
+			bottomNavigationView.setupWithNavController(navController)
 			launchBottomNavigationFlows(navController)
 		}
 		navigationRailViewMain?.setupWithNavController(navController)
@@ -53,31 +60,26 @@ class MainFragment : Fragment(R.layout.fragment_main), HostJetView<MainUiState> 
 
 	private fun launchBottomNavigationFlows(navController: NavController) = viewLifecycleOwner.lifecycleScope.launch {
 		viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-			showBottomNavigationOnDestinationChanged(navController).launchIn(this)
-			hideBottomNavigationOnNonTopLevelDestinations(navController).launchIn(this)
+			hideBottomNavigationOnNonTopLevelDestinationsFlow(navController).launchIn(this)
+			updateContentBottomPaddingFlow(navController).launchIn(this)
 		}
 	}
 
-	private fun showBottomNavigationOnDestinationChanged(navController: NavController) = navController
-		.currentBackStackEntryFlow
-		.filterNot { it.destination is DialogFragmentNavigator.Destination }
-		.distinctUntilChangedBy { it.destination }
-		.onEach { _ ->
-			val bottomNavigationView = binding.bottomNavigationViewMain ?: return@onEach
-			val params = bottomNavigationView.layoutParams as CoordinatorLayout.LayoutParams
-			val behavior = params.behavior as BottomNavigationViewBehavior
-			if (behavior.isScrolledDown) {
-				behavior.ignoreScroll()
-				behavior.slideUp(bottomNavigationView)
-			}
-		}
-
-	private fun hideBottomNavigationOnNonTopLevelDestinations(navController: NavController) = navController
-		.currentBackStackEntryFlow
-		.filterNot { it.destination is DialogFragmentNavigator.Destination }
-		.map { it.destination.id in topLevelDestinations }
-		.distinctUntilChanged()
+	private fun hideBottomNavigationOnNonTopLevelDestinationsFlow(navController: NavController) = navController
+		.isTopLevelDestinationFlow
 		.onEach { isTopLevelDestination ->
 			binding.bottomNavigationViewMain?.isVisible = isTopLevelDestination
 		}
+
+	private fun updateContentBottomPaddingFlow(navController: NavController) = navController
+		.isTopLevelDestinationFlow
+		.onEach(::updateContentBottomPadding)
+
+	private fun updateContentBottomPadding(isBottomNavigationVisible: Boolean) {
+		binding.contentMain.doOnPreDraw { content ->
+			val bottomNavigationView = binding.bottomNavigationViewMain ?: return@doOnPreDraw
+			val coefficient = if (isBottomNavigationVisible) 1 else -1
+			content.updatePadding(bottom = content.paddingBottom + bottomNavigationView.height * coefficient)
+		}
+	}
 }
