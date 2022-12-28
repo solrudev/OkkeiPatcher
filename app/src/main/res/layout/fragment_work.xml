@@ -1,56 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:paddingHorizontal="@dimen/content_padding"
-	android:paddingTop="@dimen/content_padding"
-	android:paddingBottom="32dp">
+	android:fillViewport="true">
 
-	<ImageView
-		android:id="@+id/imageview_work_okkei"
-		android:layout_width="0dp"
-		android:layout_height="150dp"
-		android:importantForAccessibility="no"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent"
-		app:srcCompat="@drawable/okkei" />
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:id="@+id/container_work"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:animateLayoutChanges="true"
+		android:paddingHorizontal="@dimen/card_layout_padding_horizontal"
+		android:paddingTop="52dp"
+		android:paddingBottom="44dp">
 
-	<Button
-		android:id="@+id/button_work"
-		android:layout_width="0dp"
-		android:layout_height="wrap_content"
-		android:text="@string/button_text_abort_process"
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent" />
+		<ImageView
+			android:id="@+id/imageview_work_okkei"
+			android:layout_width="0dp"
+			android:layout_height="150dp"
+			android:importantForAccessibility="no"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:srcCompat="@drawable/okkei" />
 
-	<TextView
-		android:id="@+id/textview_work_status"
-		android:layout_width="wrap_content"
-		android:layout_height="0dp"
-		android:layout_marginBottom="8dp"
-		android:textAlignment="viewStart"
-		app:layout_constraintBottom_toTopOf="@id/progressbar_work"
-		app:layout_constraintStart_toStartOf="@id/progressbar_work" />
+		<com.google.android.material.card.MaterialCardView
+			android:id="@+id/materialCardView"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/card_margin"
+			android:layout_marginTop="52dp"
+			android:layout_marginEnd="@dimen/card_margin"
+			android:animateLayoutChanges="true"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/imageview_work_okkei">
 
-	<TextView
-		android:id="@+id/textview_work_percent_done"
-		android:layout_width="wrap_content"
-		android:layout_height="0dp"
-		android:layout_marginBottom="8dp"
-		android:textAlignment="viewEnd"
-		app:layout_constraintBottom_toTopOf="@id/progressbar_work"
-		app:layout_constraintEnd_toEndOf="@id/progressbar_work" />
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center_horizontal"
+				android:orientation="vertical"
+				android:paddingHorizontal="@dimen/card_padding_horizontal"
+				android:paddingVertical="@dimen/card_padding_vertical">
 
-	<com.google.android.material.progressindicator.LinearProgressIndicator
-		android:id="@+id/progressbar_work"
-		android:layout_width="0dp"
-		android:layout_height="wrap_content"
-		android:layout_marginBottom="8dp"
-		app:layout_constraintBottom_toTopOf="@id/button_work"
-		app:layout_constraintEnd_toEndOf="@id/button_work"
-		app:layout_constraintStart_toStartOf="@id/button_work" />
+				<TextView
+					android:id="@+id/textview_work_percent_done"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginBottom="16dp"
+					android:textAppearance="?textAppearanceTitleLarge"
+					tools:text="28%" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+				<com.google.android.material.progressindicator.LinearProgressIndicator
+					android:id="@+id/progressbar_work"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginBottom="24dp"
+					tools:progress="28" />
+
+				<TextView
+					android:id="@+id/textview_work_status"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginBottom="8dp"
+					android:textAppearance="?textAppearanceBodyLarge"
+					tools:text="@string/status_backing_up_obb" />
+
+			</LinearLayout>
+		</com.google.android.material.card.MaterialCardView>
+
+		<Button
+			android:id="@+id/button_work"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginHorizontal="@dimen/card_margin"
+			android:layout_marginTop="24dp"
+			android:text="@string/button_text_abort_process"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/materialCardView"
+			app:layout_constraintVertical_bias="1" />
+
+	</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

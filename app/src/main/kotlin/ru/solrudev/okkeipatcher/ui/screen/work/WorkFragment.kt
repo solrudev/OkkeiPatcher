@@ -39,7 +39,8 @@ class WorkFragment : Fragment(R.layout.fragment_work), JetView<WorkUiState> {
 		setWorkLabel()
 	}
 
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
+		containerWork.animateLayoutChanges()
 		applyInsets()
 		onBackPressed {
 			requireActivity().finish()
