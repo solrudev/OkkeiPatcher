@@ -37,6 +37,7 @@ class MainFragment : Fragment(R.layout.fragment_main), HostJetView<MainUiState> 
 	private val viewModel: MainViewModel by viewModels()
 	private val topLevelDestinations = setOf(R.id.home_fragment, R.id.update_fragment, R.id.settings_fragment)
 	private val appBarConfiguration = AppBarConfiguration(topLevelDestinations)
+	private var isContentBottomPaddingApplied = false
 
 	private val NavController.isTopLevelDestinationFlow: Flow<Boolean>
 		get() = currentBackStackEntryFlow
@@ -76,8 +77,12 @@ class MainFragment : Fragment(R.layout.fragment_main), HostJetView<MainUiState> 
 		.onEach(::updateContentBottomPadding)
 
 	private fun updateContentBottomPadding(isBottomNavigationVisible: Boolean) {
+		if (isContentBottomPaddingApplied == isBottomNavigationVisible) {
+			return
+		}
 		binding.contentMain.doOnPreDraw { content ->
 			val bottomNavigationView = binding.bottomNavigationViewMain ?: return@doOnPreDraw
+			isContentBottomPaddingApplied = isBottomNavigationVisible
 			val coefficient = if (isBottomNavigationVisible) 1 else -1
 			content.updatePadding(bottom = content.paddingBottom + bottomNavigationView.height * coefficient)
 		}
