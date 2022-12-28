@@ -19,6 +19,7 @@ simpleinstaller = { module = "io.github.solrudev:simpleinstaller", version = "4.
 jetmvi = { module = "io.github.solrudev:jetmvi", version = "0.1.1" }
 viewbindingpropertydelegate = { module = "com.github.kirich1409:viewbindingpropertydelegate-noreflection", version = "1.5.6" }
 progressbutton = { module = "com.github.razir.progressbutton:progressbutton", version = "2.1.0" }
+insetter = { module = "dev.chrisbanes.insetter:insetter", version = "0.6.1" }
 
 [bundles]
 retrofit = ["retrofit", "retrofit-converter-moshi"]

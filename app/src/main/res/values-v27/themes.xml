@@ -2,7 +2,7 @@
 <resources>
 
 	<style name="Base.V27.Theme.OkkeiPatcher" parent="Base.V23.Theme.OkkeiPatcher">
-		<item name="android:navigationBarColor">?colorSurface</item>
+		<item name="android:windowTranslucentNavigation">false</item>
 		<item name="android:windowLightNavigationBar">true</item>
 	</style>
 

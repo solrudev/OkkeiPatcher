@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<style name="Base.V23.Night.Theme.OkkeiPatcher" parent="Base.V19.Night.Theme.OkkeiPatcher">
-		<item name="android:statusBarColor">@android:color/transparent</item>
+	<style name="Base.V23.Night.Theme.OkkeiPatcher" parent="Base.V21.Night.Theme.OkkeiPatcher">
+		<item name="android:windowTranslucentStatus">false</item>
 		<item name="android:windowLightStatusBar">false</item>
 	</style>
 

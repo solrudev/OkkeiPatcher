@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
+import dev.chrisbanes.insetter.applyInsetter
 import io.github.solrudev.jetmvi.JetView
 import io.github.solrudev.jetmvi.bind
 import ru.solrudev.okkeipatcher.R
@@ -20,11 +21,20 @@ class LicensesFragment : Fragment(R.layout.fragment_licenses), JetView<LicensesU
 	private val licensesAdapter = LicensesAdapter()
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		applyInsets()
 		binding.recyclerviewLicenses.adapter = licensesAdapter
 		viewModel.bind(this)
 	}
 
 	override fun render(uiState: LicensesUiState) {
 		licensesAdapter.submitList(uiState.licenses)
+	}
+
+	private fun applyInsets() = with(binding) {
+		recyclerviewLicenses.applyInsetter {
+			type(navigationBars = true) {
+				padding()
+			}
+		}
 	}
 }

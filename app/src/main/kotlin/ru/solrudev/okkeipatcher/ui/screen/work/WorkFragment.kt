@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
+import dev.chrisbanes.insetter.applyInsetter
 import io.github.solrudev.jetmvi.JetView
 import io.github.solrudev.jetmvi.jetViewModels
 import ru.solrudev.okkeipatcher.R
@@ -39,6 +40,7 @@ class WorkFragment : Fragment(R.layout.fragment_work), JetView<WorkUiState> {
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		applyInsets()
 		onBackPressed {
 			requireActivity().finish()
 		}
@@ -71,6 +73,14 @@ class WorkFragment : Fragment(R.layout.fragment_work), JetView<WorkUiState> {
 		}
 		if (uiState.errorMessage.shouldShow) {
 			onError(uiState.errorMessage.data)
+		}
+	}
+
+	private fun applyInsets() = with(binding) {
+		buttonWork.applyInsetter {
+			type(navigationBars = true) {
+				margin()
+			}
 		}
 	}
 
