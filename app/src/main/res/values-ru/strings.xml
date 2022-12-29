@@ -75,13 +75,7 @@
 	<string name="permission_storage_title">Доступ к памяти</string>
 	<string name="permission_storage_description">Для доступа к данным CHAOS;CHILD, необходимо для патча, создания и восстановления резервной копии</string>
 
-	<!--Screen titles-->
-	<string name="screen_title_patcher">Патчер</string>
-	<string name="screen_title_permissions">Разрешения</string>
-	<string name="screen_title_settings">Настройки</string>
-	<string name="screen_title_update">Обновление</string>
-
-	<!--Settings-->
+	<!--Preferences-->
 	<string name="preference_general_header">Общие</string>
 	<string name="preference_miscellaneous_header">Разное</string>
 	<string name="preference_about_title">О программе</string>
@@ -90,6 +84,12 @@
 	<string name="preference_licenses_title">Лицензии</string>
 	<string name="preference_clear_data_summary">Используйте эту опцию ТОЛЬКО при переустановке CHAOS;CHILD из-за повреждения данных</string>
 	<string name="preference_save_data_summary">Делать копию и восстанавливать сохранения игры</string>
+
+	<!--Screen titles-->
+	<string name="screen_title_patcher">Патчер</string>
+	<string name="screen_title_permissions">Разрешения</string>
+	<string name="screen_title_settings">Настройки</string>
+	<string name="screen_title_update">Обновление</string>
 
 	<!--Snackbars-->
 	<string name="snackbar_data_cleared">Данные очищены</string>
