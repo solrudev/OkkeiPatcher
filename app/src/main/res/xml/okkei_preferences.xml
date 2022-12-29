@@ -1,13 +1,14 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
-	<PreferenceCategory app:title="@string/preference_general_header">
+	<PreferenceCategory app:title="@string/preference_patcher_header">
 
 		<SwitchPreferenceCompat
 			app:icon="@drawable/ic_save_data_preference"
 			app:key="@string/preference_key_handle_save_data"
 			app:persistent="false"
 			app:widgetLayout="@layout/preference_material_switch"
-			app:summary="@string/preference_save_data_summary"
+			app:summaryOff="@string/preference_save_data_summary_off"
+			app:summaryOn="@string/preference_save_data_summary_on"
 			app:title="@string/preference_save_data_title" />
 
 		<Preference
@@ -16,6 +17,20 @@
 			app:persistent="false"
 			app:summary="@string/preference_clear_data_summary"
 			app:title="@string/preference_clear_data_title" />
+
+	</PreferenceCategory>
+
+	<PreferenceCategory app:title="@string/preference_appearance_header">
+
+		<ListPreference
+			app:dialogIcon="@drawable/ic_theme"
+			app:entries="@array/preference_theme_entries"
+			app:entryValues="@array/preference_theme_entry_values"
+			app:icon="@drawable/ic_theme_preference"
+			app:key="@string/preference_key_theme"
+			app:persistent="false"
+			app:summary="%s"
+			app:title="@string/preference_theme_title" />
 
 	</PreferenceCategory>
 

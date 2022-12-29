@@ -76,14 +76,20 @@
 	<string name="permission_storage_description">Для доступа к данным CHAOS;CHILD, необходимо для патча, создания и восстановления резервной копии</string>
 
 	<!--Preferences-->
-	<string name="preference_general_header">Общие</string>
+	<string name="preference_appearance_header">Внешний вид</string>
 	<string name="preference_miscellaneous_header">Разное</string>
+	<string name="preference_patcher_header">Патчер</string>
 	<string name="preference_about_title">О программе</string>
 	<string name="preference_clear_data_title">Очистить все данные</string>
 	<string name="preference_save_data_title">Игровые сохранения</string>
 	<string name="preference_licenses_title">Лицензии</string>
+	<string name="preference_theme_title">Тема приложения</string>
 	<string name="preference_clear_data_summary">Используйте эту опцию ТОЛЬКО при переустановке CHAOS;CHILD из-за повреждения данных</string>
-	<string name="preference_save_data_summary">Делать копию и восстанавливать сохранения игры</string>
+	<string name="preference_save_data_summary_off">Не делать копию и не восстанавливать сохранения игры</string>
+	<string name="preference_save_data_summary_on">Делать копию и восстанавливать сохранения игры</string>
+	<string name="preference_follow_system_theme">Как в системе</string>
+	<string name="preference_light_theme">Светлая</string>
+	<string name="preference_dark_theme">Тёмная</string>
 
 	<!--Screen titles-->
 	<string name="screen_title_patcher">Патчер</string>

@@ -14,5 +14,6 @@ class SettingsReducer @Inject constructor() : Reducer<SettingsEvent, SettingsUiS
 		is HandleSaveDataChanged -> state.copy(handleSaveData = event.handleSaveData)
 		is SaveDataAccessRequested -> state.copy(requestSaveDataAccess = true)
 		is SaveDataAccessRequestHandled -> state.copy(requestSaveDataAccess = false)
+		is ThemeChanged -> state.copy(theme = event.theme)
 	}
 }

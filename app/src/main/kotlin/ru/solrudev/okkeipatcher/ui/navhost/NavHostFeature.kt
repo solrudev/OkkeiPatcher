@@ -5,6 +5,7 @@ import io.github.solrudev.jetmvi.BaseFeature
 import ru.solrudev.okkeipatcher.ui.navhost.middleware.CheckPermissionsMiddleware
 import ru.solrudev.okkeipatcher.ui.navhost.middleware.CheckSaveDataAccessMiddleware
 import ru.solrudev.okkeipatcher.ui.navhost.middleware.ObservePendingWorkMiddleware
+import ru.solrudev.okkeipatcher.ui.navhost.middleware.ObserveThemeMiddleware
 import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostEvent
 import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostUiState
 import ru.solrudev.okkeipatcher.ui.navhost.reducer.NavHostReducer
@@ -15,12 +16,14 @@ class NavHostFeature @Inject constructor(
 	checkPermissionsMiddleware: CheckPermissionsMiddleware,
 	observePendingWorkMiddleware: ObservePendingWorkMiddleware,
 	checkSaveDataAccessMiddleware: CheckSaveDataAccessMiddleware,
+	observeThemeMiddleware: ObserveThemeMiddleware,
 	navHostReducer: NavHostReducer
 ) : BaseFeature<NavHostEvent, NavHostUiState>(
 	middlewares = listOf(
 		checkPermissionsMiddleware,
 		observePendingWorkMiddleware,
-		checkSaveDataAccessMiddleware
+		checkSaveDataAccessMiddleware,
+		observeThemeMiddleware
 	),
 	reducer = navHostReducer,
 	initialUiState = NavHostUiState()

@@ -11,7 +11,11 @@ import androidx.core.content.getSystemService
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import dagger.hilt.android.HiltAndroidApp
-import ru.solrudev.okkeipatcher.domain.repository.app.ConnectivityRepository
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
+import ru.solrudev.okkeipatcher.domain.model.Theme
+import ru.solrudev.okkeipatcher.domain.usecase.app.GetThemeFlowUseCase
+import ru.solrudev.okkeipatcher.domain.usecase.app.StartNetworkMonitoringUseCase
 import javax.inject.Inject
 
 @HiltAndroidApp
@@ -21,13 +25,41 @@ class OkkeiApplication : Application(), Configuration.Provider {
 	lateinit var workerFactory: HiltWorkerFactory
 
 	@Inject
-	lateinit var connectivityRepository: ConnectivityRepository
+	lateinit var startNetworkMonitoringUseCase: StartNetworkMonitoringUseCase
+
+	@Inject
+	lateinit var getThemeFlowUseCase: GetThemeFlowUseCase
 
 	override fun onCreate() {
 		super.onCreate()
-		connectivityRepository.startNetworkMonitoring()
-		createNotificationChannels()
 		AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
+		initTheme()
+		startNetworkMonitoringUseCase()
+		createNotificationChannels()
+	}
+
+	override fun getWorkManagerConfiguration() = Configuration.Builder()
+		.setWorkerFactory(workerFactory)
+		.build()
+
+	override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
+		super.onConfigurationChanged(newConfig)
+		createNotificationChannels()
+	}
+
+	fun setTheme(theme: Theme) {
+		AppCompatDelegate.setDefaultNightMode(theme.toNightMode())
+	}
+
+	private fun initTheme() = runBlocking {
+		val theme = getThemeFlowUseCase().first()
+		setTheme(theme)
+	}
+
+	private fun Theme.toNightMode() = when (this) {
+		Theme.FollowSystem -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+		Theme.Light -> AppCompatDelegate.MODE_NIGHT_NO
+		Theme.Dark -> AppCompatDelegate.MODE_NIGHT_YES
 	}
 
 	private fun createNotificationChannels() {
@@ -46,10 +78,6 @@ class OkkeiApplication : Application(), Configuration.Provider {
 		}
 	}
 
-	override fun getWorkManagerConfiguration() = Configuration.Builder()
-		.setWorkerFactory(workerFactory)
-		.build()
-
 	@RequiresApi(Build.VERSION_CODES.O)
 	private fun NotificationManager.createNotificationChannel(
 		@StringRes channelId: Int,
@@ -64,10 +92,5 @@ class OkkeiApplication : Application(), Configuration.Provider {
 			description = channelDescription
 		}
 		createNotificationChannel(channel)
-	}
-
-	override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
-		super.onConfigurationChanged(newConfig)
-		createNotificationChannels()
 	}
 }

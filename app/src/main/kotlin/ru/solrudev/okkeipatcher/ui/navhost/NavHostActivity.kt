@@ -14,20 +14,26 @@ import dev.chrisbanes.insetter.applyInsetter
 import io.github.solrudev.jetmvi.HostJetView
 import io.github.solrudev.jetmvi.derivedView
 import io.github.solrudev.jetmvi.jetViewModels
+import ru.solrudev.okkeipatcher.OkkeiApplication
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.databinding.OkkeiNavHostBinding
+import ru.solrudev.okkeipatcher.ui.navhost.controller.NavigationController
+import ru.solrudev.okkeipatcher.ui.navhost.controller.ThemeController
 import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostEvent.PermissionsCheckRequested
 import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostUiState
-import ru.solrudev.okkeipatcher.ui.navhost.view.NavigationControllerView
 
 @AndroidEntryPoint
 class NavHostActivity : AppCompatActivity(R.layout.okkei_nav_host), HostJetView<NavHostUiState> {
 
 	private val binding by viewBinding(OkkeiNavHostBinding::bind, R.id.container_nav_host)
-	private val navigationControllerView by derivedView { NavigationControllerView(navController, viewModel) }
-	private val viewModel: NavHostViewModel by jetViewModels(NavHostActivity::navigationControllerView)
+	private val navigationController by derivedView { NavigationController(navController, viewModel) }
+	private val themeController by derivedView { ThemeController(application as OkkeiApplication) }
 	private val topLevelDestinations = setOf(R.id.main_fragment, R.id.work_fragment, R.id.permissions_fragment)
 	private val appBarConfiguration = AppBarConfiguration(topLevelDestinations)
+
+	private val viewModel: NavHostViewModel by jetViewModels(
+		NavHostActivity::navigationController, NavHostActivity::themeController
+	)
 
 	private val navController: NavController
 		get() = binding.contentNavHost.getFragment<NavHostFragment>().navController

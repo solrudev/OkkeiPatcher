@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.ui.navhost.view
+package ru.solrudev.okkeipatcher.ui.navhost.controller
 
 import androidx.navigation.NavController
 import io.github.solrudev.jetmvi.JetView
@@ -11,10 +11,12 @@ import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostEvent
 import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostUiState
 import ru.solrudev.okkeipatcher.ui.util.navigateSafely
 
-class NavigationControllerView(
+class NavigationController(
 	private val navController: NavController,
 	private val viewModel: NavHostViewModel
 ) : JetView<NavHostUiState> {
+
+	override val trackedState = listOf(NavHostUiState::permissionsRequired, NavHostUiState::pendingWork)
 
 	override fun render(uiState: NavHostUiState) {
 		if (uiState.permissionsRequired) {

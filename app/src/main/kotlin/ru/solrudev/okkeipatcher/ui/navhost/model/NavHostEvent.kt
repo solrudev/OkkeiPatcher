@@ -2,6 +2,7 @@ package ru.solrudev.okkeipatcher.ui.navhost.model
 
 import io.github.solrudev.jetmvi.JetEffect
 import io.github.solrudev.jetmvi.JetEvent
+import ru.solrudev.okkeipatcher.domain.model.Theme
 import ru.solrudev.okkeipatcher.domain.model.Work
 
 sealed interface NavHostEvent : JetEvent {
@@ -10,6 +11,7 @@ sealed interface NavHostEvent : JetEvent {
 	object PermissionsCheckRequested : NavHostEvent, NavHostEffect
 	data class PermissionsChecked(val allPermissionsGranted: Boolean) : NavHostEvent
 	data class WorkIsPending(val work: Work) : NavHostEvent
+	data class ThemeChanged(val theme: Theme) : NavHostEvent
 }
 
 sealed interface NavHostEffect : JetEffect

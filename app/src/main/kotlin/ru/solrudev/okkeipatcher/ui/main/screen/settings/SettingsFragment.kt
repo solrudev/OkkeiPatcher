@@ -2,22 +2,25 @@ package ru.solrudev.okkeipatcher.ui.main.screen.settings
 
 import android.os.Bundle
 import androidx.navigation.fragment.findNavController
+import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import dagger.hilt.android.AndroidEntryPoint
-import io.github.solrudev.jetmvi.JetView
+import io.github.solrudev.jetmvi.HostJetView
+import io.github.solrudev.jetmvi.derivedView
 import io.github.solrudev.jetmvi.jetViewModels
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.HandleSaveDataClicked
-import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.SaveDataAccessRequestHandled
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.controller.AppearanceSettingsController
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.controller.MiscellaneousSettingsController
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.controller.PatcherSettingsController
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.*
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsUiState
-import ru.solrudev.okkeipatcher.ui.util.navigateSafely
+
+private const val DIALOG_FRAGMENT_TAG = "androidx.preference.PreferenceFragment.DIALOG"
 
 @AndroidEntryPoint
-class SettingsFragment : PreferenceFragmentCompat(), JetView<SettingsUiState> {
-
-	private val viewModel: SettingsViewModel by jetViewModels()
+class SettingsFragment : PreferenceFragmentCompat(), HostJetView<SettingsUiState> {
 
 	private val handleSaveData: SwitchPreferenceCompat?
 		get() = findPreference(getString(R.string.preference_key_handle_save_data))
@@ -25,61 +28,48 @@ class SettingsFragment : PreferenceFragmentCompat(), JetView<SettingsUiState> {
 	private val clearData: Preference?
 		get() = findPreference(getString(R.string.preference_key_clear_data))
 
+	private val theme: ListPreference?
+		get() = findPreference(getString(R.string.preference_key_theme))
+
 	private val about: Preference?
 		get() = findPreference(getString(R.string.preference_key_about))
 
 	private val thirdPartyLicenses: Preference?
 		get() = findPreference(getString(R.string.preference_key_licenses))
 
+	private val patcherSettingsController by derivedView {
+		PatcherSettingsController(handleSaveData, clearData, findNavController(), viewModel)
+	}
+
+	private val appearanceSettingsController by derivedView {
+		AppearanceSettingsController(theme, viewModel)
+	}
+
+	private val miscellaneousSettingsController by derivedView {
+		MiscellaneousSettingsController(about, thirdPartyLicenses, findNavController())
+	}
+
+	private val viewModel: SettingsViewModel by jetViewModels(
+		SettingsFragment::patcherSettingsController,
+		SettingsFragment::appearanceSettingsController,
+		SettingsFragment::miscellaneousSettingsController
+	)
+
 	override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
 		setPreferencesFromResource(R.xml.okkei_preferences, rootKey)
-		setupClickListeners()
 	}
 
-	override fun render(uiState: SettingsUiState) {
-		handleSaveData?.isChecked = uiState.handleSaveData
-		if (uiState.requestSaveDataAccess) {
-			navigateToSaveDataAccessScreen()
+	override fun onDisplayPreferenceDialog(preference: Preference) {
+		if (parentFragmentManager.findFragmentByTag(DIALOG_FRAGMENT_TAG) != null) {
+			return
 		}
-	}
-
-	private fun setupClickListeners() {
-		handleSaveData?.setOnPreferenceClickListener {
-			viewModel.dispatchEvent(HandleSaveDataClicked)
-			false
+		if (preference is ListPreference) {
+			val dialogFragment = MaterialListPreferenceDialogFragment.newInstance(preference.key)
+			@Suppress("DEPRECATION")
+			dialogFragment.setTargetFragment(this, 0)
+			dialogFragment.show(parentFragmentManager, DIALOG_FRAGMENT_TAG)
+			return
 		}
-		clearData?.setOnPreferenceClickListener {
-			navigateToClearDataScreen()
-			true
-		}
-		about?.setOnPreferenceClickListener {
-			navigateToAboutScreen()
-			true
-		}
-		thirdPartyLicenses?.setOnPreferenceClickListener {
-			navigateToLicensesScreen()
-			true
-		}
-	}
-
-	private fun navigateToSaveDataAccessScreen() {
-		viewModel.dispatchEvent(SaveDataAccessRequestHandled)
-		val toSaveDataAccessScreen = SettingsFragmentDirections.actionSettingsFragmentToSaveDataAccessFragment()
-		findNavController().navigateSafely(toSaveDataAccessScreen)
-	}
-
-	private fun navigateToClearDataScreen() {
-		val toClearDataScreen = SettingsFragmentDirections.actionSettingsFragmentToClearDataFragment()
-		findNavController().navigateSafely(toClearDataScreen)
-	}
-
-	private fun navigateToAboutScreen() {
-		val toAboutScreen = SettingsFragmentDirections.actionSettingsFragmentToAboutFragment()
-		findNavController().navigateSafely(toAboutScreen)
-	}
-
-	private fun navigateToLicensesScreen() {
-		val toLicensesScreen = SettingsFragmentDirections.actionSettingsFragmentToLicensesFragment()
-		findNavController().navigateSafely(toLicensesScreen)
+		super.onDisplayPreferenceDialog(preference)
 	}
 }
