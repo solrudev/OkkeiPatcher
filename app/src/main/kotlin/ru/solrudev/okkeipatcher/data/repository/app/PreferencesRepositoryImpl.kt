@@ -50,8 +50,12 @@ class PreferencesRepositoryImpl @Inject constructor(
 	)
 
 	override suspend fun reset() {
-		preferences.edit {
-			it.clear()
+		preferences.edit { mutablePreferences ->
+			val savedTheme = mutablePreferences[THEME]
+			mutablePreferences.clear()
+			savedTheme?.let { theme ->
+				mutablePreferences[THEME] = theme
+			}
 		}
 	}
 }
