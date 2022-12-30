@@ -24,6 +24,7 @@
 
 		<ListPreference
 			app:dialogIcon="@drawable/ic_theme"
+			app:negativeButtonText="@string/button_text_cancel"
 			app:entries="@array/preference_theme_entries"
 			app:entryValues="@array/preference_theme_entry_values"
 			app:icon="@drawable/ic_theme_preference"
