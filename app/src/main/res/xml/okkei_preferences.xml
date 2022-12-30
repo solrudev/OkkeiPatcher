@@ -23,7 +23,7 @@
 	<PreferenceCategory app:title="@string/preference_appearance_header">
 
 		<ListPreference
-			app:dialogIcon="@drawable/ic_theme"
+			app:dialogIcon="@drawable/ic_theme_wrapper"
 			app:negativeButtonText="@string/button_text_cancel"
 			app:entries="@array/preference_theme_entries"
 			app:entryValues="@array/preference_theme_entry_values"
