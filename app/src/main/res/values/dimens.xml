@@ -20,9 +20,6 @@
 	<dimen name="card_padding_vertical">30dp</dimen>
 	<dimen name="content_padding">16dp</dimen>
 
-	<!-- Insets -->
-	<dimen name="button_update_patch_inset">8dp</dimen>
-
 	<!-- Other -->
 	<dimen name="icon_game_size">88dp</dimen>
 </resources>
