@@ -13,7 +13,7 @@
 		android:animateLayoutChanges="true"
 		android:paddingHorizontal="@dimen/card_layout_padding_horizontal"
 		android:paddingTop="52dp"
-		android:paddingBottom="44dp">
+		android:paddingBottom="28dp">
 
 		<ImageView
 			android:id="@+id/imageview_work_okkei"
