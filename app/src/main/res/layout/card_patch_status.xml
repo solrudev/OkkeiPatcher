@@ -48,7 +48,7 @@
 			android:layout_height="wrap_content"
 			android:layout_marginTop="@dimen/button_margin_vertical"
 			android:text="@string/button_text_update_patch"
-			android:minHeight="0dp"
+			android:minHeight="@dimen/button_update_patch_height"
 			style="?materialButtonOutlinedStyle"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="@id/textview_card_patch_status"

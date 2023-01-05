@@ -22,4 +22,5 @@
 
 	<!-- Other -->
 	<dimen name="icon_game_size">88dp</dimen>
+	<dimen name="button_update_patch_height">32dp</dimen>
 </resources>
