@@ -10,8 +10,8 @@ import net.lingala.zip4j.ZipFile
 import okio.buffer
 import okio.sink
 import okio.source
+import ru.solrudev.okkeipatcher.data.service.util.computeHash
 import ru.solrudev.okkeipatcher.data.service.util.use
-import ru.solrudev.okkeipatcher.data.util.computeHash
 import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.repository.app.HashRepository
 import java.io.File
