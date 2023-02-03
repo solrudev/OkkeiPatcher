@@ -12,14 +12,14 @@ import ru.solrudev.okkeipatcher.data.service.factory.ApkZipPackageFactory
 import ru.solrudev.okkeipatcher.data.service.factory.ApkZipPackageFactoryImpl
 import ru.solrudev.okkeipatcher.data.service.factory.NotificationServiceFactory
 import ru.solrudev.okkeipatcher.data.service.factory.NotificationServiceFactoryImpl
-import ru.solrudev.okkeipatcher.data.service.operation.factory.ObbDownloadOperationFactoryImpl
-import ru.solrudev.okkeipatcher.data.service.operation.factory.ScriptsPatchOperationFactoryImpl
+import ru.solrudev.okkeipatcher.data.operation.factory.ObbDownloadOperationFactoryImpl
+import ru.solrudev.okkeipatcher.data.operation.factory.ScriptsPatchOperationFactoryImpl
 import ru.solrudev.okkeipatcher.domain.repository.patch.factory.PatchRepositoryFactory
 import ru.solrudev.okkeipatcher.domain.repository.patch.factory.PatchRepositoryFactoryImpl
-import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.GameFileStrategyFactory
-import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.GameFileStrategyFactoryImpl
-import ru.solrudev.okkeipatcher.domain.service.operation.factory.ObbDownloadOperationFactory
-import ru.solrudev.okkeipatcher.domain.service.operation.factory.ScriptsPatchOperationFactory
+import ru.solrudev.okkeipatcher.domain.gamefile.strategy.GameFileStrategyFactory
+import ru.solrudev.okkeipatcher.domain.gamefile.strategy.GameFileStrategyFactoryImpl
+import ru.solrudev.okkeipatcher.domain.operation.factory.ObbDownloadOperationFactory
+import ru.solrudev.okkeipatcher.domain.operation.factory.ScriptsPatchOperationFactory
 
 @InstallIn(SingletonComponent::class)
 @Module

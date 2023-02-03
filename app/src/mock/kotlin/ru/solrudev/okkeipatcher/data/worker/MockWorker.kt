@@ -13,7 +13,7 @@ import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Message
 import ru.solrudev.okkeipatcher.domain.repository.app.PreferencesRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.factory.PatchRepositoryFactory
-import ru.solrudev.okkeipatcher.domain.service.operation.factory.MockOperationFactory
+import ru.solrudev.okkeipatcher.domain.operation.factory.MockOperationFactory
 
 private val workLabel = LocalizedString.resource(R.string.notification_title_test)
 

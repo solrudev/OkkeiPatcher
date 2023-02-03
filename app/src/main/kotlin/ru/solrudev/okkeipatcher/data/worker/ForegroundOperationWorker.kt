@@ -19,7 +19,7 @@ import ru.solrudev.okkeipatcher.domain.core.onFailure
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.extension.statusAndAccumulatedProgress
 import ru.solrudev.okkeipatcher.domain.model.ProgressData
-import ru.solrudev.okkeipatcher.domain.service.operation.factory.OperationFactory
+import ru.solrudev.okkeipatcher.domain.operation.factory.OperationFactory
 import kotlin.Throwable
 import kotlin.getValue
 import kotlin.lazy

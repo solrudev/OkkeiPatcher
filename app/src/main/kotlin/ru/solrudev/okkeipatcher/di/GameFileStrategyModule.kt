@@ -8,8 +8,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoMap
 import ru.solrudev.okkeipatcher.domain.model.Language
-import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.DefaultGameFileStrategy
-import ru.solrudev.okkeipatcher.domain.service.gamefile.strategy.GameFileStrategy
+import ru.solrudev.okkeipatcher.domain.gamefile.strategy.DefaultGameFileStrategy
+import ru.solrudev.okkeipatcher.domain.gamefile.strategy.GameFileStrategy
 
 @InstallIn(SingletonComponent::class)
 @Module
