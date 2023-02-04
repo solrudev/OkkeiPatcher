@@ -1,7 +1,6 @@
 package ru.solrudev.okkeipatcher.domain.operation
 
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.core.onFailure
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
@@ -32,14 +31,14 @@ class PatchOperation(
 	override suspend fun canInvoke(): Result = with(game) {
 		val isPatched = patchStatus.retrieve()
 		if (isPatched && !parameters.patchUpdates.available) {
-			return Result.Failure(LocalizedString.resource(R.string.error_patched))
+			return Result.failure(R.string.error_patched)
 		}
 		apk.canPatch().onFailure { return it }
 		obb.canPatch().onFailure { return it }
 		if (!storageChecker.isEnoughSpace()) {
-			return Result.Failure(LocalizedString.resource(R.string.error_no_free_space))
+			return Result.failure(R.string.error_no_free_space)
 		}
-		return Result.Success
+		return Result.success()
 	}
 
 	override suspend fun invoke() = wrapDomainExceptions {

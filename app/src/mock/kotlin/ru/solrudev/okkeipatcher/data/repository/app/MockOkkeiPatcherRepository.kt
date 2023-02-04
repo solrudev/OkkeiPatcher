@@ -14,7 +14,6 @@ import ru.solrudev.okkeipatcher.data.service.OkkeiPatcherApkProvider
 import ru.solrudev.okkeipatcher.data.util.STREAM_COPY_PROGRESS_MAX
 import ru.solrudev.okkeipatcher.data.util.copy
 import ru.solrudev.okkeipatcher.di.IoDispatcher
-import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.model.OkkeiPatcherUpdateData
@@ -69,7 +68,7 @@ class MockOkkeiPatcherRepository @Inject constructor(
 	override suspend fun installUpdate() = try {
 		packageInstaller.install(updateFile.toFile(), immediate = true)
 	} catch (t: Throwable) {
-		Result.Failure(LocalizedString.raw(t.stackTraceToString()))
+		Result.failure(t.stackTraceToString())
 	}
 
 	override fun downloadUpdate() = operation(progressMax = STREAM_COPY_PROGRESS_MAX) {

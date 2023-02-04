@@ -11,7 +11,6 @@ import ru.solrudev.okkeipatcher.data.network.api.OkkeiPatcherApi
 import ru.solrudev.okkeipatcher.data.network.model.exception.NetworkNotAvailableException
 import ru.solrudev.okkeipatcher.data.repository.util.install
 import ru.solrudev.okkeipatcher.data.service.FileDownloader
-import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.model.OkkeiPatcherUpdateData
@@ -65,7 +64,7 @@ class OkkeiPatcherRepositoryImpl @Inject constructor(
 	override suspend fun installUpdate() = try {
 		packageInstaller.install(updateFile.toFile(), immediate = true)
 	} catch (t: Throwable) {
-		Result.Failure(LocalizedString.raw(t.stackTraceToString()))
+		Result.failure(t.stackTraceToString())
 	}
 
 	override fun downloadUpdate() = operation(progressMax = fileDownloader.progressMax) {

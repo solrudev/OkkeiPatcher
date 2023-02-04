@@ -1,7 +1,6 @@
 package ru.solrudev.okkeipatcher.domain.usecase.app
 
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.model.Language
 import ru.solrudev.okkeipatcher.domain.repository.app.HashRepository
@@ -34,8 +33,8 @@ class ClearDataUseCase @Inject constructor(
 		patchRepositories.values.forEach {
 			it.get().clearPersistedData()
 		}
-		Result.Success
+		Result.success()
 	} catch (_: Throwable) {
-		Result.Failure(LocalizedString.resource(R.string.error_clear_data))
+		Result.failure(R.string.error_clear_data)
 	}
 }

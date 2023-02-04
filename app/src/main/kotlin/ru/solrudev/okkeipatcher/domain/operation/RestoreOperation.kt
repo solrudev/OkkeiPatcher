@@ -1,7 +1,6 @@
 package ru.solrudev.okkeipatcher.domain.operation
 
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.aggregateOperation
@@ -50,7 +49,7 @@ class RestoreOperation(
 			!storageChecker.isEnoughSpace() -> R.string.error_no_free_space
 			else -> null
 		}
-		return failureReason?.let(LocalizedString::resource)?.let(Result::Failure) ?: Result.Success
+		return failureReason?.let(Result::failure) ?: Result.success()
 	}
 
 	override suspend fun invoke() = wrapDomainExceptions {

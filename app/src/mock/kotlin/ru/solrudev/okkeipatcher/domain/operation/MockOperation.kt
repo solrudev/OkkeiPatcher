@@ -29,5 +29,5 @@ fun MockOperation(
 		patchVersion.clear()
 	}
 	patchStatus.persist(isPatchWork)
-	Result.Success
+	Result.success()
 }

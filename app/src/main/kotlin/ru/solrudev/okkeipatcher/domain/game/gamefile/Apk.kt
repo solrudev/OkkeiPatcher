@@ -1,7 +1,6 @@
 package ru.solrudev.okkeipatcher.domain.game.gamefile
 
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.core.onFailure
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
@@ -25,11 +24,9 @@ abstract class Apk(
 	override fun canPatch(): Result {
 		val canInstallPatchedApk = apkBackupRepository.backupExists && apkRepository.tempExists
 		if (!apkRepository.isInstalled && !canInstallPatchedApk) {
-			return Result.Failure(
-				LocalizedString.resource(R.string.error_game_not_found)
-			)
+			return Result.failure(R.string.error_game_not_found)
 		}
-		return Result.Success
+		return Result.success()
 	}
 
 	override fun deleteBackup() = apkBackupRepository.deleteBackup()

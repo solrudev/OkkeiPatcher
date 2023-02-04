@@ -10,7 +10,6 @@ import ru.solrudev.okkeipatcher.data.repository.gamefile.util.backupPath
 import ru.solrudev.okkeipatcher.data.util.computeHash
 import ru.solrudev.okkeipatcher.data.util.prepareRecreate
 import ru.solrudev.okkeipatcher.di.IoDispatcher
-import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.repository.app.HashRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.SaveDataRepository
@@ -39,9 +38,7 @@ class SaveDataRepositoryImpl @Inject constructor(
 	}
 
 	override suspend fun createTemp(): Result {
-		val failure = Result.Failure(
-			LocalizedString.resource(R.string.warning_could_not_backup_save_data)
-		)
+		val failure = Result.failure(R.string.warning_could_not_backup_save_data)
 		if (!saveDataFile.exists) {
 			return failure
 		}
@@ -52,7 +49,7 @@ class SaveDataRepositoryImpl @Inject constructor(
 					fileSystem.prepareRecreate(temp)
 					fileSystem.sink(temp).buffer().use { sink ->
 						sink.writeAll(source)
-						return@runInterruptible Result.Success
+						return@runInterruptible Result.success()
 					}
 				}
 			}
@@ -73,9 +70,7 @@ class SaveDataRepositoryImpl @Inject constructor(
 	}
 
 	override suspend fun restoreBackup(): Result {
-		val failure = Result.Failure(
-			LocalizedString.resource(R.string.warning_could_not_restore_save_data)
-		)
+		val failure = Result.failure(R.string.warning_could_not_restore_save_data)
 		try {
 			return runInterruptible(ioDispatcher) {
 				saveDataFile.recreate()
@@ -83,7 +78,7 @@ class SaveDataRepositoryImpl @Inject constructor(
 				saveDataSink.buffer().use { sink ->
 					fileSystem.source(backup).use { source ->
 						sink.writeAll(source)
-						return@runInterruptible Result.Success
+						return@runInterruptible Result.success()
 					}
 				}
 			}

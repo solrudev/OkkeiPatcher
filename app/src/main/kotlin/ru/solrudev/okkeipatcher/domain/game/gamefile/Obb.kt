@@ -1,7 +1,6 @@
 package ru.solrudev.okkeipatcher.domain.game.gamefile
 
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.asOperation
@@ -21,9 +20,9 @@ abstract class Obb(
 
 	override fun canPatch(): Result {
 		if (!obbRepository.obbExists && !backupExists) {
-			return Result.Failure(LocalizedString.resource(R.string.error_obb_not_found))
+			return Result.failure(R.string.error_obb_not_found)
 		}
-		return Result.Success
+		return Result.success()
 	}
 
 	override fun deleteBackup() = obbBackupRepository.deleteBackup()
