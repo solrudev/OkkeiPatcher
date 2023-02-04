@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.domain.gamefile
+package ru.solrudev.okkeipatcher.domain.game.gamefile
 
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString

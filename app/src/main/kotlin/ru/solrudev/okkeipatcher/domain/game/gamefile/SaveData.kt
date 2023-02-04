@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.domain.gamefile
+package ru.solrudev.okkeipatcher.domain.game.gamefile
 
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
@@ -18,18 +18,18 @@ class SaveData @Inject constructor(private val saveDataRepository: SaveDataRepos
 
 	override fun backup(): Operation<Unit> = operation(progressMax = 100) {
 		status(LocalizedString.resource(R.string.status_backing_up_save_data))
-		saveDataRepository
-			.createTemp()
-			.onFailure { message(createWarning(it.reason)) }
+		saveDataRepository.createTemp().onFailure { failure ->
+			message(createWarning(failure.reason))
+		}
 	}
 
 	override fun restore() = operation(progressMax = 100) {
 		status(LocalizedString.resource(R.string.status_comparing_saves))
 		if (saveDataRepository.verifyBackup()) {
 			status(LocalizedString.resource(R.string.status_restoring_saves))
-			saveDataRepository
-				.restoreBackup()
-				.onFailure { message(createWarning(it.reason)) }
+			saveDataRepository.restoreBackup().onFailure { failure ->
+				message(createWarning(failure.reason))
+			}
 		} else {
 			saveDataRepository.deleteBackup()
 			val warningMessage = LocalizedString.resource(R.string.warning_save_data_backup_not_found_or_corrupted)

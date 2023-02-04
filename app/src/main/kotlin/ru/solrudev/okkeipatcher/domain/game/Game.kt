@@ -1,7 +1,7 @@
-package ru.solrudev.okkeipatcher.domain.gamefile.game
+package ru.solrudev.okkeipatcher.domain.game
 
-import ru.solrudev.okkeipatcher.domain.gamefile.GameFile
-import ru.solrudev.okkeipatcher.domain.gamefile.PatchableGameFile
+import ru.solrudev.okkeipatcher.domain.game.gamefile.GameFile
+import ru.solrudev.okkeipatcher.domain.game.gamefile.PatchableGameFile
 
 interface Game : PatchableGame, BackupableGame {
 

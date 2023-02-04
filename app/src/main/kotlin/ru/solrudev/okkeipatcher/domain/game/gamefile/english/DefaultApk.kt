@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.domain.gamefile.english
+package ru.solrudev.okkeipatcher.domain.game.gamefile.english
 
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
@@ -8,7 +8,7 @@ import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkBackupRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.DefaultPatchRepository
-import ru.solrudev.okkeipatcher.domain.gamefile.Apk
+import ru.solrudev.okkeipatcher.domain.game.gamefile.Apk
 import ru.solrudev.okkeipatcher.domain.operation.factory.ScriptsPatchOperationFactory
 import javax.inject.Inject
 

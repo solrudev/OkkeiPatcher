@@ -12,7 +12,7 @@ import ru.solrudev.okkeipatcher.domain.core.persistence.Persistable
 import ru.solrudev.okkeipatcher.domain.model.RestoreParameters
 import ru.solrudev.okkeipatcher.domain.model.exception.wrapDomainExceptions
 import ru.solrudev.okkeipatcher.domain.service.StorageChecker
-import ru.solrudev.okkeipatcher.domain.gamefile.game.BackupableGame
+import ru.solrudev.okkeipatcher.domain.game.BackupableGame
 
 class RestoreOperation(
 	private val parameters: RestoreParameters,

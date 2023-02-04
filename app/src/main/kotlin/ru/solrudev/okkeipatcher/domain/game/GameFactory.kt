@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.domain.gamefile.game
+package ru.solrudev.okkeipatcher.domain.game
 
 import ru.solrudev.okkeipatcher.domain.core.factory.SuspendFactory
 import ru.solrudev.okkeipatcher.domain.model.Language

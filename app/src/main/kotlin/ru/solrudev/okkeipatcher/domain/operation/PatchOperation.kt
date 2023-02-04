@@ -11,7 +11,7 @@ import ru.solrudev.okkeipatcher.domain.core.persistence.Persistable
 import ru.solrudev.okkeipatcher.domain.model.PatchParameters
 import ru.solrudev.okkeipatcher.domain.model.exception.wrapDomainExceptions
 import ru.solrudev.okkeipatcher.domain.service.StorageChecker
-import ru.solrudev.okkeipatcher.domain.gamefile.game.PatchableGame
+import ru.solrudev.okkeipatcher.domain.game.PatchableGame
 
 class PatchOperation(
 	private val parameters: PatchParameters,
@@ -46,7 +46,7 @@ class PatchOperation(
 		}
 	}
 
-	private fun patch() = with(game) {
+	private fun patch(): Operation<Unit> = with(game) {
 		aggregateOperation(
 			obb.backup(),
 			apk.backup(),

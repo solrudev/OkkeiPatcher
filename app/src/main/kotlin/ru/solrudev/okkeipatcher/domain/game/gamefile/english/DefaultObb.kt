@@ -1,9 +1,9 @@
-package ru.solrudev.okkeipatcher.domain.gamefile.english
+package ru.solrudev.okkeipatcher.domain.game.gamefile.english
 
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbBackupRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.DefaultPatchRepository
-import ru.solrudev.okkeipatcher.domain.gamefile.Obb
+import ru.solrudev.okkeipatcher.domain.game.gamefile.Obb
 import ru.solrudev.okkeipatcher.domain.operation.factory.ObbDownloadOperationFactory
 import javax.inject.Inject
 

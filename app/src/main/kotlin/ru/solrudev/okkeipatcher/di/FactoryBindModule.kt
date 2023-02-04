@@ -16,8 +16,8 @@ import ru.solrudev.okkeipatcher.data.operation.factory.ObbDownloadOperationFacto
 import ru.solrudev.okkeipatcher.data.operation.factory.ScriptsPatchOperationFactoryImpl
 import ru.solrudev.okkeipatcher.domain.repository.patch.factory.PatchRepositoryFactory
 import ru.solrudev.okkeipatcher.domain.repository.patch.factory.PatchRepositoryFactoryImpl
-import ru.solrudev.okkeipatcher.domain.gamefile.game.GameFactory
-import ru.solrudev.okkeipatcher.domain.gamefile.game.GameFactoryImpl
+import ru.solrudev.okkeipatcher.domain.game.GameFactory
+import ru.solrudev.okkeipatcher.domain.game.GameFactoryImpl
 import ru.solrudev.okkeipatcher.domain.operation.factory.ObbDownloadOperationFactory
 import ru.solrudev.okkeipatcher.domain.operation.factory.ScriptsPatchOperationFactory
 
