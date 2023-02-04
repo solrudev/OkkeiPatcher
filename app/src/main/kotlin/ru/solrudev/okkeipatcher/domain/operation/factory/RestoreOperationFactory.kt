@@ -5,23 +5,23 @@ import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.model.RestoreParameters
 import ru.solrudev.okkeipatcher.domain.repository.app.PreferencesRepository
 import ru.solrudev.okkeipatcher.domain.service.StorageChecker
-import ru.solrudev.okkeipatcher.domain.gamefile.strategy.GameFileStrategyFactory
+import ru.solrudev.okkeipatcher.domain.gamefile.game.GameFactory
 import ru.solrudev.okkeipatcher.domain.operation.RestoreOperation
 import javax.inject.Inject
 
 class RestoreOperationFactory @Inject constructor(
 	private val preferencesRepository: PreferencesRepository,
-	private val strategyFactory: GameFileStrategyFactory,
+	private val gameFactory: GameFactory,
 	private val storageChecker: StorageChecker
 ) : OperationFactory<Result> {
 
 	override suspend fun create(): Operation<Result> {
-		val strategy = strategyFactory.create()
+		val game = gameFactory.create()
 		val handleSaveData = preferencesRepository.handleSaveData.retrieve()
 		val parameters = RestoreParameters(handleSaveData)
 		return RestoreOperation(
 			parameters,
-			strategy,
+			game,
 			preferencesRepository.patchVersion,
 			preferencesRepository.patchStatus,
 			storageChecker

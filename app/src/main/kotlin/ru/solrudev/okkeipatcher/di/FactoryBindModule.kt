@@ -16,8 +16,8 @@ import ru.solrudev.okkeipatcher.data.operation.factory.ObbDownloadOperationFacto
 import ru.solrudev.okkeipatcher.data.operation.factory.ScriptsPatchOperationFactoryImpl
 import ru.solrudev.okkeipatcher.domain.repository.patch.factory.PatchRepositoryFactory
 import ru.solrudev.okkeipatcher.domain.repository.patch.factory.PatchRepositoryFactoryImpl
-import ru.solrudev.okkeipatcher.domain.gamefile.strategy.GameFileStrategyFactory
-import ru.solrudev.okkeipatcher.domain.gamefile.strategy.GameFileStrategyFactoryImpl
+import ru.solrudev.okkeipatcher.domain.gamefile.game.GameFactory
+import ru.solrudev.okkeipatcher.domain.gamefile.game.GameFactoryImpl
 import ru.solrudev.okkeipatcher.domain.operation.factory.ObbDownloadOperationFactory
 import ru.solrudev.okkeipatcher.domain.operation.factory.ScriptsPatchOperationFactory
 
@@ -31,9 +31,9 @@ interface FactoryBindModule {
 	): PatchRepositoryFactory
 
 	@Binds
-	fun bindGameFileStrategyFactory(
-		gameFileStrategyFactory: GameFileStrategyFactoryImpl
-	): GameFileStrategyFactory
+	fun bindGameFactory(
+		gameFactory: GameFactoryImpl
+	): GameFactory
 
 	@Binds
 	fun bindScriptsPatchOperationFactory(

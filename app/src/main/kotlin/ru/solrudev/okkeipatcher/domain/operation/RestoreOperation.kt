@@ -12,17 +12,17 @@ import ru.solrudev.okkeipatcher.domain.core.persistence.Persistable
 import ru.solrudev.okkeipatcher.domain.model.RestoreParameters
 import ru.solrudev.okkeipatcher.domain.model.exception.wrapDomainExceptions
 import ru.solrudev.okkeipatcher.domain.service.StorageChecker
-import ru.solrudev.okkeipatcher.domain.gamefile.strategy.RestoreStrategy
+import ru.solrudev.okkeipatcher.domain.gamefile.game.BackupableGame
 
 class RestoreOperation(
 	private val parameters: RestoreParameters,
-	private val strategy: RestoreStrategy,
+	private val game: BackupableGame,
 	private val patchVersion: Persistable<String>,
 	private val patchStatus: Dao<Boolean>,
 	private val storageChecker: StorageChecker
 ) : Operation<Result> {
 
-	private val operation = with(strategy) {
+	private val operation = with(game) {
 		aggregateOperation(
 			if (parameters.handleSaveData) saveData.backup() else emptyOperation(),
 			apk.restore(),
@@ -54,12 +54,12 @@ class RestoreOperation(
 	}
 
 	override suspend fun invoke() = wrapDomainExceptions {
-		strategy.use {
+		game.use {
 			operation()
 		}
 	}
 
-	private fun isBackupAvailable() = with(strategy) {
+	private fun isBackupAvailable() = with(game) {
 		apk.backupExists && obb.backupExists
 	}
 }

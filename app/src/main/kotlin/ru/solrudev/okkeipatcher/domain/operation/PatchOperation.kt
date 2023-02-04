@@ -11,11 +11,11 @@ import ru.solrudev.okkeipatcher.domain.core.persistence.Persistable
 import ru.solrudev.okkeipatcher.domain.model.PatchParameters
 import ru.solrudev.okkeipatcher.domain.model.exception.wrapDomainExceptions
 import ru.solrudev.okkeipatcher.domain.service.StorageChecker
-import ru.solrudev.okkeipatcher.domain.gamefile.strategy.PatchStrategy
+import ru.solrudev.okkeipatcher.domain.gamefile.game.PatchableGame
 
 class PatchOperation(
 	private val parameters: PatchParameters,
-	private val strategy: PatchStrategy,
+	private val game: PatchableGame,
 	private val patchVersion: Persistable<String>,
 	private val patchStatus: Dao<Boolean>,
 	private val storageChecker: StorageChecker
@@ -27,7 +27,7 @@ class PatchOperation(
 	override val progressDelta = operation.progressDelta
 	override val progressMax = operation.progressMax
 
-	override suspend fun canInvoke(): Result = with(strategy) {
+	override suspend fun canInvoke(): Result = with(game) {
 		val isPatched = patchStatus.retrieve()
 		if (isPatched && !parameters.patchUpdates.available) {
 			return Result.Failure(LocalizedString.resource(R.string.error_patched))
@@ -41,12 +41,12 @@ class PatchOperation(
 	}
 
 	override suspend fun invoke() = wrapDomainExceptions {
-		strategy.use {
+		game.use {
 			operation()
 		}
 	}
 
-	private fun patch() = with(strategy) {
+	private fun patch() = with(game) {
 		aggregateOperation(
 			obb.backup(),
 			apk.backup(),
@@ -61,7 +61,7 @@ class PatchOperation(
 		)
 	}
 
-	private fun update() = with(strategy) {
+	private fun update() = with(game) {
 		aggregateOperation(
 			if (parameters.patchUpdates.apkUpdatesAvailable) apk.update() else emptyOperation(),
 			if (parameters.patchUpdates.obbUpdatesAvailable) obb.update() else emptyOperation()
