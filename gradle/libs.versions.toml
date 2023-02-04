@@ -1,6 +1,7 @@
 [versions]
 android-gradleplugin = "7.4.1"
 kotlin = "1.8.10"
+kotlin-ksp = "1.8.10-1.0.9"
 retrofit = "2.9.0"
 moshi = "1.14.0"
 
@@ -28,4 +29,4 @@ retrofit = ["retrofit", "retrofit-converter-moshi"]
 android-application = { id = "com.android.application", version.ref = "android-gradleplugin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
-kotlin-ksp = { id = "com.google.devtools.ksp", version = "1.8.10-1.0.9" }
+kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "kotlin-ksp" }
