@@ -1,6 +1,6 @@
 [versions]
 navigation = "2.5.3"
-room = "2.4.2"
+room = "2.5.0"
 
 [libraries]
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
@@ -16,8 +16,8 @@ navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.
 datastore-preferences = { module = "androidx.datastore:datastore-preferences", version = "1.0.0" }
 swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version = "1.1.0" }
 multidex = { module = "androidx.multidex:multidex", version = "2.0.1" }
-test-ext-junit = { module = "androidx.test.ext:junit", version = "1.1.4" }
-espresso-core = { module = "androidx.test.espresso:espresso-core", version = "3.5.0" }
+test-ext-junit = { module = "androidx.test.ext:junit", version = "1.1.5" }
+espresso-core = { module = "androidx.test.espresso:espresso-core", version = "3.5.1" }
 
 [bundles]
 navigation = ["navigation-fragment-ktx", "navigation-ui-ktx"]
