@@ -2,12 +2,12 @@ package ru.solrudev.okkeipatcher.domain.operation.factory
 
 import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
+import ru.solrudev.okkeipatcher.domain.game.GameFactory
 import ru.solrudev.okkeipatcher.domain.model.PatchParameters
+import ru.solrudev.okkeipatcher.domain.operation.PatchOperation
 import ru.solrudev.okkeipatcher.domain.repository.app.PreferencesRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.factory.PatchRepositoryFactory
 import ru.solrudev.okkeipatcher.domain.service.StorageChecker
-import ru.solrudev.okkeipatcher.domain.game.GameFactory
-import ru.solrudev.okkeipatcher.domain.operation.PatchOperation
 import javax.inject.Inject
 
 class PatchOperationFactory @Inject constructor(

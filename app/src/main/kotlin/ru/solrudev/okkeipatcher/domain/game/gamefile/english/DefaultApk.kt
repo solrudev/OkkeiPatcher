@@ -5,11 +5,11 @@ import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.aggregateOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
+import ru.solrudev.okkeipatcher.domain.game.gamefile.Apk
+import ru.solrudev.okkeipatcher.domain.operation.factory.ScriptsPatchOperationFactory
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkBackupRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.DefaultPatchRepository
-import ru.solrudev.okkeipatcher.domain.game.gamefile.Apk
-import ru.solrudev.okkeipatcher.domain.operation.factory.ScriptsPatchOperationFactory
 import javax.inject.Inject
 
 class DefaultApk @Inject constructor(

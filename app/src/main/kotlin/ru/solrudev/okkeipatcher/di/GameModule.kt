@@ -7,9 +7,9 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoMap
-import ru.solrudev.okkeipatcher.domain.model.Language
 import ru.solrudev.okkeipatcher.domain.game.DefaultGame
 import ru.solrudev.okkeipatcher.domain.game.Game
+import ru.solrudev.okkeipatcher.domain.model.Language
 
 @InstallIn(SingletonComponent::class)
 @Module

@@ -6,12 +6,10 @@ import ru.solrudev.okkeipatcher.domain.repository.app.PreferencesRepository
 import javax.inject.Inject
 import javax.inject.Provider
 
-interface GameFactory : SuspendFactory<Game>
-
-class GameFactoryImpl @Inject constructor(
+class GameFactory @Inject constructor(
 	private val preferencesRepository: PreferencesRepository,
 	private val games: Map<Language, @JvmSuppressWildcards Provider<Game>>
-) : GameFactory {
+) : SuspendFactory<Game> {
 
 	override suspend fun create(): Game {
 		val patchLanguage = preferencesRepository.patchLanguage.retrieve()

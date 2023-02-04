@@ -3,12 +3,12 @@ package ru.solrudev.okkeipatcher.data.operation.factory
 import kotlinx.coroutines.CoroutineDispatcher
 import okio.FileSystem
 import ru.solrudev.okkeipatcher.data.OkkeiEnvironment
-import ru.solrudev.okkeipatcher.data.service.FileDownloader
 import ru.solrudev.okkeipatcher.data.operation.ScriptsPatchOperation
+import ru.solrudev.okkeipatcher.data.service.FileDownloader
 import ru.solrudev.okkeipatcher.di.IoDispatcher
+import ru.solrudev.okkeipatcher.domain.operation.factory.ScriptsPatchOperationFactory
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFile
-import ru.solrudev.okkeipatcher.domain.operation.factory.ScriptsPatchOperationFactory
 import javax.inject.Inject
 
 class ScriptsPatchOperationFactoryImpl @Inject constructor(
