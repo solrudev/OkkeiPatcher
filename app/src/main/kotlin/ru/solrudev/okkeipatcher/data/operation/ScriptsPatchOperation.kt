@@ -10,10 +10,10 @@ import okio.openZip
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.service.FileDownloader
 import ru.solrudev.okkeipatcher.data.util.prepareRecreate
-import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.aggregateOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
+import ru.solrudev.okkeipatcher.domain.core.operation.status
 import ru.solrudev.okkeipatcher.domain.model.exception.ScriptsCorruptedException
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFile
@@ -50,7 +50,7 @@ class ScriptsPatchOperation(
 	}
 
 	private fun downloadScripts(): Operation<Unit> = operation(progressMax = fileDownloader.progressMax) {
-		status(LocalizedString.resource(R.string.status_downloading_scripts))
+		status(R.string.status_downloading_scripts)
 		val scriptsData = scriptsPatchFile.getData()
 		val scriptsHash = fileDownloader.download(
 			scriptsData.url, scriptsFile, hashing = true, onProgressDeltaChanged = ::progressDelta
@@ -62,7 +62,7 @@ class ScriptsPatchOperation(
 	}
 
 	private fun extractScripts(): Operation<Unit> = operation(progressMax = 100) {
-		status(LocalizedString.resource(R.string.status_extracting_scripts))
+		status(R.string.status_extracting_scripts)
 		runInterruptible(ioDispatcher) {
 			val scriptsZip = fileSystem.openZip(scriptsFile)
 			scriptsZip.list("/".toPath()).forEach { script ->
@@ -78,14 +78,14 @@ class ScriptsPatchOperation(
 	}
 
 	private fun replaceScripts(): Operation<Unit> = operation(progressMax = 100) {
-		status(LocalizedString.resource(R.string.status_replacing_scripts))
+		status(R.string.status_replacing_scripts)
 		val scriptsFolder = "assets/script/"
 		val newScripts = fileSystem.list(extractedScriptsDirectory)
 		val oldScripts = newScripts.map { "$scriptsFolder${it.name}" }
 		apkRepository.createTemp().use { apk ->
 			apk.removeFiles(oldScripts)
 			apk.addFiles(newScripts, root = scriptsFolder)
-			status(LocalizedString.resource(R.string.status_signing_apk))
+			status(R.string.status_signing_apk)
 			apk.removeSignature()
 			apk.sign()
 		}

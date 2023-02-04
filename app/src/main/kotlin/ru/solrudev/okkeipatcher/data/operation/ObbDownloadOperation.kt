@@ -2,8 +2,8 @@ package ru.solrudev.okkeipatcher.data.operation
 
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.service.FileDownloader
-import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
+import ru.solrudev.okkeipatcher.domain.core.operation.status
 import ru.solrudev.okkeipatcher.domain.model.exception.ObbCorruptedException
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFile
@@ -17,7 +17,7 @@ fun ObbDownloadOperation(
 	fileDownloader: FileDownloader
 ) = operation(progressMax = fileDownloader.progressMax * PROGRESS_MULTIPLIER) {
 	try {
-		status(LocalizedString.resource(R.string.status_downloading_obb))
+		status(R.string.status_downloading_obb)
 		val obbData = obbPatchFile.getData()
 		val obbHash = fileDownloader.download(
 			obbData.url, obbRepository.obbPath, hashing = true,

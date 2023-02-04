@@ -1,5 +1,6 @@
 package ru.solrudev.okkeipatcher.domain.core.operation
 
+import androidx.annotation.StringRes
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Message
 
@@ -28,4 +29,18 @@ interface OperationScope {
 	 * emitted progress (zero if there was no emitted progress yet).
 	 */
 	suspend fun progressDelta(progressDelta: Int)
+}
+
+/**
+ * Creates [LocalizedString] represented by Android resource string and emits it as an operation's status.
+ */
+suspend inline fun OperationScope.status(@StringRes resourceId: Int, vararg args: Any) {
+	status(LocalizedString.resource(resourceId, args))
+}
+
+/**
+ * Creates [LocalizedString] from [value] and emits it as an operation's status.
+ */
+suspend inline fun OperationScope.status(value: CharSequence) {
+	status(LocalizedString.raw(value))
 }

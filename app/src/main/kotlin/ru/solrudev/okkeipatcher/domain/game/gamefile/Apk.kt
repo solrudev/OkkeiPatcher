@@ -6,6 +6,7 @@ import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.core.onFailure
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
+import ru.solrudev.okkeipatcher.domain.core.operation.status
 import ru.solrudev.okkeipatcher.domain.model.exception.ApkNotFoundException
 import ru.solrudev.okkeipatcher.domain.model.exception.InstallException
 import ru.solrudev.okkeipatcher.domain.model.exception.NotTrustworthyApkException
@@ -34,9 +35,9 @@ abstract class Apk(
 	override fun deleteBackup() = apkBackupRepository.deleteBackup()
 
 	override fun backup() = operation(progressMax = 100) {
-		status(LocalizedString.resource(R.string.status_comparing_apk))
+		status(R.string.status_comparing_apk)
 		if (!apkBackupRepository.verifyBackup()) {
-			status(LocalizedString.resource(R.string.status_backing_up_apk))
+			status(R.string.status_backing_up_apk)
 			apkBackupRepository.createBackup()
 		}
 	}
@@ -48,7 +49,7 @@ abstract class Apk(
 			if (!apkBackupRepository.backupExists) {
 				throw ApkNotFoundException()
 			}
-			status(LocalizedString.resource(R.string.status_comparing_apk))
+			status(R.string.status_comparing_apk)
 			if (!apkBackupRepository.verifyBackup()) {
 				throw NotTrustworthyApkException()
 			}
@@ -64,7 +65,7 @@ abstract class Apk(
 			if (!apkRepository.tempExists) {
 				throw ApkNotFoundException()
 			}
-			status(LocalizedString.resource(R.string.status_comparing_apk))
+			status(R.string.status_comparing_apk)
 			if (!apkRepository.verifyTemp()) {
 				apkRepository.deleteTemp()
 				throw NotTrustworthyApkException()
@@ -76,7 +77,7 @@ abstract class Apk(
 	}
 
 	private fun uninstall(updating: Boolean) = operation(progressMax = 100) {
-		status(LocalizedString.resource(R.string.status_uninstalling))
+		status(R.string.status_uninstalling)
 		if (updating || !apkRepository.isInstalled) {
 			return@operation
 		}
@@ -88,7 +89,7 @@ abstract class Apk(
 
 	private inline fun install(crossinline installApk: suspend () -> Result): Operation<Unit> =
 		operation(progressMax = 100) {
-			status(LocalizedString.resource(R.string.status_installing))
+			status(R.string.status_installing)
 			installApk().onFailure { throw InstallException(it.reason) }
 		}
 }

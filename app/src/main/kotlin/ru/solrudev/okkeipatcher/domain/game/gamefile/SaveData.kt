@@ -6,6 +6,7 @@ import ru.solrudev.okkeipatcher.domain.core.Message
 import ru.solrudev.okkeipatcher.domain.core.onFailure
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
+import ru.solrudev.okkeipatcher.domain.core.operation.status
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.SaveDataRepository
 import javax.inject.Inject
 
@@ -17,16 +18,16 @@ class SaveData @Inject constructor(private val saveDataRepository: SaveDataRepos
 	override fun deleteBackup() = saveDataRepository.deleteBackup()
 
 	override fun backup(): Operation<Unit> = operation(progressMax = 100) {
-		status(LocalizedString.resource(R.string.status_backing_up_save_data))
+		status(R.string.status_backing_up_save_data)
 		saveDataRepository.createTemp().onFailure { failure ->
 			message(createWarning(failure.reason))
 		}
 	}
 
 	override fun restore() = operation(progressMax = 100) {
-		status(LocalizedString.resource(R.string.status_comparing_saves))
+		status(R.string.status_comparing_saves)
 		if (saveDataRepository.verifyBackup()) {
-			status(LocalizedString.resource(R.string.status_restoring_saves))
+			status(R.string.status_restoring_saves)
 			saveDataRepository.restoreBackup().onFailure { failure ->
 				message(createWarning(failure.reason))
 			}
@@ -35,7 +36,7 @@ class SaveData @Inject constructor(private val saveDataRepository: SaveDataRepos
 			val warningMessage = LocalizedString.resource(R.string.warning_save_data_backup_not_found_or_corrupted)
 			message(createWarning(warningMessage))
 		}
-		status(LocalizedString.resource(R.string.status_persisting_save_data))
+		status(R.string.status_persisting_save_data)
 		saveDataRepository.persistTempAsBackup()
 	}
 
