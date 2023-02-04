@@ -1,4 +1,5 @@
 import android.annotation.SuppressLint
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import java.io.FileInputStream
 import java.util.*
 
@@ -12,6 +13,10 @@ plugins {
 	alias(libs.plugins.kotlin.ksp)
 	alias(dagger.plugins.hilt.plugin)
 	alias(androidx.plugins.navigation.safeargs)
+}
+
+kotlin {
+	jvmToolchain(17)
 }
 
 base {
@@ -92,17 +97,18 @@ android {
 	}
 
 	compileOptions {
-		sourceCompatibility = JavaVersion.VERSION_11
-		targetCompatibility = JavaVersion.VERSION_11
-	}
-
-	kotlinOptions {
-		jvmTarget = "11"
-		freeCompilerArgs += "-Xjvm-default=all"
+		sourceCompatibility = JavaVersion.VERSION_17
+		targetCompatibility = JavaVersion.VERSION_17
 	}
 
 	buildFeatures {
 		viewBinding = true
+	}
+}
+
+tasks.withType(KotlinJvmCompile::class) {
+	compilerOptions {
+		freeCompilerArgs.add("-Xjvm-default=all")
 	}
 }
 
