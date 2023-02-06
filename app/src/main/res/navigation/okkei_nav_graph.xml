@@ -36,7 +36,7 @@
 		tools:layout="@layout/fragment_work">
 		<argument
 			android:name="work"
-			app:argType="ru.solrudev.okkeipatcher.domain.model.Work" />
+			app:argType="ru.solrudev.okkeipatcher.app.model.Work" />
 	</fragment>
 
 </navigation>
