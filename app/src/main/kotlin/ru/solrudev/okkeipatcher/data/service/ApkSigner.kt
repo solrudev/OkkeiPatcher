@@ -13,7 +13,7 @@ import okio.source
 import ru.solrudev.okkeipatcher.data.service.util.computeHash
 import ru.solrudev.okkeipatcher.data.service.util.use
 import ru.solrudev.okkeipatcher.di.IoDispatcher
-import ru.solrudev.okkeipatcher.domain.repository.app.HashRepository
+import ru.solrudev.okkeipatcher.domain.repository.HashRepository
 import java.io.File
 import java.security.KeyFactory
 import java.security.cert.CertificateFactory

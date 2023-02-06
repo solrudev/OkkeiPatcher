@@ -14,8 +14,8 @@ import io.github.solrudev.jetmvi.JetView
 import io.github.solrudev.jetmvi.jetViewModels
 import io.github.solrudev.simpleinstaller.activityresult.InstallPermissionContract
 import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.app.model.Permission
 import ru.solrudev.okkeipatcher.databinding.FragmentPermissionsBinding
-import ru.solrudev.okkeipatcher.domain.model.Permission
 import ru.solrudev.okkeipatcher.ui.screen.permissions.model.PermissionsEvent.PermissionStateChanged
 import ru.solrudev.okkeipatcher.ui.screen.permissions.model.PermissionsUiState
 import ru.solrudev.okkeipatcher.ui.screen.permissions.model.allPermissionsGranted

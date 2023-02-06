@@ -6,7 +6,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import ru.solrudev.okkeipatcher.data.repository.work.mapper.WorkStateMapper
+import ru.solrudev.okkeipatcher.data.repository.app.work.mapper.WorkStateMapper
 import ru.solrudev.okkeipatcher.data.worker.util.WorkStateMapperImpl
 
 @InstallIn(SingletonComponent::class)

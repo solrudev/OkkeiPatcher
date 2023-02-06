@@ -1,8 +1,8 @@
 package ru.solrudev.okkeipatcher.ui.navhost.model
 
 import io.github.solrudev.jetmvi.JetState
-import ru.solrudev.okkeipatcher.domain.model.Theme
-import ru.solrudev.okkeipatcher.domain.model.Work
+import ru.solrudev.okkeipatcher.app.model.Theme
+import ru.solrudev.okkeipatcher.app.model.Work
 
 data class NavHostUiState(
 	val permissionsRequired: Boolean = false,

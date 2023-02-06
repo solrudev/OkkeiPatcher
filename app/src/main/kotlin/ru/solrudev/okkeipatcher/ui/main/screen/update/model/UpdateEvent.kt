@@ -2,7 +2,7 @@ package ru.solrudev.okkeipatcher.ui.main.screen.update.model
 
 import io.github.solrudev.jetmvi.JetEffect
 import io.github.solrudev.jetmvi.JetEvent
-import ru.solrudev.okkeipatcher.domain.model.OkkeiPatcherUpdateData
+import ru.solrudev.okkeipatcher.app.model.OkkeiPatcherUpdateData
 
 sealed interface UpdateEvent : JetEvent {
 	object UpdateDataLoadingStarted : UpdateEvent

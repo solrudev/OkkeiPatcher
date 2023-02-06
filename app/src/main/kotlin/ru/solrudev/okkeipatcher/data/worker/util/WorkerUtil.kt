@@ -4,13 +4,13 @@ import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.ListenableWorker
 import androidx.work.WorkInfo
-import ru.solrudev.okkeipatcher.data.repository.work.mapper.WorkStateMapper
+import ru.solrudev.okkeipatcher.app.model.ProgressData
+import ru.solrudev.okkeipatcher.app.model.WorkState
+import ru.solrudev.okkeipatcher.data.repository.app.work.mapper.WorkStateMapper
 import ru.solrudev.okkeipatcher.data.worker.model.WorkerFailure
 import ru.solrudev.okkeipatcher.data.worker.util.extension.getSerializable
 import ru.solrudev.okkeipatcher.data.worker.util.extension.putSerializable
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
-import ru.solrudev.okkeipatcher.domain.model.ProgressData
-import ru.solrudev.okkeipatcher.domain.model.WorkState
 import javax.inject.Inject
 
 private const val PROGRESS = "progress"

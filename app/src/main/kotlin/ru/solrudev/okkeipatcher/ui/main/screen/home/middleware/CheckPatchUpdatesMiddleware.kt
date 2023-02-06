@@ -2,8 +2,8 @@ package ru.solrudev.okkeipatcher.ui.main.screen.home.middleware
 
 import io.github.solrudev.jetmvi.Middleware
 import kotlinx.coroutines.flow.*
-import ru.solrudev.okkeipatcher.domain.usecase.patch.GetPatchUpdatesUseCase
-import ru.solrudev.okkeipatcher.domain.usecase.work.GetIsWorkPendingFlowUseCase
+import ru.solrudev.okkeipatcher.app.usecase.patch.GetPatchUpdatesUseCase
+import ru.solrudev.okkeipatcher.app.usecase.work.GetIsWorkPendingFlowUseCase
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeEvent
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeEvent.PatchStatusChanged
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchStatus.Patched

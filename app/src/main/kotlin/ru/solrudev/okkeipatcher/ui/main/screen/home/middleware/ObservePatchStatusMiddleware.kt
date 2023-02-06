@@ -4,7 +4,7 @@ import io.github.solrudev.jetmvi.Middleware
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.yield
-import ru.solrudev.okkeipatcher.domain.usecase.patch.GetPatchStatusFlowUseCase
+import ru.solrudev.okkeipatcher.app.usecase.patch.GetPatchStatusFlowUseCase
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeEvent
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeEvent.PatchStatusChanged
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchStatus.NotPatched

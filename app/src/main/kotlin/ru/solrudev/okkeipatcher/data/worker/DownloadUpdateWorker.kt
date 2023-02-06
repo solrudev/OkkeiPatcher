@@ -9,11 +9,11 @@ import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.app.operation.factory.DownloadUpdateOperationFactory
 import ru.solrudev.okkeipatcher.data.service.factory.NotificationServiceFactory
 import ru.solrudev.okkeipatcher.data.worker.model.WorkNotificationsParameters
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Message
-import ru.solrudev.okkeipatcher.domain.operation.factory.DownloadUpdateOperationFactory
 
 private val workLabel = LocalizedString.resource(R.string.notification_title_downloading_update)
 

@@ -6,12 +6,12 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import ru.solrudev.okkeipatcher.app.repository.OkkeiPatcherRepository
+import ru.solrudev.okkeipatcher.app.repository.work.PatchWorkRepository
+import ru.solrudev.okkeipatcher.app.repository.work.RestoreWorkRepository
 import ru.solrudev.okkeipatcher.data.repository.app.MockOkkeiPatcherRepository
 import ru.solrudev.okkeipatcher.data.repository.work.MockPatchWorkRepository
 import ru.solrudev.okkeipatcher.data.repository.work.MockRestoreWorkRepository
-import ru.solrudev.okkeipatcher.domain.repository.app.OkkeiPatcherRepository
-import ru.solrudev.okkeipatcher.domain.repository.work.PatchWorkRepository
-import ru.solrudev.okkeipatcher.domain.repository.work.RestoreWorkRepository
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)

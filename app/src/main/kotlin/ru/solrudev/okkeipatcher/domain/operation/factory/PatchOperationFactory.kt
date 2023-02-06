@@ -5,13 +5,13 @@ import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.game.GameFactory
 import ru.solrudev.okkeipatcher.domain.model.PatchParameters
 import ru.solrudev.okkeipatcher.domain.operation.PatchOperation
-import ru.solrudev.okkeipatcher.domain.repository.app.PreferencesRepository
+import ru.solrudev.okkeipatcher.domain.repository.PatchStateRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.factory.PatchRepositoryFactory
 import ru.solrudev.okkeipatcher.domain.service.StorageChecker
 import javax.inject.Inject
 
 class PatchOperationFactory @Inject constructor(
-	private val preferencesRepository: PreferencesRepository,
+	private val patchStateRepository: PatchStateRepository,
 	private val patchRepositoryFactory: PatchRepositoryFactory,
 	private val gameFactory: GameFactory,
 	private val storageChecker: StorageChecker
@@ -19,7 +19,7 @@ class PatchOperationFactory @Inject constructor(
 
 	override suspend fun create(): Operation<Result> {
 		val game = gameFactory.create()
-		val handleSaveData = preferencesRepository.handleSaveData.retrieve()
+		val handleSaveData = patchStateRepository.handleSaveData.retrieve()
 		val patchRepository = patchRepositoryFactory.create()
 		val patchUpdates = patchRepository.getPatchUpdates()
 		val patchVersion = patchRepository.getDisplayVersion()
@@ -27,8 +27,8 @@ class PatchOperationFactory @Inject constructor(
 		return PatchOperation(
 			parameters,
 			game,
-			preferencesRepository.patchVersion,
-			preferencesRepository.patchStatus,
+			patchStateRepository.patchVersion,
+			patchStateRepository.patchStatus,
 			storageChecker
 		)
 	}

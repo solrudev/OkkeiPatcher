@@ -5,8 +5,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterIsInstance
-import ru.solrudev.okkeipatcher.domain.usecase.work.CancelWorkUseCase
-import ru.solrudev.okkeipatcher.domain.usecase.work.GetPendingWorkFlowUseCase
+import ru.solrudev.okkeipatcher.app.usecase.work.CancelWorkUseCase
+import ru.solrudev.okkeipatcher.app.usecase.work.GetPendingWorkFlowUseCase
 import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostEvent
 import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostEvent.PermissionsChecked
 import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostEvent.WorkIsPending

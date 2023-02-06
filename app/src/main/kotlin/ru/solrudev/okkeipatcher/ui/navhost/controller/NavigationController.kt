@@ -4,8 +4,8 @@ import androidx.navigation.NavController
 import io.github.solrudev.jetmvi.JetView
 import ru.solrudev.okkeipatcher.OkkeiNavGraphDirections
 import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.app.model.Work
 import ru.solrudev.okkeipatcher.data.core.resolve
-import ru.solrudev.okkeipatcher.domain.model.Work
 import ru.solrudev.okkeipatcher.ui.navhost.NavHostViewModel
 import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostEvent
 import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostUiState

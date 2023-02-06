@@ -1,7 +1,7 @@
 package ru.solrudev.okkeipatcher.ui.screen.permissions.model
 
 import io.github.solrudev.jetmvi.JetState
-import ru.solrudev.okkeipatcher.domain.model.Permission
+import ru.solrudev.okkeipatcher.app.model.Permission
 
 data class PermissionsUiState(
 	val permissions: List<PermissionUiState> = emptyList()

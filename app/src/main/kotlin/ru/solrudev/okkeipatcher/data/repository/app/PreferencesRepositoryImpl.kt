@@ -4,13 +4,13 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import ru.solrudev.okkeipatcher.app.model.Theme
+import ru.solrudev.okkeipatcher.app.repository.PermissionsRepository
+import ru.solrudev.okkeipatcher.app.repository.PreferencesRepository
 import ru.solrudev.okkeipatcher.data.preference.MappedPreference
 import ru.solrudev.okkeipatcher.data.preference.Preference
 import ru.solrudev.okkeipatcher.data.preference.PreferencesDataStoreFactory
 import ru.solrudev.okkeipatcher.domain.model.Language
-import ru.solrudev.okkeipatcher.domain.model.Theme
-import ru.solrudev.okkeipatcher.domain.repository.app.PermissionsRepository
-import ru.solrudev.okkeipatcher.domain.repository.app.PreferencesRepository
 import javax.inject.Inject
 
 private val HANDLE_SAVE_DATA = booleanPreferencesKey("handle_save_data")

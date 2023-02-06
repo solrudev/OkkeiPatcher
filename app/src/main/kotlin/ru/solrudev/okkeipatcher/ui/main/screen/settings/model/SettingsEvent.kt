@@ -2,7 +2,7 @@ package ru.solrudev.okkeipatcher.ui.main.screen.settings.model
 
 import io.github.solrudev.jetmvi.JetEffect
 import io.github.solrudev.jetmvi.JetEvent
-import ru.solrudev.okkeipatcher.domain.model.Theme
+import ru.solrudev.okkeipatcher.app.model.Theme
 
 sealed interface SettingsEvent : JetEvent {
 	object HandleSaveDataClicked : SettingsEvent, SettingsEffect

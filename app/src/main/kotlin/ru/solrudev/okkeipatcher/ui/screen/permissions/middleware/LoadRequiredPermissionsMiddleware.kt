@@ -3,7 +3,7 @@ package ru.solrudev.okkeipatcher.ui.screen.permissions.middleware
 import io.github.solrudev.jetmvi.Middleware
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import ru.solrudev.okkeipatcher.domain.usecase.app.GetRequiredPermissionsUseCase
+import ru.solrudev.okkeipatcher.app.usecase.GetRequiredPermissionsUseCase
 import ru.solrudev.okkeipatcher.ui.screen.permissions.model.PermissionsEvent
 import ru.solrudev.okkeipatcher.ui.screen.permissions.model.PermissionsEvent.RequiredPermissionsLoaded
 import javax.inject.Inject

@@ -2,9 +2,9 @@ package ru.solrudev.okkeipatcher.ui.screen.work.model
 
 import io.github.solrudev.jetmvi.JetEffect
 import io.github.solrudev.jetmvi.JetEvent
+import ru.solrudev.okkeipatcher.app.model.ProgressData
+import ru.solrudev.okkeipatcher.app.model.Work
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
-import ru.solrudev.okkeipatcher.domain.model.ProgressData
-import ru.solrudev.okkeipatcher.domain.model.Work
 
 sealed interface WorkEvent : JetEvent {
 	data class CancelWork(val work: Work) : WorkEvent, WorkEffect

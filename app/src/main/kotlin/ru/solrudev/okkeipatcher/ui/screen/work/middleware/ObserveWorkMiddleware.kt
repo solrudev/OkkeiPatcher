@@ -3,9 +3,9 @@ package ru.solrudev.okkeipatcher.ui.screen.work.middleware
 import io.github.solrudev.jetmvi.Middleware
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
-import ru.solrudev.okkeipatcher.domain.model.WorkState
-import ru.solrudev.okkeipatcher.domain.usecase.work.CompleteWorkUseCase
-import ru.solrudev.okkeipatcher.domain.usecase.work.GetWorkStateFlowUseCase
+import ru.solrudev.okkeipatcher.app.model.WorkState
+import ru.solrudev.okkeipatcher.app.usecase.work.CompleteWorkUseCase
+import ru.solrudev.okkeipatcher.app.usecase.work.GetWorkStateFlowUseCase
 import ru.solrudev.okkeipatcher.ui.screen.work.model.ObserveWorkEvent
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEvent
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEvent.StartObservingWork

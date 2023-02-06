@@ -64,4 +64,4 @@
 -keep class com.android.apksig.internal.asn1.* { *; }
 
 #### Miscellaneous
--keep class ru.solrudev.okkeipatcher.domain.model.Work
+-keep class ru.solrudev.okkeipatcher.app.model.Work

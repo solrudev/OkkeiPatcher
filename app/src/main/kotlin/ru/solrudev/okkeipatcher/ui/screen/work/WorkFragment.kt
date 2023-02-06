@@ -16,10 +16,10 @@ import dev.chrisbanes.insetter.applyInsetter
 import io.github.solrudev.jetmvi.JetView
 import io.github.solrudev.jetmvi.jetViewModels
 import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.app.model.ProgressData
 import ru.solrudev.okkeipatcher.data.core.resolve
 import ru.solrudev.okkeipatcher.databinding.FragmentWorkBinding
 import ru.solrudev.okkeipatcher.domain.core.Message
-import ru.solrudev.okkeipatcher.domain.model.ProgressData
 import ru.solrudev.okkeipatcher.ui.model.shouldShow
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEvent.*
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkUiState

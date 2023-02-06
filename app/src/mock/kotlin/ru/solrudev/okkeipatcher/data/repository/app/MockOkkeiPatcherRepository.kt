@@ -8,6 +8,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 import okio.FileSystem
+import ru.solrudev.okkeipatcher.app.model.OkkeiPatcherUpdateData
+import ru.solrudev.okkeipatcher.app.model.OkkeiPatcherVersion
+import ru.solrudev.okkeipatcher.app.model.Work
+import ru.solrudev.okkeipatcher.app.repository.OkkeiPatcherRepository
+import ru.solrudev.okkeipatcher.app.repository.work.DownloadUpdateWorkRepository
 import ru.solrudev.okkeipatcher.data.OkkeiEnvironment
 import ru.solrudev.okkeipatcher.data.repository.util.install
 import ru.solrudev.okkeipatcher.data.service.OkkeiPatcherApkProvider
@@ -16,12 +21,7 @@ import ru.solrudev.okkeipatcher.data.util.copy
 import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
-import ru.solrudev.okkeipatcher.domain.model.OkkeiPatcherUpdateData
-import ru.solrudev.okkeipatcher.domain.model.OkkeiPatcherVersion
-import ru.solrudev.okkeipatcher.domain.model.Work
 import ru.solrudev.okkeipatcher.domain.model.exception.wrapDomainExceptions
-import ru.solrudev.okkeipatcher.domain.repository.app.OkkeiPatcherRepository
-import ru.solrudev.okkeipatcher.domain.repository.work.DownloadUpdateWorkRepository
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 

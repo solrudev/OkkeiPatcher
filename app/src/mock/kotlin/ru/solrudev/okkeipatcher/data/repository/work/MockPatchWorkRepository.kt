@@ -2,10 +2,11 @@ package ru.solrudev.okkeipatcher.data.repository.work
 
 import androidx.work.WorkManager
 import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.app.repository.work.PatchWorkRepository
+import ru.solrudev.okkeipatcher.app.repository.work.WorkRepository
+import ru.solrudev.okkeipatcher.data.repository.app.work.ConcreteWorkRepositoryImpl
 import ru.solrudev.okkeipatcher.data.worker.MockWorker
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
-import ru.solrudev.okkeipatcher.domain.repository.work.PatchWorkRepository
-import ru.solrudev.okkeipatcher.domain.repository.work.WorkRepository
 import javax.inject.Inject
 
 private const val PATCH_WORK_NAME = "PatchWork"

@@ -4,7 +4,7 @@ import io.github.solrudev.jetmvi.Middleware
 import io.github.solrudev.jetmvi.collectEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import ru.solrudev.okkeipatcher.domain.usecase.app.GetRequiredPermissionsUseCase
+import ru.solrudev.okkeipatcher.app.usecase.GetRequiredPermissionsUseCase
 import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostEvent
 import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostEvent.PermissionsCheckRequested
 import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostEvent.PermissionsChecked

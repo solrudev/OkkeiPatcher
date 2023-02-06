@@ -13,9 +13,9 @@ import androidx.work.Configuration
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
-import ru.solrudev.okkeipatcher.domain.model.Theme
-import ru.solrudev.okkeipatcher.domain.usecase.app.GetThemeFlowUseCase
-import ru.solrudev.okkeipatcher.domain.usecase.app.StartNetworkMonitoringUseCase
+import ru.solrudev.okkeipatcher.app.model.Theme
+import ru.solrudev.okkeipatcher.app.usecase.GetThemeFlowUseCase
+import ru.solrudev.okkeipatcher.app.usecase.StartNetworkMonitoringUseCase
 import javax.inject.Inject
 
 @HiltAndroidApp

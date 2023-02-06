@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.app.model.Permission
 import ru.solrudev.okkeipatcher.databinding.ItemPermissionBinding
-import ru.solrudev.okkeipatcher.domain.model.Permission
 import ru.solrudev.okkeipatcher.ui.screen.permissions.model.PermissionUiState
 import ru.solrudev.okkeipatcher.ui.util.localizedText
 

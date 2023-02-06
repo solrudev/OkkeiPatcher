@@ -5,6 +5,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import okio.FileSystem
+import ru.solrudev.okkeipatcher.app.model.OkkeiPatcherUpdateData
+import ru.solrudev.okkeipatcher.app.model.OkkeiPatcherVersion
+import ru.solrudev.okkeipatcher.app.model.Work
+import ru.solrudev.okkeipatcher.app.repository.OkkeiPatcherRepository
+import ru.solrudev.okkeipatcher.app.repository.work.DownloadUpdateWorkRepository
 import ru.solrudev.okkeipatcher.data.OkkeiEnvironment
 import ru.solrudev.okkeipatcher.data.core.InMemoryCache
 import ru.solrudev.okkeipatcher.data.network.api.OkkeiPatcherApi
@@ -13,14 +18,9 @@ import ru.solrudev.okkeipatcher.data.repository.util.install
 import ru.solrudev.okkeipatcher.data.service.FileDownloader
 import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
-import ru.solrudev.okkeipatcher.domain.model.OkkeiPatcherUpdateData
-import ru.solrudev.okkeipatcher.domain.model.OkkeiPatcherVersion
-import ru.solrudev.okkeipatcher.domain.model.Work
 import ru.solrudev.okkeipatcher.domain.model.exception.AppUpdateCorruptedException
 import ru.solrudev.okkeipatcher.domain.model.exception.NoNetworkException
 import ru.solrudev.okkeipatcher.domain.model.exception.wrapDomainExceptions
-import ru.solrudev.okkeipatcher.domain.repository.app.OkkeiPatcherRepository
-import ru.solrudev.okkeipatcher.domain.repository.work.DownloadUpdateWorkRepository
 import javax.inject.Inject
 
 private const val APP_UPDATE_FILE_NAME = "OkkeiPatcher.apk"

@@ -9,7 +9,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.content.getSystemService
 import dagger.hilt.android.qualifiers.ApplicationContext
-import ru.solrudev.okkeipatcher.domain.repository.app.ConnectivityRepository
+import ru.solrudev.okkeipatcher.app.repository.ConnectivityRepository
 import javax.inject.Inject
 
 class ConnectivityRepositoryImpl @Inject constructor(@ApplicationContext applicationContext: Context) :

@@ -9,10 +9,10 @@ import androidx.work.ForegroundInfo
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.app.model.ProgressData
 import ru.solrudev.okkeipatcher.data.core.resolve
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Message
-import ru.solrudev.okkeipatcher.domain.model.ProgressData
 import java.util.concurrent.atomic.AtomicInteger
 
 private val globalProgressNotificationId = AtomicInteger(813047)

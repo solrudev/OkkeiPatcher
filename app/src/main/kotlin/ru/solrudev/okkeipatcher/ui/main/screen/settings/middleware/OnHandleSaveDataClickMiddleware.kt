@@ -5,9 +5,9 @@ import io.github.solrudev.jetmvi.collectEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
-import ru.solrudev.okkeipatcher.domain.usecase.app.GetHandleSaveDataFlowUseCase
-import ru.solrudev.okkeipatcher.domain.usecase.app.GetIsSaveDataAccessGrantedUseCase
-import ru.solrudev.okkeipatcher.domain.usecase.app.PersistHandleSaveDataUseCase
+import ru.solrudev.okkeipatcher.app.usecase.GetHandleSaveDataFlowUseCase
+import ru.solrudev.okkeipatcher.app.usecase.GetIsSaveDataAccessGrantedUseCase
+import ru.solrudev.okkeipatcher.app.usecase.PersistHandleSaveDataUseCase
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.HandleSaveDataClicked
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.SaveDataAccessRequested

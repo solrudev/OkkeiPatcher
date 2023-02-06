@@ -7,9 +7,9 @@ import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Build
 import androidx.core.content.ContextCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
+import ru.solrudev.okkeipatcher.app.model.Permission
+import ru.solrudev.okkeipatcher.app.repository.PermissionsRepository
 import ru.solrudev.okkeipatcher.data.util.ANDROID_DATA_TREE_URI
-import ru.solrudev.okkeipatcher.domain.model.Permission
-import ru.solrudev.okkeipatcher.domain.repository.app.PermissionsRepository
 import javax.inject.Inject
 
 class PermissionsRepositoryImpl @Inject constructor(

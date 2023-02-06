@@ -2,7 +2,7 @@ package ru.solrudev.okkeipatcher.ui.main.screen.settings.controller
 
 import androidx.preference.ListPreference
 import io.github.solrudev.jetmvi.JetView
-import ru.solrudev.okkeipatcher.domain.model.Theme
+import ru.solrudev.okkeipatcher.app.model.Theme
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.SettingsViewModel
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.PersistTheme
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsUiState

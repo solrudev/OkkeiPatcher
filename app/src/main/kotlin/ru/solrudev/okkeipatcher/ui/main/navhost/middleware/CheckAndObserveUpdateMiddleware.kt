@@ -4,8 +4,8 @@ import io.github.solrudev.jetmvi.Middleware
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import ru.solrudev.okkeipatcher.domain.usecase.app.GetIsUpdateAvailableFlowUseCase
-import ru.solrudev.okkeipatcher.domain.usecase.app.GetUpdateDataUseCase
+import ru.solrudev.okkeipatcher.app.usecase.GetIsUpdateAvailableFlowUseCase
+import ru.solrudev.okkeipatcher.app.usecase.GetUpdateDataUseCase
 import ru.solrudev.okkeipatcher.ui.main.navhost.model.MainEvent
 import ru.solrudev.okkeipatcher.ui.main.navhost.model.MainEvent.UpdateAvailabilityChanged
 import javax.inject.Inject

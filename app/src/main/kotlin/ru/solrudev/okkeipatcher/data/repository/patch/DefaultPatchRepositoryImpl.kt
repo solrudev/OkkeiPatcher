@@ -1,12 +1,12 @@
 package ru.solrudev.okkeipatcher.data.repository.patch
 
 import androidx.datastore.preferences.core.edit
+import ru.solrudev.okkeipatcher.app.repository.PreferencesRepository
 import ru.solrudev.okkeipatcher.data.core.InMemoryCache
 import ru.solrudev.okkeipatcher.data.network.api.patch.DefaultPatchApi
 import ru.solrudev.okkeipatcher.data.preference.PreferencesDataStoreFactory
 import ru.solrudev.okkeipatcher.data.repository.patch.mapper.toPatchFileData
 import ru.solrudev.okkeipatcher.domain.model.patchupdates.DefaultPatchUpdates
-import ru.solrudev.okkeipatcher.domain.repository.app.PreferencesRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.DefaultPatchRepository
 import javax.inject.Inject
 

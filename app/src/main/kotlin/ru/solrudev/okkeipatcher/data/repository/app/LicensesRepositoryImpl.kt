@@ -4,9 +4,9 @@ import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.runInterruptible
+import ru.solrudev.okkeipatcher.app.model.License
+import ru.solrudev.okkeipatcher.app.repository.LicensesRepository
 import ru.solrudev.okkeipatcher.di.IoDispatcher
-import ru.solrudev.okkeipatcher.domain.model.License
-import ru.solrudev.okkeipatcher.domain.repository.app.LicensesRepository
 import javax.inject.Inject
 
 private const val LICENSES_DIR = "licenses"

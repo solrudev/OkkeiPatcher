@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.app.model.License
 import ru.solrudev.okkeipatcher.databinding.ItemLicenseBinding
-import ru.solrudev.okkeipatcher.domain.model.License
 
 class LicensesAdapter : ListAdapter<License, LicensesAdapter.LicenseViewHolder>(LicenseDiffCallback) {
 

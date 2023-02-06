@@ -10,6 +10,7 @@ import androidx.work.await
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import ru.solrudev.okkeipatcher.app.model.ProgressData
 import ru.solrudev.okkeipatcher.data.service.factory.NotificationServiceFactory
 import ru.solrudev.okkeipatcher.data.worker.model.WorkNotificationsParameters
 import ru.solrudev.okkeipatcher.data.worker.model.WorkerFailure
@@ -18,7 +19,6 @@ import ru.solrudev.okkeipatcher.data.worker.util.workerFailure
 import ru.solrudev.okkeipatcher.domain.core.onFailure
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.extension.statusAndAccumulatedProgress
-import ru.solrudev.okkeipatcher.domain.model.ProgressData
 import ru.solrudev.okkeipatcher.domain.operation.factory.OperationFactory
 import kotlin.Throwable
 import kotlin.getValue
