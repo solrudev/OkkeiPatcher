@@ -5,12 +5,12 @@ import io.github.solrudev.simpleinstaller.data.ConfirmationStrategy
 import io.github.solrudev.simpleinstaller.data.InstallResult
 import io.github.solrudev.simpleinstaller.data.notification
 import io.github.solrudev.simpleinstaller.installPackage
+import okio.Path
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.core.Result
-import java.io.File
 
-suspend fun PackageInstaller.install(file: File, immediate: Boolean = false): Result {
-	val result = installPackage(file) {
+suspend fun PackageInstaller.install(apkPath: Path, immediate: Boolean = false): Result {
+	val result = installPackage(apkPath.toFile()) {
 		if (immediate) {
 			confirmationStrategy = ConfirmationStrategy.IMMEDIATE
 		}

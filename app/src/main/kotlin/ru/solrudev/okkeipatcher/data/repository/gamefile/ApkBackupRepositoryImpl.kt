@@ -61,5 +61,5 @@ class ApkBackupRepositoryImpl @Inject constructor(
 		return fileHash == savedHash
 	}
 
-	override suspend fun installBackup() = packageInstaller.install(backup.toFile())
+	override suspend fun installBackup() = packageInstaller.install(backup)
 }

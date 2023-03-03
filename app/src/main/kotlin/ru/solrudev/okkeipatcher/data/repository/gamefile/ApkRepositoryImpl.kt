@@ -75,7 +75,7 @@ class ApkRepositoryImpl @Inject constructor(
 		return fileHash == savedHash
 	}
 
-	override suspend fun installTemp() = packageInstaller.install(temp.toFile())
+	override suspend fun installTemp() = packageInstaller.install(temp)
 
 	override suspend fun uninstall() = packageUninstaller.uninstallPackage(GAME_PACKAGE_NAME) {
 		notification {

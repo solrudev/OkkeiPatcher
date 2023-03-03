@@ -62,7 +62,7 @@ class OkkeiPatcherRepositoryImpl @Inject constructor(
 	}
 
 	override suspend fun installUpdate() = try {
-		packageInstaller.install(updateFile.toFile(), immediate = true)
+		packageInstaller.install(updateFile, immediate = true)
 	} catch (t: Throwable) {
 		Result.failure(t.stackTraceToString())
 	}
