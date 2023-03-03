@@ -7,7 +7,8 @@ import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.app.model.Work
 import ru.solrudev.okkeipatcher.data.core.resolve
 import ru.solrudev.okkeipatcher.ui.navhost.NavHostViewModel
-import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostEvent
+import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostEvent.NavigatedToPermissionsScreen
+import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostEvent.NavigatedToWorkScreen
 import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostUiState
 import ru.solrudev.okkeipatcher.ui.util.navigateSafely
 
@@ -26,7 +27,7 @@ class NavigationController(
 	}
 
 	private fun navigateToPermissionsScreen() {
-		viewModel.dispatchEvent(NavHostEvent.NavigatedToPermissionsScreen)
+		viewModel.dispatchEvent(NavigatedToPermissionsScreen)
 		if (navController.currentDestination?.id == R.id.permissions_fragment) {
 			return
 		}
@@ -35,7 +36,7 @@ class NavigationController(
 	}
 
 	private fun navigateToWorkScreen(work: Work) {
-		viewModel.dispatchEvent(NavHostEvent.NavigatedToWorkScreen)
+		viewModel.dispatchEvent(NavigatedToWorkScreen)
 		val workScreen = navController.findDestination(R.id.work_fragment)
 		if (navController.currentDestination?.id == workScreen?.id) {
 			return
