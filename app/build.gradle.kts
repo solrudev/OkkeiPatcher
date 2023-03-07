@@ -106,7 +106,7 @@ android {
 	}
 }
 
-tasks.withType(KotlinJvmCompile::class) {
+tasks.withType<KotlinJvmCompile> {
 	compilerOptions {
 		freeCompilerArgs.add("-Xjvm-default=all")
 	}
