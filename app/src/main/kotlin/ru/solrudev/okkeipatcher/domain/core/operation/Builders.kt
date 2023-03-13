@@ -108,7 +108,7 @@ private class OperationImpl<out R>(
 		try {
 			val result = block()
 			progressDelta(remainingProgress)
-			result
+			return@coroutineScope result
 		} finally {
 			accumulateProgressJob?.cancel()
 			accumulatedProgress = 0
