@@ -47,7 +47,7 @@ abstract class ForegroundOperationWorker(
 	}
 
 	final override suspend fun doWork(): Result {
-		cancelIfRetry()
+		cancelOnRetry()
 		try {
 			setForeground(notificationService.createForegroundInfo())
 			val operation = operationFactory.create()
@@ -73,7 +73,7 @@ abstract class ForegroundOperationWorker(
 
 	protected open fun createNotificationsContentIntent() = defaultNotificationIntent()
 
-	private suspend fun cancelIfRetry() {
+	private suspend fun cancelOnRetry() {
 		if (runAttemptCount > 0) {
 			workManager.cancelWorkById(id).await()
 		}
