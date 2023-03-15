@@ -14,7 +14,7 @@ private val workLabel = LocalizedString.resource(R.string.work_label_restoring)
 class RestoreWorkRepositoryImpl @Inject constructor(
 	workRepository: WorkRepository,
 	workManager: WorkManager
-) : RestoreWorkRepository, ConcreteWorkRepositoryImpl<RestoreWorker>(
+) : RestoreWorkRepository, UniqueWorkRepositoryImpl<RestoreWorker>(
 	workName = RESTORE_WORK_NAME,
 	workLabel = workLabel,
 	workerClass = RestoreWorker::class.java,

@@ -14,7 +14,7 @@ private val workLabel = LocalizedString.resource(R.string.work_label_patch)
 class PatchWorkRepositoryImpl @Inject constructor(
 	workRepository: WorkRepository,
 	workManager: WorkManager
-) : PatchWorkRepository, ConcreteWorkRepositoryImpl<PatchWorker>(
+) : PatchWorkRepository, UniqueWorkRepositoryImpl<PatchWorker>(
 	workName = PATCH_WORK_NAME,
 	workLabel = workLabel,
 	workerClass = PatchWorker::class.java,

@@ -14,7 +14,7 @@ private val workLabel = LocalizedString.resource(R.string.work_label_download_up
 class DownloadUpdateWorkRepositoryImpl @Inject constructor(
 	workRepository: WorkRepository,
 	workManager: WorkManager
-) : DownloadUpdateWorkRepository, ConcreteWorkRepositoryImpl<DownloadUpdateWorker>(
+) : DownloadUpdateWorkRepository, UniqueWorkRepositoryImpl<DownloadUpdateWorker>(
 	workName = DOWNLOAD_UPDATE_WORK_NAME,
 	workLabel = workLabel,
 	workerClass = DownloadUpdateWorker::class.java,

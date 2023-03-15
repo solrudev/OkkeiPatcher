@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 import ru.solrudev.okkeipatcher.app.model.Work
-import ru.solrudev.okkeipatcher.app.repository.work.ConcreteWorkRepository
+import ru.solrudev.okkeipatcher.app.repository.work.UniqueWorkRepository
 import ru.solrudev.okkeipatcher.app.repository.work.WorkRepository
 import ru.solrudev.okkeipatcher.data.repository.app.work.mapper.toWork
 import ru.solrudev.okkeipatcher.data.worker.ForegroundOperationWorker
@@ -16,13 +16,13 @@ import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 
 const val WORK_LABEL_KEY = "WORK_LABEL"
 
-open class ConcreteWorkRepositoryImpl<T : ForegroundOperationWorker>(
+open class UniqueWorkRepositoryImpl<T : ForegroundOperationWorker>(
 	private val workName: String,
 	private val workLabel: LocalizedString,
 	private val workerClass: Class<T>,
 	private val workRepository: WorkRepository,
 	private val workManager: WorkManager
-) : ConcreteWorkRepository {
+) : UniqueWorkRepository {
 
 	override suspend fun enqueueWork(): Work {
 		workManager.getWorkInfosByTag(workName).await()
