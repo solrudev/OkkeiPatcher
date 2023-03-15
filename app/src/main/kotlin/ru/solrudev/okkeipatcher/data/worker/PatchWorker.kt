@@ -35,4 +35,6 @@ class PatchWorker @AssistedInject constructor(
 ) : ForegroundOperationWorker(
 	context, workerParameters, notificationServiceFactory, workManager, patchOperationFactory,
 	WorkNotificationsParameters(workLabel, successMessage, failureMessage)
-)
+) {
+	override fun createNotificationsContentIntent() = workNotificationIntent()
+}

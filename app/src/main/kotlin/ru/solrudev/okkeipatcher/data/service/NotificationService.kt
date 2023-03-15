@@ -6,24 +6,21 @@ import android.content.Context
 import androidx.core.app.NotificationCompat
 import androidx.core.content.getSystemService
 import androidx.work.ForegroundInfo
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.app.model.ProgressData
 import ru.solrudev.okkeipatcher.data.core.resolve
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Message
 import java.util.concurrent.atomic.AtomicInteger
+import kotlin.random.Random
 
-private val globalProgressNotificationId = AtomicInteger(813047)
-private val globalMessageNotificationId = AtomicInteger(49725)
+private val globalProgressNotificationId = AtomicInteger(Random.nextInt(from = 10000, until = 1000000))
+private val globalMessageNotificationId = AtomicInteger(Random.nextInt(from = 10000, until = 1000000))
 
 interface NotificationService {
 	fun createForegroundInfo(): ForegroundInfo
 	fun updateProgressNotification(status: LocalizedString, progressData: ProgressData)
 	suspend fun displayMessageNotification(message: Message)
-	suspend fun displayResultNotification(message: Message)
-	suspend fun clearShownMessageNotifications()
 }
 
 class NotificationServiceImpl(
@@ -37,8 +34,6 @@ class NotificationServiceImpl(
 
 	private val progressNotificationId = globalProgressNotificationId.incrementAndGet()
 	private val notificationManager = applicationContext.getSystemService<NotificationManager>()
-	private val shownMessageNotifications = mutableListOf<Int>()
-	private val shownMessageNotificationsMutex = Mutex()
 
 	override fun createForegroundInfo() = ForegroundInfo(progressNotificationId, progressNotificationBuilder.build())
 
@@ -53,22 +48,7 @@ class NotificationServiceImpl(
 		notificationManager?.notify(progressNotificationId, notification)
 	}
 
-	override suspend fun displayMessageNotification(message: Message) =
-		displayMessageNotification(message, resultMessage = false)
-
-	override suspend fun displayResultNotification(message: Message) =
-		displayMessageNotification(message, resultMessage = true)
-
-	override suspend fun clearShownMessageNotifications() {
-		shownMessageNotificationsMutex.withLock {
-			shownMessageNotifications.forEach {
-				notificationManager?.cancel(it)
-			}
-			shownMessageNotifications.clear()
-		}
-	}
-
-	private suspend inline fun displayMessageNotification(message: Message, resultMessage: Boolean) {
+	override suspend fun displayMessageNotification(message: Message) {
 		val messageString = message.text.resolve(applicationContext)
 		val notification = createNotificationBuilder(message.title, progressNotification = false).apply {
 			setContentText(messageString)
@@ -77,11 +57,6 @@ class NotificationServiceImpl(
 			}
 		}.build()
 		val notificationId = globalMessageNotificationId.incrementAndGet()
-		if (!resultMessage) {
-			shownMessageNotificationsMutex.withLock {
-				shownMessageNotifications.add(notificationId)
-			}
-		}
 		notificationManager?.notify(notificationId, notification)
 	}
 

@@ -35,4 +35,6 @@ class RestoreWorker @AssistedInject constructor(
 ) : ForegroundOperationWorker(
 	context, workerParameters, notificationServiceFactory, workManager, restoreOperationFactory,
 	WorkNotificationsParameters(workLabel, successMessage, failureMessage)
-)
+) {
+	override fun createNotificationsContentIntent() = workNotificationIntent()
+}

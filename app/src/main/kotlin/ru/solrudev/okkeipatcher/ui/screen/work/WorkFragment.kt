@@ -1,11 +1,9 @@
 package ru.solrudev.okkeipatcher.ui.screen.work
 
 import android.app.Dialog
-import android.app.NotificationManager
 import android.os.Bundle
 import android.view.View
 import android.view.animation.DecelerateInterpolator
-import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
@@ -95,11 +93,6 @@ class WorkFragment : Fragment(R.layout.fragment_work), JetView<WorkUiState> {
 		findNavController().currentDestination?.label = args.work.label.resolve(requireContext())
 	}
 
-	private fun clearNotifications() {
-		val notificationManager = requireContext().getSystemService<NotificationManager>()
-		notificationManager?.cancelAll()
-	}
-
 	private fun onWorkSucceeded(playAnimations: Boolean) = with(binding) {
 		if (playAnimations) {
 			startSuccessAnimations()
@@ -109,7 +102,6 @@ class WorkFragment : Fragment(R.layout.fragment_work), JetView<WorkUiState> {
 		}
 		buttonWork.setText(R.string.button_text_ok)
 		currentCancelDialog?.dismiss()
-		clearNotifications()
 	}
 
 	private fun onWorkCanceled() {
@@ -120,7 +112,6 @@ class WorkFragment : Fragment(R.layout.fragment_work), JetView<WorkUiState> {
 		buttonWork.isEnabled = false
 		currentCancelDialog?.dismiss()
 		showErrorMessage(error)
-		clearNotifications()
 	}
 
 	private fun startSuccessAnimations() = with(binding) {

@@ -44,4 +44,6 @@ class MockWorker @AssistedInject constructor(
 		isPatchWork = "PatchWork" in workerParameters.tags
 	),
 	WorkNotificationsParameters(workLabel, successMessage, failureMessage)
-)
+) {
+	override fun createNotificationsContentIntent() = workNotificationIntent()
+}
