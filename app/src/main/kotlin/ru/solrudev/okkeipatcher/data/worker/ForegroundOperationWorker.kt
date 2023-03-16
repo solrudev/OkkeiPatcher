@@ -3,7 +3,6 @@ package ru.solrudev.okkeipatcher.data.worker
 import android.app.PendingIntent
 import android.content.Context
 import android.os.Build
-import androidx.navigation.NavDeepLinkBuilder
 import androidx.work.CoroutineWorker
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
@@ -11,22 +10,16 @@ import androidx.work.await
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.app.model.ProgressData
-import ru.solrudev.okkeipatcher.app.model.Work
-import ru.solrudev.okkeipatcher.data.repository.app.work.WORK_LABEL_KEY
 import ru.solrudev.okkeipatcher.data.service.factory.NotificationServiceFactory
 import ru.solrudev.okkeipatcher.data.worker.model.WorkNotificationsParameters
 import ru.solrudev.okkeipatcher.data.worker.model.WorkerFailure
-import ru.solrudev.okkeipatcher.data.worker.util.extension.getSerializable
 import ru.solrudev.okkeipatcher.data.worker.util.setProgress
 import ru.solrudev.okkeipatcher.data.worker.util.workerFailure
-import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.onFailure
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.extension.statusAndAccumulatedProgress
 import ru.solrudev.okkeipatcher.domain.operation.factory.OperationFactory
-import ru.solrudev.okkeipatcher.ui.screen.work.WorkFragmentArgs
 import kotlin.Throwable
 import kotlin.getValue
 import kotlin.lazy
@@ -118,20 +111,11 @@ abstract class ForegroundOperationWorker(
 		.launchIn(scope)
 }
 
-private fun ForegroundOperationWorker.defaultNotificationIntent(): PendingIntent {
+fun ForegroundOperationWorker.defaultNotificationIntent(): PendingIntent {
 	val launchIntent = applicationContext.packageManager.getLaunchIntentForPackage(applicationContext.packageName)
 	val flagImmutable = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
 	return PendingIntent.getActivity(
 		applicationContext, 0, launchIntent,
 		PendingIntent.FLAG_UPDATE_CURRENT or flagImmutable
 	)
-}
-
-fun ForegroundOperationWorker.workNotificationIntent(): PendingIntent {
-	val workLabel = inputData.getSerializable<LocalizedString>(WORK_LABEL_KEY)
-		?: return defaultNotificationIntent()
-	return NavDeepLinkBuilder(applicationContext)
-		.setGraph(R.navigation.okkei_nav_graph)
-		.setDestination(R.id.work_fragment, WorkFragmentArgs(Work(id, workLabel)).toBundle())
-		.createPendingIntent()
 }

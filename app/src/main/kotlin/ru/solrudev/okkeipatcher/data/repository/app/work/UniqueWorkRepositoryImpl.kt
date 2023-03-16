@@ -1,20 +1,26 @@
 package ru.solrudev.okkeipatcher.data.repository.app.work
 
+import android.app.PendingIntent
 import androidx.lifecycle.asFlow
+import androidx.navigation.NavDeepLinkBuilder
 import androidx.work.*
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
+import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.app.model.Work
 import ru.solrudev.okkeipatcher.app.repository.work.UniqueWorkRepository
 import ru.solrudev.okkeipatcher.app.repository.work.WorkRepository
 import ru.solrudev.okkeipatcher.data.repository.app.work.mapper.toWork
 import ru.solrudev.okkeipatcher.data.worker.ForegroundOperationWorker
+import ru.solrudev.okkeipatcher.data.worker.defaultNotificationIntent
+import ru.solrudev.okkeipatcher.data.worker.util.extension.getSerializable
 import ru.solrudev.okkeipatcher.data.worker.util.extension.putSerializable
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
+import ru.solrudev.okkeipatcher.ui.screen.work.WorkFragmentArgs
 
-const val WORK_LABEL_KEY = "WORK_LABEL"
+private const val WORK_LABEL_KEY = "WORK_LABEL"
 
 open class UniqueWorkRepositoryImpl<T : ForegroundOperationWorker>(
 	private val workName: String,
@@ -50,4 +56,13 @@ open class UniqueWorkRepositoryImpl<T : ForegroundOperationWorker>(
 		}
 		.distinctUntilChangedBy { it.id }
 		.map { it.toWork(workLabel) }
+}
+
+fun ForegroundOperationWorker.workNotificationIntent(): PendingIntent {
+	val workLabel = inputData.getSerializable<LocalizedString>(WORK_LABEL_KEY)
+		?: return defaultNotificationIntent()
+	return NavDeepLinkBuilder(applicationContext)
+		.setGraph(R.navigation.okkei_nav_graph)
+		.setDestination(R.id.work_fragment, WorkFragmentArgs(Work(id, workLabel)).toBundle())
+		.createPendingIntent()
 }
