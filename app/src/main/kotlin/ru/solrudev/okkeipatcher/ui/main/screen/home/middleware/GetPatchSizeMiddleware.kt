@@ -1,6 +1,7 @@
 package ru.solrudev.okkeipatcher.ui.main.screen.home.middleware
 
-import io.github.solrudev.jetmvi.Middleware
+import io.github.solrudev.jetmvi.JetMiddleware
+import io.github.solrudev.jetmvi.MiddlewareScope
 import kotlinx.coroutines.flow.*
 import ru.solrudev.okkeipatcher.app.usecase.patch.GetPatchSizeInMbUseCase
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeEvent
@@ -9,20 +10,19 @@ import javax.inject.Inject
 
 class GetPatchSizeMiddleware @Inject constructor(
 	private val getPatchSizeInMbUseCase: GetPatchSizeInMbUseCase
-) : Middleware<HomeEvent> {
+) : JetMiddleware<HomeEvent> {
 
-	override fun apply(events: Flow<HomeEvent>) = flow {
+	@Suppress("KotlinConstantConditions")
+	override fun MiddlewareScope<HomeEvent>.apply() {
 		var isLoading = false
-		events
-			.filterIsInstance<PatchRequested>()
-			.filterNot { isLoading }
-			.conflate()
-			.collect {
+		onEvent<PatchRequested> {
+			if (!isLoading) {
 				isLoading = true
-				emit(PatchSizeLoadingStarted)
+				send(PatchSizeLoadingStarted)
 				val patchSize = getPatchSizeInMbUseCase()
-				emit(PatchSizeLoaded(patchSize))
+				send(PatchSizeLoaded(patchSize))
 				isLoading = false
 			}
+		}
 	}
 }

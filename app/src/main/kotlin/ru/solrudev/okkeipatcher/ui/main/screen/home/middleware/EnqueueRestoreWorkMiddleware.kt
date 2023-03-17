@@ -1,10 +1,8 @@
 package ru.solrudev.okkeipatcher.ui.main.screen.home.middleware
 
-import io.github.solrudev.jetmvi.Middleware
-import io.github.solrudev.jetmvi.collectEvent
-import kotlinx.coroutines.flow.Flow
+import io.github.solrudev.jetmvi.JetMiddleware
+import io.github.solrudev.jetmvi.MiddlewareScope
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
 import ru.solrudev.okkeipatcher.app.usecase.patch.GetPatchStatusFlowUseCase
 import ru.solrudev.okkeipatcher.app.usecase.work.EnqueueRestoreWorkUseCase
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeEvent
@@ -16,14 +14,14 @@ import javax.inject.Inject
 class EnqueueRestoreWorkMiddleware @Inject constructor(
 	private val enqueueRestoreWorkUseCase: EnqueueRestoreWorkUseCase,
 	private val getPatchStatusFlowUseCase: GetPatchStatusFlowUseCase
-) : Middleware<HomeEvent> {
+) : JetMiddleware<HomeEvent> {
 
-	override fun apply(events: Flow<HomeEvent>) = flow {
-		events.collectEvent<StartRestore> {
+	override fun MiddlewareScope<HomeEvent>.apply() {
+		onEvent<StartRestore> {
 			enqueueRestoreWorkUseCase()
 			val isPatched = getPatchStatusFlowUseCase().first()
 			val currentStatus = if (isPatched) Patched else NotPatched
-			emit(PatchStatusChanged(WorkStarted(currentStatus)))
+			send(PatchStatusChanged(WorkStarted(currentStatus)))
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package ru.solrudev.okkeipatcher.ui.main.screen.home.middleware
 
-import io.github.solrudev.jetmvi.Middleware
+import io.github.solrudev.jetmvi.JetMiddleware
+import io.github.solrudev.jetmvi.MiddlewareScope
 import kotlinx.coroutines.flow.*
 import ru.solrudev.okkeipatcher.app.usecase.patch.GetPatchUpdatesUseCase
 import ru.solrudev.okkeipatcher.app.usecase.work.GetIsWorkPendingFlowUseCase
@@ -14,11 +15,10 @@ import javax.inject.Inject
 class CheckPatchUpdatesMiddleware @Inject constructor(
 	private val getPatchUpdatesUseCase: GetPatchUpdatesUseCase,
 	private val getIsWorkPendingFlowUseCase: GetIsWorkPendingFlowUseCase
-) : Middleware<HomeEvent> {
+) : JetMiddleware<HomeEvent> {
 
-	override fun apply(events: Flow<HomeEvent>) = flow {
-		events
-			.filterIsInstance<PatchStatusChanged>()
+	override fun MiddlewareScope<HomeEvent>.apply() {
+		filterIsInstance<PatchStatusChanged>()
 			.map { event -> event.patchStatus }
 			.filterIsInstance<PersistentPatchStatus>()
 			.combine(getIsWorkPendingFlowUseCase()) { patchStatus, isWorkPending ->
@@ -27,6 +27,7 @@ class CheckPatchUpdatesMiddleware @Inject constructor(
 			.filter { it }
 			.map { getPatchUpdatesUseCase() }
 			.filter { it.available }
-			.collect { emit(PatchStatusChanged(UpdateAvailable)) }
+			.onEach { send(PatchStatusChanged(UpdateAvailable)) }
+			.launchIn(this)
 	}
 }
