@@ -1,9 +1,7 @@
 package ru.solrudev.okkeipatcher.ui.main.screen.settings.cleardata.middleware
 
-import io.github.solrudev.jetmvi.Middleware
-import io.github.solrudev.jetmvi.collectEvent
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import io.github.solrudev.jetmvi.JetMiddleware
+import io.github.solrudev.jetmvi.MiddlewareScope
 import ru.solrudev.okkeipatcher.app.usecase.ClearDataUseCase
 import ru.solrudev.okkeipatcher.domain.core.onFailure
 import ru.solrudev.okkeipatcher.domain.core.onSuccess
@@ -13,13 +11,13 @@ import javax.inject.Inject
 
 class ClearDataMiddleware @Inject constructor(
 	private val clearDataUseCase: ClearDataUseCase
-) : Middleware<ClearDataEvent> {
+) : JetMiddleware<ClearDataEvent> {
 
-	override fun apply(events: Flow<ClearDataEvent>) = flow {
-		events.collectEvent<ClearingRequested> {
+	override fun MiddlewareScope<ClearDataEvent>.apply() {
+		onEvent<ClearingRequested> {
 			clearDataUseCase()
-				.onFailure { emit(ClearingFailed(it.reason)) }
-				.onSuccess { emit(DataCleared) }
+				.onFailure { send(ClearingFailed(it.reason)) }
+				.onSuccess { send(DataCleared) }
 		}
 	}
 }

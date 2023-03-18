@@ -1,9 +1,7 @@
 package ru.solrudev.okkeipatcher.ui.main.screen.settings.savedataaccess.middleware
 
-import io.github.solrudev.jetmvi.Middleware
-import io.github.solrudev.jetmvi.collectEvent
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import io.github.solrudev.jetmvi.JetMiddleware
+import io.github.solrudev.jetmvi.MiddlewareScope
 import ru.solrudev.okkeipatcher.app.usecase.PersistHandleSaveDataUseCase
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.savedataaccess.model.SaveDataAccessEvent
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.savedataaccess.model.SaveDataAccessEvent.HandleSaveDataEnabled
@@ -12,12 +10,12 @@ import javax.inject.Inject
 
 class PersistHandleSaveDataMiddleware @Inject constructor(
 	private val persistHandleSaveDataUseCase: PersistHandleSaveDataUseCase
-) : Middleware<SaveDataAccessEvent> {
+) : JetMiddleware<SaveDataAccessEvent> {
 
-	override fun apply(events: Flow<SaveDataAccessEvent>) = flow {
-		events.collectEvent<PermissionGranted> {
+	override fun MiddlewareScope<SaveDataAccessEvent>.apply() {
+		onEvent<PermissionGranted> {
 			persistHandleSaveDataUseCase(true)
-			emit(HandleSaveDataEnabled)
+			send(HandleSaveDataEnabled)
 		}
 	}
 }

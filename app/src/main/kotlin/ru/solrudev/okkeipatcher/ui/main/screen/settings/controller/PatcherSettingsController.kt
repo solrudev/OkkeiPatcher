@@ -6,7 +6,7 @@ import androidx.preference.SwitchPreferenceCompat
 import io.github.solrudev.jetmvi.JetView
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.SettingsFragmentDirections
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.SettingsViewModel
-import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.HandleSaveDataClicked
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.HandleSaveDataToggled
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.SaveDataAccessRequestHandled
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsUiState
 import ru.solrudev.okkeipatcher.ui.util.navigateSafely
@@ -20,7 +20,7 @@ class PatcherSettingsController(
 
 	init {
 		handleSaveData?.setOnPreferenceClickListener {
-			viewModel.dispatchEvent(HandleSaveDataClicked)
+			viewModel.dispatchEvent(HandleSaveDataToggled)
 			false
 		}
 		clearData?.setOnPreferenceClickListener {

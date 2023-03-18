@@ -1,9 +1,7 @@
 package ru.solrudev.okkeipatcher.ui.navhost.middleware
 
-import io.github.solrudev.jetmvi.Middleware
-import io.github.solrudev.jetmvi.collectEvent
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import io.github.solrudev.jetmvi.JetMiddleware
+import io.github.solrudev.jetmvi.MiddlewareScope
 import ru.solrudev.okkeipatcher.app.usecase.GetRequiredPermissionsUseCase
 import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostEvent
 import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostEvent.PermissionsCheckRequested
@@ -12,12 +10,12 @@ import javax.inject.Inject
 
 class CheckPermissionsMiddleware @Inject constructor(
 	private val getRequiredPermissionsUseCase: GetRequiredPermissionsUseCase
-) : Middleware<NavHostEvent> {
+) : JetMiddleware<NavHostEvent> {
 
-	override fun apply(events: Flow<NavHostEvent>) = flow {
-		events.collectEvent<PermissionsCheckRequested> {
+	override fun MiddlewareScope<NavHostEvent>.apply() {
+		onEvent<PermissionsCheckRequested> {
 			val allPermissionsGranted = getRequiredPermissionsUseCase().all { (_, isGranted) -> isGranted }
-			emit(PermissionsChecked(allPermissionsGranted))
+			send(PermissionsChecked(allPermissionsGranted))
 		}
 	}
 }

@@ -5,7 +5,7 @@ import io.github.solrudev.jetmvi.JetEvent
 import ru.solrudev.okkeipatcher.app.model.Theme
 
 sealed interface SettingsEvent : JetEvent {
-	object HandleSaveDataClicked : SettingsEvent, SettingsEffect
+	object HandleSaveDataToggled : SettingsEvent, SettingsEffect
 	object SaveDataAccessRequested : SettingsEvent
 	object SaveDataAccessRequestHandled : SettingsEvent
 	data class HandleSaveDataChanged(val handleSaveData: Boolean) : SettingsEvent

@@ -1,8 +1,8 @@
 package ru.solrudev.okkeipatcher.ui.screen.permissions.middleware
 
-import io.github.solrudev.jetmvi.Middleware
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import io.github.solrudev.jetmvi.JetMiddleware
+import io.github.solrudev.jetmvi.MiddlewareScope
+import kotlinx.coroutines.launch
 import ru.solrudev.okkeipatcher.app.usecase.GetRequiredPermissionsUseCase
 import ru.solrudev.okkeipatcher.ui.screen.permissions.model.PermissionsEvent
 import ru.solrudev.okkeipatcher.ui.screen.permissions.model.PermissionsEvent.RequiredPermissionsLoaded
@@ -10,10 +10,12 @@ import javax.inject.Inject
 
 class LoadRequiredPermissionsMiddleware @Inject constructor(
 	private val getRequiredPermissionsUseCase: GetRequiredPermissionsUseCase
-) : Middleware<PermissionsEvent> {
+) : JetMiddleware<PermissionsEvent> {
 
-	override fun apply(events: Flow<PermissionsEvent>) = flow {
-		val requiredPermissions = getRequiredPermissionsUseCase()
-		emit(RequiredPermissionsLoaded(requiredPermissions))
+	override fun MiddlewareScope<PermissionsEvent>.apply() {
+		launch {
+			val requiredPermissions = getRequiredPermissionsUseCase()
+			send(RequiredPermissionsLoaded(requiredPermissions))
+		}
 	}
 }
