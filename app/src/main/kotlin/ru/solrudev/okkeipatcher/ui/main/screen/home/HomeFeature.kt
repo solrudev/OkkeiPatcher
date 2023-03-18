@@ -1,7 +1,7 @@
 package ru.solrudev.okkeipatcher.ui.main.screen.home
 
 import dagger.hilt.android.scopes.ViewModelScoped
-import io.github.solrudev.jetmvi.BaseFeature
+import io.github.solrudev.jetmvi.JetFeature
 import ru.solrudev.okkeipatcher.ui.main.screen.home.middleware.*
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeEvent
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeUiState
@@ -17,7 +17,7 @@ class HomeFeature @Inject constructor(
 	enqueueRestoreWorkMiddleware: EnqueueRestoreWorkMiddleware,
 	getPatchSizeMiddleware: GetPatchSizeMiddleware,
 	homeReducer: HomeReducer
-) : BaseFeature<HomeEvent, HomeUiState>(
+) : JetFeature<HomeEvent, HomeUiState>(
 	middlewares = listOf(
 		observePatchStatusMiddleware,
 		observePatchVersionMiddleware,

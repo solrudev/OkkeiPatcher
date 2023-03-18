@@ -1,7 +1,7 @@
 package ru.solrudev.okkeipatcher.ui.main.navhost
 
 import dagger.hilt.android.scopes.ViewModelScoped
-import io.github.solrudev.jetmvi.BaseFeature
+import io.github.solrudev.jetmvi.JetFeature
 import ru.solrudev.okkeipatcher.ui.main.navhost.middleware.CheckAndObserveUpdateMiddleware
 import ru.solrudev.okkeipatcher.ui.main.navhost.model.MainEvent
 import ru.solrudev.okkeipatcher.ui.main.navhost.model.MainUiState
@@ -12,7 +12,7 @@ import javax.inject.Inject
 class MainFeature @Inject constructor(
 	checkAndObserveUpdateMiddleware: CheckAndObserveUpdateMiddleware,
 	mainReducer: MainReducer
-) : BaseFeature<MainEvent, MainUiState>(
+) : JetFeature<MainEvent, MainUiState>(
 	middlewares = listOf(checkAndObserveUpdateMiddleware),
 	reducer = mainReducer,
 	initialUiState = MainUiState()

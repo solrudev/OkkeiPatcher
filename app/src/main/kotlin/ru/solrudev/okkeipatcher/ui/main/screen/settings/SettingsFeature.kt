@@ -1,7 +1,7 @@
 package ru.solrudev.okkeipatcher.ui.main.screen.settings
 
 import dagger.hilt.android.scopes.ViewModelScoped
-import io.github.solrudev.jetmvi.BaseFeature
+import io.github.solrudev.jetmvi.JetFeature
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.middleware.ObserveHandleSaveDataMiddleware
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.middleware.ObserveThemeMiddleware
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.middleware.OnHandleSaveDataClickMiddleware
@@ -18,7 +18,7 @@ class SettingsFeature @Inject constructor(
 	observeThemeMiddleware: ObserveThemeMiddleware,
 	persistThemeMiddleware: PersistThemeMiddleware,
 	settingsReducer: SettingsReducer
-) : BaseFeature<SettingsEvent, SettingsUiState>(
+) : JetFeature<SettingsEvent, SettingsUiState>(
 	middlewares = listOf(
 		observeHandleSaveDataMiddleware,
 		onHandleSaveDataClickMiddleware,

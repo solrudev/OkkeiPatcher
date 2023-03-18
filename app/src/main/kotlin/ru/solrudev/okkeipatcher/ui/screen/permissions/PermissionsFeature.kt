@@ -1,7 +1,7 @@
 package ru.solrudev.okkeipatcher.ui.screen.permissions
 
 import dagger.hilt.android.scopes.ViewModelScoped
-import io.github.solrudev.jetmvi.BaseFeature
+import io.github.solrudev.jetmvi.JetFeature
 import ru.solrudev.okkeipatcher.ui.screen.permissions.middleware.LoadRequiredPermissionsMiddleware
 import ru.solrudev.okkeipatcher.ui.screen.permissions.model.PermissionsEvent
 import ru.solrudev.okkeipatcher.ui.screen.permissions.model.PermissionsUiState
@@ -12,7 +12,7 @@ import javax.inject.Inject
 class PermissionsFeature @Inject constructor(
 	loadRequiredPermissionsMiddleware: LoadRequiredPermissionsMiddleware,
 	permissionsReducer: PermissionsReducer
-) : BaseFeature<PermissionsEvent, PermissionsUiState>(
+) : JetFeature<PermissionsEvent, PermissionsUiState>(
 	middlewares = listOf(loadRequiredPermissionsMiddleware),
 	reducer = permissionsReducer,
 	initialUiState = PermissionsUiState()

@@ -1,7 +1,7 @@
 package ru.solrudev.okkeipatcher.ui.main.screen.settings.cleardata
 
 import dagger.hilt.android.scopes.ViewModelScoped
-import io.github.solrudev.jetmvi.BaseFeature
+import io.github.solrudev.jetmvi.JetFeature
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.cleardata.middleware.ClearDataMiddleware
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.cleardata.model.ClearDataEvent
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.cleardata.model.ClearDataUiState
@@ -12,7 +12,7 @@ import javax.inject.Inject
 class ClearDataFeature @Inject constructor(
 	clearDataMiddleware: ClearDataMiddleware,
 	clearDataReducer: ClearDataReducer
-) : BaseFeature<ClearDataEvent, ClearDataUiState>(
+) : JetFeature<ClearDataEvent, ClearDataUiState>(
 	middlewares = listOf(clearDataMiddleware),
 	reducer = clearDataReducer,
 	initialUiState = ClearDataUiState()

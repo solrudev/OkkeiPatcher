@@ -1,7 +1,7 @@
 package ru.solrudev.okkeipatcher.ui.main.screen.licenses
 
 import dagger.hilt.android.scopes.ViewModelScoped
-import io.github.solrudev.jetmvi.BaseFeature
+import io.github.solrudev.jetmvi.JetFeature
 import ru.solrudev.okkeipatcher.ui.main.screen.licenses.middleware.LicensesMiddleware
 import ru.solrudev.okkeipatcher.ui.main.screen.licenses.model.LicensesEvent
 import ru.solrudev.okkeipatcher.ui.main.screen.licenses.model.LicensesUiState
@@ -12,7 +12,7 @@ import javax.inject.Inject
 class LicensesFeature @Inject constructor(
 	licensesMiddleware: LicensesMiddleware,
 	licensesReducer: LicensesReducer
-) : BaseFeature<LicensesEvent, LicensesUiState>(
+) : JetFeature<LicensesEvent, LicensesUiState>(
 	middlewares = listOf(licensesMiddleware),
 	reducer = licensesReducer,
 	initialUiState = LicensesUiState()

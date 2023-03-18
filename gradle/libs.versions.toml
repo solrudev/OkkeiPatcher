@@ -17,7 +17,7 @@ pseudoapksigner = { module = "com.github.aefyr:pseudoapksigner", version = "1.6"
 apksig = { module = "com.android.tools.build:apksig", version.ref = "android-gradleplugin" }
 zip4j = { module = "net.lingala.zip4j:zip4j", version.strictly = "2.11.4" }
 simpleinstaller = { module = "io.github.solrudev:simpleinstaller", version = "4.2.2" }
-jetmvi = { module = "io.github.solrudev:jetmvi", version = "0.1.2" }
+jetmvi = { module = "io.github.solrudev:jetmvi", version = "0.1.3" }
 viewbindingpropertydelegate = { module = "com.github.kirich1409:viewbindingpropertydelegate-noreflection", version = "1.5.8" }
 progressbutton = { module = "com.github.razir.progressbutton:progressbutton", version = "2.1.0" }
 insetter = { module = "dev.chrisbanes.insetter:insetter", version = "0.6.1" }

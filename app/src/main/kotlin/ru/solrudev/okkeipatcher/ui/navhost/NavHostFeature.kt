@@ -1,7 +1,7 @@
 package ru.solrudev.okkeipatcher.ui.navhost
 
 import dagger.hilt.android.scopes.ViewModelScoped
-import io.github.solrudev.jetmvi.BaseFeature
+import io.github.solrudev.jetmvi.JetFeature
 import ru.solrudev.okkeipatcher.ui.navhost.middleware.CheckPermissionsMiddleware
 import ru.solrudev.okkeipatcher.ui.navhost.middleware.CheckSaveDataAccessMiddleware
 import ru.solrudev.okkeipatcher.ui.navhost.middleware.ObservePendingWorkMiddleware
@@ -18,7 +18,7 @@ class NavHostFeature @Inject constructor(
 	checkSaveDataAccessMiddleware: CheckSaveDataAccessMiddleware,
 	observeThemeMiddleware: ObserveThemeMiddleware,
 	navHostReducer: NavHostReducer
-) : BaseFeature<NavHostEvent, NavHostUiState>(
+) : JetFeature<NavHostEvent, NavHostUiState>(
 	middlewares = listOf(
 		checkPermissionsMiddleware,
 		observePendingWorkMiddleware,
