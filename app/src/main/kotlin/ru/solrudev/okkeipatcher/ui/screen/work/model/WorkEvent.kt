@@ -8,14 +8,14 @@ import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 
 sealed interface WorkEvent : JetEvent {
 	data class CancelWork(val work: Work) : WorkEvent, WorkEffect
-	data class StartObservingWork(val work: Work) : ObserveWorkEvent, WorkEffect
+	data class StartObservingWork(val work: Work) : WorkEvent, WorkEffect
 	object CancelRequested : WorkEvent
 	object CancelMessageShown : WorkEvent
 	object CancelMessageDismissed : WorkEvent
 	object ErrorShown : WorkEvent
 	object ErrorDismissed : WorkEvent
 	object AnimationsPlayed : WorkEvent
-	object ViewHidden : ObserveWorkEvent
+	object ViewHidden : WorkEvent
 }
 
 sealed interface WorkStateEvent : WorkEvent {
@@ -26,5 +26,4 @@ sealed interface WorkStateEvent : WorkEvent {
 	object Unknown : WorkStateEvent
 }
 
-sealed interface ObserveWorkEvent : WorkEvent
 sealed interface WorkEffect : JetEffect
