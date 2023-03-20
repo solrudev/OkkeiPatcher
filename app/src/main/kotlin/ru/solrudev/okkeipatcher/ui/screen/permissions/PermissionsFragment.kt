@@ -2,6 +2,8 @@ package ru.solrudev.okkeipatcher.ui.screen.permissions
 
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+import android.annotation.TargetApi
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions
@@ -34,6 +36,7 @@ class PermissionsFragment : Fragment(R.layout.fragment_permissions), JetView<Per
 		}
 	}
 
+	@TargetApi(Build.VERSION_CODES.O)
 	private val installPermissionLauncher = registerForActivityResult(InstallPermissionContract()) { isGranted ->
 		if (isGranted) {
 			viewModel.dispatchEvent(PermissionStateChanged(Permission.Install, isGranted = true))
