@@ -93,14 +93,16 @@ class WorkFragment : Fragment(R.layout.fragment_work), JetView<WorkUiState> {
 		findNavController().currentDestination?.label = args.work.label.resolve(requireContext())
 	}
 
-	private fun onWorkSucceeded(playAnimations: Boolean) = with(binding) {
+	private fun onWorkSucceeded(playAnimations: Boolean) = with(binding.buttonWork) {
 		if (playAnimations) {
 			startSuccessAnimations()
 		}
-		buttonWork.setOnClickListener {
+		setOnClickListener {
 			findNavController().popBackStack()
 		}
-		buttonWork.setText(R.string.button_text_ok)
+		setBackgroundColor(requireContext().getMaterialColor(com.google.android.material.R.attr.colorPrimary))
+		setTextColor(requireContext().getMaterialColor(com.google.android.material.R.attr.colorOnPrimary))
+		setText(R.string.button_text_ok)
 		currentCancelDialog?.dismiss()
 	}
 

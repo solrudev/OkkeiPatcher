@@ -78,6 +78,7 @@
 			android:layout_marginHorizontal="@dimen/card_margin"
 			android:layout_marginTop="24dp"
 			android:text="@string/button_text_abort_process"
+			style="@style/Widget.OkkeiPatcher.Button.ErrorButton"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"

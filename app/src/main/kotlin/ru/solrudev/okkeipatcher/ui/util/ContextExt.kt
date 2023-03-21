@@ -4,7 +4,9 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.widget.Toast
+import androidx.annotation.AttrRes
 import androidx.core.content.getSystemService
+import com.google.android.material.color.MaterialColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.core.resolve
@@ -29,4 +31,11 @@ fun Context.createDialogBuilder(message: Message): MaterialAlertDialogBuilder {
 		.setCancelable(true)
 		.setTitle(titleString)
 		.setMessage(messageString)
+}
+
+/**
+ * Utility extension method for [MaterialColors.getColor].
+ */
+fun Context.getMaterialColor(@AttrRes colorAttributeResId: Int): Int {
+	return MaterialColors.getColor(this, colorAttributeResId, "")
 }

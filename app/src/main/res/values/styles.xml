@@ -27,6 +27,12 @@
 		<item name="android:insetBottom">0dp</item>
 	</style>
 
+	<style name="Widget.OkkeiPatcher.Button.ErrorButton" parent="Widget.OkkeiPatcher.Button.UnelevatedButton">
+		<item name="backgroundTint">?colorErrorContainer</item>
+		<item name="android:textColor">?colorOnErrorContainer</item>
+		<item name="iconTint">?colorOnErrorContainer</item>
+	</style>
+
 	<style name="Base.Widget.OkkeiPatcher.Toolbar.Light" parent="Widget.Material3.Toolbar">
 		<item name="titleTextColor">?colorOnPrimary</item>
 		<item name="subtitleTextColor">?colorOnPrimary</item>
