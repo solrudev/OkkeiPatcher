@@ -20,14 +20,18 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginBottom="@dimen/button_margin_vertical"
-			android:text="@string/button_text_patch" />
+			android:enabled="false"
+			android:text="@string/button_text_patch"
+			tools:enabled="true" />
 
 		<Button
 			android:id="@+id/button_card_actions_restore"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
+			android:enabled="false"
 			android:text="@string/button_text_restore"
-			style="?materialButtonOutlinedStyle" />
+			style="?materialButtonOutlinedStyle"
+			tools:enabled="true" />
 
 	</LinearLayout>
 </com.google.android.material.card.MaterialCardView>
