@@ -14,7 +14,9 @@
 		<com.google.android.material.appbar.MaterialToolbar
 			android:id="@+id/toolbar_nav_host"
 			android:layout_width="match_parent"
-			android:layout_height="?actionBarSize" />
+			android:layout_height="?actionBarSize"
+			tools:menu="@menu/main_menu"
+			tools:title="@string/app_name" />
 
 	</com.google.android.material.appbar.AppBarLayout>
 

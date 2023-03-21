@@ -3,7 +3,7 @@
 
 	<style name="Base.V23.Theme.OkkeiPatcher" parent="Base.V21.Theme.OkkeiPatcher">
 		<item name="android:windowTranslucentStatus">false</item>
-		<item name="android:windowLightStatusBar">true</item>
+		<item name="android:windowLightStatusBar">false</item>
 	</style>
 
 	<style name="Base.Theme.OkkeiPatcher" parent="Base.V23.Theme.OkkeiPatcher" />

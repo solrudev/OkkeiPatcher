@@ -28,7 +28,6 @@
 		<item name="colorSurfaceInverse">@color/md_theme_dark_inverseSurface</item>
 		<item name="colorPrimaryInverse">@color/md_theme_dark_primaryInverse</item>
 		<item name="android:shadowColor">@color/md_theme_dark_shadow</item>
-		<item name="elevationOverlayEnabled">false</item>
 	</style>
 
 	<style name="Base.V19.Theme.OkkeiPatcher" parent="Base.V19.Night.Theme.OkkeiPatcher" />

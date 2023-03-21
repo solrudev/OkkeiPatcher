@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+	<style name="ThemeOverlay.OkkeiPatcher.Toolbar.Light" parent="">
+		<item name="colorSurface">?colorPrimary</item>
+		<item name="colorOnSurface">?colorOnPrimary</item>
+		<item name="colorSurfaceVariant">?colorPrimary</item>
+		<item name="colorOnSurfaceVariant">?colorOnPrimary</item>
+		<item name="actionMenuTextColor">?colorOnPrimary</item>
+		<item name="colorControlNormal">?colorOnPrimary</item>
+	</style>
+
 	<style name="Widget.OkkeiPatcher.CardView" parent="Widget.Material3.CardView.Elevated">
 		<item name="cardElevation">@dimen/card_elevated_elevation</item>
 		<item name="shapeAppearance">?shapeAppearanceCornerLarge</item>
@@ -18,16 +27,31 @@
 		<item name="android:insetBottom">0dp</item>
 	</style>
 
+	<style name="Base.Widget.OkkeiPatcher.Toolbar.Light" parent="Widget.Material3.Toolbar">
+		<item name="titleTextColor">?colorOnPrimary</item>
+		<item name="subtitleTextColor">?colorOnPrimary</item>
+		<item name="navigationIconTint">?colorOnPrimary</item>
+		<item name="materialThemeOverlay">@style/ThemeOverlay.OkkeiPatcher.Toolbar.Light</item>
+	</style>
+
+	<style name="Base.Widget.OkkeiPatcher.Toolbar" parent="Base.Widget.OkkeiPatcher.Toolbar.Light"/>
+	<style name="Widget.OkkeiPatcher.Toolbar" parent="Base.Widget.OkkeiPatcher.Toolbar"/>
+
+	<style name="Base.Widget.OkkeiPatcher.AppBarLayout.Light" parent="Widget.Material3.AppBarLayout">
+		<item name="android:background">?colorPrimary</item>
+	</style>
+
+	<style name="Base.Widget.OkkeiPatcher.AppBarLayout" parent="Base.Widget.OkkeiPatcher.AppBarLayout.Light"/>
+	<style name="Widget.OkkeiPatcher.AppBarLayout" parent="Base.Widget.OkkeiPatcher.AppBarLayout"/>
+
 	<style name="Widget.OkkeiPatcher.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
 		<item name="itemTextColor">@color/navigation_item_label_color</item>
-		<item name="itemActiveIndicatorStyle">@null</item>
 		<item name="itemTextAppearanceActive">@style/TextAppearance.OkkeiPatcher.TitleSmallBold</item>
 		<item name="itemTextAppearanceInactive">@style/TextAppearance.OkkeiPatcher.TitleSmallBold</item>
 	</style>
 
 	<style name="Widget.OkkeiPatcher.NavigationRailView" parent="Widget.Material3.NavigationRailView">
 		<item name="itemTextColor">@color/navigation_item_label_color</item>
-		<item name="itemActiveIndicatorStyle">@null</item>
 		<item name="itemTextAppearanceActive">@style/TextAppearance.OkkeiPatcher.TitleSmallBold</item>
 		<item name="itemTextAppearanceInactive">@style/TextAppearance.OkkeiPatcher.TitleSmallBold</item>
 	</style>
