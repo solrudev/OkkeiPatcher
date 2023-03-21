@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<style name="TextAppearance.OkkeiPatcher.Subtitle" parent="TextAppearance.Material3.BodyLarge">
+		<item name="materialThemeOverlay">@style/ThemeOverlay.OkkeiPatcher.Subtitle</item>
+		<item name="android:textColor">?colorOnSurfaceVariant</item>
+	</style>
+
+	<style name="TextAppearance.OkkeiPatcher.CardSubtitle" parent="TextAppearance.Material3.BodyMedium">
+		<item name="materialThemeOverlay">@style/ThemeOverlay.OkkeiPatcher.Subtitle</item>
+		<item name="android:textColor">?colorOnSurfaceVariant</item>
+	</style>
+
+	<style name="TextAppearance.OkkeiPatcher.CardSubtitleLarge" parent="TextAppearance.Material3.BodyLarge">
+		<item name="materialThemeOverlay">@style/ThemeOverlay.OkkeiPatcher.CardSubtitleLarge</item>
+		<item name="android:textColor">?colorOnSurfaceVariant</item>
+	</style>
+
+	<style name="TextAppearance.OkkeiPatcher.TitleSmallBold" parent="TextAppearance.Material3.TitleSmall">
+		<item name="android:textStyle">bold</item>
+	</style>
+</resources>

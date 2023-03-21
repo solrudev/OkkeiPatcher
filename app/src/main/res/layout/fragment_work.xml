@@ -13,7 +13,7 @@
 		android:animateLayoutChanges="true"
 		android:paddingHorizontal="@dimen/card_layout_padding_horizontal"
 		android:paddingTop="52dp"
-		android:paddingBottom="28dp">
+		android:paddingBottom="42dp">
 
 		<ImageView
 			android:id="@+id/imageview_work_okkei"
@@ -65,7 +65,7 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_marginBottom="8dp"
-					android:textAppearance="?textAppearanceBodyLarge"
+					style="@style/TextAppearance.OkkeiPatcher.CardSubtitleLarge"
 					tools:text="@string/status_backing_up_obb" />
 
 			</LinearLayout>
@@ -76,7 +76,6 @@
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginHorizontal="@dimen/card_margin"
-			android:layout_marginTop="24dp"
 			android:text="@string/button_text_abort_process"
 			style="@style/Widget.OkkeiPatcher.Button.ErrorButton"
 			app:layout_constraintBottom_toBottomOf="parent"

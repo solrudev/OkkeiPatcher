@@ -1,30 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<style name="ThemeOverlay.OkkeiPatcher.Toolbar.Light" parent="">
-		<item name="colorSurface">?colorPrimary</item>
-		<item name="colorOnSurface">?colorOnPrimary</item>
-		<item name="colorSurfaceVariant">?colorPrimary</item>
-		<item name="colorOnSurfaceVariant">?colorOnPrimary</item>
-		<item name="actionMenuTextColor">?colorOnPrimary</item>
-		<item name="colorControlNormal">?colorOnPrimary</item>
-	</style>
-
 	<style name="Widget.OkkeiPatcher.CardView" parent="Widget.Material3.CardView.Elevated">
 		<item name="cardElevation">@dimen/card_elevated_elevation</item>
 		<item name="shapeAppearance">?shapeAppearanceCornerLarge</item>
 	</style>
 
 	<style name="Widget.OkkeiPatcher.Button.OutlinedButton" parent="Widget.Material3.Button.OutlinedButton">
+		<item name="materialThemeOverlay">@style/ThemeOverlay.OkkeiPatcher.Button</item>
 		<item name="android:insetTop">0dp</item>
 		<item name="android:insetBottom">0dp</item>
 		<item name="strokeColor">@color/button_outlined_outline_color</item>
 		<item name="backgroundTint">@color/button_outlined_bg_color</item>
+		<item name="android:textColor">@color/button_outlined_content_color</item>
+		<item name="iconTint">@color/button_outlined_content_color</item>
 	</style>
 
 	<style name="Widget.OkkeiPatcher.Button.UnelevatedButton" parent="Widget.Material3.Button.UnelevatedButton">
+		<item name="materialThemeOverlay">@style/ThemeOverlay.OkkeiPatcher.Button</item>
 		<item name="android:insetTop">0dp</item>
 		<item name="android:insetBottom">0dp</item>
+		<item name="backgroundTint">@color/button_unelevated_bg_color</item>
+		<item name="android:textColor">@color/button_unelevated_content_color</item>
+		<item name="iconTint">@color/button_unelevated_content_color</item>.
 	</style>
 
 	<style name="Widget.OkkeiPatcher.Button.ErrorButton" parent="Widget.OkkeiPatcher.Button.UnelevatedButton">
@@ -51,6 +49,7 @@
 	<style name="Widget.OkkeiPatcher.AppBarLayout" parent="Base.Widget.OkkeiPatcher.AppBarLayout"/>
 
 	<style name="Widget.OkkeiPatcher.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
+		<item name="materialThemeOverlay">@style/ThemeOverlay.OkkeiPatcher.BottomNavigationView</item>
 		<item name="itemTextColor">@color/navigation_item_label_color</item>
 		<item name="itemTextAppearanceActive">@style/TextAppearance.OkkeiPatcher.TitleSmallBold</item>
 		<item name="itemTextAppearanceInactive">@style/TextAppearance.OkkeiPatcher.TitleSmallBold</item>
@@ -69,13 +68,5 @@
 	<style name="Widget.OkkeiPatcher.LinearProgressIndicator" parent="Widget.Material3.LinearProgressIndicator">
 		<item name="trackThickness">@dimen/linear_progress_indicator_track_thickness</item>
 		<item name="trackCornerRadius">@dimen/linear_progress_indicator_track_thickness</item>
-	</style>
-
-	<style name="TextAppearance.OkkeiPatcher.TitleSmallBold" parent="TextAppearance.Material3.TitleSmall">
-		<item name="android:textStyle">bold</item>
-	</style>
-
-	<style name="TextAppearance.OkkeiPatcher.LabelLargeBold" parent="TextAppearance.Material3.LabelLarge">
-		<item name="android:textStyle">bold</item>
 	</style>
 </resources>

@@ -34,7 +34,7 @@
 			android:layout_height="wrap_content"
 			android:text="@string/about_screen_version"
 			android:textAlignment="center"
-			android:textAppearance="?textAppearanceBodyLarge" />
+			style="@style/TextAppearance.OkkeiPatcher.Subtitle" />
 
 		<Button
 			android:id="@+id/button_about_source_code"

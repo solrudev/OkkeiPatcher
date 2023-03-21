@@ -2,7 +2,7 @@
 	<color name="md_theme_light_primary">#3A68E0</color>
 	<color name="md_theme_light_onPrimary">#FFFFFF</color>
 	<color name="md_theme_light_primaryContainer">#3A68E0</color>
-	<color name="md_theme_light_onPrimaryContainer">#DBE1FF</color>
+	<color name="md_theme_light_onPrimaryContainer">#FFFFFF</color>
 	<color name="md_theme_light_secondary">#4D7BF2</color>
 	<color name="md_theme_light_onSecondary">#FFFFFF</color>
 	<color name="md_theme_light_secondaryContainer">#E5EDFF</color>
@@ -20,6 +20,7 @@
 	<color name="md_theme_light_surface">#FFFFFF</color>
 	<color name="md_theme_light_onSurface">#393939</color>
 	<color name="md_theme_light_surfaceVariant">#E7E7E7</color>
+	<color name="md_theme_light_surfaceVariant_button">#EDEDED</color>
 	<color name="md_theme_light_onSurfaceVariant">#818181</color>
 	<color name="md_theme_light_outline">#79747E</color>
 	<color name="md_theme_light_inverseOnSurface">#FFFFFF</color>
@@ -29,8 +30,8 @@
 	<color name="md_theme_light_primaryInverse">#FFFFFF</color>
 	<color name="md_theme_dark_primary">#3A68E0</color>
 	<color name="md_theme_dark_onPrimary">#FFFFFF</color>
-	<color name="md_theme_dark_primaryContainer">#DBE1FF</color>
-	<color name="md_theme_dark_onPrimaryContainer">#3A68E0</color>
+	<color name="md_theme_dark_primaryContainer">#3A68E0</color>
+	<color name="md_theme_dark_onPrimaryContainer">#FFFFFF</color>
 	<color name="md_theme_dark_secondary">#4D7BF2</color>
 	<color name="md_theme_dark_onSecondary">#FFFFFF</color>
 	<color name="md_theme_dark_secondaryContainer">#343740</color>
@@ -46,9 +47,13 @@
 	<color name="md_theme_dark_background">#1B1B1B</color>
 	<color name="md_theme_dark_onBackground">#FFFFFF</color>
 	<color name="md_theme_dark_surface">#262626</color>
+	<color name="md_theme_dark_surface_bottomNavigation">#2B2B2B</color>
 	<color name="md_theme_dark_onSurface">#FFFFFF</color>
 	<color name="md_theme_dark_surfaceVariant">#3D3D3D</color>
+	<color name="md_theme_dark_surfaceVariant_button">#303030</color>
 	<color name="md_theme_dark_onSurfaceVariant">#A4A4A4</color>
+	<color name="md_theme_dark_onSurfaceVariant_cardSubtitle">#D0D0D0</color>
+	<color name="md_theme_dark_onSurfaceVariant_cardSubtitleLarge">#D8D8D8</color>
 	<color name="md_theme_dark_outline">#757680</color>
 	<color name="md_theme_dark_inverseOnSurface">#262626</color>
 	<color name="md_theme_dark_inverseSurface">#FFFFFF</color>
