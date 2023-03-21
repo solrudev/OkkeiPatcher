@@ -15,7 +15,7 @@ suspend fun PackageInstaller.install(apkPath: Path, immediate: Boolean = false):
 			confirmationStrategy = ConfirmationStrategy.IMMEDIATE
 		}
 		notification {
-			icon = R.mipmap.ic_launcher_foreground
+			icon = R.drawable.ic_notification
 		}
 	}
 	return when (result) {

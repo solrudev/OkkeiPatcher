@@ -79,7 +79,7 @@ class ApkRepositoryImpl @Inject constructor(
 
 	override suspend fun uninstall() = packageUninstaller.uninstallPackage(GAME_PACKAGE_NAME) {
 		notification {
-			icon = R.mipmap.ic_launcher_foreground
+			icon = R.drawable.ic_notification
 		}
 	}
 }

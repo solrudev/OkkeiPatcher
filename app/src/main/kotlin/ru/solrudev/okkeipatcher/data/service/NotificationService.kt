@@ -74,7 +74,7 @@ class NotificationServiceImpl(
 			setContentTitle(contentTitle)
 			setContentText("")
 			priority = NotificationCompat.PRIORITY_DEFAULT
-			setSmallIcon(R.mipmap.ic_launcher_foreground)
+			setSmallIcon(R.drawable.ic_notification)
 			setContentIntent(contentIntent)
 			setSound(null)
 			if (progressNotification) {
