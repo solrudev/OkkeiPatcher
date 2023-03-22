@@ -21,6 +21,6 @@
 	<dimen name="content_padding">16dp</dimen>
 
 	<!-- Other -->
-	<dimen name="icon_game_size">88dp</dimen>
+	<dimen name="icon_app_size">88dp</dimen>
 	<dimen name="button_update_patch_height">32dp</dimen>
 </resources>

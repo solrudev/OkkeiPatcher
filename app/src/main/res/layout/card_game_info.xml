@@ -15,8 +15,8 @@
 
 		<com.google.android.material.imageview.ShapeableImageView
 			android:id="@+id/imageview_card_game_icon"
-			android:layout_width="@dimen/icon_game_size"
-			android:layout_height="@dimen/icon_game_size"
+			android:layout_width="@dimen/icon_app_size"
+			android:layout_height="@dimen/icon_app_size"
 			android:src="@color/color_game_icon_placeholder"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
@@ -40,7 +40,7 @@
 			android:id="@+id/textview_card_game_version"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:text="@string/card_game_version"
+			android:text="@string/card_app_version"
 			style="@style/TextAppearance.OkkeiPatcher.CardSubtitle"
 			app:layout_constraintBottom_toTopOf="@id/textview_card_game_patch"
 			app:layout_constraintEnd_toEndOf="parent"

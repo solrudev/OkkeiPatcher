@@ -26,7 +26,7 @@ class GameInfoView(private val binding: CardGameInfoBinding) : JetView<HomeUiSta
 	private fun loadGameInfo() = with(binding) {
 		val gameUiState = GameUiState(context)
 		textviewCardGameTitle.text = gameUiState.title
-		textviewCardGameVersion.text = context.getString(R.string.card_game_version, gameUiState.version)
+		textviewCardGameVersion.text = context.getString(R.string.card_app_version, gameUiState.version)
 		imageviewCardGameIcon.setImageDrawable(gameUiState.icon)
 	}
 }

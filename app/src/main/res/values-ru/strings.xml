@@ -21,7 +21,7 @@
 	<string name="button_text_update_patch">Обновить патч</string>
 
 	<!--Cards-->
-	<string name="card_game_version">Версия: %s</string>
+	<string name="card_app_version">Версия: %s</string>
 	<string name="card_patch_version">Патч: %s</string>
 
 	<!--Errors-->
