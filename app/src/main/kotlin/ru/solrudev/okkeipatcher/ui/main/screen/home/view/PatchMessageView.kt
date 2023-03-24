@@ -8,7 +8,7 @@ import ru.solrudev.okkeipatcher.domain.core.Message
 import ru.solrudev.okkeipatcher.ui.main.screen.home.HomeViewModel
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeUiState
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchEvent.*
-import ru.solrudev.okkeipatcher.ui.model.shouldShow
+import ru.solrudev.okkeipatcher.ui.shared.model.shouldShow
 import ru.solrudev.okkeipatcher.ui.util.createDialogBuilder
 import ru.solrudev.okkeipatcher.ui.util.showWithLifecycle
 

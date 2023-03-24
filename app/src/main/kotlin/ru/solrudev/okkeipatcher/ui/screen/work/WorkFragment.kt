@@ -17,10 +17,10 @@ import ru.solrudev.okkeipatcher.app.model.ProgressData
 import ru.solrudev.okkeipatcher.data.core.resolve
 import ru.solrudev.okkeipatcher.databinding.FragmentWorkBinding
 import ru.solrudev.okkeipatcher.domain.core.Message
-import ru.solrudev.okkeipatcher.ui.model.shouldShow
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEvent.*
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkUiState
 import ru.solrudev.okkeipatcher.ui.screen.work.model.percentDone
+import ru.solrudev.okkeipatcher.ui.shared.model.shouldShow
 import ru.solrudev.okkeipatcher.ui.util.*
 
 @AndroidEntryPoint

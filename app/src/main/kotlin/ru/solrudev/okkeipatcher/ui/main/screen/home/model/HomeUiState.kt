@@ -3,7 +3,7 @@ package ru.solrudev.okkeipatcher.ui.main.screen.home.model
 import io.github.solrudev.jetmvi.JetState
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
-import ru.solrudev.okkeipatcher.ui.model.MessageUiState
+import ru.solrudev.okkeipatcher.ui.shared.model.MessageUiState
 
 data class HomeUiState(
 	val isPatchEnabled: Boolean = true,

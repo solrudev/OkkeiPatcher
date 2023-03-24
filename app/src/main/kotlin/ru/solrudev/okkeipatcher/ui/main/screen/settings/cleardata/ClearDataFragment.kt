@@ -16,7 +16,7 @@ import ru.solrudev.okkeipatcher.ui.main.screen.settings.cleardata.model.ClearDat
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.cleardata.model.ClearDataUiState
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.cleardata.model.shouldShowErrorMessage
 import ru.solrudev.okkeipatcher.ui.main.util.showSnackbar
-import ru.solrudev.okkeipatcher.ui.model.shouldShow
+import ru.solrudev.okkeipatcher.ui.shared.model.shouldShow
 import ru.solrudev.okkeipatcher.ui.util.createDialogBuilder
 import ru.solrudev.okkeipatcher.ui.util.showWithLifecycle
 

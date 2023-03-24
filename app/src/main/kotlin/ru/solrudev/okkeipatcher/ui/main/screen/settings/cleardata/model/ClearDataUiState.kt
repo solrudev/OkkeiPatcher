@@ -5,7 +5,7 @@ import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.core.EmptyString
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Message
-import ru.solrudev.okkeipatcher.ui.model.MessageUiState
+import ru.solrudev.okkeipatcher.ui.shared.model.MessageUiState
 
 data class ClearDataUiState(
 	val warning: MessageUiState = MessageUiState(

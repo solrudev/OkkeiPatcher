@@ -1,37 +1,24 @@
 package ru.solrudev.okkeipatcher.ui.screen.work.middleware
 
-import io.github.solrudev.jetmvi.JetMiddleware
-import io.github.solrudev.jetmvi.MiddlewareScope
-import ru.solrudev.okkeipatcher.app.model.WorkState
+import ru.solrudev.okkeipatcher.app.usecase.work.CancelWorkUseCase
 import ru.solrudev.okkeipatcher.app.usecase.work.CompleteWorkUseCase
 import ru.solrudev.okkeipatcher.app.usecase.work.GetWorkStateFlowUseCase
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEvent
+import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEvent.CancelWork
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEvent.StartObservingWork
-import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkStateEvent
+import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkStateEventFactoryForWorkScreen
+import ru.solrudev.okkeipatcher.ui.shared.middleware.WorkMiddleware
 import javax.inject.Inject
 
 class ObserveWorkMiddleware @Inject constructor(
-	private val getWorkStateFlowUseCase: GetWorkStateFlowUseCase,
-	private val completeWorkUseCase: CompleteWorkUseCase
-) : JetMiddleware<WorkEvent> {
-
-	override fun MiddlewareScope<WorkEvent>.apply() {
-		onEventLatest<StartObservingWork> { event ->
-			val work = event.work
-			getWorkStateFlowUseCase(work).collect { workState ->
-				if (workState.isFinished) {
-					completeWorkUseCase(work)
-				}
-				send(workState.toEvent())
-			}
-		}
-	}
-
-	private fun WorkState.toEvent() = when (this) {
-		is WorkState.Running -> WorkStateEvent.Running(status, progressData)
-		is WorkState.Failed -> WorkStateEvent.Failed(reason, stackTrace)
-		is WorkState.Succeeded -> WorkStateEvent.Succeeded
-		is WorkState.Canceled -> WorkStateEvent.Canceled
-		is WorkState.Unknown -> WorkStateEvent.Unknown
-	}
-}
+	getWorkStateFlowUseCase: GetWorkStateFlowUseCase,
+	completeWorkUseCase: CompleteWorkUseCase,
+	cancelWorkUseCase: CancelWorkUseCase,
+) : WorkMiddleware<WorkEvent, StartObservingWork, CancelWork, Nothing>(
+	getWorkStateFlowUseCase,
+	completeWorkUseCase,
+	cancelWorkUseCase,
+	WorkStateEventFactoryForWorkScreen,
+	startEventClass = StartObservingWork::class,
+	cancelEventClass = CancelWork::class
+)

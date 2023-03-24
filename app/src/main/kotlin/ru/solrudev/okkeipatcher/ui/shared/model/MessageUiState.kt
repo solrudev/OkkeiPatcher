@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.ui.model
+package ru.solrudev.okkeipatcher.ui.shared.model
 
 import io.github.solrudev.jetmvi.JetState
 import ru.solrudev.okkeipatcher.domain.core.Message

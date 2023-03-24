@@ -8,7 +8,7 @@ import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeUiState
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchEffect
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchEvent
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchEvent.*
-import ru.solrudev.okkeipatcher.ui.model.MessageUiState
+import ru.solrudev.okkeipatcher.ui.shared.model.MessageUiState
 import javax.inject.Inject
 
 class PatchReducer @Inject constructor() : Reducer<PatchEvent, HomeUiState> {

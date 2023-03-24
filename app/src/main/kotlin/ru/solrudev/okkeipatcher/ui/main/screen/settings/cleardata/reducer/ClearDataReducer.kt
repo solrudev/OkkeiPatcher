@@ -5,7 +5,7 @@ import ru.solrudev.okkeipatcher.ui.main.screen.settings.cleardata.model.ClearDat
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.cleardata.model.ClearDataEvent
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.cleardata.model.ClearDataEvent.*
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.cleardata.model.ClearDataUiState
-import ru.solrudev.okkeipatcher.ui.model.MessageUiState
+import ru.solrudev.okkeipatcher.ui.shared.model.MessageUiState
 import javax.inject.Inject
 
 class ClearDataReducer @Inject constructor() : Reducer<ClearDataEvent, ClearDataUiState> {

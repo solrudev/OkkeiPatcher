@@ -3,7 +3,7 @@ package ru.solrudev.okkeipatcher.ui.screen.work.model
 import io.github.solrudev.jetmvi.JetState
 import ru.solrudev.okkeipatcher.app.model.ProgressData
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
-import ru.solrudev.okkeipatcher.ui.model.MessageUiState
+import ru.solrudev.okkeipatcher.ui.shared.model.MessageUiState
 
 data class WorkUiState(
 	val status: LocalizedString = LocalizedString.empty(),

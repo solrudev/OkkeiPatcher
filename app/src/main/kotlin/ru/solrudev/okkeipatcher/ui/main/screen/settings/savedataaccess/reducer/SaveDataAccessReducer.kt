@@ -5,7 +5,7 @@ import ru.solrudev.okkeipatcher.ui.main.screen.settings.savedataaccess.model.Sav
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.savedataaccess.model.SaveDataAccessEvent
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.savedataaccess.model.SaveDataAccessEvent.*
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.savedataaccess.model.SaveDataAccessUiState
-import ru.solrudev.okkeipatcher.ui.model.MessageUiState
+import ru.solrudev.okkeipatcher.ui.shared.model.MessageUiState
 import javax.inject.Inject
 
 class SaveDataAccessReducer @Inject constructor() : Reducer<SaveDataAccessEvent, SaveDataAccessUiState> {

@@ -8,7 +8,7 @@ import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeUiState
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.RestoreEffect
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.RestoreEvent
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.RestoreEvent.*
-import ru.solrudev.okkeipatcher.ui.model.MessageUiState
+import ru.solrudev.okkeipatcher.ui.shared.model.MessageUiState
 import javax.inject.Inject
 
 class RestoreReducer @Inject constructor() : Reducer<RestoreEvent, HomeUiState> {
