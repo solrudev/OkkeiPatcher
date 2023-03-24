@@ -1,6 +1,7 @@
 <resources>
 	<!--General-->
 	<string name="app_name" translatable="false">Okkei Patcher</string>
+	<string name="empty" translatable="false" />
 	<string name="game_title" translatable="false">CHAOS;CHILD</string>
 	<string name="percent_done" translatable="false">%d%%</string>
 	<string name="not_available">N/A</string>

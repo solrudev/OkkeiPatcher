@@ -3,7 +3,6 @@ package ru.solrudev.okkeipatcher.ui.screen.work
 import android.app.Dialog
 import android.os.Bundle
 import android.view.View
-import android.view.animation.DecelerateInterpolator
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
@@ -94,15 +93,13 @@ class WorkFragment : Fragment(R.layout.fragment_work), JetView<WorkUiState> {
 	}
 
 	private fun onWorkSucceeded(playAnimations: Boolean) = with(binding.buttonWork) {
-		if (playAnimations) {
-			startSuccessAnimations()
-		}
 		setOnClickListener {
 			findNavController().popBackStack()
 		}
-		setBackgroundColor(requireContext().getMaterialColor(com.google.android.material.R.attr.colorPrimary))
-		setTextColor(requireContext().getMaterialColor(com.google.android.material.R.attr.colorOnPrimary))
-		setText(R.string.button_text_ok)
+		setAbortEnabled(abortEnabled = false, animate = playAnimations)
+		if (playAnimations) {
+			viewModel.dispatchEvent(AnimationsPlayed)
+		}
 		currentCancelDialog?.dismiss()
 	}
 
@@ -114,17 +111,6 @@ class WorkFragment : Fragment(R.layout.fragment_work), JetView<WorkUiState> {
 		buttonWork.isEnabled = false
 		currentCancelDialog?.dismiss()
 		showErrorMessage(error)
-	}
-
-	private fun startSuccessAnimations() = with(binding) {
-		buttonWork.alpha = 0f
-		buttonWork
-			.animate()
-			.alpha(1f)
-			.setDuration(500)
-			.setInterpolator(DecelerateInterpolator())
-			.start()
-		viewModel.dispatchEvent(AnimationsPlayed)
 	}
 
 	private fun setProgress(progressData: ProgressData) = with(binding) {

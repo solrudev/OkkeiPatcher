@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<declare-styleable name="AbortButton">
+		<attr name="abortEnabled" format="boolean" />
+		<attr name="abortText" format="reference" />
+		<attr name="text" format="reference" />
+	</declare-styleable>
+
+	<attr name="state_abort_enabled" format="boolean" />
+	<attr name="colorAbort" format="color" />
+	<attr name="colorOnAbort" format="color" />
+</resources>

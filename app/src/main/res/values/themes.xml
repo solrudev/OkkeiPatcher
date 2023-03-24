@@ -28,6 +28,8 @@
 		<item name="colorSurfaceInverse">@color/md_theme_light_inverseSurface</item>
 		<item name="colorPrimaryInverse">@color/md_theme_light_primaryInverse</item>
 		<item name="android:shadowColor">@color/md_theme_light_shadow</item>
+		<item name="colorAbort">@color/md_theme_light_errorContainer</item>
+		<item name="colorOnAbort">@color/md_theme_light_onErrorContainer</item>
 	</style>
 
 	<style name="Base.Theme.OkkeiPatcher" parent="Base.V19.Theme.OkkeiPatcher" />

@@ -71,13 +71,14 @@
 			</LinearLayout>
 		</com.google.android.material.card.MaterialCardView>
 
-		<Button
+		<ru.solrudev.okkeipatcher.ui.view.AbortButton
 			android:id="@+id/button_work"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginHorizontal="@dimen/card_margin"
-			android:text="@string/button_text_abort_process"
-			style="@style/Widget.OkkeiPatcher.Button.ErrorButton"
+			app:abortEnabled="true"
+			app:abortText="@string/button_text_abort_process"
+			app:text="@string/button_text_ok"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"

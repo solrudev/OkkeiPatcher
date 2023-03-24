@@ -10,32 +10,26 @@
 		<item name="materialThemeOverlay">@style/ThemeOverlay.OkkeiPatcher.Button</item>
 		<item name="android:insetTop">0dp</item>
 		<item name="android:insetBottom">0dp</item>
-		<item name="strokeColor">@color/button_outlined_outline_color</item>
-		<item name="backgroundTint">@color/button_outlined_bg_color</item>
-		<item name="android:textColor">@color/button_outlined_content_color</item>
-		<item name="iconTint">@color/button_outlined_content_color</item>
+		<item name="strokeColor">@color/button_outline_color_selector</item>
+		<item name="backgroundTint">@color/text_button_background_color_selector</item>
+		<item name="android:textColor">@color/text_button_foreground_color_selector</item>
+		<item name="iconTint">@color/text_button_foreground_color_selector</item>
 	</style>
 
 	<style name="Widget.OkkeiPatcher.Button.UnelevatedButton" parent="Widget.Material3.Button.UnelevatedButton">
 		<item name="materialThemeOverlay">@style/ThemeOverlay.OkkeiPatcher.Button</item>
 		<item name="android:insetTop">0dp</item>
 		<item name="android:insetBottom">0dp</item>
-		<item name="backgroundTint">@color/button_unelevated_bg_color</item>
-		<item name="android:textColor">@color/button_unelevated_content_color</item>
-		<item name="iconTint">@color/button_unelevated_content_color</item>.
-	</style>
-
-	<style name="Widget.OkkeiPatcher.Button.ErrorButton" parent="Widget.OkkeiPatcher.Button.UnelevatedButton">
-		<item name="backgroundTint">?colorErrorContainer</item>
-		<item name="android:textColor">?colorOnErrorContainer</item>
-		<item name="iconTint">?colorOnErrorContainer</item>
+		<item name="backgroundTint">@color/button_background_color_selector</item>
+		<item name="android:textColor">@color/button_content_color_selector</item>
+		<item name="iconTint">@color/button_content_color_selector</item>.
 	</style>
 
 	<style name="Base.Widget.OkkeiPatcher.Toolbar.Light" parent="Widget.Material3.Toolbar">
+		<item name="materialThemeOverlay">@style/ThemeOverlay.OkkeiPatcher.Toolbar.Light</item>
 		<item name="titleTextColor">?colorOnPrimary</item>
 		<item name="subtitleTextColor">?colorOnPrimary</item>
 		<item name="navigationIconTint">?colorOnPrimary</item>
-		<item name="materialThemeOverlay">@style/ThemeOverlay.OkkeiPatcher.Toolbar.Light</item>
 	</style>
 
 	<style name="Base.Widget.OkkeiPatcher.Toolbar" parent="Base.Widget.OkkeiPatcher.Toolbar.Light"/>
