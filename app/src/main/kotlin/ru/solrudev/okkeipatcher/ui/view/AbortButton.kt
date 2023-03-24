@@ -19,9 +19,6 @@ private val STATE_ABORT_ENABLED = intArrayOf(R.attr.state_abort_enabled)
 
 /**
  * [MaterialButton] which has an additional state of abort button.
- *
- * When configuration change occurs, abort state is restored and text is re-fetched from string resources (only if it
- * was set to [abortText] and [text] or via `app:text` and `app:abortText` attributes.
  */
 class AbortButton @JvmOverloads constructor(
 	context: Context,
@@ -104,25 +101,6 @@ class AbortButton @JvmOverloads constructor(
 		return drawableState
 	}
 
-	override fun onSaveInstanceState(): Parcelable = SavedState(super.onSaveInstanceState()).also { state ->
-		state.abortText = _abortText
-		state.text = text
-		state.isAbortEnabled = isAbortEnabled
-	}
-
-	override fun onRestoreInstanceState(state: Parcelable?) {
-		if (state !is SavedState) {
-			super.onRestoreInstanceState(state)
-			return
-		}
-		isInitialized = false
-		super.onRestoreInstanceState(state.superState)
-		_abortText = state.abortText
-		_text = state.text
-		isAbortEnabled = state.isAbortEnabled
-		setAbortEnabled(state.isAbortEnabled, animate = false)
-	}
-
 	private fun parseAttributes(attrs: AttributeSet?, defStyleAttr: Int) {
 		context.withStyledAttributes(attrs, R.styleable.AbortButton, defStyleAttr, DEF_STYLE_RES) {
 			_abortText = getResourceId(R.styleable.AbortButton_abortText, _abortText)
@@ -151,58 +129,6 @@ class AbortButton @JvmOverloads constructor(
 	private fun setNormalText() {
 		if (isAbortEnabled || !isInitialized) {
 			setText(_text)
-		}
-	}
-
-	private class SavedState : BaseSavedState {
-
-		@StringRes
-		var abortText = R.string.empty
-
-		@StringRes
-		var text = R.string.empty
-
-		var isAbortEnabled = false
-
-		constructor(superState: Parcelable) : super(superState)
-
-		constructor(parcel: Parcel) : super(parcel) {
-			readParcel(parcel)
-		}
-
-		@RequiresApi(Build.VERSION_CODES.N)
-		constructor(parcel: Parcel, classLoader: ClassLoader?) : super(parcel, classLoader) {
-			readParcel(parcel)
-		}
-
-		override fun writeToParcel(out: Parcel, flags: Int) {
-			super.writeToParcel(out, flags)
-			out.writeInt(abortText)
-			out.writeInt(text)
-			out.writeInt(isAbortEnabled.compareTo(false))
-		}
-
-		private fun readParcel(parcel: Parcel) {
-			abortText = parcel.readInt()
-			text = parcel.readInt()
-			isAbortEnabled = parcel.readInt() != 0
-		}
-
-		companion object {
-
-			@JvmField
-			val CREATOR: Creator<SavedState> = object : Parcelable.ClassLoaderCreator<SavedState> {
-
-				override fun createFromParcel(source: Parcel, classLoader: ClassLoader?): SavedState {
-					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-						return SavedState(source, classLoader)
-					}
-					return SavedState(source)
-				}
-
-				override fun createFromParcel(source: Parcel) = createFromParcel(source, null)
-				override fun newArray(size: Int): Array<SavedState?> = Array(size) { null }
-			}
 		}
 	}
 }
