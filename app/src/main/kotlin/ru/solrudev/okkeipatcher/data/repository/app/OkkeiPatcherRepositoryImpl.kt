@@ -21,6 +21,7 @@ import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.model.exception.AppUpdateCorruptedException
 import ru.solrudev.okkeipatcher.domain.model.exception.NoNetworkException
 import ru.solrudev.okkeipatcher.domain.model.exception.wrapDomainExceptions
+import java.util.concurrent.CancellationException
 import javax.inject.Inject
 
 private const val APP_UPDATE_FILE_NAME = "OkkeiPatcher.apk"
@@ -41,7 +42,9 @@ class OkkeiPatcherRepositoryImpl @Inject constructor(
 	private val okkeiPatcherDataCache = InMemoryCache(okkeiPatcherApi::getOkkeiPatcherData)
 	private val updateFile = environment.filesPath / APP_UPDATE_FILE_NAME
 	private val _isUpdateAvailable = MutableStateFlow(false)
+	private val _isUpdateInstallPending = MutableStateFlow(fileSystem.exists(updateFile))
 	override val isUpdateAvailable = _isUpdateAvailable.asStateFlow()
+	override val isUpdateInstallPending = _isUpdateInstallPending.asStateFlow()
 
 	override suspend fun getUpdateData(refresh: Boolean) = try {
 		val okkeiPatcherData = okkeiPatcherDataCache.retrieve(refresh)
@@ -63,8 +66,13 @@ class OkkeiPatcherRepositoryImpl @Inject constructor(
 
 	override suspend fun installUpdate() = try {
 		packageInstaller.install(updateFile, immediate = true)
+	} catch (cancellationException: CancellationException) {
+		throw cancellationException
 	} catch (t: Throwable) {
 		Result.failure(t.stackTraceToString())
+	} finally {
+		_isUpdateInstallPending.value = false
+		fileSystem.delete(updateFile)
 	}
 
 	override fun downloadUpdate() = operation(progressMax = fileDownloader.progressMax) {
@@ -77,10 +85,9 @@ class OkkeiPatcherRepositoryImpl @Inject constructor(
 				if (updateHash != updateData.hash) {
 					throw AppUpdateCorruptedException()
 				}
+				_isUpdateInstallPending.value = true
 			} catch (t: Throwable) {
-				if (fileSystem.exists(updateFile)) {
-					fileSystem.delete(updateFile)
-				}
+				fileSystem.delete(updateFile)
 				if (t is NetworkNotAvailableException) {
 					throw NoNetworkException()
 				}

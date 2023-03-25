@@ -22,6 +22,7 @@ import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.model.exception.wrapDomainExceptions
+import java.util.concurrent.CancellationException
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
@@ -47,7 +48,9 @@ class MockOkkeiPatcherRepository @Inject constructor(
 	private val updateData = OkkeiPatcherUpdateData(isAvailable = true, sizeInMb = 3.14, changelog)
 	private val updateFile = environment.filesPath / APP_UPDATE_FILE_NAME
 	private val _isUpdateAvailable = MutableStateFlow(false)
+	private val _isUpdateInstallPending = MutableStateFlow(fileSystem.exists(updateFile))
 	override val isUpdateAvailable = _isUpdateAvailable.asStateFlow()
+	override val isUpdateInstallPending = _isUpdateInstallPending.asStateFlow()
 
 	override suspend fun getUpdateData(refresh: Boolean): OkkeiPatcherUpdateData {
 		checksCount++
@@ -67,8 +70,13 @@ class MockOkkeiPatcherRepository @Inject constructor(
 
 	override suspend fun installUpdate() = try {
 		packageInstaller.install(updateFile, immediate = true)
+	} catch (cancellationException: CancellationException) {
+		throw cancellationException
 	} catch (t: Throwable) {
 		Result.failure(t.stackTraceToString())
+	} finally {
+		_isUpdateInstallPending.value = false
+		fileSystem.delete(updateFile)
 	}
 
 	override fun downloadUpdate() = operation(progressMax = STREAM_COPY_PROGRESS_MAX) {
@@ -78,10 +86,9 @@ class MockOkkeiPatcherRepository @Inject constructor(
 					val installedApk = okkeiPatcherApkProvider.getOkkeiPatcherApkPath()
 					fileSystem.copy(installedApk, updateFile, onProgressDeltaChanged = { progressDelta(it) })
 				}
+				_isUpdateInstallPending.value = true
 			} catch (t: Throwable) {
-				if (fileSystem.exists(updateFile)) {
-					fileSystem.delete(updateFile)
-				}
+				fileSystem.delete(updateFile)
 				throw t
 			}
 		}
