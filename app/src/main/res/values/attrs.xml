@@ -3,8 +3,8 @@
 
 	<declare-styleable name="AbortButton">
 		<attr name="abortEnabled" format="boolean" />
-		<attr name="abortText" format="reference" />
-		<attr name="text" format="reference" />
+		<attr name="abortText" format="string" />
+		<attr name="text" format="string" />
 	</declare-styleable>
 
 	<attr name="state_abort_enabled" format="boolean" />

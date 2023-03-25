@@ -1,14 +1,8 @@
 package ru.solrudev.okkeipatcher.ui.view
 
 import android.content.Context
-import android.os.Build
-import android.os.Parcel
-import android.os.Parcelable
-import android.os.Parcelable.Creator
 import android.util.AttributeSet
 import android.view.animation.DecelerateInterpolator
-import androidx.annotation.RequiresApi
-import androidx.annotation.StringRes
 import androidx.core.content.withStyledAttributes
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.theme.overlay.MaterialThemeOverlay
@@ -33,11 +27,11 @@ class AbortButton @JvmOverloads constructor(
 		private set
 
 	/**
-	 * Resource id of a text in abort state.
+	 * Button text in abort state.
 	 */
-	var abortText: Int
-		@StringRes get() = _abortText
-		set(@StringRes value) {
+	var abortText: String
+		get() = _abortText
+		set(value) {
 			if (_abortText != value) {
 				_abortText = value
 				if (isAbortEnabled) {
@@ -47,11 +41,11 @@ class AbortButton @JvmOverloads constructor(
 		}
 
 	/**
-	 * Resource id of a text in normal state.
+	 * Button text in normal state.
 	 */
-	var text: Int
-		@StringRes get() = _text
-		@JvmName("setTextRes") set(@StringRes value) {
+	var text: String
+		get() = _text
+		@JvmName("setNormalText") set(value) {
 			if (_text != value) {
 				_text = value
 				if (!isAbortEnabled) {
@@ -60,12 +54,8 @@ class AbortButton @JvmOverloads constructor(
 			}
 		}
 
-	@StringRes
-	private var _abortText = R.string.empty
-
-	@StringRes
-	private var _text = R.string.empty
-
+	private var _abortText = ""
+	private var _text = ""
 	private var isInitialized = false
 
 	init {
@@ -103,8 +93,8 @@ class AbortButton @JvmOverloads constructor(
 
 	private fun parseAttributes(attrs: AttributeSet?, defStyleAttr: Int) {
 		context.withStyledAttributes(attrs, R.styleable.AbortButton, defStyleAttr, DEF_STYLE_RES) {
-			_abortText = getResourceId(R.styleable.AbortButton_abortText, _abortText)
-			_text = getResourceId(R.styleable.AbortButton_text, R.string.empty)
+			_abortText = getString(R.styleable.AbortButton_abortText) ?: ""
+			_text = getString(R.styleable.AbortButton_text) ?: ""
 			val isAbortEnabled = getBoolean(R.styleable.AbortButton_abortEnabled, false)
 			setAbortEnabled(isAbortEnabled, animate = false)
 			isInitialized = true
