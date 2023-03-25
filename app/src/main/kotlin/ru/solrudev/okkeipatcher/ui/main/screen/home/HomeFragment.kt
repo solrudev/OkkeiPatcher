@@ -59,7 +59,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), HostJetView<HomeUiState> 
 	}
 
 	private fun setupNavigation() = with(binding) {
-		cardHomePatchStatus.buttonCardPatchUpdate.setOnClickListener {
+		cardHomePatchStatus.buttonCardUpdate.setOnClickListener {
 			cardHomeActions.buttonCardActionsPatch.performClick()
 		}
 	}

@@ -2,7 +2,7 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
-	android:id="@+id/container_card_patch"
+	android:id="@+id/container_card_update"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:layout_margin="@dimen/card_margin"
@@ -17,7 +17,7 @@
 		android:paddingVertical="@dimen/card_padding_vertical">
 
 		<ImageView
-			android:id="@+id/imageview_card_patch_icon"
+			android:id="@+id/imageview_card_update_icon"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/patch_status_icon_start_margin"
@@ -28,32 +28,33 @@
 			app:srcCompat="@drawable/ic_sparkles" />
 
 		<TextView
-			android:id="@+id/textview_card_patch_status"
+			android:id="@+id/textview_card_update_status"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/card_padding_horizontal"
-			android:text="@string/patch_status_update_available"
 			android:textAppearance="?textAppearanceTitleMedium"
 			app:layout_constrainedWidth="true"
-			app:layout_constraintBottom_toTopOf="@id/button_card_patch_update"
+			app:layout_constraintBottom_toTopOf="@id/button_card_update"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintHorizontal_bias="0"
-			app:layout_constraintStart_toEndOf="@id/imageview_card_patch_icon"
+			app:layout_constraintStart_toEndOf="@id/imageview_card_update_icon"
 			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintVertical_chainStyle="packed" />
+			app:layout_constraintVertical_chainStyle="packed"
+			tools:text="@string/patch_status_update_available" />
 
-		<Button
-			android:id="@+id/button_card_patch_update"
+		<ru.solrudev.okkeipatcher.ui.view.AbortButton
+			android:id="@+id/button_card_update"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="@dimen/button_margin_vertical"
-			android:text="@string/button_text_update_patch"
 			android:minHeight="@dimen/button_update_patch_height"
+			app:abortText="@string/button_text_update_cancel"
+			app:text="@string/button_text_update"
 			style="?materialButtonOutlinedStyle"
 			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toEndOf="@id/textview_card_patch_status"
-			app:layout_constraintStart_toStartOf="@id/textview_card_patch_status"
-			app:layout_constraintTop_toBottomOf="@id/textview_card_patch_status" />
+			app:layout_constraintEnd_toEndOf="@id/textview_card_update_status"
+			app:layout_constraintStart_toStartOf="@id/textview_card_update_status"
+			app:layout_constraintTop_toBottomOf="@id/textview_card_update_status" />
 
 	</androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

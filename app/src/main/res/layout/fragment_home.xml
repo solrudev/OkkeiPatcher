@@ -24,7 +24,7 @@
 
 		<include
 			android:id="@+id/card_home_patch_status"
-			layout="@layout/card_patch_status" />
+			layout="@layout/card_update_status" />
 
 	</LinearLayout>
 </androidx.core.widget.NestedScrollView>

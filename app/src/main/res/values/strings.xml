@@ -22,6 +22,8 @@
 	<string name="button_text_restore">Restore</string>
 	<string name="button_text_source_code">Source code</string>
 	<string name="button_text_start">Start</string>
+	<string name="button_text_update">Update</string>
+	<string name="button_text_update_cancel">Cancel</string>
 	<string name="button_text_update_patch">Update patch</string>
 
 	<!--Cards-->
