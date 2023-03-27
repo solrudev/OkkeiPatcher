@@ -19,7 +19,7 @@ suspend fun PackageInstaller.install(apkPath: Path, immediate: Boolean = false):
 		}
 	}
 	return when (result) {
-		is InstallResult.Failure -> Result.failure(result.cause.toString())
+		is InstallResult.Failure -> Result.failure(result.cause?.toString() ?: "")
 		is InstallResult.Success -> Result.success()
 	}
 }
