@@ -31,6 +31,13 @@ sealed interface Result {
 		fun failure(value: CharSequence): Failure {
 			return Failure(LocalizedString.raw(value))
 		}
+
+		/**
+		 * Creates [Failure] instance with a [reason].
+		 */
+		fun failure(reason: LocalizedString): Failure {
+			return Failure(reason)
+		}
 	}
 }
 
