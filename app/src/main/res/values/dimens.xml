@@ -7,6 +7,7 @@
 	<!-- Margins -->
 	<dimen name="about_screen_elements_margin">8dp</dimen>
 	<dimen name="button_margin_vertical">16dp</dimen>
+	<dimen name="card_collapsing_content_margin">10dp</dimen>
 	<dimen name="card_margin">8dp</dimen>
 	<dimen name="content_category_margin">16dp</dimen>
 	<dimen name="patch_status_icon_start_margin">16dp</dimen>

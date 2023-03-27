@@ -63,4 +63,9 @@
 		<item name="trackThickness">@dimen/linear_progress_indicator_track_thickness</item>
 		<item name="trackCornerRadius">@dimen/linear_progress_indicator_track_thickness</item>
 	</style>
+
+	<style name="Widget.OkkeiPatcher.CircularProgressIndicator" parent="Widget.Material3.CircularProgressIndicator">
+		<item name="indicatorInset">0dp</item>
+		<item name="trackColor">?colorSurfaceVariant</item>
+	</style>
 </resources>

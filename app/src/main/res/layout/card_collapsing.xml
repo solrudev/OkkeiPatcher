@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:animateLayoutChanges="true"
+	tools:parentTag="com.google.android.material.card.MaterialCardView">
+
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:id="@+id/container_card_collapsing"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:animateLayoutChanges="true"
+		android:padding="@dimen/card_padding_horizontal">
+
+		<TextView
+			android:id="@+id/textview_card_collapsing_title"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:textAppearance="?textAppearanceTitleMedium"
+			app:layout_constraintBottom_toBottomOf="@id/imageview_card_collapsing_arrow"
+			app:layout_constraintEnd_toStartOf="@id/imageview_card_collapsing_arrow"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			tools:text="Card title" />
+
+		<ImageView
+			android:id="@+id/imageview_card_collapsing_arrow"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:importantForAccessibility="no"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toEndOf="@id/textview_card_collapsing_title"
+			app:layout_constraintTop_toTopOf="parent"
+			app:srcCompat="@drawable/ic_drop_down" />
+
+		<FrameLayout
+			android:id="@+id/content_card_collapsing"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/card_collapsing_content_margin"
+			android:visibility="gone"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/imageview_card_collapsing_arrow" />
+
+	</androidx.constraintlayout.widget.ConstraintLayout>
+</merge>

@@ -1,13 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+	<attr name="state_abort_enabled" format="boolean" />
+	<attr name="colorAbort" format="color" />
+	<attr name="colorOnAbort" format="color" />
+
 	<declare-styleable name="AbortButton">
 		<attr name="abortEnabled" format="boolean" />
 		<attr name="abortText" format="string" />
 		<attr name="text" format="string" />
 	</declare-styleable>
 
-	<attr name="state_abort_enabled" format="boolean" />
-	<attr name="colorAbort" format="color" />
-	<attr name="colorOnAbort" format="color" />
+	<declare-styleable name="ProgressIcon">
+		<attr name="progressVisible" format="boolean" />
+		<attr name="progress" format="integer" />
+		<attr name="max" format="integer" />
+		<attr name="indeterminate" format="boolean" />
+		<attr name="size" format="dimension" />
+		<attr name="iconSrc" format="reference" />
+	</declare-styleable>
+
+	<declare-styleable name="CollapsingCardView">
+		<attr name="title" format="string" />
+		<attr name="expand" format="boolean" />
+	</declare-styleable>
 </resources>

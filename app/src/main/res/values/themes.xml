@@ -42,6 +42,7 @@
 		<item name="navigationRailStyle">@style/Widget.OkkeiPatcher.NavigationRailView</item>
 		<item name="navigationViewStyle">@style/Widget.OkkeiPatcher.NavigationView</item>
 		<item name="linearProgressIndicatorStyle">@style/Widget.OkkeiPatcher.LinearProgressIndicator</item>
+		<item name="circularProgressIndicatorStyle">@style/Widget.OkkeiPatcher.CircularProgressIndicator</item>
 		<item name="appBarLayoutStyle">@style/Widget.OkkeiPatcher.AppBarLayout</item>
 		<item name="toolbarStyle">@style/Widget.OkkeiPatcher.Toolbar</item>
 		<item name="elevationOverlayEnabled">false</item>
