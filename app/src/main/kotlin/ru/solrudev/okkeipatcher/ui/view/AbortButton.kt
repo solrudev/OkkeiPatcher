@@ -92,6 +92,7 @@ class AbortButton @JvmOverloads constructor(
 	}
 
 	private fun parseAttributes(attrs: AttributeSet?, defStyleAttr: Int) {
+		attrs ?: return
 		context.withStyledAttributes(attrs, R.styleable.AbortButton, defStyleAttr, DEF_STYLE_RES) {
 			_abortText = getString(R.styleable.AbortButton_abortText) ?: ""
 			_text = getString(R.styleable.AbortButton_text) ?: ""
