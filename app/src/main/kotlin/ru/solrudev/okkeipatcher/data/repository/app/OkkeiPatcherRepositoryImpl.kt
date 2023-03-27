@@ -25,7 +25,7 @@ import ru.solrudev.okkeipatcher.domain.model.exception.wrapDomainExceptions
 import java.util.concurrent.CancellationException
 import javax.inject.Inject
 
-private const val APP_UPDATE_FILE_NAME = "OkkeiPatcher.apk"
+const val APP_UPDATE_FILE_NAME = "OkkeiPatcher.apk"
 
 class OkkeiPatcherRepositoryImpl @Inject constructor(
 	private val environment: OkkeiEnvironment,

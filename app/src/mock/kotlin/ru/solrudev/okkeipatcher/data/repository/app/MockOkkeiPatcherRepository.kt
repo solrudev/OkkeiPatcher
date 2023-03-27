@@ -27,8 +27,6 @@ import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
-private const val APP_UPDATE_FILE_NAME = "OkkeiPatcher.apk"
-
 class MockOkkeiPatcherRepository @Inject constructor(
 	environment: OkkeiEnvironment,
 	private val okkeiPatcherApkProvider: OkkeiPatcherApkProvider,
