@@ -68,7 +68,7 @@ class AbortButton @JvmOverloads constructor(
 	/**
 	 * Sets abort state for this button.
 	 * @param abortEnabled abort state.
-	 * @param animate animate abort state transition.
+	 * @param animate whether to animate abort state transition.
 	 */
 	fun setAbortEnabled(abortEnabled: Boolean, animate: Boolean = true) {
 		if (abortEnabled == isAbortEnabled && isInitialized) {
