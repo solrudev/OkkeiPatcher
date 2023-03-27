@@ -16,6 +16,7 @@ import ru.solrudev.okkeipatcher.data.network.api.OkkeiPatcherApi
 import ru.solrudev.okkeipatcher.data.network.model.exception.NetworkNotAvailableException
 import ru.solrudev.okkeipatcher.data.repository.util.install
 import ru.solrudev.okkeipatcher.data.service.FileDownloader
+import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.model.exception.AppUpdateCorruptedException
@@ -69,7 +70,8 @@ class OkkeiPatcherRepositoryImpl @Inject constructor(
 	} catch (cancellationException: CancellationException) {
 		throw cancellationException
 	} catch (t: Throwable) {
-		Result.failure(t.stackTraceToString())
+		println(t.stackTraceToString())
+		Result.failure(LocalizedString.empty())
 	} finally {
 		_isUpdateInstallPending.value = false
 		fileSystem.delete(updateFile)

@@ -24,6 +24,7 @@ import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.model.exception.wrapDomainExceptions
 import java.util.concurrent.CancellationException
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 private const val APP_UPDATE_FILE_NAME = "OkkeiPatcher.apk"
@@ -84,7 +85,10 @@ class MockOkkeiPatcherRepository @Inject constructor(
 			try {
 				withContext(ioDispatcher) {
 					val installedApk = okkeiPatcherApkProvider.getOkkeiPatcherApkPath()
-					fileSystem.copy(installedApk, updateFile, onProgressDeltaChanged = { progressDelta(it) })
+					fileSystem.copy(installedApk, updateFile, onProgressDeltaChanged = {
+						delay(50.milliseconds) // simulate long operation
+						progressDelta(it)
+					})
 				}
 				_isUpdateInstallPending.value = true
 			} catch (t: Throwable) {
