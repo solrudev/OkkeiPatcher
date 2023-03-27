@@ -60,7 +60,10 @@ class ApkSignerImpl @Inject constructor(
 
 	override suspend fun removeSignature(apk: File) = runInterruptible(ioDispatcher) {
 		ZipFile(apk).use { zipFile ->
-			zipFile.removeFile("META-INF/")
+			val headers = zipFile.fileHeaders
+				.filter { it.fileName.startsWith("META-INF/") }
+				.map { it.fileName }
+			zipFile.removeFiles(headers)
 		}
 	}
 
