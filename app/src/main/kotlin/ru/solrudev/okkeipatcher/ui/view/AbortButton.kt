@@ -13,6 +13,9 @@ private val STATE_ABORT_ENABLED = intArrayOf(R.attr.state_abort_enabled)
 
 /**
  * [MaterialButton] which has an additional state of abort button.
+ *
+ * In abort state, theme's `?attr/colorAbort` is used for the background tint color and `?attr/colorOnAbort` is used
+ * for the text and icon color.
  */
 class AbortButton @JvmOverloads constructor(
 	context: Context,
