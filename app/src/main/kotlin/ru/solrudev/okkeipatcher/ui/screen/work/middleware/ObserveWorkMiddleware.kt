@@ -15,9 +15,7 @@ class ObserveWorkMiddleware @Inject constructor(
 	completeWorkUseCase: CompleteWorkUseCase,
 	cancelWorkUseCase: CancelWorkUseCase,
 ) : WorkMiddleware<WorkEvent, StartObservingWork, CancelWork, Nothing>(
-	getWorkStateFlowUseCase,
-	completeWorkUseCase,
-	cancelWorkUseCase,
+	getWorkStateFlowUseCase, completeWorkUseCase, cancelWorkUseCase,
 	WorkStateEventFactoryForWorkScreen,
 	startEventClass = StartObservingWork::class,
 	cancelEventClass = CancelWork::class

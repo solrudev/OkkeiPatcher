@@ -40,7 +40,7 @@
 			app:layout_constraintStart_toEndOf="@id/imageview_card_update_icon"
 			app:layout_constraintTop_toTopOf="parent"
 			app:layout_constraintVertical_chainStyle="packed"
-			tools:text="@string/patch_status_update_available" />
+			tools:text="@string/update_status_update_available" />
 
 		<ru.solrudev.okkeipatcher.ui.view.AbortButton
 			android:id="@+id/button_card_update"

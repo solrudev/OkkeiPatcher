@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/container_card_app"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:layout_margin="@dimen/card_margin"
+	tools:showIn="@layout/fragment_update">
+
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:padding="@dimen/card_padding_horizontal">
+
+		<ru.solrudev.okkeipatcher.ui.view.ProgressIcon
+			android:id="@+id/progressicon_card_app_icon"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			app:iconSrc="@mipmap/ic_launcher"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:size="@dimen/icon_app_size"
+			tools:progress="28"
+			tools:progressVisible="true" />
+
+		<TextView
+			android:id="@+id/textview_card_app_title"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/card_padding_horizontal"
+			android:text="@string/app_name"
+			android:textAppearance="?textAppearanceTitleMedium"
+			app:layout_constraintBottom_toTopOf="@id/textview_card_app_subtitle"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toEndOf="@id/progressicon_card_app_icon"
+			app:layout_constraintTop_toTopOf="parent" />
+
+		<TextView
+			android:id="@+id/textview_card_app_subtitle"
+			style="@style/TextAppearance.OkkeiPatcher.CardSubtitle"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:text="@string/card_app_version"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="@id/textview_card_app_title"
+			app:layout_constraintTop_toBottomOf="@id/textview_card_app_title" />
+
+	</androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

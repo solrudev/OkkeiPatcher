@@ -5,6 +5,7 @@ import io.github.solrudev.jetmvi.MiddlewareScope
 import ru.solrudev.okkeipatcher.app.usecase.GetUpdateDataUseCase
 import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateEvent
 import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateEvent.*
+import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateStatus.UpdateAvailable
 import javax.inject.Inject
 
 class LoadUpdateDataMiddleware @Inject constructor(
@@ -15,7 +16,10 @@ class LoadUpdateDataMiddleware @Inject constructor(
 		onEvent<UpdateDataRequested> { event ->
 			send(UpdateDataLoadingStarted)
 			val updateData = getUpdateDataUseCase(refresh = event.refresh)
-			send(UpdateDataLoaded(updateData))
+			send(UpdateDataLoaded(updateData.sizeInMb, updateData.changelog))
+			if (updateData.isAvailable) {
+				send(UpdateStatusChanged(UpdateAvailable))
+			}
 		}
 	}
 }

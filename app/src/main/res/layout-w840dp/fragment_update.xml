@@ -20,13 +20,29 @@
 			android:paddingHorizontal="@dimen/card_layout_padding_horizontal"
 			android:paddingVertical="@dimen/card_layout_padding_vertical">
 
-			<include
-				android:id="@+id/card_update_app_info"
-				layout="@layout/card_update_app_info" />
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:baselineAligned="false"
+				android:orientation="horizontal">
 
-			<include
-				android:id="@+id/card_update_status"
-				layout="@layout/card_update_status" />
+				<include
+					android:id="@+id/card_update_app_info"
+					layout="@layout/card_update_app_info"
+					android:layout_width="0dp"
+					android:layout_height="match_parent"
+					android:layout_margin="@dimen/card_margin"
+					android:layout_weight="1" />
+
+				<include
+					android:id="@+id/card_update_status"
+					layout="@layout/card_update_status"
+					android:layout_width="0dp"
+					android:layout_height="match_parent"
+					android:layout_margin="@dimen/card_margin"
+					android:layout_weight="1" />
+
+			</LinearLayout>
 
 			<ru.solrudev.okkeipatcher.ui.view.CollapsingCardView
 				android:id="@+id/card_collapsing_changelog_container_update"

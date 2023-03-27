@@ -24,10 +24,12 @@
 	<string name="button_text_start">Start</string>
 	<string name="button_text_update">Update</string>
 	<string name="button_text_update_cancel">Cancel</string>
+	<string name="button_text_update_install">Install</string>
 	<string name="button_text_update_patch">Update patch</string>
 
 	<!--Cards-->
 	<string name="card_app_version">Version: %s</string>
+	<string name="card_changelog_title">Changelog</string>
 	<string name="card_patch_version">Patch: %s</string>
 
 	<!--Errors-->
@@ -134,6 +136,17 @@
 
 	<!--Toasts-->
 	<string name="toast_copied_to_clipboard">Copied to clipboard</string>
+
+	<!--Update statuses-->
+	<string name="update_status_awaiting_installation">Update is ready to be installed</string>
+	<string name="update_status_canceled">Update was canceled</string>
+	<string name="update_status_downloading">Update is downloading</string>
+	<string name="update_status_failed">Update failed</string>
+	<string name="update_status_failed_with_reason">Update failed: %s</string>
+	<string name="update_status_installing">Update is being installed</string>
+	<string name="update_status_no_update">No app updates</string>
+	<string name="update_status_update_available">App update is available!</string>
+	<string name="update_percent_done">%1$d%% of %2$.2f MB</string>
 
 	<!--Warnings-->
 	<string name="warning">Warning</string>

@@ -20,10 +20,12 @@
 	<string name="button_text_start">Начать</string>
 	<string name="button_text_update">Обновить</string>
 	<string name="button_text_update_cancel">Отменить</string>
+	<string name="button_text_update_install">Установить</string>
 	<string name="button_text_update_patch">Обновить патч</string>
 
 	<!--Cards-->
 	<string name="card_app_version">Версия: %s</string>
+	<string name="card_changelog_title">Список изменений</string>
 	<string name="card_patch_version">Патч: %s</string>
 
 	<!--Errors-->
@@ -123,6 +125,17 @@
 
 	<!--Toasts-->
 	<string name="toast_copied_to_clipboard">Скопировано в буфер обмена</string>
+
+	<!--Update statuses-->
+	<string name="update_status_awaiting_installation">Обновление готово к установке</string>
+	<string name="update_status_canceled">Обновление приложения отменено</string>
+	<string name="update_status_downloading">Идёт загрузка обновления</string>
+	<string name="update_status_failed">Не удалось обновить приложение</string>
+	<string name="update_status_failed_with_reason">Не удалось обновить: %s</string>
+	<string name="update_status_installing">Идёт установка обновления</string>
+	<string name="update_status_no_update">Обновлений нет</string>
+	<string name="update_status_update_available">Доступно обновление приложения!</string>
+	<string name="update_percent_done">%1$d%% из %2$.2f МБ</string>
 
 	<!--Warnings-->
 	<string name="warning">Предупреждение</string>
