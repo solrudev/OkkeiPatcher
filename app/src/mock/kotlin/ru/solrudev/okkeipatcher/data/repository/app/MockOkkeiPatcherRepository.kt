@@ -19,6 +19,7 @@ import ru.solrudev.okkeipatcher.data.service.OkkeiPatcherApkProvider
 import ru.solrudev.okkeipatcher.data.util.STREAM_COPY_PROGRESS_MAX
 import ru.solrudev.okkeipatcher.data.util.copy
 import ru.solrudev.okkeipatcher.di.IoDispatcher
+import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.model.exception.wrapDomainExceptions
@@ -72,7 +73,8 @@ class MockOkkeiPatcherRepository @Inject constructor(
 	} catch (cancellationException: CancellationException) {
 		throw cancellationException
 	} catch (t: Throwable) {
-		Result.failure(t.stackTraceToString())
+		println(t.stackTraceToString())
+		Result.failure(LocalizedString.empty())
 	} finally {
 		_isUpdateInstallPending.value = false
 		fileSystem.delete(updateFile)
