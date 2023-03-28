@@ -8,7 +8,7 @@ import androidx.core.view.isVisible
 import io.github.solrudev.jetmvi.JetView
 import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateUiState
 import ru.solrudev.okkeipatcher.ui.main.screen.update.model.isChangelogVisible
-import ru.solrudev.okkeipatcher.ui.view.CollapsingCardView
+import ru.solrudev.okkeipatcher.ui.widget.CollapsingCardView
 
 class ChangelogView(
 	private val changelogTextView: TextView,

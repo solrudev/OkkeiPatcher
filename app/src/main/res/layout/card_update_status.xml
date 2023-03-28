@@ -42,7 +42,7 @@
 			app:layout_constraintVertical_chainStyle="packed"
 			tools:text="@string/update_status_update_available" />
 
-		<ru.solrudev.okkeipatcher.ui.view.AbortButton
+		<ru.solrudev.okkeipatcher.ui.widget.AbortButton
 			android:id="@+id/button_card_update"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"

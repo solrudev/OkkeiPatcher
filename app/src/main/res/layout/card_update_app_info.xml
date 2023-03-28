@@ -13,7 +13,7 @@
 		android:layout_height="match_parent"
 		android:padding="@dimen/card_padding_horizontal">
 
-		<ru.solrudev.okkeipatcher.ui.view.ProgressIcon
+		<ru.solrudev.okkeipatcher.ui.widget.ProgressIcon
 			android:id="@+id/progressicon_card_app_icon"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"

@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.ui.view
+package ru.solrudev.okkeipatcher.ui.widget
 
 import android.content.Context
 import android.os.Build

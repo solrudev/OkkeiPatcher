@@ -71,7 +71,7 @@
 			</LinearLayout>
 		</com.google.android.material.card.MaterialCardView>
 
-		<ru.solrudev.okkeipatcher.ui.view.AbortButton
+		<ru.solrudev.okkeipatcher.ui.widget.AbortButton
 			android:id="@+id/button_work"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
