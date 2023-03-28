@@ -63,6 +63,15 @@ class ProgressIcon @JvmOverloads constructor(
 		isProgressVisible = progressVisible
 	}
 
+	/**
+	 * Sets the current progress to the specified value with/without animation based on the input.
+	 *
+	 * If it's in the indeterminate mode, it will smoothly transition to determinate mode by
+	 * finishing the current indeterminate animation cycle.
+	 *
+	 * @param progress The new progress value.
+	 * @param animated Whether to update the progress with the animation.
+	 */
 	fun setProgressCompat(progress: Int, animated: Boolean) {
 		binding.progressCircularProgressIcon.setProgressCompat(progress, animated)
 	}
