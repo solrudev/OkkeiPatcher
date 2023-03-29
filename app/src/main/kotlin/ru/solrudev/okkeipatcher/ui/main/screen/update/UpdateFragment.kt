@@ -19,9 +19,17 @@ import ru.solrudev.okkeipatcher.ui.main.screen.update.view.UpdateStatusView
 @AndroidEntryPoint
 class UpdateFragment : Fragment(R.layout.fragment_update), HostJetView<UpdateUiState> {
 
-	private val refreshView by derivedView { RefreshView(binding.swipeRefreshLayoutUpdate, viewModel) }
-	private val appInfoView by derivedView { AppInfoView(binding.cardUpdateAppInfo) }
-	private val updateStatusView by derivedView { UpdateStatusView(binding.cardUpdateStatus, viewModel) }
+	private val refreshView by derivedView {
+		RefreshView(binding.swipeRefreshLayoutUpdate, viewModel)
+	}
+
+	private val appInfoView by derivedView {
+		AppInfoView(binding.cardUpdateAppInfo)
+	}
+
+	private val updateStatusView by derivedView {
+		UpdateStatusView(binding.cardUpdateStatus, viewModel)
+	}
 
 	private val changelogView by derivedView {
 		ChangelogView(binding.textviewUpdateChangelog, binding.cardCollapsingChangelogContainerUpdate)
