@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:fillViewport="true">
@@ -12,77 +11,42 @@
 		android:layout_height="match_parent"
 		android:animateLayoutChanges="true"
 		android:paddingHorizontal="@dimen/card_layout_padding_horizontal"
-		android:paddingTop="52dp"
-		android:paddingBottom="42dp">
+		android:paddingVertical="@dimen/work_padding_vertical">
 
 		<ImageView
 			android:id="@+id/imageview_work_okkei"
 			android:layout_width="0dp"
-			android:layout_height="150dp"
+			android:layout_height="@dimen/work_image_height"
 			android:importantForAccessibility="no"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
 			app:srcCompat="@drawable/okkei" />
 
-		<com.google.android.material.card.MaterialCardView
-			android:id="@+id/materialCardView"
+		<include
+			android:id="@+id/card_progress_work"
+			layout="@layout/card_work_progress"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/card_margin"
-			android:layout_marginTop="52dp"
+			android:layout_marginTop="@dimen/work_padding_vertical"
 			android:layout_marginEnd="@dimen/card_margin"
-			android:animateLayoutChanges="true"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/imageview_work_okkei">
-
-			<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:gravity="center_horizontal"
-				android:orientation="vertical"
-				android:paddingHorizontal="@dimen/card_padding_horizontal"
-				android:paddingVertical="@dimen/card_padding_vertical">
-
-				<TextView
-					android:id="@+id/textview_work_percent_done"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginBottom="16dp"
-					android:textAppearance="?textAppearanceTitleLarge"
-					tools:text="28%" />
-
-				<com.google.android.material.progressindicator.LinearProgressIndicator
-					android:id="@+id/progressbar_work"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_marginBottom="24dp"
-					tools:progress="28" />
-
-				<TextView
-					android:id="@+id/textview_work_status"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginBottom="8dp"
-					style="@style/TextAppearance.OkkeiPatcher.CardSubtitleLarge"
-					tools:text="@string/status_backing_up_obb" />
-
-			</LinearLayout>
-		</com.google.android.material.card.MaterialCardView>
+			app:layout_constraintTop_toBottomOf="@id/imageview_work_okkei" />
 
 		<ru.solrudev.okkeipatcher.ui.widget.AbortButton
 			android:id="@+id/button_work"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:layout_marginHorizontal="@dimen/card_margin"
+			android:layout_marginTop="@dimen/work_padding_vertical"
 			app:abortEnabled="true"
 			app:abortText="@string/button_text_abort_process"
 			app:text="@string/button_text_ok"
 			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/materialCardView"
+			app:layout_constraintEnd_toEndOf="@id/card_progress_work"
+			app:layout_constraintStart_toStartOf="@id/card_progress_work"
+			app:layout_constraintTop_toBottomOf="@id/card_progress_work"
 			app:layout_constraintVertical_bias="1" />
 
 	</androidx.constraintlayout.widget.ConstraintLayout>

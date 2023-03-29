@@ -14,6 +14,9 @@
 	<dimen name="patch_status_icon_start_margin">16dp</dimen>
 	<dimen name="text_paragraph_margin">8dp</dimen>
 	<dimen name="text_end_margin">12dp</dimen>
+	<dimen name="work_progress_indicator_margin_top">16dp</dimen>
+	<dimen name="work_progress_indicator_margin_bottom">24dp</dimen>
+	<dimen name="work_status_margin">8dp</dimen>
 
 	<!-- Paddings -->
 	<dimen name="card_layout_padding_horizontal">20dp</dimen>
@@ -21,8 +24,10 @@
 	<dimen name="card_padding_horizontal">24dp</dimen>
 	<dimen name="card_padding_vertical">30dp</dimen>
 	<dimen name="content_padding">16dp</dimen>
+	<dimen name="work_padding_vertical">42dp</dimen>
 
 	<!-- Other -->
 	<dimen name="icon_app_size">88dp</dimen>
 	<dimen name="button_update_height">32dp</dimen>
+	<dimen name="work_image_height">150dp</dimen>
 </resources>

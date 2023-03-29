@@ -56,7 +56,7 @@ class WorkFragment : Fragment(R.layout.fragment_work), JetView<WorkUiState> {
 		viewModel.dispatchEvent(ViewHidden)
 	}
 
-	override fun render(uiState: WorkUiState) = with(binding) {
+	override fun render(uiState: WorkUiState) = with(binding.cardProgressWork) {
 		textviewWorkStatus.localizedText = uiState.status
 		textviewWorkPercentDone.text = getString(R.string.percent_done, uiState.percentDone)
 		setProgress(uiState.progressData)
@@ -113,7 +113,7 @@ class WorkFragment : Fragment(R.layout.fragment_work), JetView<WorkUiState> {
 		showErrorMessage(error)
 	}
 
-	private fun setProgress(progressData: ProgressData) = with(binding) {
+	private fun setProgress(progressData: ProgressData) = with(binding.cardProgressWork) {
 		progressbarWork.max = progressData.max
 		progressbarWork.setProgressCompat(progressData.progress, true)
 	}
