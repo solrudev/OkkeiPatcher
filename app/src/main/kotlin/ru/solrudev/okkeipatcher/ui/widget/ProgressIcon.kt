@@ -16,12 +16,28 @@ import ru.solrudev.okkeipatcher.databinding.LayoutProgressIconBinding
 /**
  * Icon with ability to display circular progress around it.
  */
-class ProgressIcon @JvmOverloads constructor(
-	context: Context,
-	attrs: AttributeSet? = null,
-	defStyleAttr: Int = 0,
-	defStyleRes: Int = 0
-) : ConstraintLayout(context, attrs, defStyleAttr, defStyleRes) {
+class ProgressIcon : ConstraintLayout {
+
+	init {
+		LayoutInflater.from(context).inflate(R.layout.layout_progress_icon, this, true)
+		binding = LayoutProgressIconBinding.bind(this)
+	}
+
+	constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
+		context, attrs, defStyleAttr, defStyleRes
+	) {
+		parseAttributes(attrs, defStyleAttr, defStyleRes)
+	}
+
+	constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+		parseAttributes(attrs, defStyleAttr, 0)
+	}
+
+	constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
+		parseAttributes(attrs, 0, 0)
+	}
+
+	constructor(context: Context) : super(context)
 
 	/**
 	 * Returns circular progress indicator visibility.
@@ -30,12 +46,6 @@ class ProgressIcon @JvmOverloads constructor(
 		private set
 
 	private val binding: LayoutProgressIconBinding
-
-	init {
-		LayoutInflater.from(context).inflate(R.layout.layout_progress_icon, this, true)
-		binding = LayoutProgressIconBinding.bind(this)
-		parseAttributes(attrs, defStyleAttr, defStyleRes)
-	}
 
 	var progress by binding.progressCircularProgressIcon::progress
 	var max by binding.progressCircularProgressIcon::max
