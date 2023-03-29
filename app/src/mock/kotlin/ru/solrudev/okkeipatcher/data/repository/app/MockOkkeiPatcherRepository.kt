@@ -46,7 +46,7 @@ class MockOkkeiPatcherRepository @Inject constructor(
 	)
 
 	private val updateData = OkkeiPatcherUpdateData(isAvailable = true, sizeInMb = 3.14, changelog)
-	private val updateFile = environment.filesPath / APP_UPDATE_FILE_NAME
+	private val updateFile = environment.externalFilesPath / APP_UPDATE_FILE_NAME
 	private val _isUpdateAvailable = MutableStateFlow(false)
 	private val _isUpdateInstallPending = MutableStateFlow(fileSystem.exists(updateFile))
 	override val isUpdateAvailable = _isUpdateAvailable.asStateFlow()

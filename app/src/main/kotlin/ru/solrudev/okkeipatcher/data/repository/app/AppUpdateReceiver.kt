@@ -22,7 +22,7 @@ class AppUpdateReceiver : BroadcastReceiver() {
 		if (intent?.action != ACTION_MY_PACKAGE_REPLACED) {
 			return
 		}
-		val updateFile = environment.filesPath / APP_UPDATE_FILE_NAME
+		val updateFile = environment.externalFilesPath / APP_UPDATE_FILE_NAME
 		fileSystem.delete(updateFile)
 		println("AppUpdateReceiver: deleted update APK")
 	}
