@@ -66,7 +66,7 @@ data class QuantityResourceString(
 ) : LocalizedString
 
 /**
- * Concatenates two [LocalizedString]s.
+ * Concatenates two [LocalizedStrings][LocalizedString].
  */
 operator fun LocalizedString.plus(other: LocalizedString): LocalizedString {
 	return when {
@@ -76,3 +76,9 @@ operator fun LocalizedString.plus(other: LocalizedString): LocalizedString {
 		else -> CompoundString(listOf(this, other))
 	}
 }
+
+/**
+ * Returns `true` if this [LocalizedString] was created with [empty()][LocalizedString.empty] factory function or empty
+ * [raw string][LocalizedString.raw].
+ */
+fun LocalizedString.isEmpty() = this is EmptyString

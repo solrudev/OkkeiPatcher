@@ -2,9 +2,9 @@ package ru.solrudev.okkeipatcher.ui.main.screen.settings.cleardata.model
 
 import io.github.solrudev.jetmvi.JetState
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.domain.core.EmptyString
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Message
+import ru.solrudev.okkeipatcher.domain.core.isEmpty
 import ru.solrudev.okkeipatcher.ui.shared.model.MessageUiState
 
 data class ClearDataUiState(
@@ -20,4 +20,4 @@ data class ClearDataUiState(
 ) : JetState
 
 val ClearDataUiState.shouldShowErrorMessage: Boolean
-	get() = error !is EmptyString && canShowErrorMessage
+	get() = !error.isEmpty() && canShowErrorMessage

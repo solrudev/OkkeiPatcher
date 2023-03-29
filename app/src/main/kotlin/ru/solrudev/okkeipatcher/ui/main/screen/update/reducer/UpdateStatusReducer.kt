@@ -3,8 +3,8 @@ package ru.solrudev.okkeipatcher.ui.main.screen.update.reducer
 import io.github.solrudev.jetmvi.Reducer
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.app.model.ProgressData
-import ru.solrudev.okkeipatcher.domain.core.EmptyString
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
+import ru.solrudev.okkeipatcher.domain.core.isEmpty
 import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateEvent.UpdateStatusChanged
 import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateStatus
 import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateStatus.*
@@ -67,10 +67,10 @@ class UpdateStatusReducer @Inject constructor() : Reducer<UpdateStatusChanged, U
 		)
 		is Canceled -> state.default(LocalizedString.resource(R.string.update_status_canceled))
 		is Failed -> state.default(
-			if (status.reason !is EmptyString) {
-				LocalizedString.resource(R.string.update_status_failed_with_reason, status.reason)
-			} else {
+			if (status.reason.isEmpty()) {
 				LocalizedString.resource(R.string.update_status_failed)
+			} else {
+				LocalizedString.resource(R.string.update_status_failed_with_reason, status.reason)
 			}
 		)
 	}
