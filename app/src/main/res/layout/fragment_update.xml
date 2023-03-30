@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/swipeRefreshLayout_update"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
@@ -33,13 +34,15 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_margin="@dimen/card_margin"
-				app:title="@string/card_changelog_title">
+				app:title="@string/card_changelog_title"
+				tools:expand="true">
 
 				<TextView
 					android:id="@+id/textview_update_changelog"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:textAppearance="?textAppearanceBodyLarge" />
+					android:textAppearance="?textAppearanceBodyMedium"
+					tools:text="Change 1\nChange 2\nChange 3" />
 
 			</ru.solrudev.okkeipatcher.ui.widget.CollapsingCardView>
 		</LinearLayout>
