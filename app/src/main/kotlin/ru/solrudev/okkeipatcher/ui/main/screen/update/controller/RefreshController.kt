@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.ui.main.screen.update.view
+package ru.solrudev.okkeipatcher.ui.main.screen.update.controller
 
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import io.github.solrudev.jetmvi.JetView
@@ -6,7 +6,7 @@ import ru.solrudev.okkeipatcher.ui.main.screen.update.UpdateViewModel
 import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateEvent.UpdateDataRequested
 import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateUiState
 
-class RefreshView(
+class RefreshController(
 	private val swipeRefreshLayout: SwipeRefreshLayout,
 	private val viewModel: UpdateViewModel
 ) : JetView<UpdateUiState> {
