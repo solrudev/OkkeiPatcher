@@ -11,8 +11,7 @@
 		android:id="@+id/container_card_collapsing"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:animateLayoutChanges="true"
-		android:padding="@dimen/card_padding_horizontal">
+		android:animateLayoutChanges="true">
 
 		<TextView
 			android:id="@+id/textview_card_collapsing_title"

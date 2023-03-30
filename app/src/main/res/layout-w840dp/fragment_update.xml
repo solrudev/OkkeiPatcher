@@ -50,6 +50,8 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_margin="@dimen/card_margin"
+				app:contentPadding="@dimen/card_padding_horizontal"
+				app:cardPreventCornerOverlap="false"
 				app:title="@string/card_changelog_title"
 				tools:expand="true">
 
