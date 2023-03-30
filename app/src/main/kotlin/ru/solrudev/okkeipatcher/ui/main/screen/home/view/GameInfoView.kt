@@ -1,6 +1,5 @@
 package ru.solrudev.okkeipatcher.ui.main.screen.home.view
 
-import android.content.Context
 import io.github.solrudev.jetmvi.JetView
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.databinding.CardGameInfoBinding
@@ -9,8 +8,7 @@ import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeUiState
 
 class GameInfoView(private val binding: CardGameInfoBinding) : JetView<HomeUiState> {
 
-	private val context: Context
-		get() = binding.root.context
+	private val context by binding.root::context
 
 	init {
 		loadGameInfo()
