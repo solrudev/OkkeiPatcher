@@ -3,18 +3,17 @@ package ru.solrudev.okkeipatcher.ui.main.screen.update.view
 import androidx.core.view.isVisible
 import io.github.solrudev.jetmvi.JetView
 import ru.solrudev.okkeipatcher.app.model.Work
-import ru.solrudev.okkeipatcher.data.core.resolve
 import ru.solrudev.okkeipatcher.databinding.CardUpdateStatusBinding
 import ru.solrudev.okkeipatcher.ui.main.screen.update.UpdateViewModel
 import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateEvent.*
 import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateUiState
+import ru.solrudev.okkeipatcher.ui.util.localizedText
 
 class UpdateStatusView(
 	private val binding: CardUpdateStatusBinding,
 	private val viewModel: UpdateViewModel
 ) : JetView<UpdateUiState> {
 
-	private val context by binding.root::context
 	private var work: Work? = null
 
 	override val trackedState = listOf(
@@ -32,10 +31,10 @@ class UpdateStatusView(
 		work = uiState.currentWork
 		buttonCardUpdate.isVisible = uiState.isUpdateButtonVisible
 		buttonCardUpdate.isEnabled = uiState.isUpdateButtonEnabled
-		buttonCardUpdate.text = uiState.buttonText.resolve(context).toString()
+		buttonCardUpdate.localizedText = uiState.buttonText
 		buttonCardUpdate.setAbortEnabled(uiState.isUpdating, animate = false)
 		setButtonOnClickListener(uiState)
-		textviewCardUpdateStatus.text = uiState.status.resolve(context)
+		textviewCardUpdateStatus.localizedText = uiState.status
 	}
 
 	private fun setButtonOnClickListener(uiState: UpdateUiState) = with(binding) {
