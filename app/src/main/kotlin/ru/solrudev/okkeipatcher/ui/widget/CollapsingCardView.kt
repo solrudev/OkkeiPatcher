@@ -92,11 +92,10 @@ class CollapsingCardView @JvmOverloads constructor(
 	}
 
 	private fun rotateArrow(expand: Boolean, animate: Boolean) = with(binding.imageviewCardCollapsingArrow) {
+		val degree = if (expand) 180f else 0f
 		if (animate) {
-			val degree = if (expand) 180f else -180f
-			animate().rotationBy(degree).setDuration(200).start()
+			animate().rotation(degree).setDuration(200).start()
 		} else {
-			val degree = if (expand) 180f else 0f
 			rotation = degree
 		}
 	}
