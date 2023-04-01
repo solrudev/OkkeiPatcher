@@ -7,7 +7,6 @@
 	</style>
 
 	<style name="Widget.OkkeiPatcher.Button.OutlinedButton" parent="Widget.Material3.Button.OutlinedButton">
-		<item name="materialThemeOverlay">@style/ThemeOverlay.OkkeiPatcher.Button</item>
 		<item name="android:insetTop">0dp</item>
 		<item name="android:insetBottom">0dp</item>
 		<item name="strokeColor">@color/button_outline_color_selector</item>
@@ -17,7 +16,6 @@
 	</style>
 
 	<style name="Widget.OkkeiPatcher.Button.UnelevatedButton" parent="Widget.Material3.Button.UnelevatedButton">
-		<item name="materialThemeOverlay">@style/ThemeOverlay.OkkeiPatcher.Button</item>
 		<item name="android:insetTop">0dp</item>
 		<item name="android:insetBottom">0dp</item>
 		<item name="backgroundTint">@color/button_background_color_selector</item>
@@ -43,20 +41,19 @@
 	<style name="Widget.OkkeiPatcher.AppBarLayout" parent="Base.Widget.OkkeiPatcher.AppBarLayout"/>
 
 	<style name="Widget.OkkeiPatcher.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
-		<item name="materialThemeOverlay">@style/ThemeOverlay.OkkeiPatcher.BottomNavigationView</item>
 		<item name="itemTextColor">@color/navigation_item_label_color_selector</item>
-		<item name="itemTextAppearanceActive">@style/TextAppearance.OkkeiPatcher.TitleSmallBold</item>
-		<item name="itemTextAppearanceInactive">@style/TextAppearance.OkkeiPatcher.TitleSmallBold</item>
+		<item name="itemTextAppearanceActive">@style/TextAppearance.OkkeiPatcher.BodySmallBold</item>
+		<item name="itemTextAppearanceInactive">@style/TextAppearance.OkkeiPatcher.BodySmallBold</item>
 	</style>
 
 	<style name="Widget.OkkeiPatcher.NavigationRailView" parent="Widget.Material3.NavigationRailView">
 		<item name="itemTextColor">@color/navigation_item_label_color_selector</item>
-		<item name="itemTextAppearanceActive">@style/TextAppearance.OkkeiPatcher.TitleSmallBold</item>
-		<item name="itemTextAppearanceInactive">@style/TextAppearance.OkkeiPatcher.TitleSmallBold</item>
+		<item name="itemTextAppearanceActive">@style/TextAppearance.OkkeiPatcher.BodySmallBold</item>
+		<item name="itemTextAppearanceInactive">@style/TextAppearance.OkkeiPatcher.BodySmallBold</item>
 	</style>
 
 	<style name="Widget.OkkeiPatcher.NavigationView" parent="Widget.Material3.NavigationView">
-		<item name="itemTextAppearance">@style/TextAppearance.OkkeiPatcher.TitleSmallBold</item>
+		<item name="itemTextAppearance">@style/TextAppearance.OkkeiPatcher.BodySmallBold</item>
 	</style>
 
 	<style name="Widget.OkkeiPatcher.LinearProgressIndicator" parent="Widget.Material3.LinearProgressIndicator">

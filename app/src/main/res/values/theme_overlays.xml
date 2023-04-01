@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<style name="Base.ThemeOverlay.OkkeiPatcher.Button.Light" parent="ThemeOverlay.Material3.Button">
-		<item name="colorSurfaceVariant">@color/md_theme_light_surfaceVariant_button</item>
-	</style>
-	<style name="Base.ThemeOverlay.OkkeiPatcher.Button" parent="Base.ThemeOverlay.OkkeiPatcher.Button.Light" />
-	<style name="ThemeOverlay.OkkeiPatcher.Button" parent="Base.ThemeOverlay.OkkeiPatcher.Button" />
-
 	<style name="ThemeOverlay.OkkeiPatcher.Toolbar.Light" parent="">
 		<item name="colorSurface">?colorPrimary</item>
 		<item name="colorOnSurface">?colorOnPrimary</item>
@@ -16,15 +10,7 @@
 		<item name="colorControlNormal">?colorOnPrimary</item>
 	</style>
 
-	<style name="Base.ThemeOverlay.OkkeiPatcher.BottomNavigationView.Light" parent="" />
-	<style name="Base.ThemeOverlay.OkkeiPatcher.BottomNavigationView" parent="Base.ThemeOverlay.OkkeiPatcher.BottomNavigationView.Light" />
-	<style name="ThemeOverlay.OkkeiPatcher.BottomNavigationView" parent="Base.ThemeOverlay.OkkeiPatcher.BottomNavigationView" />
-
 	<style name="Base.ThemeOverlay.OkkeiPatcher.Subtitle.Light" parent="" />
 	<style name="Base.ThemeOverlay.OkkeiPatcher.Subtitle" parent="Base.ThemeOverlay.OkkeiPatcher.Subtitle.Light" />
 	<style name="ThemeOverlay.OkkeiPatcher.Subtitle" parent="Base.ThemeOverlay.OkkeiPatcher.Subtitle" />
-
-	<style name="Base.ThemeOverlay.OkkeiPatcher.CardSubtitleLarge.Light" parent="" />
-	<style name="Base.ThemeOverlay.OkkeiPatcher.CardSubtitleLarge" parent="Base.ThemeOverlay.OkkeiPatcher.CardSubtitleLarge.Light" />
-	<style name="ThemeOverlay.OkkeiPatcher.CardSubtitleLarge" parent="Base.ThemeOverlay.OkkeiPatcher.CardSubtitleLarge" />
 </resources>

@@ -12,11 +12,11 @@
 	</style>
 
 	<style name="TextAppearance.OkkeiPatcher.CardSubtitleLarge" parent="TextAppearance.Material3.BodyLarge">
-		<item name="materialThemeOverlay">@style/ThemeOverlay.OkkeiPatcher.CardSubtitleLarge</item>
+		<item name="materialThemeOverlay">@style/ThemeOverlay.OkkeiPatcher.Subtitle</item>
 		<item name="android:textColor">?colorOnSurfaceVariant</item>
 	</style>
 
-	<style name="TextAppearance.OkkeiPatcher.TitleSmallBold" parent="TextAppearance.Material3.TitleSmall">
+	<style name="TextAppearance.OkkeiPatcher.BodySmallBold" parent="TextAppearance.Material3.BodySmall">
 		<item name="android:textStyle">bold</item>
 	</style>
 </resources>

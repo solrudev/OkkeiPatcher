@@ -1,23 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-	<style name="Base.ThemeOverlay.OkkeiPatcher.Button.Night" parent="ThemeOverlay.Material3.Button">
-		<item name="colorSurfaceVariant">@color/md_theme_dark_surfaceVariant_button</item>
-	</style>
-	<style name="Base.ThemeOverlay.OkkeiPatcher.Button" parent="Base.ThemeOverlay.OkkeiPatcher.Button.Night" />
-
-	<style name="Base.ThemeOverlay.OkkeiPatcher.BottomNavigationView.Night" parent="">
-		<item name="colorSurface">@color/md_theme_dark_surface_bottomNavigation</item>
-	</style>
-	<style name="Base.ThemeOverlay.OkkeiPatcher.BottomNavigationView" parent="Base.ThemeOverlay.OkkeiPatcher.BottomNavigationView.Night" />
-
 	<style name="Base.ThemeOverlay.OkkeiPatcher.CardSubtitle.Night" parent="">
 		<item name="colorOnSurfaceVariant">@color/md_theme_dark_onSurfaceVariant_cardSubtitle</item>
 	</style>
 	<style name="Base.ThemeOverlay.OkkeiPatcher.Subtitle" parent="Base.ThemeOverlay.OkkeiPatcher.CardSubtitle.Night" />
-
-	<style name="Base.ThemeOverlay.OkkeiPatcher.CardSubtitleLarge.Night" parent="">
-		<item name="colorOnSurfaceVariant">@color/md_theme_dark_onSurfaceVariant_cardSubtitleLarge</item>
-	</style>
-	<style name="Base.ThemeOverlay.OkkeiPatcher.CardSubtitleLarge" parent="Base.ThemeOverlay.OkkeiPatcher.CardSubtitleLarge.Night" />
 </resources>
