@@ -21,16 +21,16 @@ class PatchFileImpl<T>(
 	private val versionKey = intPreferencesKey(name)
 	override val installedVersion = Preference(key = versionKey, defaultValue = { 1 }, preferences)
 
-	override suspend fun getData() = selector(cache.retrieve())
+	override suspend fun getData(refresh: Boolean) = selector(cache.retrieve(refresh))
 
-	override suspend fun isUpdateAvailable(): Boolean {
+	override suspend fun isUpdateAvailable(refresh: Boolean): Boolean {
 		val isPatched = patchStatus.retrieve()
 		if (!isPatched) {
 			return false
 		}
 		val currentVersion = installedVersion.retrieve()
 		val latestVersion = try {
-			getData().version
+			getData(refresh).version
 		} catch (_: NetworkNotAvailableException) {
 			currentVersion
 		}
