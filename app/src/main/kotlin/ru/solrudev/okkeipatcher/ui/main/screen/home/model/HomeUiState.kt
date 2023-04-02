@@ -10,6 +10,7 @@ data class HomeUiState(
 	val isRestoreEnabled: Boolean = false,
 	val patchStatus: LocalizedString = LocalizedString.resource(R.string.patch_status_not_patched),
 	val patchVersion: String = "",
+	val isPatchUpdateLoading: Boolean = false,
 	val isPatchSizeLoading: Boolean = false,
 	val startPatchMessage: MessageUiState = MessageUiState(),
 	val startRestoreMessage: MessageUiState = MessageUiState(),

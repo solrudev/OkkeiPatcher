@@ -11,14 +11,13 @@ import kotlin.time.Duration.Companion.seconds
 @Singleton
 class MockPatchRepository @Inject constructor() : PatchRepository {
 
-	private var firstUpdatesCheck = true
+	private var checkCount = 0
 
 	override suspend fun getDisplayVersion() = "1.0(mock)"
 
-	override suspend fun getPatchUpdates(): PatchUpdates {
+	override suspend fun getPatchUpdates(refresh: Boolean): PatchUpdates {
 		delay(3.seconds)
-		val isUpdateAvailable = firstUpdatesCheck
-		firstUpdatesCheck = false
+		val isUpdateAvailable = checkCount++ % 2 == 0
 		return DefaultPatchUpdates(isUpdateAvailable)
 	}
 

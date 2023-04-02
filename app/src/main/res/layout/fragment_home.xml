@@ -1,30 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/swipeRefreshLayout_home"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
-	<LinearLayout
-		android:id="@+id/container_home"
+	<androidx.core.widget.NestedScrollView
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:animateLayoutChanges="true"
-		android:clipChildren="false"
-		android:clipToPadding="false"
-		android:orientation="vertical"
-		android:paddingHorizontal="@dimen/card_layout_padding_horizontal"
-		android:paddingVertical="@dimen/card_layout_padding_vertical">
+		android:layout_height="match_parent">
 
-		<include
-			android:id="@+id/card_home_game_info"
-			layout="@layout/card_game_info" />
+		<LinearLayout
+			android:id="@+id/container_home"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:animateLayoutChanges="true"
+			android:clipChildren="false"
+			android:clipToPadding="false"
+			android:orientation="vertical"
+			android:paddingHorizontal="@dimen/card_layout_padding_horizontal"
+			android:paddingVertical="@dimen/card_layout_padding_vertical">
 
-		<include
-			android:id="@+id/card_home_actions"
-			layout="@layout/card_actions" />
+			<include
+				android:id="@+id/card_home_game_info"
+				layout="@layout/card_game_info" />
 
-		<include
-			android:id="@+id/card_home_patch_status"
-			layout="@layout/card_update_status" />
+			<include
+				android:id="@+id/card_home_actions"
+				layout="@layout/card_actions" />
 
-	</LinearLayout>
-</androidx.core.widget.NestedScrollView>
+			<include
+				android:id="@+id/card_home_patch_status"
+				layout="@layout/card_update_status" />
+
+		</LinearLayout>
+	</androidx.core.widget.NestedScrollView>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

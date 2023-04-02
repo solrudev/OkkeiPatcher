@@ -6,7 +6,7 @@ import ru.solrudev.okkeipatcher.domain.model.patchupdates.PatchUpdates
 
 interface PatchRepository {
 	suspend fun getDisplayVersion(): String
-	suspend fun getPatchUpdates(): PatchUpdates
+	suspend fun getPatchUpdates(refresh: Boolean = false): PatchUpdates
 	suspend fun getPatchSizeInMb(): Double
 	suspend fun clearPersistedData()
 }

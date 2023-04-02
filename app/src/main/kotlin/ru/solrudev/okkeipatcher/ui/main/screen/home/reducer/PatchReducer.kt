@@ -31,5 +31,7 @@ class PatchReducer @Inject constructor() : Reducer<PatchEvent, HomeUiState> {
 			state.copy(startPatchMessage = startPatchMessage)
 		}
 		is StartPatchMessageDismissed -> state.copy(startPatchMessage = MessageUiState())
+		is PatchUpdatesLoadingStarted -> state.copy(isPatchUpdateLoading = true)
+		is PatchUpdatesLoaded -> state.copy(isPatchUpdateLoading = false)
 	}
 }

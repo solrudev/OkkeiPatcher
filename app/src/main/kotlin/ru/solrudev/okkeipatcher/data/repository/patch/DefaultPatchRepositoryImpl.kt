@@ -41,9 +41,9 @@ class DefaultPatchRepositoryImpl @Inject constructor(
 		""
 	}
 
-	override suspend fun getPatchUpdates() = DefaultPatchUpdates(
-		scripts.isUpdateAvailable(),
-		obb.isUpdateAvailable()
+	override suspend fun getPatchUpdates(refresh: Boolean) = DefaultPatchUpdates(
+		scripts.isUpdateAvailable(refresh),
+		obb.isUpdateAvailable(refresh)
 	)
 
 	override suspend fun getPatchSizeInMb() = try {

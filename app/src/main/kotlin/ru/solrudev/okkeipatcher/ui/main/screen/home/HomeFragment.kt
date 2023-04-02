@@ -10,6 +10,7 @@ import io.github.solrudev.jetmvi.derivedView
 import io.github.solrudev.jetmvi.jetViewModels
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.databinding.FragmentHomeBinding
+import ru.solrudev.okkeipatcher.ui.main.screen.home.controller.RefreshController
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeEvent.ViewHidden
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeUiState
 import ru.solrudev.okkeipatcher.ui.main.screen.home.view.*
@@ -40,12 +41,17 @@ class HomeFragment : Fragment(R.layout.fragment_home), HostJetView<HomeUiState> 
 		RestoreMessageView(requireContext(), viewLifecycleOwner.lifecycle, viewModel)
 	}
 
+	private val refreshController by derivedView {
+		RefreshController(binding.swipeRefreshLayoutHome, viewModel)
+	}
+
 	private val viewModel: HomeViewModel by jetViewModels(
 		HomeFragment::gameInfoView,
 		HomeFragment::actionsView,
 		HomeFragment::patchStatusView,
 		HomeFragment::patchMessageView,
-		HomeFragment::restoreMessageView
+		HomeFragment::restoreMessageView,
+		HomeFragment::refreshController
 	)
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {

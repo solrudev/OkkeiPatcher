@@ -13,6 +13,9 @@ sealed interface PatchEvent : HomeEvent {
 	data class PatchSizeLoaded(val patchSize: Double) : PatchEvent
 	object PatchSizeLoadingStarted : PatchEvent
 	object PatchRequested : PatchEvent, PatchEffect
+	object PatchUpdatesRequested : PatchEvent, PatchEffect
+	object PatchUpdatesLoadingStarted : PatchEvent
+	object PatchUpdatesLoaded : PatchEvent
 	object StartPatch : PatchEvent, PatchEffect
 	object StartPatchMessageShown : PatchEvent
 	object StartPatchMessageDismissed : PatchEvent
