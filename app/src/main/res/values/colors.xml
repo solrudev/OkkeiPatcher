@@ -21,13 +21,13 @@
 	<color name="md_theme_light_onSurface">#1B1B1B</color>
 	<color name="md_theme_light_surfaceVariant">#12000000</color>
 	<color name="md_theme_light_onSurfaceVariant">#7E7E7E</color>
-	<color name="md_theme_light_onSurfaceVariant_cardSubtitle">#666666</color>
 	<color name="md_theme_light_outline">#7E7E7E</color>
 	<color name="md_theme_light_inverseOnSurface">#FFFFFF</color>
 	<color name="md_theme_light_inverseSurface">#1B1B1B</color>
 	<color name="md_theme_light_inversePrimary">#FFFFFF</color>
 	<color name="md_theme_light_shadow">#000000</color>
 	<color name="md_theme_light_primaryInverse">#FFFFFF</color>
+	<color name="md_theme_light_secondaryText">#666666</color>
 	<color name="md_theme_dark_primary">#3A68E0</color>
 	<color name="md_theme_dark_onPrimary">#FFFFFF</color>
 	<color name="md_theme_dark_primaryContainer">#3A68E0</color>
@@ -50,12 +50,12 @@
 	<color name="md_theme_dark_onSurface">#FFFFFF</color>
 	<color name="md_theme_dark_surfaceVariant">#303030</color>
 	<color name="md_theme_dark_onSurfaceVariant">#7E7E7E</color>
-	<color name="md_theme_dark_onSurfaceVariant_cardSubtitle">#D8D8D8</color>
 	<color name="md_theme_dark_outline">#7E7E7E</color>
 	<color name="md_theme_dark_inverseOnSurface">#262626</color>
 	<color name="md_theme_dark_inverseSurface">#FFFFFF</color>
 	<color name="md_theme_dark_inversePrimary">#FFFFFF</color>
 	<color name="md_theme_dark_shadow">#000000</color>
 	<color name="md_theme_dark_primaryInverse">#FFFFFF</color>
+	<color name="md_theme_dark_secondaryText">#D8D8D8</color>
 	<color name="color_game_icon_placeholder">#888888</color>
 </resources>

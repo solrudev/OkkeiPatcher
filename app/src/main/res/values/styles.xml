@@ -66,8 +66,11 @@
 		<item name="trackColor">?colorSurfaceVariant</item>
 	</style>
 
+	<style name="Widget.OkkeiPatcher.CheckedTextView" parent="Widget.Material3.CheckedTextView">
+		<item name="android:textColor">?colorSecondaryText</item>
+	</style>
+
 	<style name="MaterialAlertDialog.OkkeiPatcher.Body.Text" parent="MaterialAlertDialog.Material3.Body.Text">
-		<item name="materialThemeOverlay">@style/ThemeOverlay.OkkeiPatcher.Subtitle</item>
-		<item name="android:textColor">?colorOnSurfaceVariant</item>
+		<item name="android:textColor">?colorSecondaryText</item>
 	</style>
 </resources>

@@ -4,6 +4,7 @@
 	<attr name="state_abort_enabled" format="boolean" />
 	<attr name="colorAbort" format="color" />
 	<attr name="colorOnAbort" format="color" />
+	<attr name="colorSecondaryText" format="color" />
 
 	<declare-styleable name="AbortButton">
 		<attr name="abortEnabled" format="boolean" />

@@ -10,13 +10,8 @@
 		<item name="colorControlNormal">?colorOnPrimary</item>
 	</style>
 
-	<style name="Base.ThemeOverlay.OkkeiPatcher.Subtitle.Light" parent="">
-		<item name="colorOnSurfaceVariant">@color/md_theme_light_onSurfaceVariant_cardSubtitle</item>
-	</style>
-	<style name="Base.ThemeOverlay.OkkeiPatcher.Subtitle" parent="Base.ThemeOverlay.OkkeiPatcher.Subtitle.Light" />
-	<style name="ThemeOverlay.OkkeiPatcher.Subtitle" parent="Base.ThemeOverlay.OkkeiPatcher.Subtitle" />
-
 	<style name="ThemeOverlay.OkkeiPatcher.MaterialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog.Centered">
+		<item name="android:checkedTextViewStyle">@style/Widget.OkkeiPatcher.CheckedTextView</item>
 		<item name="materialAlertDialogBodyTextStyle">@style/MaterialAlertDialog.OkkeiPatcher.Body.Text</item>
 	</style>
 </resources>

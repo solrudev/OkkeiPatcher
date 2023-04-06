@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-	<style name="Base.ThemeOverlay.OkkeiPatcher.CardSubtitle.Night" parent="">
-		<item name="colorOnSurfaceVariant">@color/md_theme_dark_onSurfaceVariant_cardSubtitle</item>
-	</style>
-	<style name="Base.ThemeOverlay.OkkeiPatcher.Subtitle" parent="Base.ThemeOverlay.OkkeiPatcher.CardSubtitle.Night" />
-</resources>

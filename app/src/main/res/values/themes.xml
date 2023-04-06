@@ -30,6 +30,7 @@
 		<item name="android:shadowColor">@color/md_theme_light_shadow</item>
 		<item name="colorAbort">@color/md_theme_light_errorContainer</item>
 		<item name="colorOnAbort">@color/md_theme_light_onErrorContainer</item>
+		<item name="colorSecondaryText">@color/md_theme_light_secondaryText</item>
 	</style>
 
 	<style name="Base.Theme.OkkeiPatcher" parent="Base.V19.Theme.OkkeiPatcher" />
