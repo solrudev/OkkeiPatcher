@@ -15,4 +15,8 @@
 	</style>
 	<style name="Base.ThemeOverlay.OkkeiPatcher.Subtitle" parent="Base.ThemeOverlay.OkkeiPatcher.Subtitle.Light" />
 	<style name="ThemeOverlay.OkkeiPatcher.Subtitle" parent="Base.ThemeOverlay.OkkeiPatcher.Subtitle" />
+
+	<style name="ThemeOverlay.OkkeiPatcher.MaterialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog.Centered">
+		<item name="materialAlertDialogBodyTextStyle">@style/MaterialAlertDialog.OkkeiPatcher.Body.Text</item>
+	</style>
 </resources>

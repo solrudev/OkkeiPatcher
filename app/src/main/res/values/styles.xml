@@ -65,4 +65,9 @@
 		<item name="indicatorInset">0dp</item>
 		<item name="trackColor">?colorSurfaceVariant</item>
 	</style>
+
+	<style name="MaterialAlertDialog.OkkeiPatcher.Body.Text" parent="MaterialAlertDialog.Material3.Body.Text">
+		<item name="materialThemeOverlay">@style/ThemeOverlay.OkkeiPatcher.Subtitle</item>
+		<item name="android:textColor">?colorOnSurfaceVariant</item>
+	</style>
 </resources>
