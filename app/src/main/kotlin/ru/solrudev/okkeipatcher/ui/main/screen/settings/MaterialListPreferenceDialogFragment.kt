@@ -8,10 +8,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 class MaterialListPreferenceDialogFragment : ListPreferenceDialogFragmentCompat() {
 
 	override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-		val builder = MaterialAlertDialogBuilder(
-			requireContext(),
-			com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog_Centered
-		)
+		val builder = MaterialAlertDialogBuilder(requireContext())
 			.setTitle(preference.dialogTitle)
 			.setIcon(preference.dialogIcon)
 			.setPositiveButton(preference.positiveButtonText, this)
