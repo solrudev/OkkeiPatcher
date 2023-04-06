@@ -1,6 +1,7 @@
 package ru.solrudev.okkeipatcher.data.repository.app.work
 
 import androidx.lifecycle.asFlow
+import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.*
@@ -8,14 +9,13 @@ import kotlinx.coroutines.supervisorScope
 import ru.solrudev.okkeipatcher.app.repository.work.WorkRepository
 import ru.solrudev.okkeipatcher.data.database.dao.WorkDao
 import ru.solrudev.okkeipatcher.data.database.model.WorkModel
-import ru.solrudev.okkeipatcher.data.repository.app.work.mapper.WorkStateMapper
+import ru.solrudev.okkeipatcher.data.worker.util.toWorkState
 import java.util.*
 import javax.inject.Inject
 
 class WorkRepositoryImpl @Inject constructor(
 	private val workDao: WorkDao,
-	private val workManager: WorkManager,
-	private val workStateMapper: WorkStateMapper
+	private val workManager: WorkManager
 ) : WorkRepository {
 
 	override suspend fun add(workId: UUID) {
@@ -40,7 +40,7 @@ class WorkRepositoryImpl @Inject constructor(
 			workManager
 				.getWorkInfoByIdLiveData(workId)
 				.asFlow()
-				.map(workStateMapper)
+				.map(WorkInfo::toWorkState)
 				.onEach(::emit)
 				.filter { it.isFinished }
 				.onEach { this@supervisorScope.cancel() }

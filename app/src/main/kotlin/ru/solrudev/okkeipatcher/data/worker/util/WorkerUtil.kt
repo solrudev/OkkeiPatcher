@@ -6,12 +6,10 @@ import androidx.work.ListenableWorker
 import androidx.work.WorkInfo
 import ru.solrudev.okkeipatcher.app.model.ProgressData
 import ru.solrudev.okkeipatcher.app.model.WorkState
-import ru.solrudev.okkeipatcher.data.repository.app.work.mapper.WorkStateMapper
 import ru.solrudev.okkeipatcher.data.worker.model.WorkerFailure
 import ru.solrudev.okkeipatcher.data.worker.util.extension.getSerializable
 import ru.solrudev.okkeipatcher.data.worker.util.extension.putSerializable
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
-import javax.inject.Inject
 
 private const val PROGRESS = "progress"
 private const val PROGRESS_MAX = "progress_max"
@@ -45,23 +43,20 @@ fun workerFailure(data: WorkerFailure) = ListenableWorker.Result.failure(
 	}.build()
 )
 
-class WorkStateMapperImpl @Inject constructor() : WorkStateMapper {
-
-	override fun invoke(workInfo: WorkInfo?) = when (workInfo?.state) {
-		WorkInfo.State.RUNNING -> with(workInfo.progress) {
-			val status = getSerializable<LocalizedString>(STATUS) ?: LocalizedString.empty()
-			val progress = getInt(PROGRESS, 0)
-			val progressMax = getInt(PROGRESS_MAX, 0)
-			val progressData = ProgressData(progress, progressMax)
-			WorkState.Running(status, progressData)
-		}
-		WorkInfo.State.FAILED -> with(workInfo.outputData) {
-			val reason = getSerializable<LocalizedString>(FAILURE_REASON) ?: LocalizedString.empty()
-			val stackTrace = getString(STACK_TRACE) ?: ""
-			WorkState.Failed(reason, stackTrace)
-		}
-		WorkInfo.State.SUCCEEDED -> WorkState.Succeeded
-		WorkInfo.State.CANCELLED -> WorkState.Canceled
-		else -> WorkState.Unknown
+fun WorkInfo?.toWorkState() = when (this?.state) {
+	WorkInfo.State.RUNNING -> with(progress) {
+		val status = getSerializable<LocalizedString>(STATUS) ?: LocalizedString.empty()
+		val progress = getInt(PROGRESS, 0)
+		val progressMax = getInt(PROGRESS_MAX, 0)
+		val progressData = ProgressData(progress, progressMax)
+		WorkState.Running(status, progressData)
 	}
+	WorkInfo.State.FAILED -> with(outputData) {
+		val reason = getSerializable<LocalizedString>(FAILURE_REASON) ?: LocalizedString.empty()
+		val stackTrace = getString(STACK_TRACE) ?: ""
+		WorkState.Failed(reason, stackTrace)
+	}
+	WorkInfo.State.SUCCEEDED -> WorkState.Succeeded
+	WorkInfo.State.CANCELLED -> WorkState.Canceled
+	else -> WorkState.Unknown
 }
