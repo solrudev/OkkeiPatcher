@@ -21,6 +21,7 @@
 	<color name="md_theme_light_onSurface">#1B1B1B</color>
 	<color name="md_theme_light_surfaceVariant">#12000000</color>
 	<color name="md_theme_light_onSurfaceVariant">#7E7E7E</color>
+	<color name="md_theme_light_onSurfaceVariant_cardSubtitle">#666666</color>
 	<color name="md_theme_light_outline">#7E7E7E</color>
 	<color name="md_theme_light_inverseOnSurface">#FFFFFF</color>
 	<color name="md_theme_light_inverseSurface">#1B1B1B</color>
