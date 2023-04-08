@@ -148,6 +148,7 @@ dependencies {
 	implementation(libs.viewbindingpropertydelegate)
 	implementation(libs.progressbutton)
 	implementation(libs.insetter)
+	implementation(libs.lottie)
 	implementation(files("libs/Base64.jar")) // java.util.Base64 for apksig on API 24-25
 
 	debugImplementation(androidx.multidex)

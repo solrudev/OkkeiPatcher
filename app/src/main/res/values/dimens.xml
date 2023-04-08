@@ -10,6 +10,7 @@
 	<dimen name="button_margin_vertical">16dp</dimen>
 	<dimen name="card_collapsing_content_margin">10dp</dimen>
 	<dimen name="card_margin">0dp</dimen>
+	<dimen name="card_work_margin_vertical">40dp</dimen>
 	<dimen name="content_category_margin">16dp</dimen>
 	<dimen name="patch_status_icon_start_margin">16dp</dimen>
 	<dimen name="text_paragraph_margin">8dp</dimen>
@@ -24,10 +25,11 @@
 	<dimen name="card_padding_horizontal">24dp</dimen>
 	<dimen name="card_padding_vertical">30dp</dimen>
 	<dimen name="content_padding">16dp</dimen>
-	<dimen name="work_padding_vertical">42dp</dimen>
+	<dimen name="work_padding_top">52dp</dimen>
+	<dimen name="work_padding_bottom">42dp</dimen>
 
 	<!-- Other -->
 	<dimen name="icon_app_size">88dp</dimen>
 	<dimen name="button_update_height">32dp</dimen>
-	<dimen name="work_image_height">150dp</dimen>
+	<dimen name="work_animation_height">130dp</dimen>
 </resources>

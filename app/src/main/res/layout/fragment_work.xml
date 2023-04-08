@@ -11,43 +11,45 @@
 		android:layout_height="match_parent"
 		android:animateLayoutChanges="true"
 		android:paddingHorizontal="@dimen/card_layout_padding_horizontal"
-		android:paddingVertical="@dimen/work_padding_vertical">
+		android:paddingTop="@dimen/work_padding_top"
+		android:paddingBottom="@dimen/work_padding_bottom">
 
-		<ImageView
-			android:id="@+id/imageview_work_okkei"
+		<com.airbnb.lottie.LottieAnimationView
+			android:id="@+id/lottieAnimationView_work"
 			android:layout_width="0dp"
-			android:layout_height="@dimen/work_image_height"
-			android:importantForAccessibility="no"
+			android:layout_height="@dimen/work_animation_height"
+			android:layout_marginHorizontal="@dimen/card_margin"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
-			app:srcCompat="@drawable/okkei" />
+			app:lottie_fileName="animations/gears.lottie"
+			app:lottie_imageAssetsFolder="animations"
+			app:lottie_loop="true" />
 
 		<include
 			android:id="@+id/card_progress_work"
 			layout="@layout/card_work_progress"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:layout_marginStart="@dimen/card_margin"
-			android:layout_marginTop="@dimen/work_padding_vertical"
-			android:layout_marginEnd="@dimen/card_margin"
+			android:layout_marginHorizontal="@dimen/card_margin"
+			android:layout_marginVertical="@dimen/card_work_margin_vertical"
+			app:layout_constraintBottom_toTopOf="@id/button_work"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@id/imageview_work_okkei" />
+			app:layout_constraintTop_toBottomOf="@id/lottieAnimationView_work"
+			app:layout_constraintVertical_chainStyle="spread_inside" />
 
 		<ru.solrudev.okkeipatcher.ui.widget.AbortButton
 			android:id="@+id/button_work"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:layout_marginTop="@dimen/work_padding_vertical"
 			app:abortEnabled="true"
 			app:abortText="@string/button_text_abort_process"
 			app:text="@string/button_text_ok"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="@id/card_progress_work"
 			app:layout_constraintStart_toStartOf="@id/card_progress_work"
-			app:layout_constraintTop_toBottomOf="@id/card_progress_work"
-			app:layout_constraintVertical_bias="1" />
+			app:layout_constraintTop_toBottomOf="@id/card_progress_work" />
 
 	</androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

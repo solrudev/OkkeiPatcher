@@ -43,6 +43,7 @@ class WorkFragment : Fragment(R.layout.fragment_work), JetView<WorkUiState> {
 			requireActivity().finish()
 		}
 		setupNavigation()
+		lottieAnimationViewWork.playAnimation()
 	}
 
 	override fun onStart() {
@@ -70,7 +71,7 @@ class WorkFragment : Fragment(R.layout.fragment_work), JetView<WorkUiState> {
 			showCancelWorkMessage(uiState.cancelWorkMessage.data)
 		}
 		if (uiState.errorMessage.shouldShow) {
-			onError(uiState.errorMessage.data)
+			onError(uiState.errorMessage.data, playAnimations = !uiState.animationsPlayed)
 		}
 	}
 
@@ -92,14 +93,12 @@ class WorkFragment : Fragment(R.layout.fragment_work), JetView<WorkUiState> {
 		findNavController().currentDestination?.label = args.work.label.resolve(requireContext())
 	}
 
-	private fun onWorkSucceeded(playAnimations: Boolean) = with(binding.buttonWork) {
-		setOnClickListener {
+	private fun onWorkSucceeded(playAnimations: Boolean) = with(binding) {
+		startAnimation("success.lottie", play = playAnimations)
+		buttonWork.setOnClickListener {
 			findNavController().popBackStack()
 		}
-		setAbortEnabled(abortEnabled = false, animate = playAnimations)
-		if (playAnimations) {
-			viewModel.dispatchEvent(AnimationsPlayed)
-		}
+		buttonWork.setAbortEnabled(abortEnabled = false, animate = playAnimations)
 		currentCancelDialog?.dismiss()
 	}
 
@@ -107,10 +106,21 @@ class WorkFragment : Fragment(R.layout.fragment_work), JetView<WorkUiState> {
 		findNavController().popBackStack()
 	}
 
-	private fun onError(error: Message) = with(binding) {
+	private fun onError(error: Message, playAnimations: Boolean) = with(binding) {
+		startAnimation("error.lottie", play = playAnimations)
 		buttonWork.isEnabled = false
 		currentCancelDialog?.dismiss()
 		showErrorMessage(error)
+	}
+
+	private fun startAnimation(fileName: String, play: Boolean) = with(binding) {
+		lottieAnimationViewWork.run {
+			setOneshotAnimation(fileName, start = play)
+			onAnimationEnd {
+				viewModel.dispatchEvent(AnimationsPlayed)
+				removeAllAnimatorListeners()
+			}
+		}
 	}
 
 	private fun setProgress(progressData: ProgressData) = with(binding.cardProgressWork) {

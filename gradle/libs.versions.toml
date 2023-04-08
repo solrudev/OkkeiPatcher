@@ -21,6 +21,7 @@ jetmvi = { module = "io.github.solrudev:jetmvi", version = "0.1.5" }
 viewbindingpropertydelegate = { module = "com.github.kirich1409:viewbindingpropertydelegate-noreflection", version = "1.5.8" }
 progressbutton = { module = "com.github.razir.progressbutton:progressbutton", version = "2.1.0" }
 insetter = { module = "dev.chrisbanes.insetter:insetter", version = "0.6.1" }
+lottie = { module = "com.airbnb.android:lottie", version = "6.0.0" }
 
 [bundles]
 retrofit = ["retrofit", "retrofit-converter-moshi"]
