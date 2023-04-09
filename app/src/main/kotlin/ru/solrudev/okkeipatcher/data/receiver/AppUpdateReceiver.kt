@@ -1,4 +1,4 @@
-package ru.solrudev.okkeipatcher.data.repository.app
+package ru.solrudev.okkeipatcher.data.receiver
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -7,6 +7,7 @@ import android.content.Intent.ACTION_MY_PACKAGE_REPLACED
 import dagger.hilt.android.AndroidEntryPoint
 import okio.FileSystem
 import ru.solrudev.okkeipatcher.data.OkkeiEnvironment
+import ru.solrudev.okkeipatcher.data.repository.app.APP_UPDATE_FILE_NAME
 import javax.inject.Inject
 
 @AndroidEntryPoint

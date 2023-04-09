@@ -47,7 +47,7 @@
 		</provider>
 
 		<receiver
-			android:name=".data.repository.app.AppUpdateReceiver"
+			android:name=".data.receiver.AppUpdateReceiver"
 			android:exported="false">
 			<intent-filter>
 				<action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
