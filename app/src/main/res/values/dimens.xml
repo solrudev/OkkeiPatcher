@@ -30,6 +30,7 @@
 	<dimen name="work_padding_bottom">42dp</dimen>
 
 	<!-- Other -->
+	<dimen name="about_icon_app_size">64dp</dimen>
 	<dimen name="icon_app_size">88dp</dimen>
 	<dimen name="button_update_height">32dp</dimen>
 	<dimen name="work_animation_height">130dp</dimen>
