@@ -7,7 +7,7 @@
 
 	<!--About screen-->
 	<string name="about_screen_source_code_link" translatable="false">https://github.com/solrudev/OkkeiPatcher</string>
-	<string name="about_screen_version">Version %s\nby solrudev</string>
+	<string name="about_screen_version">Version %s\nby solrudev\nDesign by elmisa</string>
 
 	<!--Button texts-->
 	<string name="button_text_abort_process">Abort process</string>

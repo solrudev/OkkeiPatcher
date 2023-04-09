@@ -3,7 +3,7 @@
 	<string name="not_available">Н/Д</string>
 
 	<!--About screen-->
-	<string name="about_screen_version">Версия %s\nby solrudev</string>
+	<string name="about_screen_version">Версия %s\nby solrudev\nDesign by elmisa</string>
 
 	<!--Button texts-->
 	<string name="button_text_abort_process">Прервать процесс</string>
