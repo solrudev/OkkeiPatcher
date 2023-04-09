@@ -45,7 +45,7 @@
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:text="@string/card_app_version"
-			android:textAppearance="@style/TextAppearance.OkkeiPatcher.CardSecondary"
+			android:textAppearance="?textAppearanceSecondary"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="@id/textview_card_app_title"

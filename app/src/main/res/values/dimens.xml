@@ -6,6 +6,7 @@
 
 	<!-- Margins -->
 	<dimen name="about_screen_elements_margin">8dp</dimen>
+	<dimen name="about_screen_icon_margin">18dp</dimen>
 	<dimen name="app_info_app_name_margin">10dp</dimen>
 	<dimen name="button_margin_vertical">16dp</dimen>
 	<dimen name="card_collapsing_content_margin">10dp</dimen>

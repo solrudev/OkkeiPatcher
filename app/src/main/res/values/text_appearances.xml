@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<style name="TextAppearance.OkkeiPatcher.Secondary" parent="TextAppearance.Material3.BodyLarge">
+	<style name="TextAppearance.OkkeiPatcher.Secondary" parent="TextAppearance.Material3.BodyMedium">
 		<item name="android:textColor">?colorSecondaryText</item>
 	</style>
 
-	<style name="TextAppearance.OkkeiPatcher.CardSecondary" parent="TextAppearance.Material3.BodyMedium">
-		<item name="android:textColor">?colorSecondaryText</item>
-	</style>
-
-	<style name="TextAppearance.OkkeiPatcher.CardSecondaryLarge" parent="TextAppearance.Material3.BodyLarge">
+	<style name="TextAppearance.OkkeiPatcher.SecondaryLarge" parent="TextAppearance.Material3.BodyLarge">
 		<item name="android:textColor">?colorSecondaryText</item>
 	</style>
 

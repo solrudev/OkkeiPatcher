@@ -7,6 +7,8 @@
 	<attr name="colorSecondaryText" format="color" />
 	<attr name="colorRippleFilled" format="color" />
 	<attr name="colorRippleOutlined" format="color" />
+	<attr name="textAppearanceSecondary" format="reference" />
+	<attr name="textAppearanceSecondaryLarge" format="reference" />
 
 	<declare-styleable name="AbortButton">
 		<attr name="abortEnabled" format="boolean" />

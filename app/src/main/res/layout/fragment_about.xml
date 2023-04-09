@@ -16,7 +16,7 @@
 			android:id="@+id/imageview_about_app_icon"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginBottom="@dimen/about_screen_elements_margin"
+			android:layout_marginBottom="@dimen/about_screen_icon_margin"
 			android:importantForAccessibility="no"
 			app:srcCompat="@mipmap/ic_launcher" />
 
@@ -34,7 +34,7 @@
 			android:layout_height="wrap_content"
 			android:text="@string/about_screen_version"
 			android:textAlignment="center"
-			android:textAppearance="@style/TextAppearance.OkkeiPatcher.Secondary" />
+			android:textAppearance="?textAppearanceSecondary" />
 
 		<Button
 			android:id="@+id/button_about_source_code"
