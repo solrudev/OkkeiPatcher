@@ -26,7 +26,7 @@ fun GameUiState(context: Context): GameUiState {
 		?.loadLabel(context.packageManager) ?: context.getString(R.string.game_title)
 	val version = packageInfo?.versionName ?: context.getString(R.string.not_available)
 	val icon = packageInfo?.applicationInfo?.loadIcon(context.packageManager) ?: ColorDrawable(
-		ContextCompat.getColor(context, R.color.color_game_icon_placeholder)
+		ContextCompat.getColor(context, R.color.color_app_icon_placeholder)
 	)
 	return GameUiState(title, version, icon)
 }

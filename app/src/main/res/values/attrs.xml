@@ -5,6 +5,8 @@
 	<attr name="colorAbort" format="color" />
 	<attr name="colorOnAbort" format="color" />
 	<attr name="colorSecondaryText" format="color" />
+	<attr name="colorRippleFilled" format="color" />
+	<attr name="colorRippleOutlined" format="color" />
 
 	<declare-styleable name="AbortButton">
 		<attr name="abortEnabled" format="boolean" />

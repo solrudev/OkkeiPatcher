@@ -28,6 +28,8 @@
 	<color name="md_theme_light_shadow">#000000</color>
 	<color name="md_theme_light_primaryInverse">#FFFFFF</color>
 	<color name="md_theme_light_secondaryText">#666666</color>
+	<color name="md_theme_light_rippleColor_outlined">#12000000</color>
+	<color name="md_theme_light_rippleColor_filled">#1AFFFFFF</color>
 	<color name="md_theme_dark_primary">#3A68E0</color>
 	<color name="md_theme_dark_onPrimary">#FFFFFF</color>
 	<color name="md_theme_dark_primaryContainer">#3A68E0</color>
@@ -57,5 +59,7 @@
 	<color name="md_theme_dark_shadow">#000000</color>
 	<color name="md_theme_dark_primaryInverse">#FFFFFF</color>
 	<color name="md_theme_dark_secondaryText">#D8D8D8</color>
-	<color name="color_game_icon_placeholder">#888888</color>
+	<color name="md_theme_dark_rippleColor_outlined">#0CFFFFFF</color>
+	<color name="md_theme_dark_rippleColor_filled">#1AFFFFFF</color>
+	<color name="color_app_icon_placeholder">#888888</color>
 </resources>

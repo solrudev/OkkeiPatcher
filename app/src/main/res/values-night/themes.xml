@@ -31,6 +31,8 @@
 		<item name="colorAbort">@color/md_theme_dark_errorContainer</item>
 		<item name="colorOnAbort">@color/md_theme_dark_onErrorContainer</item>
 		<item name="colorSecondaryText">@color/md_theme_dark_secondaryText</item>
+		<item name="colorRippleFilled">@color/md_theme_dark_rippleColor_filled</item>
+		<item name="colorRippleOutlined">@color/md_theme_dark_rippleColor_outlined</item>
 	</style>
 
 	<style name="Base.V19.Theme.OkkeiPatcher" parent="Base.V19.Night.Theme.OkkeiPatcher" />

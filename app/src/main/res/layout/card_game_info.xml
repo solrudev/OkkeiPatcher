@@ -18,7 +18,7 @@
 			android:id="@+id/imageview_card_game_icon"
 			android:layout_width="@dimen/icon_app_size"
 			android:layout_height="@dimen/icon_app_size"
-			android:src="@color/color_game_icon_placeholder"
+			android:src="@color/color_app_icon_placeholder"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"

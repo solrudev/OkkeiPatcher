@@ -13,6 +13,7 @@
 		<item name="backgroundTint">@color/text_button_background_color_selector</item>
 		<item name="android:textColor">@color/text_button_foreground_color_selector</item>
 		<item name="iconTint">@color/text_button_foreground_color_selector</item>
+		<item name="rippleColor">?colorRippleOutlined</item>
 	</style>
 
 	<style name="Widget.OkkeiPatcher.Button.UnelevatedButton" parent="Widget.Material3.Button.UnelevatedButton">
@@ -21,6 +22,7 @@
 		<item name="backgroundTint">@color/button_background_color_selector</item>
 		<item name="android:textColor">@color/button_content_color_selector</item>
 		<item name="iconTint">@color/button_content_color_selector</item>.
+		<item name="rippleColor">?colorRippleFilled</item>
 	</style>
 
 	<style name="Base.Widget.OkkeiPatcher.Toolbar.Light" parent="Widget.Material3.Toolbar">

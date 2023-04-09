@@ -150,7 +150,7 @@ class ProgressIcon : ConstraintLayout {
 		attrs ?: return
 		context.withStyledAttributes(attrs, R.styleable.ProgressIcon, defStyleAttr, defStyleRes) {
 			progressCircularProgressIcon.indicatorSize = getDimensionPixelSize(R.styleable.ProgressIcon_size, 0)
-			val iconSrc = getResourceId(R.styleable.ProgressIcon_iconSrc, R.color.color_game_icon_placeholder)
+			val iconSrc = getResourceId(R.styleable.ProgressIcon_iconSrc, R.color.color_app_icon_placeholder)
 			imageviewProgressIcon.setImageResource(iconSrc)
 			val isProgressVisible = getBoolean(R.styleable.ProgressIcon_progressVisible, false)
 			setProgressVisible(isProgressVisible, animate = false)
