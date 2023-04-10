@@ -25,8 +25,7 @@ import kotlinx.coroutines.yield
 import ru.solrudev.okkeipatcher.app.usecase.patch.GetPatchStatusFlowUseCase
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeEvent
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeEvent.PatchStatusChanged
-import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchStatus.NotPatched
-import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchStatus.Patched
+import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PersistentPatchStatus
 import javax.inject.Inject
 
 class ObservePatchStatusMiddleware @Inject constructor(
@@ -35,7 +34,6 @@ class ObservePatchStatusMiddleware @Inject constructor(
 
 	override fun apply(events: Flow<HomeEvent>) = getPatchStatusFlowUseCase().map { isPatched ->
 		yield()
-		val status = if (isPatched) Patched else NotPatched
-		PatchStatusChanged(status)
+		PatchStatusChanged(PersistentPatchStatus.of(isPatched))
 	}
 }

@@ -18,6 +18,9 @@
 
 package ru.solrudev.okkeipatcher.ui.main.screen.home.model
 
+import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchStatus.NotPatched
+import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchStatus.Patched
+
 sealed interface PatchStatus {
 	object Patched : PatchStatus, PersistentPatchStatus
 	object NotPatched : PatchStatus, PersistentPatchStatus
@@ -25,4 +28,8 @@ sealed interface PatchStatus {
 	data class WorkStarted(val currentStatus: PersistentPatchStatus) : PatchStatus
 }
 
-sealed interface PersistentPatchStatus : PatchStatus
+sealed interface PersistentPatchStatus : PatchStatus {
+	companion object {
+		fun of(value: Boolean) = if (value) Patched else NotPatched
+	}
+}

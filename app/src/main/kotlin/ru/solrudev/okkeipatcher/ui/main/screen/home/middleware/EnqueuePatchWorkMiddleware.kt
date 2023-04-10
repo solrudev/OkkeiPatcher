@@ -20,25 +20,22 @@ package ru.solrudev.okkeipatcher.ui.main.screen.home.middleware
 
 import io.github.solrudev.jetmvi.JetMiddleware
 import io.github.solrudev.jetmvi.MiddlewareScope
-import kotlinx.coroutines.flow.first
-import ru.solrudev.okkeipatcher.app.usecase.patch.GetPatchStatusFlowUseCase
-import ru.solrudev.okkeipatcher.app.usecase.work.EnqueuePatchWorkUseCase
+import ru.solrudev.okkeipatcher.app.usecase.work.EnqueuePatchWorkAndGetPatchStatusUseCase
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeEvent
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeEvent.PatchStatusChanged
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchEvent.StartPatch
-import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchStatus.*
+import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchStatus.WorkStarted
+import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PersistentPatchStatus
 import javax.inject.Inject
 
 class EnqueuePatchWorkMiddleware @Inject constructor(
-	private val enqueuePatchWorkUseCase: EnqueuePatchWorkUseCase,
-	private val getPatchStatusFlowUseCase: GetPatchStatusFlowUseCase
+	private val enqueuePatchWorkAndGetPatchStatusUseCase: EnqueuePatchWorkAndGetPatchStatusUseCase
 ) : JetMiddleware<HomeEvent> {
 
 	override fun MiddlewareScope<HomeEvent>.apply() {
 		onEvent<StartPatch> {
-			enqueuePatchWorkUseCase()
-			val isPatched = getPatchStatusFlowUseCase().first()
-			val currentStatus = if (isPatched) Patched else NotPatched
+			val isPatched = enqueuePatchWorkAndGetPatchStatusUseCase()
+			val currentStatus = PersistentPatchStatus.of(isPatched)
 			send(PatchStatusChanged(WorkStarted(currentStatus)))
 		}
 	}

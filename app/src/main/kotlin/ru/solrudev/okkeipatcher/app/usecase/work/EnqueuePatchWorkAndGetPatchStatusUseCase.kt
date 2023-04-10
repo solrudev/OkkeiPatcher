@@ -18,9 +18,21 @@
 
 package ru.solrudev.okkeipatcher.app.usecase.work
 
-import ru.solrudev.okkeipatcher.app.repository.work.RestoreWorkRepository
+import kotlinx.coroutines.flow.first
+import ru.solrudev.okkeipatcher.app.repository.work.PatchWorkRepository
+import ru.solrudev.okkeipatcher.app.usecase.patch.GetPatchStatusFlowUseCase
 import javax.inject.Inject
 
-class EnqueueRestoreWorkUseCase @Inject constructor(private val restoreWorkRepository: RestoreWorkRepository) {
-	suspend operator fun invoke() = restoreWorkRepository.enqueueWork()
+class EnqueuePatchWorkAndGetPatchStatusUseCase @Inject constructor(
+	private val patchWorkRepository: PatchWorkRepository,
+	private val getPatchStatusFlowUseCase: GetPatchStatusFlowUseCase
+) {
+
+	/**
+	 * Returns current patch status.
+	 */
+	suspend operator fun invoke(): Boolean {
+		patchWorkRepository.enqueueWork()
+		return getPatchStatusFlowUseCase().first()
+	}
 }
