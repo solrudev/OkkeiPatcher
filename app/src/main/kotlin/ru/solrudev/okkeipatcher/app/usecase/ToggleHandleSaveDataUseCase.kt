@@ -18,9 +18,26 @@
 
 package ru.solrudev.okkeipatcher.app.usecase
 
+import kotlinx.coroutines.flow.first
 import ru.solrudev.okkeipatcher.app.repository.PermissionsRepository
 import javax.inject.Inject
 
-class GetIsSaveDataAccessGrantedUseCase @Inject constructor(private val permissionsRepository: PermissionsRepository) {
-	operator fun invoke() = permissionsRepository.isSaveDataAccessGranted()
+class ToggleHandleSaveDataUseCase @Inject constructor(
+	private val permissionsRepository: PermissionsRepository,
+	private val getHandleSaveDataFlowUseCase: GetHandleSaveDataFlowUseCase,
+	private val persistHandleSaveDataUseCase: PersistHandleSaveDataUseCase
+) {
+
+	/**
+	 * Returns true if "handle save data" preference was toggled, false otherwise.
+	 */
+	suspend operator fun invoke(): Boolean {
+		val handleSaveData = getHandleSaveDataFlowUseCase().first()
+		val isSaveDataAccessGranted = permissionsRepository.isSaveDataAccessGranted()
+		when {
+			handleSaveData -> persistHandleSaveDataUseCase(false)
+			isSaveDataAccessGranted -> persistHandleSaveDataUseCase(true)
+		}
+		return handleSaveData || isSaveDataAccessGranted
+	}
 }
