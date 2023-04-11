@@ -39,7 +39,7 @@ development, such as edge-to-edge UI, adapting to different screen sizes, MVI pa
 presentation layer logic, Repository pattern and single-activity approach, while also adhering to
 [Material 3 design guidelines](https://m3.material.io/) (not wholeheartedly, though).
 
-UI is built with Android View system (no Jetpack Compose, sorry).
+UI is built with Android View system (no Jetpack Compose, sorry, we have to support KitKat anyway).
 
 Core logic of the app is highly abstracted and lives in the `domain` layer. It contains interfaces
 such as `Operation`, `Game`, `GameFile`, `PatchUpdates`. Interacting with other layers is achieved
