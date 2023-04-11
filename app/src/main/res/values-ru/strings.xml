@@ -31,8 +31,8 @@
 	<string name="button_text_copy_to_clipboard">Копировать в буфер обмена</string>
 	<string name="button_text_grant">Выдать</string>
 	<string name="button_text_granted">Выдано</string>
-	<string name="button_text_ok">OK</string>
-	<string name="button_text_patch">Пропатчить</string>
+	<string name="button_text_ok">Хорошо</string>
+	<string name="button_text_patch">Пропатчить игру</string>
 	<string name="button_text_restore">Восстановить</string>
 	<string name="button_text_source_code">Исходный код</string>
 	<string name="button_text_start">Начать</string>

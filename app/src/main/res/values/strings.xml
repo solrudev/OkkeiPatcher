@@ -36,7 +36,7 @@
 	<string name="button_text_grant">Grant</string>
 	<string name="button_text_granted">Granted</string>
 	<string name="button_text_ok">OK</string>
-	<string name="button_text_patch">Patch</string>
+	<string name="button_text_patch">Patch game</string>
 	<string name="button_text_restore">Restore</string>
 	<string name="button_text_source_code">Source code</string>
 	<string name="button_text_start">Start</string>
