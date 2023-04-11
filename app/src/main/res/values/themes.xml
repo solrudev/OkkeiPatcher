@@ -67,7 +67,6 @@
 		<item name="appBarLayoutStyle">@style/Widget.OkkeiPatcher.AppBarLayout</item>
 		<item name="toolbarStyle">@style/Widget.OkkeiPatcher.Toolbar</item>
 		<item name="materialAlertDialogTheme">@style/ThemeOverlay.OkkeiPatcher.MaterialAlertDialog</item>
-		<item name="textAppearanceTitleLarge">@style/TextAppearance.OkkeiPatcher.TitleLarge</item>
 		<item name="textAppearanceSecondary">@style/TextAppearance.OkkeiPatcher.Secondary</item>
 		<item name="elevationOverlayEnabled">false</item>
 	</style>

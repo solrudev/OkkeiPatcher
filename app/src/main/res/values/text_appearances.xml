@@ -23,7 +23,7 @@
 		<item name="android:textColor">?colorSecondaryText</item>
 	</style>
 
-	<style name="TextAppearance.OkkeiPatcher.TitleLarge" parent="TextAppearance.Material3.TitleLarge">
+	<style name="TextAppearance.OkkeiPatcher.ProgressDone" parent="TextAppearance.Material3.TitleLarge">
 		<item name="android:textSize">20sp</item>
 	</style>
 
