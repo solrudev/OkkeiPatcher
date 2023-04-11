@@ -55,7 +55,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginBottom="@dimen/work_status_margin"
-			android:textAppearance="?textAppearanceSecondaryLarge"
+			android:textAppearance="?textAppearanceSecondary"
 			tools:text="@string/status_backing_up_obb" />
 
 	</LinearLayout>
