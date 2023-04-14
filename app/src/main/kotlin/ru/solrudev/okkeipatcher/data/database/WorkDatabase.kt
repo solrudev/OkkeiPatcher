@@ -25,7 +25,7 @@ import ru.solrudev.okkeipatcher.data.database.converter.UuidConverter
 import ru.solrudev.okkeipatcher.data.database.dao.WorkDao
 import ru.solrudev.okkeipatcher.data.database.model.WorkModel
 
-@Database(entities = [WorkModel::class], version = 1)
+@Database(entities = [WorkModel::class], version = 1, exportSchema = false)
 @TypeConverters(UuidConverter::class)
 abstract class WorkDatabase : RoomDatabase() {
 	abstract fun workDao(): WorkDao
