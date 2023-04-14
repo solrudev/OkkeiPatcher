@@ -12,11 +12,9 @@ pluginManagement {
 dependencyResolutionManagement {
 	repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
 
-	@Suppress("JcenterRepositoryObsolete")
 	repositories {
 		google()
 		mavenCentral()
-		jcenter()
 	}
 
 	versionCatalogs {
