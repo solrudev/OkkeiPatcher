@@ -96,7 +96,7 @@ class WorkFragment : Fragment(R.layout.fragment_work), JetView<WorkUiState> {
 	private fun applyInsets() = with(binding) {
 		buttonWork.applyInsetter {
 			type(navigationBars = true) {
-				margin()
+				margin(vertical = true)
 			}
 		}
 	}
