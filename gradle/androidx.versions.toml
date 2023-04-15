@@ -1,16 +1,16 @@
 [versions]
 navigation = "2.5.3"
-room = "2.5.0"
+room = "2.5.1"
 
 [libraries]
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
-activity-ktx = { module = "androidx.activity:activity-ktx", version = "1.6.1" }
-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version = "1.5.5" }
+activity-ktx = { module = "androidx.activity:activity-ktx", version = "1.7.0" }
+fragment-ktx = { module = "androidx.fragment:fragment-ktx", version = "1.5.6" }
 preference-ktx = { module = "androidx.preference:preference-ktx", version = "1.2.0" }
-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version = "2.6.0" }
+lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version = "2.6.1" }
 hilt-work = { module = "androidx.hilt:hilt-work", version = "1.0.0" }
-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version = "2.7.1" }
+work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version = "2.8.1" }
 navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigation" }
 navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigation" }
 datastore-preferences = { module = "androidx.datastore:datastore-preferences", version = "1.0.0" }
