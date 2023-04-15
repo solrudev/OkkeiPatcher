@@ -51,7 +51,7 @@ class LicensesFragment : Fragment(R.layout.fragment_licenses), JetView<LicensesU
 	private fun applyInsets() = with(binding) {
 		recyclerviewLicenses.applyInsetter {
 			type(navigationBars = true) {
-				padding()
+				padding(vertical = true)
 			}
 		}
 	}

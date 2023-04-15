@@ -53,7 +53,7 @@ class AboutFragment : Fragment(R.layout.fragment_about) {
 	private fun applyInsets() = with(binding) {
 		containerAbout.applyInsetter {
 			type(navigationBars = true) {
-				padding()
+				padding(vertical = true)
 			}
 		}
 	}
