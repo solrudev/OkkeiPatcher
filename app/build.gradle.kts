@@ -23,7 +23,6 @@ import java.util.*
 
 val packageName = "ru.solrudev.okkeipatcher"
 
-@Suppress("DSL_SCOPE_VIOLATION") // https://github.com/gradle/gradle/issues/22797
 plugins {
 	alias(libs.plugins.android.application)
 	alias(libs.plugins.kotlin.android)
