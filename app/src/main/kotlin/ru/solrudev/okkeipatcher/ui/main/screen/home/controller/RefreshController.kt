@@ -39,8 +39,9 @@ class RefreshController(
 		swipeRefreshLayout.isRefreshing = uiState.isPatchUpdateLoading
 	}
 
-	private fun setupRefresh() {
-		swipeRefreshLayout.setOnRefreshListener {
+	private fun setupRefresh() = with(swipeRefreshLayout) {
+		setDistanceToTriggerSync((192 * context.resources.displayMetrics.density).toInt())
+		setOnRefreshListener {
 			viewModel.dispatchEvent(PatchUpdatesRequested)
 		}
 	}
