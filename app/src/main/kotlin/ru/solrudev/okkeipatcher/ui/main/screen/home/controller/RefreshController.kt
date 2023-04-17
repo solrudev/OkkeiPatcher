@@ -23,6 +23,7 @@ import io.github.solrudev.jetmvi.JetView
 import ru.solrudev.okkeipatcher.ui.main.screen.home.HomeViewModel
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeUiState
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchEvent.PatchUpdatesRequested
+import ru.solrudev.okkeipatcher.ui.main.util.applyDistanceToTrigger
 
 class RefreshController(
 	private val swipeRefreshLayout: SwipeRefreshLayout,
@@ -40,7 +41,7 @@ class RefreshController(
 	}
 
 	private fun setupRefresh() = with(swipeRefreshLayout) {
-		setDistanceToTriggerSync((192 * context.resources.displayMetrics.density).toInt())
+		applyDistanceToTrigger()
 		setOnRefreshListener {
 			viewModel.dispatchEvent(PatchUpdatesRequested)
 		}
