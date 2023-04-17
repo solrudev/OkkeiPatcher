@@ -27,7 +27,6 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions
 import androidx.activity.result.launch
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,19 +36,17 @@ import io.github.solrudev.simpleinstaller.activityresult.InstallPermissionContra
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.app.model.Permission
 import ru.solrudev.okkeipatcher.databinding.FragmentPermissionsBinding
-import ru.solrudev.okkeipatcher.ui.navhost.NavHostViewModel
-import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostEvent
 import ru.solrudev.okkeipatcher.ui.screen.permissions.model.PermissionsEvent.PermissionStateChanged
 import ru.solrudev.okkeipatcher.ui.screen.permissions.model.PermissionsUiState
 import ru.solrudev.okkeipatcher.ui.screen.permissions.model.allPermissionsGranted
 import ru.solrudev.okkeipatcher.ui.util.onBackPressed
+import ru.solrudev.okkeipatcher.ui.util.requireNavHostActivity
 
 @AndroidEntryPoint
 class PermissionsFragment : Fragment(R.layout.fragment_permissions), JetView<PermissionsUiState> {
 
 	private val binding by viewBinding(FragmentPermissionsBinding::bind)
 	private val viewModel: PermissionsViewModel by jetViewModels()
-	private val navHostViewModel: NavHostViewModel by activityViewModels()
 
 	private val storagePermissionLauncher = registerForActivityResult(RequestMultiplePermissions()) { permissions ->
 		val isGranted = permissions.all { (_, isGranted) -> isGranted }
@@ -76,7 +73,7 @@ class PermissionsFragment : Fragment(R.layout.fragment_permissions), JetView<Per
 
 	override fun render(uiState: PermissionsUiState) {
 		if (uiState.allPermissionsGranted) {
-			navHostViewModel.dispatchEvent(NavHostEvent.PermissionsCheckRequested)
+			requireNavHostActivity().notifyAllPermissionsGranted()
 			findNavController().popBackStack()
 		}
 		permissionsAdapter.submitList(uiState.permissions)

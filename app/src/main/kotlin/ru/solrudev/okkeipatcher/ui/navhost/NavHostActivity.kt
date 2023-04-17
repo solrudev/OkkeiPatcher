@@ -38,6 +38,7 @@ import ru.solrudev.okkeipatcher.databinding.OkkeiNavHostBinding
 import ru.solrudev.okkeipatcher.ui.navhost.controller.NavigationController
 import ru.solrudev.okkeipatcher.ui.navhost.controller.ThemeController
 import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostEvent.PermissionsCheckRequested
+import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostEvent.PermissionsChecked
 import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostUiState
 
 @AndroidEntryPoint
@@ -69,6 +70,10 @@ class NavHostActivity : AppCompatActivity(R.layout.okkei_nav_host), HostJetView<
 	override fun onStart() {
 		super.onStart()
 		viewModel.dispatchEvent(PermissionsCheckRequested)
+	}
+
+	fun notifyAllPermissionsGranted() {
+		viewModel.dispatchEvent(PermissionsChecked(allPermissionsGranted = true))
 	}
 
 	private fun applyInsets(): Unit = with(binding) {

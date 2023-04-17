@@ -22,6 +22,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import ru.solrudev.okkeipatcher.ui.navhost.NavHostActivity
 
 /**
  * Installs [OnBackPressedCallback] to the host Activity.
@@ -43,3 +44,5 @@ fun Fragment.findParentNavController(): NavController? {
 	}
 	return null
 }
+
+fun Fragment.requireNavHostActivity() = requireActivity() as NavHostActivity
