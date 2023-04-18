@@ -19,13 +19,13 @@
 package ru.solrudev.okkeipatcher.domain.core.persistence
 
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class FakeReactiveDao<T>(private val defaultValue: T) : ReactiveDao<T> {
 
 	private val valueHolder = MutableStateFlow(defaultValue)
 
-	override val flow = valueHolder.asSharedFlow()
+	override val flow = valueHolder.asStateFlow()
 
 	override suspend fun retrieve(): T {
 		return valueHolder.value
