@@ -127,6 +127,10 @@ tasks.withType<KotlinJvmCompile> {
 	}
 }
 
+tasks.withType<Test> {
+	useJUnitPlatform()
+}
+
 dependencies {
 	kapt(dagger.bundles.hilt.compilers)
 	ksp(libs.moshi.kotlin.codegen)
@@ -168,7 +172,9 @@ dependencies {
 
 	debugImplementation(androidx.multidex)
 
-	testImplementation(test.junit)
+	testImplementation(libs.kotlin.test)
+	testImplementation(libs.okio.fakefilesystem)
+	testImplementation(libs.kotlinx.coroutines.test)
 	androidTestImplementation(androidx.test.ext.junit)
 	androidTestImplementation(androidx.espresso.core)
 }

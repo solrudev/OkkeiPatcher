@@ -23,6 +23,7 @@ import kotlinx.coroutines.runInterruptible
 import net.lingala.zip4j.ZipFile
 import net.lingala.zip4j.model.ZipParameters
 import okio.Path
+import ru.solrudev.okkeipatcher.data.service.apksigner.ApkSigner
 import ru.solrudev.okkeipatcher.domain.service.ZipPackage
 
 class ApkZipPackage(
@@ -48,10 +49,10 @@ class ApkZipPackage(
 	}
 
 	override suspend fun sign() {
-		apkSigner.sign(apkPath.toFile())
+		apkSigner.sign(apkPath)
 	}
 
 	override suspend fun removeSignature() {
-		apkSigner.removeSignature(apkPath.toFile())
+		apkSigner.removeSignature(apkPath)
 	}
 }

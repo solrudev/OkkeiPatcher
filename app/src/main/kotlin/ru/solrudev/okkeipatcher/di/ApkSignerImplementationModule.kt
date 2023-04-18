@@ -20,36 +20,28 @@
 
 package ru.solrudev.okkeipatcher.di
 
-import dagger.Binds
+import android.os.Build
 import dagger.Module
-import dagger.Reusable
+import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import ru.solrudev.okkeipatcher.data.service.*
-import ru.solrudev.okkeipatcher.data.service.apksigner.ApkSigner
-import ru.solrudev.okkeipatcher.data.service.apksigner.ApkSignerWrapper
-import ru.solrudev.okkeipatcher.domain.service.StorageChecker
+import ru.solrudev.okkeipatcher.data.service.apksigner.ApkSignerApi19
+import ru.solrudev.okkeipatcher.data.service.apksigner.ApkSignerApi24
+import ru.solrudev.okkeipatcher.data.service.apksigner.ApkSignerImplementation
+import javax.inject.Provider
 
 @InstallIn(SingletonComponent::class)
 @Module
-interface ServiceBindModule {
+object ApkSignerImplementationModule {
 
-	@Binds
-	@Reusable
-	fun bindGameInstallationProvider(gameInstallationProvider: GameInstallationProviderImpl): GameInstallationProvider
-
-	@Binds
-	@Reusable
-	fun bindStorageChecker(storageChecker: StorageCheckerImpl): StorageChecker
-
-	@Binds
-	@Reusable
-	fun bindApkSigner(apkSigner: ApkSignerWrapper): ApkSigner
-
-	@Binds
-	@Reusable
-	fun bindFileDownloader(fileDownloader: FileDownloaderImpl): FileDownloader
-
-	@Binds
-	fun bindNotificationService(notificationService: NotificationServiceImpl): NotificationService
+	@Provides
+	fun provideApkSignerImplementation(
+		apkSignerApi24: Provider<ApkSignerApi24>,
+		apkSignerApi19: Provider<ApkSignerApi19>
+	): ApkSignerImplementation {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+			return apkSignerApi24.get()
+		}
+		return apkSignerApi19.get()
+	}
 }

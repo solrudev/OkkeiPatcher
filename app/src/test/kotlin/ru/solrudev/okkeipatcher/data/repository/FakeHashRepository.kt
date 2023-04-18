@@ -16,21 +16,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ru.solrudev.okkeipatcher.data.service.util
+package ru.solrudev.okkeipatcher.data.repository
 
-import okio.HashingSink.Companion.sha256
-import okio.blackholeSink
-import okio.buffer
-import okio.source
-import ru.solrudev.okkeipatcher.data.util.copyTo
-import java.io.File
+import ru.solrudev.okkeipatcher.domain.core.persistence.FakeReactiveDao
+import ru.solrudev.okkeipatcher.domain.repository.HashRepository
 
-inline fun File.computeHash(onProgressDeltaChanged: (Int) -> Unit = {}): String {
-	source().buffer().use { source ->
-		val hashingSink = sha256(blackholeSink())
-		hashingSink.buffer().use { sink ->
-			source.copyTo(sink, length(), onProgressDeltaChanged)
-		}
-		return hashingSink.hash.hex()
+class FakeHashRepository : HashRepository {
+
+	override val signedApkHash = FakeReactiveDao<String>()
+	override val backupApkHash = FakeReactiveDao<String>()
+	override val backupObbHash = FakeReactiveDao<String>()
+	override val saveDataHash = FakeReactiveDao<String>()
+
+	override suspend fun clear() {
+		signedApkHash.clear()
+		backupApkHash.clear()
+		backupObbHash.clear()
+		saveDataHash.clear()
 	}
 }

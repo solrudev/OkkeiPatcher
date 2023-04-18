@@ -28,8 +28,5 @@ dependencyResolutionManagement {
 		create("dagger") {
 			from(files("gradle/dagger.versions.toml"))
 		}
-		create("test") {
-			from(files("gradle/test.versions.toml"))
-		}
 	}
 }

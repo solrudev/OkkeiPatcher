@@ -20,8 +20,8 @@ package ru.solrudev.okkeipatcher.data.service.factory
 
 import kotlinx.coroutines.CoroutineDispatcher
 import okio.Path
-import ru.solrudev.okkeipatcher.data.service.ApkSigner
 import ru.solrudev.okkeipatcher.data.service.ApkZipPackage
+import ru.solrudev.okkeipatcher.data.service.apksigner.ApkSigner
 import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.service.ZipPackage
 import javax.inject.Inject

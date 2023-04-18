@@ -16,22 +16,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ru.solrudev.okkeipatcher.data.service
+package ru.solrudev.okkeipatcher.data.service.apksigner
 
 import android.content.Context
-import android.os.Build
 import com.aefyr.pseudoapksigner.PseudoApkSigner
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.runInterruptible
-import net.lingala.zip4j.ZipFile
+import okio.Path
 import okio.buffer
 import okio.sink
 import okio.source
-import ru.solrudev.okkeipatcher.data.service.util.computeHash
-import ru.solrudev.okkeipatcher.data.service.util.use
 import ru.solrudev.okkeipatcher.di.IoDispatcher
-import ru.solrudev.okkeipatcher.domain.repository.HashRepository
 import java.io.File
 import java.security.KeyFactory
 import java.security.cert.CertificateFactory
@@ -45,47 +41,16 @@ private const val TEMPLATE_FILE_NAME = "testkey.past"
 private const val CREATED_BY = "Okkei Patcher"
 private const val SIGNER_NAME = "Okkei"
 
-interface ApkSigner {
-	suspend fun sign(apk: File)
-	suspend fun removeSignature(apk: File)
+interface ApkSignerImplementation {
+	suspend fun sign(apk: Path, outputApk: Path)
 }
 
-class ApkSignerImpl @Inject constructor(
+class ApkSignerApi24 @Inject constructor(
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-	@ApplicationContext private val applicationContext: Context,
-	private val hashRepository: HashRepository
-) : ApkSigner {
+	@ApplicationContext private val applicationContext: Context
+) : ApkSignerImplementation {
 
-	override suspend fun sign(apk: File) {
-		val outputApk = File(apk.parent, "${apk.nameWithoutExtension}-signed.apk")
-		try {
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-				signWithApkSig(apk, outputApk)
-			} else {
-				signWithPseudoApkSigner(apk, outputApk)
-			}
-			val outputApkHash = runInterruptible(ioDispatcher) {
-				outputApk.computeHash()
-			}
-			hashRepository.signedApkHash.persist(outputApkHash)
-			apk.delete()
-			outputApk.renameTo(apk)
-		} catch (t: Throwable) {
-			outputApk.delete()
-			throw t
-		}
-	}
-
-	override suspend fun removeSignature(apk: File) = runInterruptible(ioDispatcher) {
-		ZipFile(apk).use { zipFile ->
-			val headers = zipFile.fileHeaders
-				.filter { it.fileName.startsWith("META-INF/") }
-				.map { it.fileName }
-			zipFile.removeFiles(headers)
-		}
-	}
-
-	private suspend inline fun signWithApkSig(apk: File, outputApk: File) {
+	override suspend fun sign(apk: Path, outputApk: Path) {
 		val certificate = getSigningCertificate()
 		val privateKey = getSigningPrivateKey()
 		val signerConfig = com.android.apksig.ApkSigner.SignerConfig.Builder(
@@ -95,21 +60,11 @@ class ApkSignerImpl @Inject constructor(
 		).build()
 		val apkSigner = com.android.apksig.ApkSigner.Builder(listOf(signerConfig))
 			.setCreatedBy(CREATED_BY)
-			.setInputApk(apk)
-			.setOutputApk(outputApk)
+			.setInputApk(apk.toFile())
+			.setOutputApk(outputApk.toFile())
 			.build()
 		runInterruptible(ioDispatcher) {
 			apkSigner.sign()
-		}
-	}
-
-	private suspend inline fun signWithPseudoApkSigner(apk: File, outputApk: File) {
-		val templateFile = getSigningTemplateFile()
-		val privateKeyFile = getSigningPrivateKeyFile()
-		runInterruptible(ioDispatcher) {
-			PseudoApkSigner(templateFile, privateKeyFile)
-				.apply { setSignerName(SIGNER_NAME) }
-				.sign(apk, outputApk)
 		}
 	}
 
@@ -131,6 +86,22 @@ class ApkSignerImpl @Inject constructor(
 			val keySpec = PKCS8EncodedKeySpec(keyByteArray)
 			val keyFactory = KeyFactory.getInstance("RSA")
 			return@runInterruptible keyFactory.generatePrivate(keySpec)
+		}
+	}
+}
+
+class ApkSignerApi19 @Inject constructor(
+	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+	@ApplicationContext private val applicationContext: Context
+) : ApkSignerImplementation {
+
+	override suspend fun sign(apk: Path, outputApk: Path) {
+		val templateFile = getSigningTemplateFile()
+		val privateKeyFile = getSigningPrivateKeyFile()
+		runInterruptible(ioDispatcher) {
+			PseudoApkSigner(templateFile, privateKeyFile)
+				.apply { setSignerName(SIGNER_NAME) }
+				.sign(apk.toFile(), outputApk.toFile())
 		}
 	}
 
