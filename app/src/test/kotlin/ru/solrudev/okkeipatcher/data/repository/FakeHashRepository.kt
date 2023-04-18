@@ -23,10 +23,10 @@ import ru.solrudev.okkeipatcher.domain.repository.HashRepository
 
 class FakeHashRepository : HashRepository {
 
-	override val signedApkHash = FakeReactiveDao<String>()
-	override val backupApkHash = FakeReactiveDao<String>()
-	override val backupObbHash = FakeReactiveDao<String>()
-	override val saveDataHash = FakeReactiveDao<String>()
+	override val signedApkHash = FakeReactiveDao(defaultValue = "")
+	override val backupApkHash = FakeReactiveDao(defaultValue = "")
+	override val backupObbHash = FakeReactiveDao(defaultValue = "")
+	override val saveDataHash = FakeReactiveDao(defaultValue = "")
 
 	override suspend fun clear() {
 		signedApkHash.clear()

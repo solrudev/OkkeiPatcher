@@ -18,27 +18,24 @@
 
 package ru.solrudev.okkeipatcher.domain.core.persistence
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.first
 
-class FakeReactiveDao<T> : ReactiveDao<T> {
+class FakeReactiveDao<T>(private val defaultValue: T) : ReactiveDao<T> {
 
-	private val valueHolder = MutableSharedFlow<T>(replay = 1)
+	private val valueHolder = MutableStateFlow(defaultValue)
 
 	override val flow = valueHolder.asSharedFlow()
 
 	override suspend fun retrieve(): T {
-		return valueHolder.first()
+		return valueHolder.value
 	}
 
 	override suspend fun persist(value: T) {
-		valueHolder.emit(value)
+		valueHolder.value = value
 	}
 
-	@OptIn(ExperimentalCoroutinesApi::class)
 	override suspend fun clear() {
-		valueHolder.resetReplayCache()
+		valueHolder.value = defaultValue
 	}
 }
