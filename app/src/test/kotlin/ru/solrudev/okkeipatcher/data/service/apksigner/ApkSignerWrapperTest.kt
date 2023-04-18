@@ -69,35 +69,47 @@ class ApkSignerWrapperTest {
 	}
 
 	@Test
-	fun `input apk must contain signed apk content after signing`() = runTest {
+	fun `WHEN apk is signed THEN apk must contain signed apk content`() = runTest {
 		val apkSigner = ApkSignerWrapper(
 			StandardTestDispatcher(testScheduler), hashRepository, fileSystem, apkSignerImplementation
 		)
+
+		// WHEN
 		apkSigner.sign(inputApkPath)
-		val actualInputApkContent = inputApkPath.read()
-		assertEquals(signedApkContent, actualInputApkContent)
+		val actualApkContent = inputApkPath.read()
+
+		// THEN
+		assertEquals(signedApkContent, actualApkContent)
 	}
 
 	@Test
-	fun `signed apk hash must be written to signedApkHash dao of hash repository`() = runTest {
+	fun `WHEN apk is signed THEN signedApkHash in hash repository must contain signed apk hash`() = runTest {
 		val apkSigner = ApkSignerWrapper(
 			StandardTestDispatcher(testScheduler), hashRepository, fileSystem, apkSignerImplementation
 		)
+
+		// WHEN
 		apkSigner.sign(inputApkPath)
 		val actualSignedApkHash = hashRepository.signedApkHash.retrieve()
+
+		// THEN
 		assertEquals(expectedSignedApkHash, actualSignedApkHash)
 	}
 
 	@Test
-	fun `if exception is thrown, input apk must be unchanged`() = runTest {
+	fun `WHEN apk is signed and exception is thrown THEN apk must remain unchanged`() = runTest {
 		val apkSigner = ApkSignerWrapper(
 			StandardTestDispatcher(testScheduler), hashRepository, failingFileSystem, apkSignerImplementation
 		)
+
+		// WHEN
 		try {
 			apkSigner.sign(inputApkPath)
 		} catch (_: Throwable) {
 		}
 		val actualInputApkContent = inputApkPath.read()
+
+		// THEN
 		assertEquals(inputApkContent, actualInputApkContent)
 	}
 
