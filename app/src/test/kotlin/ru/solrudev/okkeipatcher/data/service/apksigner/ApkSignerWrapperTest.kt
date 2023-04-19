@@ -69,7 +69,7 @@ class ApkSignerWrapperTest {
 	}
 
 	@Test
-	fun `WHEN apk is signed THEN apk must contain signed apk content`() = runTest {
+	fun `WHEN apk is signed THEN apk contains signed apk content`() = runTest {
 		val apkSigner = ApkSignerWrapper(
 			StandardTestDispatcher(testScheduler), hashRepository, fileSystem, apkSignerImplementation
 		)
@@ -83,7 +83,7 @@ class ApkSignerWrapperTest {
 	}
 
 	@Test
-	fun `WHEN apk is signed THEN signedApkHash in hash repository must contain signed apk hash`() = runTest {
+	fun `WHEN apk is signed THEN signedApkHash in hash repository contains signed apk hash`() = runTest {
 		val apkSigner = ApkSignerWrapper(
 			StandardTestDispatcher(testScheduler), hashRepository, fileSystem, apkSignerImplementation
 		)
@@ -97,7 +97,7 @@ class ApkSignerWrapperTest {
 	}
 
 	@Test
-	fun `WHEN apk is signed and exception is thrown THEN apk must remain unchanged`() = runTest {
+	fun `WHEN apk is signed and exception is thrown THEN apk remains unchanged`() = runTest {
 		val apkSigner = ApkSignerWrapper(
 			StandardTestDispatcher(testScheduler), hashRepository, failingFileSystem, apkSignerImplementation
 		)
