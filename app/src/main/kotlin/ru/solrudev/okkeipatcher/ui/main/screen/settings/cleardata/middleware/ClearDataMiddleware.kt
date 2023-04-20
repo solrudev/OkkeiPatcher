@@ -24,7 +24,9 @@ import ru.solrudev.okkeipatcher.app.usecase.ClearDataUseCase
 import ru.solrudev.okkeipatcher.domain.core.onFailure
 import ru.solrudev.okkeipatcher.domain.core.onSuccess
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.cleardata.model.ClearDataEvent
-import ru.solrudev.okkeipatcher.ui.main.screen.settings.cleardata.model.ClearDataEvent.*
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.cleardata.model.ClearDataEvent.ClearingFailed
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.cleardata.model.ClearDataEvent.ClearingRequested
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.cleardata.model.ClearDataEvent.DataCleared
 import javax.inject.Inject
 
 class ClearDataMiddleware @Inject constructor(
@@ -34,7 +36,7 @@ class ClearDataMiddleware @Inject constructor(
 	override fun MiddlewareScope<ClearDataEvent>.apply() {
 		onEvent<ClearingRequested> {
 			clearDataUseCase()
-				.onFailure { send(ClearingFailed(it.reason)) }
+				.onFailure { failure -> send(ClearingFailed(failure.reason)) }
 				.onSuccess { send(DataCleared) }
 		}
 	}

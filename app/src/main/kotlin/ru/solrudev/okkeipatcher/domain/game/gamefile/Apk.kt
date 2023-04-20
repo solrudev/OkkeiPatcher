@@ -105,6 +105,6 @@ abstract class Apk(
 	private inline fun install(crossinline installApk: suspend () -> Result): Operation<Unit> =
 		operation(progressMax = 100) {
 			status(R.string.status_installing)
-			installApk().onFailure { throw InstallException(it.reason) }
+			installApk().onFailure { failure -> throw InstallException(failure.reason) }
 		}
 }
