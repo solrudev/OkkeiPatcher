@@ -38,7 +38,7 @@ private val globalMessageNotificationId = AtomicInteger(Random.nextInt(from = 10
 interface NotificationService {
 	fun createForegroundInfo(): ForegroundInfo
 	fun updateProgressNotification(status: LocalizedString, progressData: ProgressData)
-	suspend fun displayMessageNotification(message: Message)
+	fun displayMessageNotification(message: Message)
 }
 
 class NotificationServiceImpl(
@@ -66,7 +66,7 @@ class NotificationServiceImpl(
 		notificationManager?.notify(progressNotificationId, notification)
 	}
 
-	override suspend fun displayMessageNotification(message: Message) {
+	override fun displayMessageNotification(message: Message) {
 		val messageString = message.text.resolve(applicationContext)
 		val notification = createNotificationBuilder(message.title, progressNotification = false).apply {
 			setContentText(messageString)

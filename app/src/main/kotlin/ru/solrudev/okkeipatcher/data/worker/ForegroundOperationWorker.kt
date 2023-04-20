@@ -25,9 +25,13 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.await
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import ru.solrudev.okkeipatcher.app.model.ProgressData
 import ru.solrudev.okkeipatcher.data.service.factory.NotificationServiceFactory
 import ru.solrudev.okkeipatcher.data.worker.model.WorkNotificationsParameters
@@ -90,17 +94,13 @@ abstract class ForegroundOperationWorker(
 		}
 	}
 
-	private suspend fun createSuccess(): Result {
-		withContext(NonCancellable) {
-			notificationService.displayMessageNotification(workNotificationsParameters.successMessage)
-		}
+	private fun createSuccess(): Result {
+		notificationService.displayMessageNotification(workNotificationsParameters.successMessage)
 		return Result.success()
 	}
 
-	private suspend fun createFailure(failure: WorkerFailure): Result {
-		withContext(NonCancellable) {
-			notificationService.displayMessageNotification(workNotificationsParameters.failureMessage)
-		}
+	private fun createFailure(failure: WorkerFailure): Result {
+		notificationService.displayMessageNotification(workNotificationsParameters.failureMessage)
 		return workerFailure(failure)
 	}
 
