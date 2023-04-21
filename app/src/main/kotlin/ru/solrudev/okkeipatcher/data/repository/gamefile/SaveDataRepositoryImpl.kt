@@ -32,7 +32,9 @@ import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.repository.HashRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.SaveDataRepository
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class SaveDataRepositoryImpl @Inject constructor(
 	environment: OkkeiEnvironment,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,

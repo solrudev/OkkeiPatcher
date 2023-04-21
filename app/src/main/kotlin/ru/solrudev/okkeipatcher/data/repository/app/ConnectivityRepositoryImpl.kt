@@ -29,7 +29,9 @@ import androidx.core.content.getSystemService
 import dagger.hilt.android.qualifiers.ApplicationContext
 import ru.solrudev.okkeipatcher.app.repository.ConnectivityRepository
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class ConnectivityRepositoryImpl @Inject constructor(@ApplicationContext applicationContext: Context) :
 	ConnectivityRepository {
 

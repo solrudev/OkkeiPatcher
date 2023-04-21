@@ -18,6 +18,7 @@
 
 package ru.solrudev.okkeipatcher.data.service
 
+import dagger.Reusable
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
@@ -52,6 +53,7 @@ interface FileDownloader {
 	): String
 }
 
+@Reusable
 class FileDownloaderImpl @Inject constructor(
 	private val okHttpClient: OkHttpClient,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,

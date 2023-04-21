@@ -38,86 +38,48 @@ import ru.solrudev.okkeipatcher.data.repository.gamefile.*
 import ru.solrudev.okkeipatcher.domain.repository.HashRepository
 import ru.solrudev.okkeipatcher.domain.repository.PatchStateRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.*
-import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
 @Module(includes = [RepositoryFlavorModule::class, PatchRepositoryModule::class])
 interface RepositoryModule {
 
 	@Binds
-	@Singleton
-	fun bindStateRepository(
-		stateRepository: PreferencesRepository
-	): PatchStateRepository
+	fun bindStateRepository(stateRepository: PreferencesRepository): PatchStateRepository
 
 	@Binds
-	@Singleton
-	fun bindWorkRepository(
-		workRepository: WorkRepositoryImpl
-	): WorkRepository
+	fun bindWorkRepository(workRepository: WorkRepositoryImpl): WorkRepository
 
 	@Binds
-	@Singleton
-	fun bindConnectivityRepository(
-		connectivityRepository: ConnectivityRepositoryImpl
-	): ConnectivityRepository
+	fun bindConnectivityRepository(connectivityRepository: ConnectivityRepositoryImpl): ConnectivityRepository
 
 	@Binds
-	@Singleton
-	fun bindPreferencesRepository(
-		preferencesRepository: PreferencesRepositoryImpl
-	): PreferencesRepository
+	fun bindPreferencesRepository(preferencesRepository: PreferencesRepositoryImpl): PreferencesRepository
 
 	@Binds
-	@Singleton
-	fun bindApkRepository(
-		apkRepository: ApkRepositoryImpl
-	): ApkRepository
+	fun bindApkRepository(apkRepository: ApkRepositoryImpl): ApkRepository
 
 	@Binds
-	@Singleton
-	fun bindApkBackupRepository(
-		apkBackupRepository: ApkBackupRepositoryImpl
-	): ApkBackupRepository
+	fun bindApkBackupRepository(apkBackupRepository: ApkBackupRepositoryImpl): ApkBackupRepository
 
 	@Binds
-	@Singleton
-	fun bindObbRepository(
-		obbRepository: ObbRepositoryImpl
-	): ObbRepository
+	fun bindObbRepository(obbRepository: ObbRepositoryImpl): ObbRepository
 
 	@Binds
-	@Singleton
-	fun bindObbBackupRepository(
-		obbBackupRepository: ObbBackupRepositoryImpl
-	): ObbBackupRepository
+	fun bindObbBackupRepository(obbBackupRepository: ObbBackupRepositoryImpl): ObbBackupRepository
 
 	@Binds
-	@Singleton
-	fun bindSaveDataRepository(
-		saveDataRepository: SaveDataRepositoryImpl
-	): SaveDataRepository
+	fun bindSaveDataRepository(saveDataRepository: SaveDataRepositoryImpl): SaveDataRepository
 
 	@Binds
-	@Singleton
-	fun bindHashRepository(
-		hashRepository: HashRepositoryImpl
-	): HashRepository
+	fun bindHashRepository(hashRepository: HashRepositoryImpl): HashRepository
 
 	@Binds
-	@Singleton
-	fun bindPermissionsRepository(
-		permissionsRepository: PermissionsRepositoryImpl
-	): PermissionsRepository
+	fun bindPermissionsRepository(permissionsRepository: PermissionsRepositoryImpl): PermissionsRepository
 
 	@Binds
-	@Singleton
-	fun bindLicensesRepository(
-		licensesRepository: LicensesRepositoryImpl
-	): LicensesRepository
+	fun bindLicensesRepository(licensesRepository: LicensesRepositoryImpl): LicensesRepository
 
 	@Binds
-	@Singleton
 	fun bindDownloadUpdateWorkRepository(
 		downloadUpdateWorkRepository: DownloadUpdateWorkRepositoryImpl
 	): DownloadUpdateWorkRepository

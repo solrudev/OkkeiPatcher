@@ -27,7 +27,9 @@ import ru.solrudev.okkeipatcher.data.repository.patch.mapper.toPatchFileData
 import ru.solrudev.okkeipatcher.domain.model.patchupdates.DefaultPatchUpdates
 import ru.solrudev.okkeipatcher.domain.repository.patch.DefaultPatchRepository
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class DefaultPatchRepositoryImpl @Inject constructor(
 	defaultPatchApi: DefaultPatchApi,
 	preferencesRepository: PreferencesRepository,

@@ -30,6 +30,7 @@ import ru.solrudev.okkeipatcher.data.preference.Preference
 import ru.solrudev.okkeipatcher.data.preference.PreferencesDataStoreFactory
 import ru.solrudev.okkeipatcher.domain.model.Language
 import javax.inject.Inject
+import javax.inject.Singleton
 
 private val HANDLE_SAVE_DATA = booleanPreferencesKey("handle_save_data")
 private val IS_PATCHED = booleanPreferencesKey("is_patched")
@@ -37,6 +38,7 @@ private val PATCH_LANGUAGE = stringPreferencesKey("patch_language")
 private val PATCH_VERSION = stringPreferencesKey("patch_version")
 private val THEME = intPreferencesKey("theme")
 
+@Singleton
 class PreferencesRepositoryImpl @Inject constructor(
 	preferencesDataStoreFactory: PreferencesDataStoreFactory,
 	permissionsRepository: PermissionsRepository

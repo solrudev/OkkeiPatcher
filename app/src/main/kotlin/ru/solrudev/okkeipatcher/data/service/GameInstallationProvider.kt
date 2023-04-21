@@ -20,6 +20,7 @@ package ru.solrudev.okkeipatcher.data.service
 
 import android.content.Context
 import android.content.pm.PackageManager
+import dagger.Reusable
 import dagger.hilt.android.qualifiers.ApplicationContext
 import okio.Path
 import okio.Path.Companion.toPath
@@ -33,6 +34,7 @@ interface GameInstallationProvider {
 	fun getApkPath(): Path
 }
 
+@Reusable
 class GameInstallationProviderImpl @Inject constructor(
 	@ApplicationContext private val applicationContext: Context
 ) : GameInstallationProvider {

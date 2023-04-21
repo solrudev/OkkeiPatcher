@@ -24,12 +24,14 @@ import ru.solrudev.okkeipatcher.data.preference.Preference
 import ru.solrudev.okkeipatcher.data.preference.PreferencesDataStoreFactory
 import ru.solrudev.okkeipatcher.domain.repository.HashRepository
 import javax.inject.Inject
+import javax.inject.Singleton
 
 private val SIGNED_APK = stringPreferencesKey("signed_apk_hash")
 private val BACKUP_APK = stringPreferencesKey("backup_apk_hash")
 private val BACKUP_OBB = stringPreferencesKey("backup_obb_hash")
 private val SAVE_DATA = stringPreferencesKey("save_data_hash")
 
+@Singleton
 class HashRepositoryImpl @Inject constructor(
 	preferencesDataStoreFactory: PreferencesDataStoreFactory
 ) : HashRepository {

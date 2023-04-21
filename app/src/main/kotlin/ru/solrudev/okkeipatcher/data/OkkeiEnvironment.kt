@@ -21,12 +21,13 @@ package ru.solrudev.okkeipatcher.data
 import android.content.Context
 import android.os.Environment
 import androidx.core.os.ConfigurationCompat
+import dagger.Reusable
 import dagger.hilt.android.qualifiers.ApplicationContext
 import okio.Path
 import okio.Path.Companion.toOkioPath
 import ru.solrudev.okkeipatcher.data.util.externalDir
 import ru.solrudev.okkeipatcher.data.util.versionCode
-import java.util.*
+import java.util.Locale
 import javax.inject.Inject
 
 interface OkkeiEnvironment {
@@ -37,6 +38,7 @@ interface OkkeiEnvironment {
 	val externalStoragePath: Path
 }
 
+@Reusable
 class OkkeiEnvironmentImpl @Inject constructor(
 	@ApplicationContext private val applicationContext: Context
 ) : OkkeiEnvironment {

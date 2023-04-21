@@ -18,6 +18,7 @@
 
 package ru.solrudev.okkeipatcher.data.service.apksigner
 
+import dagger.Reusable
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.runInterruptible
 import net.lingala.zip4j.ZipFile
@@ -34,6 +35,7 @@ interface ApkSigner {
 	suspend fun removeSignature(apkPath: Path)
 }
 
+@Reusable
 class ApkSignerWrapper @Inject constructor(
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	private val hashRepository: HashRepository,

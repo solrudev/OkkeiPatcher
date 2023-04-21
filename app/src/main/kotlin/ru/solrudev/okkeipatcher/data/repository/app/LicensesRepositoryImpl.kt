@@ -26,9 +26,11 @@ import ru.solrudev.okkeipatcher.app.model.License
 import ru.solrudev.okkeipatcher.app.repository.LicensesRepository
 import ru.solrudev.okkeipatcher.di.IoDispatcher
 import javax.inject.Inject
+import javax.inject.Singleton
 
 private const val LICENSES_DIR = "licenses"
 
+@Singleton
 class LicensesRepositoryImpl @Inject constructor(
 	@ApplicationContext private val applicationContext: Context,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher

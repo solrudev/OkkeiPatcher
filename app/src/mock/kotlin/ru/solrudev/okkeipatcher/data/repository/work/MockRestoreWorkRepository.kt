@@ -26,10 +26,12 @@ import ru.solrudev.okkeipatcher.data.repository.app.work.UniqueWorkRepositoryImp
 import ru.solrudev.okkeipatcher.data.worker.MockWorker
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import javax.inject.Inject
+import javax.inject.Singleton
 
 private const val RESTORE_WORK_NAME = "RestoreWork"
 private val workLabel = LocalizedString.resource(R.string.work_label_restoring)
 
+@Singleton
 class MockRestoreWorkRepository @Inject constructor(
 	workRepository: WorkRepository,
 	workManager: WorkManager

@@ -25,10 +25,12 @@ import ru.solrudev.okkeipatcher.app.repository.work.WorkRepository
 import ru.solrudev.okkeipatcher.data.worker.PatchWorker
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import javax.inject.Inject
+import javax.inject.Singleton
 
 private const val PATCH_WORK_NAME = "PatchWork"
 private val workLabel = LocalizedString.resource(R.string.work_label_patch)
 
+@Singleton
 class PatchWorkRepositoryImpl @Inject constructor(
 	workRepository: WorkRepository,
 	workManager: WorkManager

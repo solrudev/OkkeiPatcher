@@ -42,9 +42,11 @@ import ru.solrudev.okkeipatcher.domain.model.exception.NoNetworkException
 import ru.solrudev.okkeipatcher.domain.model.exception.wrapDomainExceptions
 import java.util.concurrent.CancellationException
 import javax.inject.Inject
+import javax.inject.Singleton
 
 const val APP_UPDATE_FILE_NAME = "OkkeiPatcher.apk"
 
+@Singleton
 class OkkeiPatcherRepositoryImpl @Inject constructor(
 	private val environment: OkkeiEnvironment,
 	private val okkeiPatcherApi: OkkeiPatcherApi,

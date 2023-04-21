@@ -33,7 +33,9 @@ import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.repository.HashRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkBackupRepository
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class ApkBackupRepositoryImpl @Inject constructor(
 	environment: OkkeiEnvironment,
 	private val gameInstallationProvider: GameInstallationProvider,

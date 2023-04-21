@@ -36,12 +36,14 @@ import ru.solrudev.okkeipatcher.domain.repository.HashRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbBackupRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbRepository
 import javax.inject.Inject
+import javax.inject.Singleton
 
 private const val OBB_FILE_NAME = "main.87.com.mages.chaoschild_jp.obb"
 
 private val OkkeiEnvironment.obbPath: Path
 	get() = externalStoragePath / "Android" / "obb" / GAME_PACKAGE_NAME / OBB_FILE_NAME
 
+@Singleton
 class ObbRepositoryImpl @Inject constructor(
 	environment: OkkeiEnvironment,
 	private val fileSystem: FileSystem
@@ -57,6 +59,7 @@ class ObbRepositoryImpl @Inject constructor(
 	}
 }
 
+@Singleton
 class ObbBackupRepositoryImpl @Inject constructor(
 	environment: OkkeiEnvironment,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,

@@ -22,15 +22,21 @@ import androidx.lifecycle.asFlow
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.supervisorScope
 import ru.solrudev.okkeipatcher.app.repository.work.WorkRepository
 import ru.solrudev.okkeipatcher.data.database.dao.WorkDao
 import ru.solrudev.okkeipatcher.data.database.model.WorkModel
 import ru.solrudev.okkeipatcher.data.worker.util.toWorkState
-import java.util.*
+import java.util.UUID
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class WorkRepositoryImpl @Inject constructor(
 	private val workDao: WorkDao,
 	private val workManager: WorkManager

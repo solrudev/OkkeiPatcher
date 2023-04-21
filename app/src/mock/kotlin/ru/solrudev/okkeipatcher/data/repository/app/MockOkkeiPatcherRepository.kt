@@ -43,9 +43,11 @@ import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.model.exception.wrapDomainExceptions
 import java.util.concurrent.CancellationException
 import javax.inject.Inject
+import javax.inject.Singleton
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
+@Singleton
 class MockOkkeiPatcherRepository @Inject constructor(
 	environment: OkkeiEnvironment,
 	private val okkeiPatcherApkProvider: OkkeiPatcherApkProvider,

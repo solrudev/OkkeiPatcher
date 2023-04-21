@@ -29,7 +29,9 @@ import ru.solrudev.okkeipatcher.app.model.Permission
 import ru.solrudev.okkeipatcher.app.repository.PermissionsRepository
 import ru.solrudev.okkeipatcher.data.util.ANDROID_DATA_TREE_URI
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class PermissionsRepositoryImpl @Inject constructor(
 	@ApplicationContext private val applicationContext: Context
 ) : PermissionsRepository {

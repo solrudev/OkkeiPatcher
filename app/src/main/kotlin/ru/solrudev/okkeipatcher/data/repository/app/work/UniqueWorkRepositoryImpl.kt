@@ -77,8 +77,7 @@ open class UniqueWorkRepositoryImpl<T : ForegroundOperationWorker>(
 }
 
 fun ForegroundOperationWorker.workNotificationIntent(): PendingIntent {
-	val workLabel = inputData.getSerializable<LocalizedString>(WORK_LABEL_KEY)
-		?: return defaultNotificationIntent()
+	val workLabel = inputData.getSerializable<LocalizedString>(WORK_LABEL_KEY) ?: return defaultNotificationIntent()
 	return NavDeepLinkBuilder(applicationContext)
 		.setGraph(R.navigation.okkei_nav_graph)
 		.setDestination(R.id.work_fragment, WorkFragmentArgs(Work(id, workLabel)).toBundle())

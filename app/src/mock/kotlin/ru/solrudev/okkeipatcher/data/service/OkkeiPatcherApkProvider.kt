@@ -19,6 +19,7 @@
 package ru.solrudev.okkeipatcher.data.service
 
 import android.content.Context
+import dagger.Reusable
 import dagger.hilt.android.qualifiers.ApplicationContext
 import okio.Path
 import okio.Path.Companion.toPath
@@ -29,6 +30,7 @@ interface OkkeiPatcherApkProvider {
 	fun getOkkeiPatcherApkPath(): Path
 }
 
+@Reusable
 class OkkeiPatcherApkProviderImpl @Inject constructor(
 	@ApplicationContext private val applicationContext: Context
 ) : OkkeiPatcherApkProvider {
