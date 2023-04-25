@@ -38,7 +38,7 @@ interface Operation<out R> : ProgressOperation<R> {
 interface ProgressOperation<out R> {
 	val progressDelta: Flow<Int>
 	val progressMax: Int
-	suspend fun canInvoke(): Result = Result.Success
+	suspend fun canInvoke(): Result<Unit> = Result.success()
 	suspend operator fun invoke(): R
 }
 

@@ -29,9 +29,9 @@ class MockOperationFactory(
 	private val patchVersion: Persistable<String>,
 	private val patchStatus: Persistable<Boolean>,
 	private val isPatchWork: Boolean
-) : OperationFactory<Result> {
+) : OperationFactory<Result<Unit>> {
 
-	override suspend fun create(): Operation<Result> {
+	override suspend fun create(): Operation<Result<Unit>> {
 		val patchRepository = patchRepositoryFactory.create()
 		return MockOperation(patchRepository, patchVersion, patchStatus, isPatchWork)
 	}

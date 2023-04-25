@@ -29,7 +29,7 @@ interface OkkeiPatcherRepository {
 	val isUpdateInstallPending: Flow<Boolean>
 	suspend fun getUpdateData(refresh: Boolean): OkkeiPatcherUpdateData
 	suspend fun enqueueUpdateDownloadWork(): Work
-	suspend fun installUpdate(): Result
-	fun downloadUpdate(): Operation<Result>
+	suspend fun installUpdate(): Result<Unit>
+	fun downloadUpdate(): Operation<Result<Unit>>
 	fun getPendingUpdateDownloadWorkFlow(): Flow<Work>
 }

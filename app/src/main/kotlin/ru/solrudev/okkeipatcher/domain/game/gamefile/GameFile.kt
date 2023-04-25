@@ -30,7 +30,7 @@ interface GameFile : AutoCloseable {
 }
 
 interface Patchable {
-	fun canPatch(): Result
+	fun canPatch(): Result<Unit>
 	fun patch(): Operation<Unit>
 	fun update(): Operation<Unit>
 }

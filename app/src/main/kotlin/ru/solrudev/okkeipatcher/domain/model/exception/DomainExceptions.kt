@@ -69,7 +69,7 @@ class AppUpdateCorruptedException : DomainException(
  */
 inline fun wrapDomainExceptions(block: () -> Unit) = try {
 	block()
-	Result.Success
+	Result.success()
 } catch (e: DomainException) {
-	Result.Failure(e.reason)
+	Result.failure(e.reason)
 }

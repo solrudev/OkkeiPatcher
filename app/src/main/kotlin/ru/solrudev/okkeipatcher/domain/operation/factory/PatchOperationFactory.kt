@@ -33,9 +33,9 @@ class PatchOperationFactory @Inject constructor(
 	private val patchRepositoryFactory: PatchRepositoryFactory,
 	private val gameFactory: GameFactory,
 	private val storageChecker: StorageChecker
-) : OperationFactory<Result> {
+) : OperationFactory<Result<Unit>> {
 
-	override suspend fun create(): Operation<Result> {
+	override suspend fun create(): Operation<Result<Unit>> {
 		val game = gameFactory.create()
 		val handleSaveData = patchStateRepository.handleSaveData.retrieve()
 		val patchRepository = patchRepositoryFactory.create()

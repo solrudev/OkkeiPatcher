@@ -33,7 +33,7 @@ import javax.inject.Inject
 class DefaultApk @Inject constructor(
 	patchRepository: DefaultPatchRepository,
 	scriptsPatchOperationFactory: ScriptsPatchOperationFactory,
-	apkRepository: ApkRepository,
+	private val apkRepository: ApkRepository,
 	apkBackupRepository: ApkBackupRepository
 ) : Apk(apkRepository, apkBackupRepository) {
 

@@ -38,7 +38,7 @@ class PatchOperation(
 	private val patchVersion: Persistable<String>,
 	private val patchStatus: Dao<Boolean>,
 	private val storageChecker: StorageChecker
-) : Operation<Result> {
+) : Operation<Result<Unit>> {
 
 	private val operation = if (parameters.patchUpdates.available) update() else patch()
 	override val status = operation.status
@@ -46,7 +46,7 @@ class PatchOperation(
 	override val progressDelta = operation.progressDelta
 	override val progressMax = operation.progressMax
 
-	override suspend fun canInvoke(): Result = with(game) {
+	override suspend fun canInvoke(): Result<Unit> = with(game) {
 		val isPatched = patchStatus.retrieve()
 		if (isPatched && !parameters.patchUpdates.available) {
 			return Result.failure(R.string.error_patched)

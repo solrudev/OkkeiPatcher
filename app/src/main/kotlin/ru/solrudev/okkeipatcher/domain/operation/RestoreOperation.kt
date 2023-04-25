@@ -37,7 +37,7 @@ class RestoreOperation(
 	private val patchVersion: Persistable<String>,
 	private val patchStatus: Dao<Boolean>,
 	private val storageChecker: StorageChecker
-) : Operation<Result> {
+) : Operation<Result<Unit>> {
 
 	private val operation = with(game) {
 		aggregateOperation(
@@ -59,7 +59,7 @@ class RestoreOperation(
 	override val progressDelta = operation.progressDelta
 	override val progressMax = operation.progressMax
 
-	override suspend fun canInvoke(): Result {
+	override suspend fun canInvoke(): Result<Unit> {
 		val isPatched = patchStatus.retrieve()
 		val failureReason = when {
 			!isPatched -> R.string.error_not_patched
@@ -67,7 +67,10 @@ class RestoreOperation(
 			!storageChecker.isEnoughSpace() -> R.string.error_no_free_space
 			else -> null
 		}
-		return failureReason?.let(Result::failure) ?: Result.success()
+		if (failureReason != null) {
+			return Result.failure(failureReason)
+		}
+		return Result.success()
 	}
 
 	override suspend fun invoke() = wrapDomainExceptions {

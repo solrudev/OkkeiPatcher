@@ -27,6 +27,6 @@ interface ApkRepository {
 	fun deleteTemp()
 	suspend fun createTemp(): ZipPackage
 	suspend fun verifyTemp(): Boolean
-	suspend fun installTemp(): Result
+	suspend fun installTemp(): Result<Unit>
 	suspend fun uninstall(): Boolean
 }

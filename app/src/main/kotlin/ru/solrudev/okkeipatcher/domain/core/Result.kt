@@ -23,37 +23,44 @@ import androidx.annotation.StringRes
 /**
  * Represents either a successful result or a failure with a reason.
  */
-sealed interface Result {
+sealed interface Result<T> {
 
-	object Success : Result
-	data class Failure(val reason: LocalizedString) : Result
+	data class Success<T>(val value: T) : Result<T>
+	data class Failure<T>(val reason: LocalizedString) : Result<T>
 
 	companion object {
 
+		private val successUnit = Success(Unit)
+
 		/**
-		 * Returns [Success].
+		 * Returns [Success] with [Unit] as a value.
 		 */
-		fun success() = Success
+		fun success() = successUnit
+
+		/**
+		 * Creates [Success] instance with a [value].
+		 */
+		fun <T> success(value: T) = Success(value)
 
 		/**
 		 * Creates [Failure] instance with a [LocalizedString] represented by Android resource string as its
 		 * [Failure.reason].
 		 */
-		fun failure(@StringRes resourceId: Int, vararg args: Any): Failure {
+		fun <T> failure(@StringRes resourceId: Int, vararg args: Any): Failure<T> {
 			return Failure(LocalizedString.resource(resourceId, args))
 		}
 
 		/**
 		 * Creates [Failure] instance with a [LocalizedString] represented by hardcoded [value] as its [Failure.reason].
 		 */
-		fun failure(value: CharSequence): Failure {
+		fun <T> failure(value: CharSequence): Failure<T> {
 			return Failure(LocalizedString.raw(value))
 		}
 
 		/**
 		 * Creates [Failure] instance with a [reason].
 		 */
-		fun failure(reason: LocalizedString): Failure {
+		fun <T> failure(reason: LocalizedString): Failure<T> {
 			return Failure(reason)
 		}
 	}
@@ -62,7 +69,7 @@ sealed interface Result {
 /**
  * Executes [block] if the result is [Result.Failure] and returns result unmodified.
  */
-inline fun <R> Result.onFailure(block: (Result.Failure) -> R): Result {
+inline fun <T> Result<T>.onFailure(block: (Result.Failure<T>) -> Unit): Result<T> {
 	if (this is Result.Failure) block(this)
 	return this
 }
@@ -70,7 +77,7 @@ inline fun <R> Result.onFailure(block: (Result.Failure) -> R): Result {
 /**
  * Executes [block] if the result is [Result.Success] and returns result unmodified.
  */
-inline fun <R> Result.onSuccess(block: (Result.Success) -> R): Result {
-	if (this is Result.Success) block(this)
+inline fun <T> Result<T>.onSuccess(block: (Result.Success<T>) -> Unit): Result<T> {
+	if (this is Result.Success<T>) block(this)
 	return this
 }

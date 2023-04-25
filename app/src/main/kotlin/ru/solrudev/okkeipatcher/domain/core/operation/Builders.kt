@@ -20,7 +20,13 @@ package ru.solrudev.okkeipatcher.domain.core.operation
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.runningReduce
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Message
 import ru.solrudev.okkeipatcher.domain.core.Result
@@ -46,7 +52,7 @@ import ru.solrudev.okkeipatcher.domain.core.onFailure
 fun <R> operation(
 	vararg operations: Operation<*> = emptyArray(),
 	progressMax: Int = 0,
-	canInvoke: suspend () -> Result = { Result.Success },
+	canInvoke: suspend () -> Result<Unit> = { Result.success() },
 	block: suspend OperationScope.() -> R
 ): Operation<R> {
 	require(progressMax >= 0) { "progressMax cannot be negative, but was $progressMax" }
@@ -65,7 +71,7 @@ fun aggregateOperation(vararg operations: Operation<*>): Operation<Unit> = Opera
 		operations.forEach { operation ->
 			operation.canInvoke().onFailure { return@lambda it }
 		}
-		Result.Success
+		Result.success()
 	},
 	block = {
 		operations.forEach { it.invoke() }
@@ -88,7 +94,7 @@ private object EmptyOperation : Operation<Unit> {
 private class OperationImpl<out R>(
 	operations: Array<out Operation<*>>,
 	progressMax: Int = 0,
-	private val canInvokeDelegate: suspend () -> Result = { Result.Success },
+	private val canInvokeDelegate: suspend () -> Result<Unit> = { Result.success() },
 	private val block: suspend OperationScope.() -> R
 ) : Operation<R>, OperationScope {
 

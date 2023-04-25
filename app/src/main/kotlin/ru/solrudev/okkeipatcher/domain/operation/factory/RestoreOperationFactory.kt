@@ -31,9 +31,9 @@ class RestoreOperationFactory @Inject constructor(
 	private val patchStateRepository: PatchStateRepository,
 	private val gameFactory: GameFactory,
 	private val storageChecker: StorageChecker
-) : OperationFactory<Result> {
+) : OperationFactory<Result<Unit>> {
 
-	override suspend fun create(): Operation<Result> {
+	override suspend fun create(): Operation<Result<Unit>> {
 		val game = gameFactory.create()
 		val handleSaveData = patchStateRepository.handleSaveData.retrieve()
 		val parameters = RestoreParameters(handleSaveData)

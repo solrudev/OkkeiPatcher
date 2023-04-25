@@ -36,7 +36,7 @@ abstract class Obb(
 	override val backupExists: Boolean
 		get() = obbBackupRepository.backupExists
 
-	override fun canPatch(): Result {
+	override fun canPatch(): Result<Unit> {
 		if (!obbRepository.obbExists && !backupExists) {
 			return Result.failure(R.string.error_obb_not_found)
 		}

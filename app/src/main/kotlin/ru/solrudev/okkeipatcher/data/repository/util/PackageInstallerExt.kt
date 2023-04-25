@@ -27,7 +27,7 @@ import okio.Path
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.core.Result
 
-suspend fun PackageInstaller.install(apkPath: Path, immediate: Boolean = false): Result {
+suspend fun PackageInstaller.install(apkPath: Path, immediate: Boolean = false): Result<Unit> {
 	val result = installPackage(apkPath.toFile()) {
 		if (immediate) {
 			confirmationStrategy = ConfirmationStrategy.IMMEDIATE

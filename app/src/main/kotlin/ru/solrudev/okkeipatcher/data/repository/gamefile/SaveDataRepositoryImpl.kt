@@ -57,8 +57,8 @@ class SaveDataRepositoryImpl @Inject constructor(
 		fileSystem.delete(temp)
 	}
 
-	override suspend fun createTemp(): Result {
-		val failure = Result.failure(R.string.warning_could_not_backup_save_data)
+	override suspend fun createTemp(): Result<Unit> {
+		val failure = Result.failure<Unit>(R.string.warning_could_not_backup_save_data)
 		if (!saveDataFile.exists) {
 			return failure
 		}
@@ -89,8 +89,8 @@ class SaveDataRepositoryImpl @Inject constructor(
 		return backupHash == savedHash
 	}
 
-	override suspend fun restoreBackup(): Result {
-		val failure = Result.failure(R.string.warning_could_not_restore_save_data)
+	override suspend fun restoreBackup(): Result<Unit> {
+		val failure = Result.failure<Unit>(R.string.warning_could_not_restore_save_data)
 		try {
 			return runInterruptible(ioDispatcher) {
 				saveDataFile.recreate()

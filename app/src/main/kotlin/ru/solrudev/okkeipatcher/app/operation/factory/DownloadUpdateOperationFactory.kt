@@ -25,7 +25,7 @@ import javax.inject.Inject
 
 class DownloadUpdateOperationFactory @Inject constructor(
 	private val okkeiPatcherRepository: OkkeiPatcherRepository
-) : OperationFactory<Result> {
+) : OperationFactory<Result<Unit>> {
 
 	override suspend fun create() = okkeiPatcherRepository.downloadUpdate()
 }

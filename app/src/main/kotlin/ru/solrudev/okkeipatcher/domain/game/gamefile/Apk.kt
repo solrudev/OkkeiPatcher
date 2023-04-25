@@ -32,14 +32,14 @@ import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkBackupRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
 
 abstract class Apk(
-	protected val apkRepository: ApkRepository,
-	protected val apkBackupRepository: ApkBackupRepository
+	private val apkRepository: ApkRepository,
+	private val apkBackupRepository: ApkBackupRepository
 ) : PatchableGameFile {
 
 	override val backupExists: Boolean
 		get() = apkBackupRepository.backupExists
 
-	override fun canPatch(): Result {
+	override fun canPatch(): Result<Unit> {
 		val canInstallPatchedApk = apkBackupRepository.backupExists && apkRepository.tempExists
 		if (!apkRepository.isInstalled && !canInstallPatchedApk) {
 			return Result.failure(R.string.error_game_not_found)
@@ -102,7 +102,7 @@ abstract class Apk(
 		}
 	}
 
-	private inline fun install(crossinline installApk: suspend () -> Result): Operation<Unit> =
+	private inline fun install(crossinline installApk: suspend () -> Result<Unit>): Operation<Unit> =
 		operation(progressMax = 100) {
 			status(R.string.status_installing)
 			installApk().onFailure { failure -> throw InstallException(failure.reason) }

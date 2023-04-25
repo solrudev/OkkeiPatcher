@@ -24,8 +24,8 @@ interface SaveDataRepository {
 	val backupExists: Boolean
 	fun deleteBackup()
 	fun deleteTemp()
-	suspend fun createTemp(): Result
+	suspend fun createTemp(): Result<Unit>
 	suspend fun verifyBackup(): Boolean
-	suspend fun restoreBackup(): Result
+	suspend fun restoreBackup(): Result<Unit>
 	suspend fun persistTempAsBackup()
 }

@@ -25,5 +25,5 @@ interface ApkBackupRepository {
 	fun deleteBackup()
 	suspend fun createBackup()
 	suspend fun verifyBackup(): Boolean
-	suspend fun installBackup(): Result
+	suspend fun installBackup(): Result<Unit>
 }

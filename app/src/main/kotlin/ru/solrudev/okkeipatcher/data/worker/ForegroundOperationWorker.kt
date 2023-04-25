@@ -43,6 +43,7 @@ import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.extension.statusAndAccumulatedProgress
 import ru.solrudev.okkeipatcher.domain.operation.factory.OperationFactory
 import kotlin.Throwable
+import kotlin.Unit
 import kotlin.getValue
 import kotlin.lazy
 import kotlin.time.Duration.Companion.milliseconds
@@ -53,7 +54,7 @@ abstract class ForegroundOperationWorker(
 	workerParameters: WorkerParameters,
 	private val notificationServiceFactory: NotificationServiceFactory,
 	private val workManager: WorkManager,
-	private val operationFactory: OperationFactory<DomainResult>,
+	private val operationFactory: OperationFactory<DomainResult<Unit>>,
 	private val workNotificationsParameters: WorkNotificationsParameters
 ) : CoroutineWorker(context, workerParameters) {
 
@@ -69,7 +70,7 @@ abstract class ForegroundOperationWorker(
 			operation.canInvoke().onFailure { failure ->
 				return createFailure(WorkerFailure.Domain(failure.reason))
 			}
-			val result: DomainResult
+			val result: DomainResult<Unit>
 			coroutineScope {
 				val observeOperationJob = operation.observeIn(this)
 				result = operation()
