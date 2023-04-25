@@ -21,16 +21,13 @@ package ru.solrudev.okkeipatcher.data.repository.app
 import io.github.solrudev.simpleinstaller.PackageInstaller
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 import okio.FileSystem
 import ru.solrudev.okkeipatcher.app.model.OkkeiPatcherUpdateData
 import ru.solrudev.okkeipatcher.app.model.OkkeiPatcherVersion
-import ru.solrudev.okkeipatcher.app.model.Work
 import ru.solrudev.okkeipatcher.app.repository.OkkeiPatcherRepository
-import ru.solrudev.okkeipatcher.app.repository.work.DownloadUpdateWorkRepository
 import ru.solrudev.okkeipatcher.data.OkkeiEnvironment
 import ru.solrudev.okkeipatcher.data.repository.util.install
 import ru.solrudev.okkeipatcher.data.service.OkkeiPatcherApkProvider
@@ -52,7 +49,6 @@ class MockOkkeiPatcherRepository @Inject constructor(
 	environment: OkkeiEnvironment,
 	private val okkeiPatcherApkProvider: OkkeiPatcherApkProvider,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-	private val downloadUpdateWorkRepository: DownloadUpdateWorkRepository,
 	private val packageInstaller: PackageInstaller,
 	private val fileSystem: FileSystem
 ) : OkkeiPatcherRepository {
@@ -84,10 +80,6 @@ class MockOkkeiPatcherRepository @Inject constructor(
 		return updateData
 	}
 
-	override suspend fun enqueueUpdateDownloadWork(): Work {
-		return downloadUpdateWorkRepository.enqueueWork()
-	}
-
 	override suspend fun installUpdate() = try {
 		packageInstaller.install(updateFile, immediate = true)
 	} catch (cancellationException: CancellationException) {
@@ -116,9 +108,5 @@ class MockOkkeiPatcherRepository @Inject constructor(
 				throw t
 			}
 		}
-	}
-
-	override fun getPendingUpdateDownloadWorkFlow(): Flow<Work> {
-		return downloadUpdateWorkRepository.getPendingWorkFlow()
 	}
 }

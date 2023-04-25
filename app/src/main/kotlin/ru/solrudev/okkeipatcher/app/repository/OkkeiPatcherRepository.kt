@@ -20,16 +20,13 @@ package ru.solrudev.okkeipatcher.app.repository
 
 import kotlinx.coroutines.flow.Flow
 import ru.solrudev.okkeipatcher.app.model.OkkeiPatcherUpdateData
-import ru.solrudev.okkeipatcher.app.model.Work
 import ru.solrudev.okkeipatcher.domain.core.Result
-import ru.solrudev.okkeipatcher.domain.core.operation.Operation
+import ru.solrudev.okkeipatcher.domain.core.operation.ProgressOperation
 
 interface OkkeiPatcherRepository {
 	val isUpdateAvailable: Flow<Boolean>
 	val isUpdateInstallPending: Flow<Boolean>
 	suspend fun getUpdateData(refresh: Boolean): OkkeiPatcherUpdateData
-	suspend fun enqueueUpdateDownloadWork(): Work
 	suspend fun installUpdate(): Result<Unit>
-	fun downloadUpdate(): Operation<Result<Unit>>
-	fun getPendingUpdateDownloadWorkFlow(): Flow<Work>
+	fun downloadUpdate(): ProgressOperation<Result<Unit>>
 }

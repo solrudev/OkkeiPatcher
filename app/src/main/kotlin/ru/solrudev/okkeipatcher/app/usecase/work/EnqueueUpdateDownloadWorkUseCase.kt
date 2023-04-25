@@ -18,9 +18,12 @@
 
 package ru.solrudev.okkeipatcher.app.usecase.work
 
-import ru.solrudev.okkeipatcher.app.repository.OkkeiPatcherRepository
+import ru.solrudev.okkeipatcher.app.repository.work.DownloadUpdateWorkRepository
 import javax.inject.Inject
 
-class EnqueueUpdateDownloadWorkUseCase @Inject constructor(private val okkeiPatcherRepository: OkkeiPatcherRepository) {
-	suspend operator fun invoke() = okkeiPatcherRepository.enqueueUpdateDownloadWork()
+class EnqueueUpdateDownloadWorkUseCase @Inject constructor(
+	private val downloadUpdateWorkRepository: DownloadUpdateWorkRepository
+) {
+
+	suspend operator fun invoke() = downloadUpdateWorkRepository.enqueueWork()
 }
