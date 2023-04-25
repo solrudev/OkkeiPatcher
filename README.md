@@ -68,7 +68,7 @@ Reliable task execution and status tracking is ensured by using
 - [Okio](https://square.github.io/okio/) for I/O operations and file system abstraction
 - [Zip4j](https://github.com/srikanth-lingala/zip4j) for working with ZIP archives
 - [apksig](https://android.googlesource.com/platform/tools/apksig/+/master) for signing APK files
-- [PseudoApkSigner](https://github.com/Aefyr/PseudoApkSigner) for signing APK files on API < 24
+- [PseudoApkSigner](https://github.com/solrudev/PseudoApkSigner) for signing APK files on API < 24
 - [Retrofit & OkHttp](https://square.github.io/retrofit/) for working with network requests
 - [Moshi](https://github.com/square/moshi/) for deserializing JSON data
 - [Material Components](https://github.com/material-components/material-components-android) for
