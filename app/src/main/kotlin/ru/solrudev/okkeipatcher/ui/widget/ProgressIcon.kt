@@ -28,8 +28,10 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.withStyledAttributes
 import androidx.core.view.isInvisible
 import com.google.android.material.imageview.ShapeableImageView
+import com.google.android.material.progressindicator.CircularProgressIndicator
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.databinding.LayoutProgressIconBinding
+import kotlin.math.abs
 
 /**
  * Icon with ability to display circular progress around it.
@@ -41,6 +43,7 @@ class ProgressIcon : ConstraintLayout {
 		binding = LayoutProgressIconBinding.bind(this)
 	}
 
+	@Suppress("UNUSED")
 	constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
 		context, attrs, defStyleAttr, defStyleRes
 	) {
@@ -105,63 +108,49 @@ class ProgressIcon : ConstraintLayout {
 	}
 
 	private fun showProgress(animate: Boolean) = with(binding) {
-		progressCircularProgressIcon.run {
-			if (animate) {
-				alpha = 0f
-				animate()
-					.alpha(1f)
-					.setListener(null)
-					.setDuration(100)
-					.setInterpolator(DecelerateInterpolator())
-					.start()
-			}
-			isInvisible = false
-		}
-		imageviewProgressIcon.run {
-			if (animate) {
-				animateIcon(scale = 0.56f)
-			} else {
-				scaleX = 0.56f
-				scaleY = 0.56f
-			}
-		}
+		progressCircularProgressIcon.visibility(visible = true, animate)
+		imageviewProgressIcon.scale(scale = 0.56f, animate)
 	}
 
 	private fun hideProgress(animate: Boolean) = with(binding) {
-		progressCircularProgressIcon.run {
-			if (animate) {
-				animate()
-					.alpha(0f)
-					.setListener(object : AnimatorListenerAdapter() {
-						override fun onAnimationEnd(animation: Animator) {
-							isInvisible = true
-							alpha = 1f
-						}
-					})
-					.setDuration(100)
-					.setInterpolator(DecelerateInterpolator())
-					.start()
-			} else {
-				isInvisible = true
-			}
-		}
-		imageviewProgressIcon.run {
-			if (animate) {
-				animateIcon(scale = 1f)
-			} else {
-				scaleX = 1f
-				scaleY = 1f
-			}
+		progressCircularProgressIcon.visibility(visible = false, animate)
+		imageviewProgressIcon.scale(scale = 1f, animate)
+	}
+
+	private fun CircularProgressIndicator.visibility(visible: Boolean, animate: Boolean) {
+		val toAlpha = if (visible) 1f else 0f
+		if (animate) {
+			isInvisible = false
+			alpha = abs(toAlpha - 1)
+			animate()
+				.alpha(toAlpha)
+				.setListener(object : AnimatorListenerAdapter() {
+					override fun onAnimationEnd(animation: Animator) {
+						isInvisible = !visible
+						alpha = 1f
+					}
+				})
+				.setDuration(100)
+				.setInterpolator(DecelerateInterpolator())
+				.start()
+		} else {
+			isInvisible = !visible
+			alpha = toAlpha
 		}
 	}
 
-	private fun ShapeableImageView.animateIcon(scale: Float) {
-		animate()
-			.scaleX(scale)
-			.scaleY(scale)
-			.setDuration(200)
-			.setInterpolator(DecelerateInterpolator())
-			.start()
+	private fun ShapeableImageView.scale(scale: Float, animate: Boolean) {
+		if (animate) {
+			animate()
+				.scaleX(scale)
+				.scaleY(scale)
+				.setDuration(200)
+				.setInterpolator(DecelerateInterpolator())
+				.start()
+		} else {
+			scaleX = scale
+			scaleY = scale
+		}
 	}
 
 	private fun parseAttributes(attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) = with(binding) {
