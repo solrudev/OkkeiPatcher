@@ -35,6 +35,8 @@ import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.databinding.CardCollapsingBinding
 import ru.solrudev.okkeipatcher.ui.util.animateLayoutChanges
 
+private val DEF_STYLE_RES = com.google.android.material.R.style.Widget_MaterialComponents_CardView
+
 /**
  * [MaterialCardView] with a title and collapsing content.
  */
@@ -42,12 +44,7 @@ class CollapsingCardView @JvmOverloads constructor(
 	context: Context,
 	attrs: AttributeSet? = null,
 	defStyleAttr: Int = com.google.android.material.R.attr.materialCardViewStyle
-) : MaterialCardView(
-	MaterialThemeOverlay.wrap(
-		context, attrs, defStyleAttr, com.google.android.material.R.style.Widget_MaterialComponents_CardView
-	),
-	attrs, defStyleAttr
-) {
+) : MaterialCardView(MaterialThemeOverlay.wrap(context, attrs, defStyleAttr, DEF_STYLE_RES), attrs, defStyleAttr) {
 
 	/**
 	 * Indicates whether this card's content is expanded.
@@ -144,6 +141,7 @@ class CollapsingCardView @JvmOverloads constructor(
 
 		companion object {
 
+			@Suppress("UNUSED")
 			@JvmField
 			val CREATOR: Parcelable.Creator<SavedState> = object : Parcelable.ClassLoaderCreator<SavedState> {
 
