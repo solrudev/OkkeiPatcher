@@ -22,10 +22,10 @@ dependencyResolutionManagement {
 	}
 
 	versionCatalogs {
-		create("androidx") {
+		register("androidx") {
 			from(files("gradle/androidx.versions.toml"))
 		}
-		create("dagger") {
+		register("dagger") {
 			from(files("gradle/dagger.versions.toml"))
 		}
 	}

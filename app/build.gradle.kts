@@ -18,7 +18,6 @@
 
 import android.annotation.SuppressLint
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
-import java.io.FileInputStream
 import java.util.*
 
 val packageName = "ru.solrudev.okkeipatcher"
@@ -56,20 +55,19 @@ android {
 		vectorDrawables.useSupportLibrary = true
 	}
 
-	signingConfigs {
+	val releaseSigningConfig by signingConfigs.registering {
+		initWith(signingConfigs["debug"])
 		val keystorePropertiesFile = rootProject.file("keystore.properties")
 		if (keystorePropertiesFile.exists()) {
-			register("release") {
-				val keystoreProperties = Properties().apply {
-					load(FileInputStream(keystorePropertiesFile))
-				}
-				keyAlias = keystoreProperties["keyAlias"] as? String
-				keyPassword = keystoreProperties["keyPassword"] as? String
-				storeFile = keystoreProperties["storeFile"]?.let(::file)
-				storePassword = keystoreProperties["storePassword"] as? String
-				enableV3Signing = true
-				enableV4Signing = true
+			val keystoreProperties = Properties().apply {
+				keystorePropertiesFile.inputStream().use { load(it) }
 			}
+			keyAlias = keystoreProperties["keyAlias"] as? String
+			keyPassword = keystoreProperties["keyPassword"] as? String
+			storeFile = keystoreProperties["storeFile"]?.let(::file)
+			storePassword = keystoreProperties["storePassword"] as? String
+			enableV3Signing = true
+			enableV4Signing = true
 		}
 	}
 
@@ -80,30 +78,22 @@ android {
 		release {
 			isMinifyEnabled = true
 			isShrinkResources = true
-			signingConfig = signingConfigs.findByName("release") ?: signingConfigs["debug"]
+			signingConfig = releaseSigningConfig.get()
 			proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
 		}
 	}
 
 	val flavorDimension = "flavor"
-	flavorDimensions.add(flavorDimension)
+	flavorDimensions += flavorDimension
 
 	productFlavors {
-		create("mock") {
+		register("mock") {
 			dimension = flavorDimension
 			applicationIdSuffix = ".mock"
 			versionNameSuffix = "-mock"
 		}
-		create("prod") {
+		register("prod") {
 			dimension = flavorDimension
-		}
-		sourceSets {
-			named("mock") {
-				kotlin.srcDir("src/mock/kotlin")
-			}
-			named("prod") {
-				kotlin.srcDir("src/prod/kotlin")
-			}
 		}
 	}
 
@@ -121,13 +111,13 @@ android {
 	}
 }
 
-tasks.withType<KotlinJvmCompile> {
+tasks.withType<KotlinJvmCompile>().configureEach {
 	compilerOptions {
 		freeCompilerArgs.add("-Xjvm-default=all")
 	}
 }
 
-tasks.withType<Test> {
+tasks.withType<Test>().configureEach {
 	useJUnitPlatform()
 }
 
@@ -159,6 +149,7 @@ dependencies {
 	implementation(libs.bundles.retrofit)
 
 	// Miscellaneous
+	implementation(libs.kotlinx.coroutines)
 	implementation(libs.pseudoapksigner)
 	implementation(libs.apksig)
 	implementation(libs.zip4j)
