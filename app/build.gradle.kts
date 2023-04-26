@@ -72,10 +72,10 @@ android {
 	}
 
 	buildTypes {
-		debug {
+		named("debug") {
 			multiDexEnabled = true
 		}
-		release {
+		named("release") {
 			isMinifyEnabled = true
 			isShrinkResources = true
 			signingConfig = releaseSigningConfig.get()
