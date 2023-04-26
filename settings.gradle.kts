@@ -1,6 +1,8 @@
 rootProject.name = "Okkei Patcher"
 include(":app")
 
+enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
+
 pluginManagement {
 	repositories {
 		gradlePluginPortal()
