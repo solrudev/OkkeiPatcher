@@ -36,7 +36,6 @@ data class UpdateUiState(
 	val buttonText: LocalizedString = LocalizedString.resource(R.string.button_text_update),
 	val status: LocalizedString = LocalizedString.resource(R.string.update_status_no_update),
 	val progressData: ProgressData = ProgressData(),
-	val percentDone: Int = 0,
 	val updateSize: Double = 0.0,
 	val changelog: Map<String, List<String>> = emptyMap(),
 	val currentWork: Work? = null
@@ -44,3 +43,6 @@ data class UpdateUiState(
 
 val UpdateUiState.isChangelogVisible: Boolean
 	get() = isUpdateAvailable || isUpdating || isInstallPending
+
+val UpdateUiState.percentDone: Int
+	get() = (progressData.progress.toDouble() / progressData.max * 100).toInt()

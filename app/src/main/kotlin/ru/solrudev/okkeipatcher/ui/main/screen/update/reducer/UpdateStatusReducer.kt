@@ -57,8 +57,7 @@ class UpdateStatusReducer @Inject constructor() : Reducer<UpdateStatusChanged, U
 			isUpdateButtonEnabled = true,
 			isUpdateButtonVisible = true,
 			status = LocalizedString.resource(R.string.update_status_downloading),
-			progressData = status.progressData,
-			percentDone = (status.progressData.progress.toDouble() / status.progressData.max * 100).toInt()
+			progressData = status.progressData
 		)
 		is AwaitingInstallation -> state.copy(
 			isUpdateAvailable = false,
@@ -102,7 +101,6 @@ class UpdateStatusReducer @Inject constructor() : Reducer<UpdateStatusChanged, U
 		isUpdateButtonEnabled = true,
 		isUpdateButtonVisible = false,
 		progressData = ProgressData(),
-		percentDone = 0,
 		buttonText = LocalizedString.resource(R.string.button_text_update),
 		status = status,
 		currentWork = null

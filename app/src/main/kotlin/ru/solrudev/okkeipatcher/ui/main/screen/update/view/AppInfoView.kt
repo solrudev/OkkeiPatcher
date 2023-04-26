@@ -23,6 +23,7 @@ import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.util.versionName
 import ru.solrudev.okkeipatcher.databinding.CardUpdateAppInfoBinding
 import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateUiState
+import ru.solrudev.okkeipatcher.ui.main.screen.update.model.percentDone
 
 class AppInfoView(
 	private val binding: CardUpdateAppInfoBinding
