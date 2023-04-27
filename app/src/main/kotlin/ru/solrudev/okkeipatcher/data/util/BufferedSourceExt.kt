@@ -32,8 +32,9 @@ inline fun BufferedSource.copyTo(sink: BufferedSink, size: Long, onProgressDelta
 	Buffer().use { buffer ->
 		var currentProgress = 0
 		var accumulatedBytesRead = 0L
+		var progressEmitCounter = 0
 		while (true) {
-			val bytesRead = read(buffer, BUFFER_LENGTH - accumulatedBytesRead)
+			val bytesRead = read(buffer, byteCount = BUFFER_LENGTH - accumulatedBytesRead)
 			if (bytesRead < 0) {
 				break
 			}
@@ -41,12 +42,15 @@ inline fun BufferedSource.copyTo(sink: BufferedSink, size: Long, onProgressDelta
 			sink.write(buffer, buffer.size)
 			if (accumulatedBytesRead == BUFFER_LENGTH) {
 				accumulatedBytesRead = 0
-				if (++currentProgress % progressRatio == 0) {
+				val progress = ++currentProgress / progressRatio
+				val shouldEmitProgress = currentProgress - (progress * progressRatio) == 0
+				if (shouldEmitProgress && progress <= STREAM_COPY_PROGRESS_MAX) {
+					progressEmitCounter++
 					onProgressDeltaChanged(progressDelta)
 				}
 			}
 		}
-		onProgressDeltaChanged(STREAM_COPY_PROGRESS_MAX - currentProgress / progressRatio)
+		onProgressDeltaChanged(STREAM_COPY_PROGRESS_MAX - progressEmitCounter / progressDelta)
 	}
 }
 
@@ -56,8 +60,8 @@ data class Progress(
 )
 
 fun calculateProgress(totalSize: Long, bufferLength: Long, progressMax: Int): Progress {
-	val ratio = ceil(totalSize.toDouble() / (bufferLength * progressMax)).toInt().coerceAtLeast(1)
-	val max = ceil(totalSize.toDouble() / (bufferLength * ratio)).toInt()
-	val delta = (progressMax.toDouble() / max).roundToInt()
+	val ratio = (totalSize.toDouble() / (bufferLength * progressMax)).roundToInt().coerceAtLeast(1)
+	val max = ceil(totalSize.toDouble() / (bufferLength * ratio))
+	val delta = (progressMax / max).roundToInt()
 	return Progress(delta, ratio)
 }

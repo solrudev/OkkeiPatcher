@@ -21,7 +21,6 @@ package ru.solrudev.okkeipatcher.domain.core.operation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.merge
@@ -151,7 +150,6 @@ private class OperationImpl<out R>(
 
 	private fun CoroutineScope.accumulateProgress() = progressDelta
 		.runningReduce(Int::plus)
-		.conflate()
 		.onEach { accumulatedProgress = it }
 		.launchIn(this)
 }
