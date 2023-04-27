@@ -50,8 +50,8 @@ android {
 		minSdk = 19
 		@SuppressLint("OldTargetApi")
 		targetSdk = 32
-		versionCode = 45
-		versionName = "2.0.3"
+		versionCode = 46
+		versionName = "2.0.4"
 		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 		vectorDrawables.useSupportLibrary = true
 	}
