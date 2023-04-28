@@ -18,7 +18,6 @@
 
 package ru.solrudev.okkeipatcher.ui.main.screen.update
 
-import android.os.Bundle
 import androidx.fragment.app.Fragment
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,7 +28,6 @@ import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.databinding.FragmentUpdateBinding
 import ru.solrudev.okkeipatcher.ui.main.screen.update.controller.RefreshController
 import ru.solrudev.okkeipatcher.ui.main.screen.update.controller.UpdateButtonClickController
-import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateEvent.UpdateDataRequested
 import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateUiState
 import ru.solrudev.okkeipatcher.ui.main.screen.update.view.AppInfoView
 import ru.solrudev.okkeipatcher.ui.main.screen.update.view.ChangelogView
@@ -67,11 +65,4 @@ class UpdateFragment : Fragment(R.layout.fragment_update), HostJetView<UpdateUiS
 	)
 
 	private val binding by viewBinding(FragmentUpdateBinding::bind)
-
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
-		if (savedInstanceState == null) {
-			viewModel.dispatchEvent(UpdateDataRequested(refresh = false))
-		}
-	}
 }

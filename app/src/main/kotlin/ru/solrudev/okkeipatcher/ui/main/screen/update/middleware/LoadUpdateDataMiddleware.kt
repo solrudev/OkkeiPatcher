@@ -20,6 +20,7 @@ package ru.solrudev.okkeipatcher.ui.main.screen.update.middleware
 
 import io.github.solrudev.jetmvi.JetMiddleware
 import io.github.solrudev.jetmvi.MiddlewareScope
+import kotlinx.coroutines.launch
 import ru.solrudev.okkeipatcher.app.usecase.GetUpdateDataUseCase
 import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateEvent
 import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateEvent.*
@@ -31,6 +32,9 @@ class LoadUpdateDataMiddleware @Inject constructor(
 ) : JetMiddleware<UpdateEvent> {
 
 	override fun MiddlewareScope<UpdateEvent>.apply() {
+		launch {
+			send(UpdateDataRequested(refresh = false))
+		}
 		onEvent<UpdateDataRequested> { event ->
 			send(UpdateDataLoadingStarted)
 			val updateData = getUpdateDataUseCase(refresh = event.refresh)
