@@ -21,14 +21,13 @@ package ru.solrudev.okkeipatcher.data.util
 import okio.Buffer
 import okio.BufferedSink
 import okio.BufferedSource
-import kotlin.math.ceil
 import kotlin.math.roundToInt
 
 const val BUFFER_LENGTH = 8192L
 const val STREAM_COPY_PROGRESS_MAX = 100
 
 inline fun BufferedSource.copyTo(sink: BufferedSink, size: Long, onProgressDeltaChanged: (Int) -> Unit = {}) {
-	val (progressDelta, progressRatio) = calculateProgress(size, BUFFER_LENGTH, STREAM_COPY_PROGRESS_MAX)
+	val progressRatio = calculateProgressRatio(size, BUFFER_LENGTH, STREAM_COPY_PROGRESS_MAX)
 	Buffer().use { buffer ->
 		var currentProgress = 0
 		var accumulatedBytesRead = 0L
@@ -46,22 +45,14 @@ inline fun BufferedSource.copyTo(sink: BufferedSink, size: Long, onProgressDelta
 				val shouldEmitProgress = currentProgress - (progress * progressRatio) == 0
 				if (shouldEmitProgress && progress <= STREAM_COPY_PROGRESS_MAX) {
 					progressEmitCounter++
-					onProgressDeltaChanged(progressDelta)
+					onProgressDeltaChanged(1)
 				}
 			}
 		}
-		onProgressDeltaChanged(STREAM_COPY_PROGRESS_MAX - progressEmitCounter / progressDelta)
+		onProgressDeltaChanged(STREAM_COPY_PROGRESS_MAX - progressEmitCounter)
 	}
 }
 
-data class Progress(
-	val progressDelta: Int,
-	val progressRatio: Int
-)
-
-fun calculateProgress(totalSize: Long, bufferLength: Long, progressMax: Int): Progress {
-	val ratio = (totalSize.toDouble() / (bufferLength * progressMax)).roundToInt().coerceAtLeast(1)
-	val max = ceil(totalSize.toDouble() / (bufferLength * ratio))
-	val delta = (progressMax / max).roundToInt()
-	return Progress(delta, ratio)
+fun calculateProgressRatio(totalSize: Long, bufferLength: Long, progressMax: Int): Int {
+	return (totalSize.toDouble() / (bufferLength * progressMax)).roundToInt().coerceAtLeast(1)
 }
