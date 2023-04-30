@@ -23,26 +23,20 @@ import android.content.Context
 import android.content.Intent
 import android.content.Intent.ACTION_MY_PACKAGE_REPLACED
 import dagger.hilt.android.AndroidEntryPoint
-import okio.FileSystem
-import ru.solrudev.okkeipatcher.data.OkkeiEnvironment
-import ru.solrudev.okkeipatcher.data.repository.app.APP_UPDATE_FILE_NAME
+import ru.solrudev.okkeipatcher.app.repository.OkkeiPatcherRepository
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class AppUpdateReceiver : BroadcastReceiver() {
 
 	@Inject
-	lateinit var environment: OkkeiEnvironment
-
-	@Inject
-	lateinit var fileSystem: FileSystem
+	lateinit var okkeiPatcherRepository: OkkeiPatcherRepository
 
 	override fun onReceive(context: Context?, intent: Intent?) {
 		if (intent?.action != ACTION_MY_PACKAGE_REPLACED) {
 			return
 		}
-		val updateFile = environment.externalFilesPath / APP_UPDATE_FILE_NAME
-		fileSystem.delete(updateFile)
+		okkeiPatcherRepository.deleteUpdate()
 		println("AppUpdateReceiver: deleted update APK")
 	}
 }

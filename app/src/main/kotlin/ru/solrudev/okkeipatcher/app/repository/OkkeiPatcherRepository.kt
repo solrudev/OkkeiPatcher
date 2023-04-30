@@ -29,4 +29,5 @@ interface OkkeiPatcherRepository {
 	suspend fun getUpdateData(refresh: Boolean): OkkeiPatcherUpdateData
 	suspend fun installUpdate(): Result<Unit>
 	fun downloadUpdate(): ProgressOperation<Result<Unit>>
+	fun deleteUpdate()
 }
