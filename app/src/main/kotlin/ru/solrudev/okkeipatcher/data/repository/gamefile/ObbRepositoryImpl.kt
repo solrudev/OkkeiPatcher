@@ -22,7 +22,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import okio.FileSystem
 import okio.Path
-import ru.solrudev.okkeipatcher.data.OkkeiEnvironment
+import ru.solrudev.okkeipatcher.data.PatcherEnvironment
 import ru.solrudev.okkeipatcher.data.repository.gamefile.util.backupPath
 import ru.solrudev.okkeipatcher.data.util.GAME_PACKAGE_NAME
 import ru.solrudev.okkeipatcher.data.util.STREAM_COPY_PROGRESS_MAX
@@ -40,12 +40,12 @@ import javax.inject.Singleton
 
 private const val OBB_FILE_NAME = "main.87.com.mages.chaoschild_jp.obb"
 
-private val OkkeiEnvironment.obbPath: Path
+private val PatcherEnvironment.obbPath: Path
 	get() = externalStoragePath / "Android" / "obb" / GAME_PACKAGE_NAME / OBB_FILE_NAME
 
 @Singleton
 class ObbRepositoryImpl @Inject constructor(
-	environment: OkkeiEnvironment,
+	environment: PatcherEnvironment,
 	private val fileSystem: FileSystem
 ) : ObbRepository {
 
@@ -61,7 +61,7 @@ class ObbRepositoryImpl @Inject constructor(
 
 @Singleton
 class ObbBackupRepositoryImpl @Inject constructor(
-	environment: OkkeiEnvironment,
+	environment: PatcherEnvironment,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	private val hashRepository: HashRepository,
 	private val fileSystem: FileSystem

@@ -30,7 +30,7 @@ import ru.solrudev.okkeipatcher.data.util.versionCode
 import java.util.Locale
 import javax.inject.Inject
 
-interface OkkeiEnvironment {
+interface PatcherEnvironment {
 	val locale: Locale
 	val versionCode: Int
 	val filesPath: Path
@@ -39,9 +39,9 @@ interface OkkeiEnvironment {
 }
 
 @Reusable
-class OkkeiEnvironmentImpl @Inject constructor(
+class PatcherEnvironmentImpl @Inject constructor(
 	@ApplicationContext private val applicationContext: Context
-) : OkkeiEnvironment {
+) : PatcherEnvironment {
 
 	override val locale: Locale
 		get() = ConfigurationCompat.getLocales(applicationContext.resources.configuration)[0] ?: Locale.ENGLISH

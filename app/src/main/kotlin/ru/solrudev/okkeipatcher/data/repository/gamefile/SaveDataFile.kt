@@ -26,7 +26,7 @@ import androidx.annotation.RequiresApi
 import androidx.documentfile.provider.DocumentFile
 import dagger.hilt.android.qualifiers.ApplicationContext
 import okio.*
-import ru.solrudev.okkeipatcher.data.OkkeiEnvironment
+import ru.solrudev.okkeipatcher.data.PatcherEnvironment
 import ru.solrudev.okkeipatcher.data.util.ANDROID_DATA_TREE_URI
 import ru.solrudev.okkeipatcher.data.util.GAME_PACKAGE_NAME
 import ru.solrudev.okkeipatcher.data.util.prepareRecreate
@@ -35,7 +35,7 @@ import javax.inject.Inject
 private const val FILES_DIR_NAME = "files"
 private const val SAVE_DATA_NAME = "SAVEDATA.DAT"
 
-private val OkkeiEnvironment.saveDataPath: Path
+private val PatcherEnvironment.saveDataPath: Path
 	get() = externalStoragePath / "Android" / "data" / GAME_PACKAGE_NAME / FILES_DIR_NAME / SAVE_DATA_NAME
 
 interface SaveDataFile {
@@ -47,7 +47,7 @@ interface SaveDataFile {
 }
 
 class SaveDataRawFile @Inject constructor(
-	environment: OkkeiEnvironment,
+	environment: PatcherEnvironment,
 	private val fileSystem: FileSystem
 ) : SaveDataFile {
 

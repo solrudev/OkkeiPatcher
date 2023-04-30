@@ -19,7 +19,7 @@
 package ru.solrudev.okkeipatcher.data.repository.gamefile.util
 
 import okio.Path
-import ru.solrudev.okkeipatcher.data.OkkeiEnvironment
+import ru.solrudev.okkeipatcher.data.PatcherEnvironment
 
-val OkkeiEnvironment.backupPath: Path
+val PatcherEnvironment.backupPath: Path
 	get() = externalFilesPath / "backup"

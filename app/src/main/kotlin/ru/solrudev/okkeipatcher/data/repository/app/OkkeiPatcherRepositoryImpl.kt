@@ -25,7 +25,7 @@ import okio.FileSystem
 import ru.solrudev.okkeipatcher.app.model.OkkeiPatcherUpdateData
 import ru.solrudev.okkeipatcher.app.model.OkkeiPatcherVersion
 import ru.solrudev.okkeipatcher.app.repository.OkkeiPatcherRepository
-import ru.solrudev.okkeipatcher.data.OkkeiEnvironment
+import ru.solrudev.okkeipatcher.data.PatcherEnvironment
 import ru.solrudev.okkeipatcher.data.core.InMemoryCache
 import ru.solrudev.okkeipatcher.data.network.api.OkkeiPatcherApi
 import ru.solrudev.okkeipatcher.data.network.model.exception.NetworkNotAvailableException
@@ -45,7 +45,7 @@ const val APP_UPDATE_FILE_NAME = "OkkeiPatcher.apk"
 
 @Singleton
 class OkkeiPatcherRepositoryImpl @Inject constructor(
-	private val environment: OkkeiEnvironment,
+	private val environment: PatcherEnvironment,
 	private val okkeiPatcherApi: OkkeiPatcherApi,
 	private val fileDownloader: FileDownloader,
 	private val packageInstaller: PackageInstaller,

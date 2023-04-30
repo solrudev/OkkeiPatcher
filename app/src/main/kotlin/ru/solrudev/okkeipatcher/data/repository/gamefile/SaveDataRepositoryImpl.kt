@@ -23,7 +23,7 @@ import kotlinx.coroutines.runInterruptible
 import okio.FileSystem
 import okio.buffer
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.data.OkkeiEnvironment
+import ru.solrudev.okkeipatcher.data.PatcherEnvironment
 import ru.solrudev.okkeipatcher.data.repository.gamefile.util.backupPath
 import ru.solrudev.okkeipatcher.data.util.computeHash
 import ru.solrudev.okkeipatcher.data.util.prepareRecreate
@@ -36,7 +36,7 @@ import javax.inject.Singleton
 
 @Singleton
 class SaveDataRepositoryImpl @Inject constructor(
-	environment: OkkeiEnvironment,
+	environment: PatcherEnvironment,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	private val saveDataFile: SaveDataFile,
 	private val hashRepository: HashRepository,

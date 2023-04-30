@@ -24,13 +24,13 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import ru.solrudev.okkeipatcher.data.OkkeiEnvironment
-import ru.solrudev.okkeipatcher.data.OkkeiEnvironmentImpl
+import ru.solrudev.okkeipatcher.data.PatcherEnvironment
+import ru.solrudev.okkeipatcher.data.PatcherEnvironmentImpl
 
 @InstallIn(SingletonComponent::class)
 @Module
 interface EnvironmentBindModule {
 
 	@Binds
-	fun bindOkkeiEnvironment(okkeiEnvironment: OkkeiEnvironmentImpl): OkkeiEnvironment
+	fun bindPatcherEnvironment(patcherEnvironment: PatcherEnvironmentImpl): PatcherEnvironment
 }

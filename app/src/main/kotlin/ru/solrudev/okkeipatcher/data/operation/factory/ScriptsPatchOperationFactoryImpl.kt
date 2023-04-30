@@ -20,7 +20,7 @@ package ru.solrudev.okkeipatcher.data.operation.factory
 
 import kotlinx.coroutines.CoroutineDispatcher
 import okio.FileSystem
-import ru.solrudev.okkeipatcher.data.OkkeiEnvironment
+import ru.solrudev.okkeipatcher.data.PatcherEnvironment
 import ru.solrudev.okkeipatcher.data.operation.ScriptsPatchOperation
 import ru.solrudev.okkeipatcher.data.service.FileDownloader
 import ru.solrudev.okkeipatcher.di.IoDispatcher
@@ -31,7 +31,7 @@ import javax.inject.Inject
 
 class ScriptsPatchOperationFactoryImpl @Inject constructor(
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-	private val environment: OkkeiEnvironment,
+	private val environment: PatcherEnvironment,
 	private val apkRepository: ApkRepository,
 	private val fileDownloader: FileDownloader,
 	private val fileSystem: FileSystem

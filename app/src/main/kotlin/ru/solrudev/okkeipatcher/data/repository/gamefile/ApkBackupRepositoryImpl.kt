@@ -23,7 +23,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.runInterruptible
 import okio.FileSystem
 import okio.Path
-import ru.solrudev.okkeipatcher.data.OkkeiEnvironment
+import ru.solrudev.okkeipatcher.data.PatcherEnvironment
 import ru.solrudev.okkeipatcher.data.repository.gamefile.util.backupPath
 import ru.solrudev.okkeipatcher.data.repository.util.install
 import ru.solrudev.okkeipatcher.data.service.GameInstallationProvider
@@ -37,7 +37,7 @@ import javax.inject.Singleton
 
 @Singleton
 class ApkBackupRepositoryImpl @Inject constructor(
-	environment: OkkeiEnvironment,
+	environment: PatcherEnvironment,
 	private val gameInstallationProvider: GameInstallationProvider,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	private val packageInstaller: PackageInstaller,

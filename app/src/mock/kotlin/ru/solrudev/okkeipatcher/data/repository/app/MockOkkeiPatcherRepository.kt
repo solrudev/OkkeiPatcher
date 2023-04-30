@@ -28,7 +28,7 @@ import okio.FileSystem
 import ru.solrudev.okkeipatcher.app.model.OkkeiPatcherUpdateData
 import ru.solrudev.okkeipatcher.app.model.OkkeiPatcherVersion
 import ru.solrudev.okkeipatcher.app.repository.OkkeiPatcherRepository
-import ru.solrudev.okkeipatcher.data.OkkeiEnvironment
+import ru.solrudev.okkeipatcher.data.PatcherEnvironment
 import ru.solrudev.okkeipatcher.data.repository.util.install
 import ru.solrudev.okkeipatcher.data.service.OkkeiPatcherApkProvider
 import ru.solrudev.okkeipatcher.data.util.STREAM_COPY_PROGRESS_MAX
@@ -46,7 +46,7 @@ import kotlin.time.Duration.Companion.seconds
 
 @Singleton
 class MockOkkeiPatcherRepository @Inject constructor(
-	environment: OkkeiEnvironment,
+	environment: PatcherEnvironment,
 	private val okkeiPatcherApkProvider: OkkeiPatcherApkProvider,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	private val packageInstaller: PackageInstaller,

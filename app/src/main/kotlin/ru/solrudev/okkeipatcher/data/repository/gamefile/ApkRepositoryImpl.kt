@@ -27,7 +27,7 @@ import kotlinx.coroutines.runInterruptible
 import okio.FileSystem
 import okio.Path
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.data.OkkeiEnvironment
+import ru.solrudev.okkeipatcher.data.PatcherEnvironment
 import ru.solrudev.okkeipatcher.data.repository.util.install
 import ru.solrudev.okkeipatcher.data.service.GameInstallationProvider
 import ru.solrudev.okkeipatcher.data.service.factory.ApkZipPackageFactory
@@ -42,7 +42,7 @@ import javax.inject.Singleton
 
 @Singleton
 class ApkRepositoryImpl @Inject constructor(
-	environment: OkkeiEnvironment,
+	environment: PatcherEnvironment,
 	private val gameInstallationProvider: GameInstallationProvider,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	private val packageUninstaller: PackageUninstaller,
