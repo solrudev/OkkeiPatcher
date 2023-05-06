@@ -24,6 +24,7 @@ import ru.solrudev.okkeipatcher.app.model.ProgressData
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.isEmpty
 import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateEvent.UpdateStatusChanged
+import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateState
 import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateStatus
 import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateStatus.*
 import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateUiState
@@ -36,12 +37,9 @@ class UpdateStatusReducer @Inject constructor() : Reducer<UpdateStatusChanged, U
 	private fun reduceStatus(status: UpdateStatus, state: UpdateUiState) = when (status) {
 		is Unknown -> state
 		is NoUpdate -> state.default(LocalizedString.resource(R.string.update_status_no_update))
-		is UpdateAvailable -> if (!state.isUpdating && !state.isInstallPending) state.copy(
+		is UpdateAvailable -> if (state.state is UpdateState.Idle) state.copy(
 			isUpdateAvailable = true,
-			isUpdating = false,
-			isDownloading = false,
-			isInstallPending = false,
-			isInstalling = false,
+			state = UpdateState.Idle,
 			isUpdateButtonEnabled = true,
 			isUpdateButtonVisible = true,
 			buttonText = LocalizedString.resource(R.string.button_text_update),
@@ -50,10 +48,7 @@ class UpdateStatusReducer @Inject constructor() : Reducer<UpdateStatusChanged, U
 		) else state
 		is Downloading -> state.copy(
 			isUpdateAvailable = false,
-			isUpdating = true,
-			isDownloading = true,
-			isInstallPending = false,
-			isInstalling = false,
+			state = UpdateState.Downloading,
 			isUpdateButtonEnabled = true,
 			isUpdateButtonVisible = true,
 			status = LocalizedString.resource(R.string.update_status_downloading),
@@ -61,10 +56,7 @@ class UpdateStatusReducer @Inject constructor() : Reducer<UpdateStatusChanged, U
 		)
 		is AwaitingInstallation -> state.copy(
 			isUpdateAvailable = false,
-			isUpdating = false,
-			isDownloading = false,
-			isInstallPending = true,
-			isInstalling = false,
+			state = UpdateState.InstallPending,
 			isUpdateButtonEnabled = true,
 			isUpdateButtonVisible = true,
 			buttonText = LocalizedString.resource(R.string.button_text_update_install),
@@ -73,10 +65,7 @@ class UpdateStatusReducer @Inject constructor() : Reducer<UpdateStatusChanged, U
 		)
 		is Installing -> state.copy(
 			isUpdateAvailable = false,
-			isUpdating = true,
-			isDownloading = false,
-			isInstallPending = false,
-			isInstalling = true,
+			state = UpdateState.Installing,
 			isUpdateButtonEnabled = false,
 			isUpdateButtonVisible = true,
 			status = LocalizedString.resource(R.string.update_status_installing),
@@ -94,10 +83,7 @@ class UpdateStatusReducer @Inject constructor() : Reducer<UpdateStatusChanged, U
 
 	private fun UpdateUiState.default(status: LocalizedString) = copy(
 		isUpdateAvailable = false,
-		isUpdating = false,
-		isDownloading = false,
-		isInstallPending = false,
-		isInstalling = false,
+		state = UpdateState.Idle,
 		isUpdateButtonEnabled = true,
 		isUpdateButtonVisible = false,
 		progressData = ProgressData(),

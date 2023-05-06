@@ -21,7 +21,10 @@ package ru.solrudev.okkeipatcher.ui.main.screen.update.controller
 import io.github.solrudev.jetmvi.JetView
 import ru.solrudev.okkeipatcher.app.model.Work
 import ru.solrudev.okkeipatcher.ui.main.screen.update.UpdateViewModel
-import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateEvent.*
+import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateEvent.CancelWork
+import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateEvent.UpdateDownloadRequested
+import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateEvent.UpdateInstallRequested
+import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateState
 import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateUiState
 import ru.solrudev.okkeipatcher.ui.widget.AbortButton
 
@@ -34,9 +37,8 @@ class UpdateButtonClickController(
 
 	override val trackedState = listOf(
 		UpdateUiState::currentWork,
-		UpdateUiState::isUpdating,
-		UpdateUiState::isUpdateAvailable,
-		UpdateUiState::isInstallPending
+		UpdateUiState::state,
+		UpdateUiState::isUpdateAvailable
 	)
 
 	override fun render(uiState: UpdateUiState) {
@@ -45,14 +47,14 @@ class UpdateButtonClickController(
 	}
 
 	private fun setButtonOnClickListener(uiState: UpdateUiState) = with(button) {
-		when {
-			uiState.isUpdateAvailable -> setOnClickListener {
+		when (uiState.state) {
+			is UpdateState.Idle -> setOnClickListener {
 				viewModel.dispatchEvent(UpdateDownloadRequested)
 			}
-			uiState.isInstallPending -> setOnClickListener {
+			is UpdateState.InstallPending -> setOnClickListener {
 				viewModel.dispatchEvent(UpdateInstallRequested)
 			}
-			uiState.isUpdating -> setOnClickListener {
+			is UpdateState.Updating -> setOnClickListener {
 				work?.let { work ->
 					viewModel.dispatchEvent(CancelWork(work))
 				}

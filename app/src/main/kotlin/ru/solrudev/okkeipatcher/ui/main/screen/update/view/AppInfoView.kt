@@ -22,6 +22,7 @@ import io.github.solrudev.jetmvi.JetView
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.util.versionName
 import ru.solrudev.okkeipatcher.databinding.CardUpdateAppInfoBinding
+import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateState
 import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateUiState
 import ru.solrudev.okkeipatcher.ui.main.screen.update.model.percentDone
 
@@ -32,9 +33,7 @@ class AppInfoView(
 	private val context by binding.root::context
 
 	override val trackedState = listOf(
-		UpdateUiState::isUpdating,
-		UpdateUiState::isDownloading,
-		UpdateUiState::isInstalling,
+		UpdateUiState::state,
 		UpdateUiState::percentDone,
 		UpdateUiState::progressData,
 		UpdateUiState::updateSize
@@ -46,18 +45,17 @@ class AppInfoView(
 	}
 
 	private fun setProgress(uiState: UpdateUiState) = with(binding.progressiconCardAppIcon) {
-		setProgressVisible(uiState.isUpdating, animate = true)
+		setProgressVisible(uiState.state is UpdateState.Updating, animate = true)
 		setProgressCompat(uiState.progressData.progress, animated = true)
 		max = uiState.progressData.max
-		isIndeterminate = uiState.isInstalling
+		isIndeterminate = uiState.state is UpdateState.Installing
 	}
 
 	private fun subtitleText(uiState: UpdateUiState): String {
-		val text = if (uiState.isDownloading) {
+		return if (uiState.state is UpdateState.Downloading) {
 			context.getString(R.string.update_percent_done, uiState.percentDone, uiState.updateSize)
 		} else {
 			context.getString(R.string.card_app_version, context.versionName)
 		}
-		return text
 	}
 }

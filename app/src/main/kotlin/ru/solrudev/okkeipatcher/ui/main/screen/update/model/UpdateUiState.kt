@@ -29,10 +29,7 @@ data class UpdateUiState(
 	val isUpdateButtonEnabled: Boolean = true,
 	val isUpdateButtonVisible: Boolean = false,
 	val isUpdateAvailable: Boolean = false,
-	val isUpdating: Boolean = false,
-	val isDownloading: Boolean = false,
-	val isInstallPending: Boolean = false,
-	val isInstalling: Boolean = false,
+	val state: UpdateState = UpdateState.Idle,
 	val buttonText: LocalizedString = LocalizedString.resource(R.string.button_text_update),
 	val status: LocalizedString = LocalizedString.resource(R.string.update_status_no_update),
 	val progressData: ProgressData = ProgressData(),
@@ -41,8 +38,16 @@ data class UpdateUiState(
 	val currentWork: Work? = null
 ) : JetState
 
+sealed interface UpdateState {
+	sealed interface Updating
+	object Idle : UpdateState
+	object Downloading : UpdateState, Updating
+	object InstallPending : UpdateState
+	object Installing : UpdateState, Updating
+}
+
 val UpdateUiState.isChangelogVisible: Boolean
-	get() = isUpdateAvailable || isUpdating || isInstallPending
+	get() = isUpdateAvailable || state !is UpdateState.Idle
 
 val UpdateUiState.percentDone: Int
 	get() = (progressData.progress.toDouble() / progressData.max * 100).toInt()
