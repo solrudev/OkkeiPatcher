@@ -26,7 +26,6 @@ import okio.ForwardingFileSystem
 import okio.IOException
 import okio.Path
 import okio.Path.Companion.toPath
-import okio.buffer
 import okio.fakefilesystem.FakeFileSystem
 import ru.solrudev.okkeipatcher.data.repository.FakeHashRepository
 import kotlin.test.AfterTest
@@ -41,12 +40,11 @@ class ApkSignerWrapperTest {
 	private val inputApkContent = "ApkSignerWrapper input test string"
 	private val signedApkContent = "ApkSignerWrapper output test string"
 	private val expectedSignedApkHash = "b83021ee45ae504358eb1e3f1550c5dd3b54b199008ce2131123bca6f7827a50"
-
 	private val hashRepository = FakeHashRepository()
 	private val fileSystem = FakeFileSystem()
 
 	private val failingFileSystem = object : ForwardingFileSystem(fileSystem) {
-		override fun atomicMove(source: Path, target: Path) {
+		override fun onPathParameter(path: Path, functionName: String, parameterName: String): Path {
 			throw IOException("synthetic failure")
 		}
 	}
@@ -58,7 +56,7 @@ class ApkSignerWrapperTest {
 	}
 
 	@BeforeTest
-	fun setup() {
+	fun setUp() {
 		inputApkPath.write(inputApkContent)
 	}
 
@@ -114,10 +112,10 @@ class ApkSignerWrapperTest {
 	}
 
 	private fun Path.read(): String {
-		return fileSystem.source(this).buffer().use { it.readUtf8() }
+		return fileSystem.read(this) { readUtf8() }
 	}
 
 	private fun Path.write(content: String) {
-		fileSystem.sink(this).buffer().use { it.writeUtf8(content) }
+		fileSystem.write(this) { writeUtf8(content) }
 	}
 }
