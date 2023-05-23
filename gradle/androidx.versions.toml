@@ -5,8 +5,8 @@ room = "2.5.1"
 [libraries]
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
-activity-ktx = { module = "androidx.activity:activity-ktx", version = "1.7.0" }
-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version = "1.5.6" }
+activity-ktx = { module = "androidx.activity:activity-ktx", version = "1.7.1" }
+fragment-ktx = { module = "androidx.fragment:fragment-ktx", version = "1.5.7" }
 preference-ktx = { module = "androidx.preference:preference-ktx", version = "1.2.0" }
 lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version = "2.6.1" }
 hilt-work = { module = "androidx.hilt:hilt-work", version = "1.0.0" }
