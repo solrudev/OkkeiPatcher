@@ -112,5 +112,6 @@ class OkkeiPatcherRepositoryImpl @Inject constructor(
 
 	override fun deleteUpdate() {
 		fileSystem.delete(updateFile)
+		_isUpdateInstallPending.value = false
 	}
 }
