@@ -18,7 +18,6 @@
 
 package ru.solrudev.okkeipatcher.data.service.apksigner
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -33,7 +32,6 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class ApkSignerWrapperTest {
 
 	private val inputApkPath = "/file.apk".toPath()

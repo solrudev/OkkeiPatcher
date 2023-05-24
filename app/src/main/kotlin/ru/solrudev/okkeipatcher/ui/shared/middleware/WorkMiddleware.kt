@@ -30,7 +30,6 @@ import ru.solrudev.okkeipatcher.app.usecase.work.GetWorkStateFlowUseCase
 import ru.solrudev.okkeipatcher.ui.shared.model.HasWork
 import ru.solrudev.okkeipatcher.ui.shared.model.WorkStateEventFactory
 import kotlin.reflect.KClass
-import kotlin.reflect.safeCast
 
 @Suppress("BOUNDS_NOT_ALLOWED_IF_BOUNDED_BY_TYPE_PARAMETER")
 open class WorkMiddleware<E : JetEvent, StartEvent, CancelEvent, PendingWorkEvent : E>(
@@ -71,12 +70,12 @@ open class WorkMiddleware<E : JetEvent, StartEvent, CancelEvent, PendingWorkEven
 	private fun <E : JetEvent, R : E> MiddlewareScope<E>.onEventLatest(
 		eventClass: KClass<out R>, action: suspend (R) -> Unit
 	) = launch {
-		transform { event -> eventClass.safeCast(event)?.let { emit(it) } }.collectLatest(action)
+		filterIsInstance(eventClass).collectLatest(action)
 	}
 
 	private fun <E : JetEvent, R : E> MiddlewareScope<E>.onEvent(
 		eventClass: KClass<out R>, collector: FlowCollector<R>
 	) = launch {
-		transform { event -> eventClass.safeCast(event)?.let { emit(it) } }.collect(collector)
+		filterIsInstance(eventClass).collect(collector)
 	}
 }
