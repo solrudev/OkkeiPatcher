@@ -4,6 +4,7 @@ Okkei Patcher
 
 [![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/solrudev/OkkeiPatcher)](https://github.com/solrudev/OkkeiPatcher/releases)
 [![License: GPLv3](https://img.shields.io/github/license/solrudev/OkkeiPatcher)](/LICENSE)
+![GitHub downloads](https://img.shields.io/github/downloads/solrudev/OkkeiPatcher/total?label=Downloads&logo=github)
 
 **Okkei Patcher** is a companion app for localizing the Android version of CHAOS;CHILD visual novel.
 It downloads the latest revision of CHAOS;CHILD Android localization patch and automatically applies
