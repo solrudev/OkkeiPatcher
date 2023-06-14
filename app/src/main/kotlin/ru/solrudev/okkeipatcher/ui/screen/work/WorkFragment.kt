@@ -136,7 +136,6 @@ class WorkFragment : Fragment(R.layout.fragment_work), JetView<WorkUiState> {
 			setOneshotAnimation(fileName, start = play)
 			onAnimationEnd {
 				viewModel.dispatchEvent(AnimationsPlayed)
-				removeAllAnimatorListeners()
 			}
 		}
 	}

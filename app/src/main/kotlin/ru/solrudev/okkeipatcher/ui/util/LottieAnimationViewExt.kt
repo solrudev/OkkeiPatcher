@@ -27,7 +27,12 @@ import com.airbnb.lottie.LottieAnimationView
 inline fun LottieAnimationView.onAnimationEnd(crossinline action: () -> Unit) {
 	addAnimatorListener(object : Animator.AnimatorListener {
 		override fun onAnimationStart(animation: Animator) {}
-		override fun onAnimationEnd(animation: Animator) = action()
+
+		override fun onAnimationEnd(animation: Animator) {
+			action()
+			removeAllAnimatorListeners()
+		}
+
 		override fun onAnimationCancel(animation: Animator) {}
 		override fun onAnimationRepeat(animation: Animator) {}
 	})
