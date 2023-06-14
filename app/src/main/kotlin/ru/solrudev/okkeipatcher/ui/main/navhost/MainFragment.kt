@@ -20,7 +20,6 @@ package ru.solrudev.okkeipatcher.ui.main.navhost
 
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.core.view.marginBottom
@@ -47,6 +46,7 @@ import ru.solrudev.okkeipatcher.ui.main.navhost.model.MainUiState
 import ru.solrudev.okkeipatcher.ui.main.navhost.view.UpdateBadgeView
 import ru.solrudev.okkeipatcher.ui.main.util.updateMargins
 import ru.solrudev.okkeipatcher.ui.util.animateLayoutChanges
+import ru.solrudev.okkeipatcher.ui.util.findNavHostToolbar
 import ru.solrudev.okkeipatcher.ui.util.findParentNavController
 
 @AndroidEntryPoint
@@ -68,8 +68,7 @@ class MainFragment : Fragment(R.layout.fragment_main), HostJetView<MainUiState> 
 		}
 		navigationRailViewMain?.setupWithNavController(navController)
 		navigationViewMain?.setupWithNavController(navController)
-		val toolbar = requireActivity().findViewById<Toolbar>(R.id.toolbar_nav_host)
-		toolbar.setupWithNavController(navController, appBarConfiguration)
+		findNavHostToolbar()?.setupWithNavController(navController, appBarConfiguration)
 		viewModel.bindDerived(this@MainFragment, updateBadgeView)
 	}
 

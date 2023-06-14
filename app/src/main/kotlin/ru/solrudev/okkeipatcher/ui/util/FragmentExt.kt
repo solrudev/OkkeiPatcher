@@ -19,9 +19,11 @@
 package ru.solrudev.okkeipatcher.ui.util
 
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.ui.navhost.NavHostActivity
 
 /**
@@ -45,4 +47,5 @@ fun Fragment.findParentNavController(): NavController? {
 	return null
 }
 
+fun Fragment.findNavHostToolbar(): Toolbar? = requireActivity().findViewById(R.id.toolbar_nav_host)
 fun Fragment.requireNavHostActivity() = requireActivity() as NavHostActivity
