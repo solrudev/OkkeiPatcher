@@ -24,7 +24,7 @@ import com.airbnb.lottie.LottieAnimationView
 /**
  * Registers an animator listener which invokes [action] on animation end.
  */
-inline fun LottieAnimationView.onAnimationEnd(crossinline action: () -> Unit) {
+inline fun LottieAnimationView.doOnAnimationEnd(crossinline action: () -> Unit) {
 	addAnimatorListener(object : Animator.AnimatorListener {
 		override fun onAnimationStart(animation: Animator) {}
 

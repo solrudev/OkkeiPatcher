@@ -134,7 +134,7 @@ class WorkFragment : Fragment(R.layout.fragment_work), JetView<WorkUiState> {
 	private fun startAnimation(fileName: String, play: Boolean) = with(binding) {
 		lottieAnimationViewWork.run {
 			setOneshotAnimation(fileName, start = play)
-			onAnimationEnd {
+			doOnAnimationEnd {
 				viewModel.dispatchEvent(AnimationsPlayed)
 			}
 		}
