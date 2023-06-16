@@ -18,7 +18,7 @@ okhttp = { module = "com.squareup.okhttp3:okhttp", version.strictly = "3.12.13" 
 pseudoapksigner = { module = "io.github.solrudev:pseudoapksigner", version = "1.8" }
 apksig = { module = "com.android.tools.build:apksig", version.ref = "android-gradleplugin" }
 zip4j = { module = "net.lingala.zip4j:zip4j", version = "2.11.5" }
-simpleinstaller = { module = "io.github.solrudev:simpleinstaller", version = "4.2.4" }
+simpleinstaller = { module = "io.github.solrudev:simpleinstaller", version = "4.3.0" }
 jetmvi = { module = "io.github.solrudev:jetmvi", version = "0.1.5" }
 viewbindingpropertydelegate = { module = "com.github.kirich1409:viewbindingpropertydelegate-noreflection", version = "1.5.9" }
 progressbutton = { module = "com.github.razir.progressbutton:progressbutton", version = "2.1.0" }
