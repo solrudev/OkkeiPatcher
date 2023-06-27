@@ -25,11 +25,11 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.runningReduce
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Message
 import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.core.onFailure
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * Creates an instance of [Operation] which executes the provided [block] when invoked. This builder function allows
@@ -117,12 +117,10 @@ private class OperationImpl<out R>(
 		.merge()
 
 	override val progressMax = progressMax + operations.sumOf { it.progressMax }
-
-	@Volatile
-	private var accumulatedProgress = 0
+	private var accumulatedProgress = AtomicInteger(0)
 
 	private val remainingProgress: Int
-		get() = progressMax - accumulatedProgress
+		get() = progressMax - accumulatedProgress.get()
 
 	override suspend fun canInvoke() = canInvokeDelegate()
 
@@ -134,7 +132,7 @@ private class OperationImpl<out R>(
 			return@coroutineScope result
 		} finally {
 			accumulateProgressJob?.cancel()
-			accumulatedProgress = 0
+			accumulatedProgress.set(0)
 		}
 	}
 
@@ -142,14 +140,13 @@ private class OperationImpl<out R>(
 	override suspend fun message(message: Message) = _messages.emit(message)
 
 	override suspend fun progressDelta(progressDelta: Int) {
-		val coercedProgressDelta = progressDelta.coerceIn(-accumulatedProgress, remainingProgress)
+		val coercedProgressDelta = progressDelta.coerceIn(-accumulatedProgress.get(), remainingProgress)
 		if (coercedProgressDelta != 0) {
 			_progressDelta.emit(coercedProgressDelta)
 		}
 	}
 
 	private fun CoroutineScope.accumulateProgress() = progressDelta
-		.runningReduce(Int::plus)
-		.onEach { accumulatedProgress = it }
+		.onEach(accumulatedProgress::getAndAdd)
 		.launchIn(this)
 }
