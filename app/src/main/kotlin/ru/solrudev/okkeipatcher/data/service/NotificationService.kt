@@ -23,10 +23,12 @@ import android.app.PendingIntent
 import android.content.Context
 import androidx.core.app.NotificationCompat
 import androidx.core.content.getSystemService
+import androidx.core.graphics.drawable.toBitmap
 import androidx.work.ForegroundInfo
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.app.model.ProgressData
 import ru.solrudev.okkeipatcher.data.core.resolve
+import ru.solrudev.okkeipatcher.data.util.GAME_PACKAGE_NAME
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Message
 import java.util.concurrent.atomic.AtomicInteger
@@ -61,7 +63,14 @@ class NotificationServiceImpl(
 		val notification = progressNotificationBuilder
 			.setContentTitle(titleString)
 			.setContentText(statusString)
+			.setSubText(
+				applicationContext.getString(
+					R.string.percent_done,
+					(progressData.progress.toDouble() / progressData.max * 100).toInt()
+				)
+			)
 			.setProgress(progressData.max, progressData.progress, false)
+			.setStyle(NotificationCompat.BigTextStyle().bigText(statusString))
 			.build()
 		notificationManager?.notify(progressNotificationId, notification)
 	}
@@ -70,7 +79,7 @@ class NotificationServiceImpl(
 		val messageString = message.text.resolve(applicationContext)
 		val notification = createNotificationBuilder(message.title, progressNotification = false).apply {
 			setContentText(messageString)
-			if (messageString.length > 28) {
+			if (messageString.length > 30) {
 				setStyle(NotificationCompat.BigTextStyle().bigText(messageString))
 			}
 		}.build()
@@ -96,8 +105,11 @@ class NotificationServiceImpl(
 			setContentIntent(contentIntent)
 			setSound(null)
 			if (progressNotification) {
+				runCatching { applicationContext.packageManager.getApplicationIcon(GAME_PACKAGE_NAME).toBitmap() }
+					.getOrNull()?.let(::setLargeIcon)
 				setProgress(100, 0, false)
 				setOnlyAlertOnce(true)
+				setStyle(NotificationCompat.BigTextStyle().bigText(""))
 			} else {
 				setAutoCancel(true)
 			}
