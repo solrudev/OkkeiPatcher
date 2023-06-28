@@ -19,9 +19,16 @@
 package ru.solrudev.okkeipatcher.data.repository.app.work
 
 import android.app.PendingIntent
+import android.content.Context
+import android.os.Build
 import androidx.lifecycle.asFlow
 import androidx.navigation.NavDeepLinkBuilder
-import androidx.work.*
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
+import androidx.work.WorkerParameters
+import androidx.work.await
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
@@ -32,7 +39,6 @@ import ru.solrudev.okkeipatcher.app.repository.work.UniqueWorkRepository
 import ru.solrudev.okkeipatcher.app.repository.work.WorkRepository
 import ru.solrudev.okkeipatcher.data.repository.app.work.mapper.toWork
 import ru.solrudev.okkeipatcher.data.worker.ForegroundOperationWorker
-import ru.solrudev.okkeipatcher.data.worker.defaultNotificationIntent
 import ru.solrudev.okkeipatcher.data.worker.util.extension.getSerializable
 import ru.solrudev.okkeipatcher.data.worker.util.extension.putSerializable
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
@@ -76,10 +82,20 @@ open class UniqueWorkRepositoryImpl<T : ForegroundOperationWorker>(
 		.map { it.toWork(workLabel) }
 }
 
-fun ForegroundOperationWorker.workNotificationIntent(): PendingIntent {
-	val workLabel = inputData.getSerializable<LocalizedString>(WORK_LABEL_KEY) ?: return defaultNotificationIntent()
+fun workNotificationIntent(applicationContext: Context, workerParameters: WorkerParameters): PendingIntent {
+	val workLabel = workerParameters.inputData.getSerializable<LocalizedString>(WORK_LABEL_KEY)
+		?: return defaultNotificationIntent(applicationContext)
 	return NavDeepLinkBuilder(applicationContext)
 		.setGraph(R.navigation.okkei_nav_graph)
-		.setDestination(R.id.work_fragment, WorkFragmentArgs(Work(id, workLabel)).toBundle())
+		.setDestination(R.id.work_fragment, WorkFragmentArgs(Work(workerParameters.id, workLabel)).toBundle())
 		.createPendingIntent()
+}
+
+private fun defaultNotificationIntent(applicationContext: Context): PendingIntent {
+	val launchIntent = applicationContext.packageManager.getLaunchIntentForPackage(applicationContext.packageName)
+	val flagImmutable = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
+	return PendingIntent.getActivity(
+		applicationContext, 0, launchIntent,
+		PendingIntent.FLAG_UPDATE_CURRENT or flagImmutable
+	)
 }

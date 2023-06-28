@@ -27,14 +27,26 @@ import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import javax.inject.Inject
 
 interface NotificationServiceFactory {
-	fun create(progressNotificationTitle: LocalizedString, contentIntent: PendingIntent): NotificationService
+
+	fun create(
+		progressNotificationTitle: LocalizedString,
+		contentIntent: PendingIntent,
+		showGameIconInProgressNotification: Boolean
+	): NotificationService
 }
 
 class NotificationServiceFactoryImpl @Inject constructor(
 	@ApplicationContext private val applicationContext: Context
 ) : NotificationServiceFactory {
 
-	override fun create(progressNotificationTitle: LocalizedString, contentIntent: PendingIntent): NotificationService {
-		return NotificationServiceImpl(applicationContext, progressNotificationTitle, contentIntent)
-	}
+	override fun create(
+		progressNotificationTitle: LocalizedString,
+		contentIntent: PendingIntent,
+		showGameIconInProgressNotification: Boolean
+	): NotificationService = NotificationServiceImpl(
+		applicationContext,
+		progressNotificationTitle,
+		contentIntent,
+		showGameIconInProgressNotification
+	)
 }

@@ -53,14 +53,18 @@ class DownloadUpdateWorker @AssistedInject constructor(
 	workManager: WorkManager,
 	downloadUpdateOperationFactory: DownloadUpdateOperationFactory
 ) : ForegroundOperationWorker(
-	context, workerParameters, notificationServiceFactory, workManager, downloadUpdateOperationFactory,
-	WorkNotificationsParameters(workLabel, successMessage, failureMessage)
-) {
+	context, workerParameters, workManager, downloadUpdateOperationFactory,
+	notificationServiceFactory.create(
+		workLabel,
+		downloadUpdateNotificationContentIntent(context),
+		showGameIconInProgressNotification = false
+	),
+	WorkNotificationsParameters(successMessage, failureMessage)
+)
 
-	override fun createNotificationsContentIntent(): PendingIntent {
-		return NavDeepLinkBuilder(applicationContext)
-			.setGraph(R.navigation.main_nav_graph)
-			.setDestination(R.id.update_fragment)
-			.createPendingIntent()
-	}
+private fun downloadUpdateNotificationContentIntent(applicationContext: Context): PendingIntent {
+	return NavDeepLinkBuilder(applicationContext)
+		.setGraph(R.navigation.main_nav_graph)
+		.setDestination(R.id.update_fragment)
+		.createPendingIntent()
 }

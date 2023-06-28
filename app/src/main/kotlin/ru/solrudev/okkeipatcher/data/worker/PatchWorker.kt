@@ -52,8 +52,11 @@ class PatchWorker @AssistedInject constructor(
 	workManager: WorkManager,
 	patchOperationFactory: PatchOperationFactory
 ) : ForegroundOperationWorker(
-	context, workerParameters, notificationServiceFactory, workManager, patchOperationFactory,
-	WorkNotificationsParameters(workLabel, successMessage, failureMessage)
-) {
-	override fun createNotificationsContentIntent() = workNotificationIntent()
-}
+	context, workerParameters, workManager, patchOperationFactory,
+	notificationServiceFactory.create(
+		workLabel,
+		workNotificationIntent(context, workerParameters),
+		showGameIconInProgressNotification = true
+	),
+	WorkNotificationsParameters(successMessage, failureMessage)
+)

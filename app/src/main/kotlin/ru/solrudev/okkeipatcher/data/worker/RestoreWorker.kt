@@ -52,8 +52,11 @@ class RestoreWorker @AssistedInject constructor(
 	workManager: WorkManager,
 	restoreOperationFactory: RestoreOperationFactory
 ) : ForegroundOperationWorker(
-	context, workerParameters, notificationServiceFactory, workManager, restoreOperationFactory,
-	WorkNotificationsParameters(workLabel, successMessage, failureMessage)
-) {
-	override fun createNotificationsContentIntent() = workNotificationIntent()
-}
+	context, workerParameters, workManager, restoreOperationFactory,
+	notificationServiceFactory.create(
+		workLabel,
+		workNotificationIntent(context, workerParameters),
+		showGameIconInProgressNotification = true
+	),
+	WorkNotificationsParameters(successMessage, failureMessage)
+)

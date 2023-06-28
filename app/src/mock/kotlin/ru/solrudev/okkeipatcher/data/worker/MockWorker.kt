@@ -55,14 +55,17 @@ class MockWorker @AssistedInject constructor(
 	preferencesRepository: PreferencesRepository,
 	patchRepositoryFactory: PatchRepositoryFactory
 ) : ForegroundOperationWorker(
-	context, workerParameters, notificationServiceFactory, workManager,
+	context, workerParameters, workManager,
 	MockOperationFactory(
 		patchRepositoryFactory,
 		preferencesRepository.patchVersion,
 		preferencesRepository.patchStatus,
 		isPatchWork = "PatchWork" in workerParameters.tags
 	),
-	WorkNotificationsParameters(workLabel, successMessage, failureMessage)
-) {
-	override fun createNotificationsContentIntent() = workNotificationIntent()
-}
+	notificationServiceFactory.create(
+		workLabel,
+		workNotificationIntent(context, workerParameters),
+		showGameIconInProgressNotification = true
+	),
+	WorkNotificationsParameters(successMessage, failureMessage)
+)

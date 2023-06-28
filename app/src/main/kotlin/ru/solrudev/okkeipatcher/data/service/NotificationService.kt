@@ -46,11 +46,15 @@ interface NotificationService {
 class NotificationServiceImpl(
 	private val applicationContext: Context,
 	private val progressNotificationTitle: LocalizedString,
-	private val contentIntent: PendingIntent
+	private val contentIntent: PendingIntent,
+	showGameIconInProgressNotification: Boolean
 ) : NotificationService {
 
-	private val progressNotificationBuilder =
-		createNotificationBuilder(progressNotificationTitle, progressNotification = true)
+	private val progressNotificationBuilder = createNotificationBuilder(
+		progressNotificationTitle,
+		progressNotification = true,
+		showGameIconInProgressNotification
+	)
 
 	private val progressNotificationId = globalProgressNotificationId.incrementAndGet()
 	private val notificationManager = applicationContext.getSystemService<NotificationManager>()
@@ -77,9 +81,13 @@ class NotificationServiceImpl(
 
 	override fun displayMessageNotification(message: Message) {
 		val messageString = message.text.resolve(applicationContext)
-		val notification = createNotificationBuilder(message.title, progressNotification = false).apply {
+		val notification = createNotificationBuilder(
+			message.title,
+			progressNotification = false,
+			showGameIcon = false
+		).apply {
 			setContentText(messageString)
-			if (messageString.length > 30) {
+			if (messageString.length > 40) {
 				setStyle(NotificationCompat.BigTextStyle().bigText(messageString))
 			}
 		}.build()
@@ -89,7 +97,8 @@ class NotificationServiceImpl(
 
 	private fun createNotificationBuilder(
 		title: LocalizedString,
-		progressNotification: Boolean
+		progressNotification: Boolean,
+		showGameIcon: Boolean
 	): NotificationCompat.Builder {
 		val contentTitle = title.resolve(applicationContext)
 		val channelId = if (progressNotification) {
@@ -105,8 +114,11 @@ class NotificationServiceImpl(
 			setContentIntent(contentIntent)
 			setSound(null)
 			if (progressNotification) {
-				runCatching { applicationContext.packageManager.getApplicationIcon(GAME_PACKAGE_NAME).toBitmap() }
-					.getOrNull()?.let(::setLargeIcon)
+				setSubText(applicationContext.getString(R.string.percent_done, 0))
+				if (showGameIcon) {
+					runCatching { applicationContext.packageManager.getApplicationIcon(GAME_PACKAGE_NAME).toBitmap() }
+						.getOrNull()?.let(::setLargeIcon)
+				}
 				setProgress(100, 0, false)
 				setOnlyAlertOnce(true)
 				setStyle(NotificationCompat.BigTextStyle().bigText(""))

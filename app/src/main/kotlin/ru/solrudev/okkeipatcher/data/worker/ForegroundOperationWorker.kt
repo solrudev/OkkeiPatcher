@@ -18,9 +18,7 @@
 
 package ru.solrudev.okkeipatcher.data.worker
 
-import android.app.PendingIntent
 import android.content.Context
-import android.os.Build
 import androidx.work.CoroutineWorker
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
@@ -33,7 +31,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import ru.solrudev.okkeipatcher.app.model.ProgressData
-import ru.solrudev.okkeipatcher.data.service.factory.NotificationServiceFactory
+import ru.solrudev.okkeipatcher.data.service.NotificationService
 import ru.solrudev.okkeipatcher.data.worker.model.WorkNotificationsParameters
 import ru.solrudev.okkeipatcher.data.worker.model.WorkerFailure
 import ru.solrudev.okkeipatcher.data.worker.util.setProgress
@@ -44,23 +42,17 @@ import ru.solrudev.okkeipatcher.domain.core.operation.extension.statusAndAccumul
 import ru.solrudev.okkeipatcher.domain.operation.factory.OperationFactory
 import kotlin.Throwable
 import kotlin.Unit
-import kotlin.getValue
-import kotlin.lazy
 import kotlin.time.Duration.Companion.milliseconds
 import ru.solrudev.okkeipatcher.domain.core.Result as DomainResult
 
 abstract class ForegroundOperationWorker(
 	context: Context,
 	workerParameters: WorkerParameters,
-	private val notificationServiceFactory: NotificationServiceFactory,
 	private val workManager: WorkManager,
 	private val operationFactory: OperationFactory<DomainResult<Unit>>,
+	private val notificationService: NotificationService,
 	private val workNotificationsParameters: WorkNotificationsParameters
 ) : CoroutineWorker(context, workerParameters) {
-
-	private val notificationService by lazy {
-		notificationServiceFactory.create(workNotificationsParameters.workLabel, createNotificationsContentIntent())
-	}
 
 	final override suspend fun doWork(): Result {
 		cancelOnRetry()
@@ -86,8 +78,6 @@ abstract class ForegroundOperationWorker(
 			return createFailure(WorkerFailure.Unhandled(t))
 		}
 	}
-
-	protected open fun createNotificationsContentIntent() = defaultNotificationIntent()
 
 	private suspend fun cancelOnRetry() {
 		if (runAttemptCount > 0) {
@@ -128,13 +118,4 @@ abstract class ForegroundOperationWorker(
 	private fun Operation<*>.collectMessagesIn(scope: CoroutineScope) = messages
 		.onEach(notificationService::displayMessageNotification)
 		.launchIn(scope)
-}
-
-fun ForegroundOperationWorker.defaultNotificationIntent(): PendingIntent {
-	val launchIntent = applicationContext.packageManager.getLaunchIntentForPackage(applicationContext.packageName)
-	val flagImmutable = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
-	return PendingIntent.getActivity(
-		applicationContext, 0, launchIntent,
-		PendingIntent.FLAG_UPDATE_CURRENT or flagImmutable
-	)
 }
