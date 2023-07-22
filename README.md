@@ -17,6 +17,9 @@ easily go back to the unpatched Japanese version.
 Go to the [Releases](https://github.com/solrudev/OkkeiPatcher/releases) page to download the latest
 APK.
 
+**ATTENTION:** versions below 2.0.9 are now defunct due to domain name used for backend API has been
+shut down.
+
 # Screenshots
 ### Light theme
 <div style="display: flex; width: 100%">
