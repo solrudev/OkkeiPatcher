@@ -20,6 +20,7 @@ package ru.solrudev.okkeipatcher.data.service
 
 import dagger.Reusable
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -78,7 +79,10 @@ class FileDownloaderImpl @Inject constructor(
 					sink.buffer().use { bufferedSink ->
 						source.copyTo(
 							bufferedSink, responseBody.contentLength(),
-							onProgressDeltaChanged = { onProgressDeltaChanged(it) }
+							onProgressDeltaChanged = {
+								ensureActive()
+								onProgressDeltaChanged(it)
+							}
 						)
 					}
 					return@withContext if (sink is HashingSink) sink.hash.hex() else ""
