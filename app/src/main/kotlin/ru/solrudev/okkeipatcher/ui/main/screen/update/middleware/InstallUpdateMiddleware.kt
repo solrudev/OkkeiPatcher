@@ -26,8 +26,12 @@ import ru.solrudev.okkeipatcher.domain.core.onSuccess
 import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateEvent
 import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateEvent.UpdateInstallRequested
 import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateEvent.UpdateStatusChanged
-import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateStatus.*
+import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateStatus.Canceled
+import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateStatus.Failed
+import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateStatus.Installing
+import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateStatus.NoUpdate
 import javax.inject.Inject
+import kotlin.coroutines.cancellation.CancellationException
 
 class InstallUpdateMiddleware @Inject constructor(
 	private val installUpdateUseCase: InstallUpdateUseCase
@@ -36,9 +40,13 @@ class InstallUpdateMiddleware @Inject constructor(
 	override fun MiddlewareScope<UpdateEvent>.apply() {
 		onEvent<UpdateInstallRequested> {
 			send(UpdateStatusChanged(Installing))
-			installUpdateUseCase()
-				.onSuccess { send(UpdateStatusChanged(NoUpdate)) }
-				.onFailure { failure -> send(UpdateStatusChanged(Failed(failure.reason))) }
+			try {
+				installUpdateUseCase()
+					.onSuccess { send(UpdateStatusChanged(NoUpdate)) }
+					.onFailure { failure -> send(UpdateStatusChanged(Failed(failure.reason))) }
+			} catch (_: CancellationException) {
+				send(UpdateStatusChanged(Canceled))
+			}
 		}
 	}
 }
