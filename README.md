@@ -66,9 +66,9 @@ Reliable task execution and status tracking is ensured by using
       single-activity UI architecture
     - [Android Architecture Components](https://developer.android.com/topic/libraries/architecture/viewmodel)
       for handling components lifecycle and managing UI state holder
-- [JetMVI](https://github.com/solrudev/JetMVI) for implementing UI state management
-- [SimpleInstaller](https://github.com/solrudev/SimpleInstaller) for handling APK install sessions
+- [Ackpine](https://github.com/solrudev/Ackpine) for handling APK install sessions
   with Kotlin Coroutines
+- [JetMVI](https://github.com/solrudev/JetMVI) for implementing UI state management
 - [Okio](https://square.github.io/okio/) for I/O operations and file system abstraction
 - [Zip4j](https://github.com/srikanth-lingala/zip4j) for working with ZIP archives
 - [apksig](https://android.googlesource.com/platform/tools/apksig/+/master) for signing APK files

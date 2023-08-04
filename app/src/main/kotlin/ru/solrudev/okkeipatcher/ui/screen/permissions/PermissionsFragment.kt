@@ -21,18 +21,20 @@ package ru.solrudev.okkeipatcher.ui.screen.permissions
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.annotation.TargetApi
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions
 import androidx.activity.result.launch
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.solrudev.jetmvi.JetView
 import io.github.solrudev.jetmvi.jetViewModels
-import io.github.solrudev.simpleinstaller.activityresult.InstallPermissionContract
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.app.model.Permission
 import ru.solrudev.okkeipatcher.databinding.FragmentPermissionsBinding
@@ -55,14 +57,18 @@ class PermissionsFragment : Fragment(R.layout.fragment_permissions), JetView<Per
 		}
 	}
 
+	// Needs context to be initialized.
 	@TargetApi(Build.VERSION_CODES.O)
-	private val installPermissionLauncher = registerForActivityResult(InstallPermissionContract()) { isGranted ->
-		if (isGranted) {
-			viewModel.dispatchEvent(PermissionStateChanged(Permission.Install, isGranted = true))
-		}
-	}
+	private var installPermissionLauncher: ActivityResultLauncher<Unit>? = null
 
 	private val permissionsAdapter = PermissionsAdapter(::requestPermission)
+
+	override fun onAttach(context: Context) {
+		super.onAttach(context)
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			installPermissionLauncher = createInstallPermissionLauncher(context)
+		}
+	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		onBackPressed {
@@ -79,11 +85,21 @@ class PermissionsFragment : Fragment(R.layout.fragment_permissions), JetView<Per
 		permissionsAdapter.submitList(uiState.permissions)
 	}
 
+	@RequiresApi(Build.VERSION_CODES.O)
+	private fun createInstallPermissionLauncher(context: Context): ActivityResultLauncher<Unit> {
+		return registerForActivityResult(InstallPermissionContract(context.packageManager)) { isGranted ->
+			if (isGranted) {
+				viewModel.dispatchEvent(PermissionStateChanged(Permission.Install, isGranted = true))
+			}
+		}
+	}
+
 	private fun requestPermission(permission: Permission) = when (permission) {
 		Permission.Storage -> {
 			val storagePermissions = arrayOf(READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE)
 			storagePermissionLauncher.launch(storagePermissions)
 		}
-		Permission.Install -> installPermissionLauncher.launch()
+
+		Permission.Install -> installPermissionLauncher?.launch()
 	}
 }

@@ -21,6 +21,7 @@ package ru.solrudev.okkeipatcher.domain.model.exception
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Result
+import ru.solrudev.okkeipatcher.domain.core.isEmpty
 
 abstract class DomainException(val reason: LocalizedString) : Exception()
 
@@ -44,12 +45,20 @@ class ObbNotFoundException : DomainException(
 	LocalizedString.resource(R.string.error_obb_not_found)
 )
 
-class UninstallException : DomainException(
-	LocalizedString.resource(R.string.error_uninstall)
+class UninstallException(failureCause: LocalizedString) : DomainException(
+	if (failureCause.isEmpty()) {
+		LocalizedString.resource(R.string.error_uninstall)
+	} else {
+		LocalizedString.resource(R.string.error_uninstall_with_reason, failureCause)
+	}
 )
 
 class InstallException(failureCause: LocalizedString) : DomainException(
-	LocalizedString.resource(R.string.error_install, failureCause)
+	if (failureCause.isEmpty()) {
+		LocalizedString.resource(R.string.error_install)
+	} else {
+		LocalizedString.resource(R.string.error_install_with_reason, failureCause)
+	}
 )
 
 class ScriptsCorruptedException : DomainException(

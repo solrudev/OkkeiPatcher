@@ -96,10 +96,7 @@ abstract class Apk(
 		if (updating || !apkRepository.isInstalled) {
 			return@operation
 		}
-		val uninstallResult = apkRepository.uninstall()
-		if (!uninstallResult) {
-			throw UninstallException()
-		}
+		apkRepository.uninstall().onFailure { failure -> throw UninstallException(failure.reason) }
 	}
 
 	private inline fun install(crossinline installApk: suspend () -> Result<Unit>): Operation<Unit> =

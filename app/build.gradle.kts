@@ -154,7 +154,7 @@ dependencies {
 	implementation(libs.pseudoapksigner)
 	implementation(libs.apksig)
 	implementation(libs.zip4j)
-	implementation(libs.simpleinstaller)
+	implementation(libs.ackpine)
 	implementation(libs.jetmvi)
 	implementation(libs.viewbindingpropertydelegate)
 	implementation(libs.progressbutton)

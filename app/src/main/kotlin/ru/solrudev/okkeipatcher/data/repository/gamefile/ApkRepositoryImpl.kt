@@ -18,18 +18,13 @@
 
 package ru.solrudev.okkeipatcher.data.repository.gamefile
 
-import io.github.solrudev.simpleinstaller.PackageInstaller
-import io.github.solrudev.simpleinstaller.PackageUninstaller
-import io.github.solrudev.simpleinstaller.data.notification
-import io.github.solrudev.simpleinstaller.uninstallPackage
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.runInterruptible
 import okio.FileSystem
 import okio.Path
-import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.PatcherEnvironment
-import ru.solrudev.okkeipatcher.data.repository.util.install
 import ru.solrudev.okkeipatcher.data.service.GameInstallationProvider
+import ru.solrudev.okkeipatcher.data.service.PackageInstallerFacade
 import ru.solrudev.okkeipatcher.data.service.factory.ApkZipPackageFactory
 import ru.solrudev.okkeipatcher.data.util.GAME_PACKAGE_NAME
 import ru.solrudev.okkeipatcher.data.util.computeHash
@@ -45,8 +40,7 @@ class ApkRepositoryImpl @Inject constructor(
 	environment: PatcherEnvironment,
 	private val gameInstallationProvider: GameInstallationProvider,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-	private val packageUninstaller: PackageUninstaller,
-	private val packageInstaller: PackageInstaller,
+	private val packageInstaller: PackageInstallerFacade,
 	private val hashRepository: HashRepository,
 	private val apkZipPackageFactory: ApkZipPackageFactory,
 	private val fileSystem: FileSystem
@@ -95,11 +89,6 @@ class ApkRepositoryImpl @Inject constructor(
 		return fileHash == savedHash
 	}
 
-	override suspend fun installTemp() = packageInstaller.install(temp)
-
-	override suspend fun uninstall() = packageUninstaller.uninstallPackage(GAME_PACKAGE_NAME) {
-		notification {
-			icon = R.drawable.ic_notification
-		}
-	}
+	override suspend fun installTemp() = packageInstaller.install(temp, appName = "CHAOS;CHILD")
+	override suspend fun uninstall() = packageInstaller.uninstall(GAME_PACKAGE_NAME)
 }

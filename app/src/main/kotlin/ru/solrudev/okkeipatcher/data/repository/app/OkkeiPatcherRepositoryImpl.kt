@@ -18,7 +18,6 @@
 
 package ru.solrudev.okkeipatcher.data.repository.app
 
-import io.github.solrudev.simpleinstaller.PackageInstaller
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import okio.FileSystem
@@ -29,8 +28,8 @@ import ru.solrudev.okkeipatcher.data.PatcherEnvironment
 import ru.solrudev.okkeipatcher.data.core.InMemoryCache
 import ru.solrudev.okkeipatcher.data.network.api.OkkeiPatcherApi
 import ru.solrudev.okkeipatcher.data.network.model.exception.NetworkNotAvailableException
-import ru.solrudev.okkeipatcher.data.repository.util.install
 import ru.solrudev.okkeipatcher.data.service.FileDownloader
+import ru.solrudev.okkeipatcher.data.service.PackageInstallerFacade
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
@@ -48,7 +47,7 @@ class OkkeiPatcherRepositoryImpl @Inject constructor(
 	private val environment: PatcherEnvironment,
 	private val okkeiPatcherApi: OkkeiPatcherApi,
 	private val fileDownloader: FileDownloader,
-	private val packageInstaller: PackageInstaller,
+	private val packageInstaller: PackageInstallerFacade,
 	private val fileSystem: FileSystem
 ) : OkkeiPatcherRepository {
 
@@ -78,7 +77,7 @@ class OkkeiPatcherRepositoryImpl @Inject constructor(
 	}
 
 	override suspend fun installUpdate() = try {
-		packageInstaller.install(updateFile, immediate = true)
+		packageInstaller.install(updateFile, appName = "Okkei Patcher", immediate = true)
 	} catch (cancellationException: CancellationException) {
 		throw cancellationException
 	} catch (t: Throwable) {

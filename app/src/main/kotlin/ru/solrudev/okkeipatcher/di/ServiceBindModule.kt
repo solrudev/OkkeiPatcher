@@ -44,4 +44,7 @@ interface ServiceBindModule {
 
 	@Binds
 	fun bindFileDownloader(fileDownloader: FileDownloaderImpl): FileDownloader
+
+	@Binds
+	fun bindPackageInstallerFacade(packageInstallerFacade: PackageInstallerFacadeImpl): PackageInstallerFacade
 }

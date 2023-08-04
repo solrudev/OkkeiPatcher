@@ -54,7 +54,8 @@
 	<string name="error_game_not_found">CHAOS;CHILD не найден на этом устройстве.</string>
 	<string name="error_hash_obb_mismatch">OBB повреждён.</string>
 	<string name="error_hash_scripts_mismatch">Скрипты повреждены.</string>
-	<string name="error_install">Произошла ошибка при установке APK.\n%s</string>
+	<string name="error_install">Произошла ошибка при установке APK.</string>
+	<string name="error_install_with_reason">Произошла ошибка при установке APK.\n%s</string>
 	<string name="error_no_free_space">Недостаточно свободного места. Убедитесь, что на устройстве свободно как минимум 2 ГБ.</string>
 	<string name="error_no_network">Отсутствует интернет-соединение.</string>
 	<string name="error_not_patched">Патч ещё не был применён к CHAOS;CHILD.</string>
@@ -62,6 +63,7 @@
 	<string name="error_obb_not_found">Файл OBB не найден.</string>
 	<string name="error_patched">Патч уже применён к CHAOS;CHILD.</string>
 	<string name="error_uninstall">CHAOS;CHILD не был удалён с устройства.</string>
+	<string name="error_uninstall_with_reason">CHAOS;CHILD не был удалён с устройства.\n%s</string>
 	<string name="error_update_app_corrupted">Обновление Okkei Patcher повреждено.</string>
 
 	<!--Notifications-->

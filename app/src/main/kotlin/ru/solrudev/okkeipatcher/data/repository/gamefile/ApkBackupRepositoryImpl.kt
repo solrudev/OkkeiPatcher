@@ -18,15 +18,14 @@
 
 package ru.solrudev.okkeipatcher.data.repository.gamefile
 
-import io.github.solrudev.simpleinstaller.PackageInstaller
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.runInterruptible
 import okio.FileSystem
 import okio.Path
 import ru.solrudev.okkeipatcher.data.PatcherEnvironment
 import ru.solrudev.okkeipatcher.data.repository.gamefile.util.backupPath
-import ru.solrudev.okkeipatcher.data.repository.util.install
 import ru.solrudev.okkeipatcher.data.service.GameInstallationProvider
+import ru.solrudev.okkeipatcher.data.service.PackageInstallerFacade
 import ru.solrudev.okkeipatcher.data.util.computeHash
 import ru.solrudev.okkeipatcher.data.util.copy
 import ru.solrudev.okkeipatcher.di.IoDispatcher
@@ -40,7 +39,7 @@ class ApkBackupRepositoryImpl @Inject constructor(
 	environment: PatcherEnvironment,
 	private val gameInstallationProvider: GameInstallationProvider,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-	private val packageInstaller: PackageInstaller,
+	private val packageInstaller: PackageInstallerFacade,
 	private val hashRepository: HashRepository,
 	private val fileSystem: FileSystem
 ) : ApkBackupRepository {
@@ -81,5 +80,5 @@ class ApkBackupRepositoryImpl @Inject constructor(
 		return fileHash == savedHash
 	}
 
-	override suspend fun installBackup() = packageInstaller.install(backup)
+	override suspend fun installBackup() = packageInstaller.install(backup, appName = "CHAOS;CHILD")
 }

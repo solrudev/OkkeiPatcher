@@ -20,20 +20,26 @@
 
 package ru.solrudev.okkeipatcher.di
 
+import android.content.Context
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import io.github.solrudev.simpleinstaller.PackageInstaller
-import io.github.solrudev.simpleinstaller.PackageUninstaller
+import ru.solrudev.ackpine.installer.PackageInstaller
+import ru.solrudev.ackpine.uninstaller.PackageUninstaller
 
 @InstallIn(SingletonComponent::class)
 @Module
 object PackageInstallerModule {
 
 	@Provides
-	fun providePackageInstaller(): PackageInstaller = PackageInstaller
+	fun providePackageInstaller(@ApplicationContext applicationContext: Context): PackageInstaller {
+		return PackageInstaller.getInstance(applicationContext)
+	}
 
 	@Provides
-	fun providePackageUninstaller(): PackageUninstaller = PackageUninstaller
+	fun providePackageUninstaller(@ApplicationContext applicationContext: Context): PackageUninstaller {
+		return PackageUninstaller.getInstance(applicationContext)
+	}
 }

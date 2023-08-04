@@ -18,7 +18,6 @@
 
 package ru.solrudev.okkeipatcher.data.repository.app
 
-import io.github.solrudev.simpleinstaller.PackageInstaller
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,8 +28,8 @@ import ru.solrudev.okkeipatcher.app.model.OkkeiPatcherUpdateData
 import ru.solrudev.okkeipatcher.app.model.OkkeiPatcherVersion
 import ru.solrudev.okkeipatcher.app.repository.OkkeiPatcherRepository
 import ru.solrudev.okkeipatcher.data.PatcherEnvironment
-import ru.solrudev.okkeipatcher.data.repository.util.install
 import ru.solrudev.okkeipatcher.data.service.OkkeiPatcherApkProvider
+import ru.solrudev.okkeipatcher.data.service.PackageInstallerFacade
 import ru.solrudev.okkeipatcher.data.util.STREAM_COPY_PROGRESS_MAX
 import ru.solrudev.okkeipatcher.data.util.copy
 import ru.solrudev.okkeipatcher.di.IoDispatcher
@@ -49,7 +48,7 @@ class MockOkkeiPatcherRepository @Inject constructor(
 	environment: PatcherEnvironment,
 	private val okkeiPatcherApkProvider: OkkeiPatcherApkProvider,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-	private val packageInstaller: PackageInstaller,
+	private val packageInstaller: PackageInstallerFacade,
 	private val fileSystem: FileSystem
 ) : OkkeiPatcherRepository {
 
@@ -81,7 +80,7 @@ class MockOkkeiPatcherRepository @Inject constructor(
 	}
 
 	override suspend fun installUpdate() = try {
-		packageInstaller.install(updateFile, immediate = true)
+		packageInstaller.install(updateFile, appName = "Okkei Patcher", immediate = true)
 	} catch (cancellationException: CancellationException) {
 		throw cancellationException
 	} catch (t: Throwable) {
