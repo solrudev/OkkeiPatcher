@@ -46,6 +46,7 @@ class PackageInstallerFacadeImpl @Inject constructor(
 	override suspend fun install(apkPath: Path, appName: String, immediate: Boolean): Result<Unit> {
 		val session = packageInstaller.createSession(apkPath.toFile().toUri()) {
 			name = appName
+			requireUserAction = false
 			if (immediate) {
 				confirmation = Confirmation.IMMEDIATE
 			}
