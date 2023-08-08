@@ -57,8 +57,8 @@ Reliable task execution and status tracking is ensured by using
   [Flow](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/)
   for handling asynchronous cancellable tasks and reactive streams
 - Android Jetpack
-    - [DataStore](https://developer.android.com/topic/libraries/architecture/datastore) and Room for
-      data persistence
+    - [DataStore](https://developer.android.com/topic/libraries/architecture/datastore) and
+      [Room](https://developer.android.com/training/data-storage/room) for data persistence
     - [Dagger Hilt](https://dagger.dev/hilt/) for dependency injection
     - [WorkManager](https://developer.android.com/topic/libraries/architecture/workmanager) for
       reliable task execution
