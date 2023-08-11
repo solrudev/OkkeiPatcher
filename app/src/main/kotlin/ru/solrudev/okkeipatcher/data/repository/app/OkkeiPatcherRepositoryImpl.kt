@@ -81,7 +81,7 @@ class OkkeiPatcherRepositoryImpl @Inject constructor(
 	} catch (cancellationException: CancellationException) {
 		throw cancellationException
 	} catch (t: Throwable) {
-		println(t.stackTraceToString())
+		t.printStackTrace()
 		Result.failure(LocalizedString.empty())
 	} finally {
 		_isUpdateInstallPending.value = false
