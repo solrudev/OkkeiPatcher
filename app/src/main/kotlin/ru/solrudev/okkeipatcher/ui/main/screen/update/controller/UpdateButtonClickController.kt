@@ -37,8 +37,7 @@ class UpdateButtonClickController(
 
 	override val trackedState = listOf(
 		UpdateUiState::currentWork,
-		UpdateUiState::state,
-		UpdateUiState::isUpdateAvailable
+		UpdateUiState::state
 	)
 
 	override fun render(uiState: UpdateUiState) {
