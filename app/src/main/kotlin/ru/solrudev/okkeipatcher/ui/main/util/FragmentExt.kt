@@ -21,6 +21,7 @@ package ru.solrudev.okkeipatcher.ui.main.util
 import android.view.View
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
+import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.snackbar.BaseTransientBottomBar.Duration
 import com.google.android.material.snackbar.Snackbar
 import ru.solrudev.okkeipatcher.R
@@ -37,4 +38,9 @@ fun Fragment.showSnackbar(view: View, text: CharSequence, @Duration duration: In
 	Snackbar.make(view, text, duration).apply {
 		bottomNavigationView?.let(::setAnchorView)
 	}.show()
+}
+
+fun Fragment.findNavigationBarView(): NavigationBarView? {
+	return requireActivity().findViewById(R.id.bottomNavigationView_main)
+		?: requireActivity().findViewById(R.id.navigationRailView_main)
 }

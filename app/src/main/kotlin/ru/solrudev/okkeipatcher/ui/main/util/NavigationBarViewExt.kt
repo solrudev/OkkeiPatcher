@@ -16,16 +16,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ru.solrudev.okkeipatcher.ui.main.navhost.view
+package ru.solrudev.okkeipatcher.ui.main.util
 
+import android.graphics.Color
 import com.google.android.material.navigation.NavigationBarView
-import io.github.solrudev.jetmvi.JetView
-import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.ui.main.navhost.model.MainUiState
-import ru.solrudev.okkeipatcher.ui.main.util.setBadgeVisible
 
-class UpdateBadgeView(private val navigationBarView: NavigationBarView?) : JetView<MainUiState> {
-	override fun render(uiState: MainUiState) {
-		navigationBarView?.setBadgeVisible(uiState.isUpdateAvailable, R.id.update_fragment)
+fun NavigationBarView.setBadgeVisible(isBadgeVisible: Boolean, menuItemId: Int) {
+	if (isBadgeVisible) {
+		val color = context.getMaterialColor(com.google.android.material.R.attr.colorError, Color.RED)
+		getOrCreateBadge(menuItemId).apply { backgroundColor = color }
+	} else {
+		removeBadge(menuItemId)
 	}
 }

@@ -31,7 +31,13 @@ import ru.solrudev.okkeipatcher.databinding.FragmentHomeBinding
 import ru.solrudev.okkeipatcher.ui.main.screen.home.controller.RefreshController
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeEvent.ViewHidden
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeUiState
-import ru.solrudev.okkeipatcher.ui.main.screen.home.view.*
+import ru.solrudev.okkeipatcher.ui.main.screen.home.view.ActionsView
+import ru.solrudev.okkeipatcher.ui.main.screen.home.view.GameInfoView
+import ru.solrudev.okkeipatcher.ui.main.screen.home.view.PatchMessageView
+import ru.solrudev.okkeipatcher.ui.main.screen.home.view.PatchStatusView
+import ru.solrudev.okkeipatcher.ui.main.screen.home.view.PatchUpdateBadgeView
+import ru.solrudev.okkeipatcher.ui.main.screen.home.view.RestoreMessageView
+import ru.solrudev.okkeipatcher.ui.main.util.findNavigationBarView
 import ru.solrudev.okkeipatcher.ui.util.animateLayoutChanges
 
 @AndroidEntryPoint
@@ -59,6 +65,10 @@ class HomeFragment : Fragment(R.layout.fragment_home), HostJetView<HomeUiState> 
 		RestoreMessageView(requireContext(), viewLifecycleOwner.lifecycle, viewModel)
 	}
 
+	private val patchUpdateBadgeView by derivedView {
+		PatchUpdateBadgeView(findNavigationBarView())
+	}
+
 	private val refreshController by derivedView {
 		RefreshController(binding.swipeRefreshLayoutHome, viewModel)
 	}
@@ -69,6 +79,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), HostJetView<HomeUiState> 
 		HomeFragment::patchStatusView,
 		HomeFragment::patchMessageView,
 		HomeFragment::restoreMessageView,
+		HomeFragment::patchUpdateBadgeView,
 		HomeFragment::refreshController
 	)
 

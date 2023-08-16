@@ -38,12 +38,17 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.github.solrudev.jetmvi.HostJetView
 import io.github.solrudev.jetmvi.bindDerived
 import io.github.solrudev.jetmvi.derivedView
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNot
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.databinding.FragmentMainBinding
 import ru.solrudev.okkeipatcher.ui.main.navhost.model.MainUiState
 import ru.solrudev.okkeipatcher.ui.main.navhost.view.UpdateBadgeView
+import ru.solrudev.okkeipatcher.ui.main.util.findNavigationBarView
 import ru.solrudev.okkeipatcher.ui.main.util.updateMargins
 import ru.solrudev.okkeipatcher.ui.util.animateLayoutChanges
 import ru.solrudev.okkeipatcher.ui.util.findNavHostToolbar
@@ -53,7 +58,7 @@ import ru.solrudev.okkeipatcher.ui.util.findParentNavController
 class MainFragment : Fragment(R.layout.fragment_main), HostJetView<MainUiState> {
 
 	private val binding by viewBinding(FragmentMainBinding::bind, R.id.container_main)
-	private val updateBadgeView by derivedView { UpdateBadgeView(binding) }
+	private val updateBadgeView by derivedView { UpdateBadgeView(findNavigationBarView()) }
 	private val viewModel: MainViewModel by viewModels()
 	private val topLevelDestinations = setOf(R.id.home_fragment, R.id.update_fragment, R.id.settings_fragment)
 	private val appBarConfiguration = AppBarConfiguration(topLevelDestinations)
