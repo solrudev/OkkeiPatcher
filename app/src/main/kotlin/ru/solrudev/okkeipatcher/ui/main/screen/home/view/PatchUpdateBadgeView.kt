@@ -25,6 +25,9 @@ import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeUiState
 import ru.solrudev.okkeipatcher.ui.main.util.setBadgeVisible
 
 class PatchUpdateBadgeView(private val navigationBarView: NavigationBarView?) : JetView<HomeUiState> {
+
+	override val trackedState = listOf(HomeUiState::patchUpdatesAvailable)
+
 	override fun render(uiState: HomeUiState) {
 		navigationBarView?.setBadgeVisible(uiState.patchUpdatesAvailable, R.id.home_fragment)
 	}
