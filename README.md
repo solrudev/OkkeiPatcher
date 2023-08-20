@@ -85,7 +85,7 @@ Reliable task execution and status tracking is ensured by using
   simple access to view binding
 
 # Building
-**Okkei Patcher** requires Android Studio Flamingo and higher to build (Android Gradle Plugin 8.0+).
+**Okkei Patcher** requires Android Studio Giraffe and higher to build (Android Gradle Plugin 8.1+).
 
 **Okkei Patcher** has two flavors: **prod** and **mock**.
 
