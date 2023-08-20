@@ -1,5 +1,5 @@
 [versions]
-navigation = "2.7.0"
+navigation = "2.6.0"
 room = "2.5.2"
 
 [libraries]
