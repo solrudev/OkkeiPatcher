@@ -1,14 +1,14 @@
 [versions]
-navigation = "2.6.0"
+navigation = "2.7.4"
 room = "2.5.2"
 
 [libraries]
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
-activity-ktx = { module = "androidx.activity:activity-ktx", version = "1.7.2" }
+activity-ktx = { module = "androidx.activity:activity-ktx", version = "1.8.0" }
 fragment-ktx = { module = "androidx.fragment:fragment-ktx", version = "1.6.1" }
 preference-ktx = { module = "androidx.preference:preference-ktx", version = "1.2.1" }
-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version = "2.6.1" }
+lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version = "2.6.2" }
 hilt-work = { module = "androidx.hilt:hilt-work", version = "1.0.0" }
 work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version = "2.8.1" }
 navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigation" }
