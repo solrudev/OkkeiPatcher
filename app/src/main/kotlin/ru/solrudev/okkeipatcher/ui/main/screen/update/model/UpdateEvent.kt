@@ -30,12 +30,12 @@ import ru.solrudev.okkeipatcher.ui.shared.model.HasWork
 import ru.solrudev.okkeipatcher.ui.shared.model.WorkStateEventFactory
 
 sealed interface UpdateEvent : JetEvent {
-	object UpdateDataLoadingStarted : UpdateEvent
+	data object UpdateDataLoadingStarted : UpdateEvent
 	data class UpdateDataRequested(val refresh: Boolean) : UpdateEvent, UpdateEffect
 	data class UpdateDataLoaded(val size: Double, val changelog: List<OkkeiPatcherVersion>) : UpdateEvent
 	data class UpdateStatusChanged(val updateStatus: UpdateStatus) : UpdateEvent
-	object UpdateDownloadRequested : UpdateEvent, UpdateEffect
-	object UpdateInstallRequested : UpdateEvent, UpdateEffect
+	data object UpdateDownloadRequested : UpdateEvent, UpdateEffect
+	data object UpdateInstallRequested : UpdateEvent, UpdateEffect
 	data class StartObservingDownloadWork(override val work: Work) : UpdateEvent, HasWork
 	data class CancelWork(override val work: Work) : UpdateEvent, UpdateEffect, HasWork
 }

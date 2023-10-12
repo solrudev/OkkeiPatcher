@@ -24,26 +24,26 @@ import io.github.solrudev.jetmvi.JetEvent
 sealed interface HomeEvent : JetEvent {
 	data class PatchStatusChanged(val patchStatus: PatchStatus) : HomeEvent
 	data class PatchVersionChanged(val patchVersion: String) : HomeEvent
-	object ViewHidden : HomeEvent
+	data object ViewHidden : HomeEvent
 }
 
 sealed interface PatchEvent : HomeEvent {
 	data class PatchSizeLoaded(val patchSize: Double) : PatchEvent
-	object PatchSizeLoadingStarted : PatchEvent
-	object PatchRequested : PatchEvent, PatchEffect
-	object PatchUpdatesRequested : PatchEvent, PatchEffect
-	object PatchUpdatesLoadingStarted : PatchEvent
-	object PatchUpdatesLoaded : PatchEvent
-	object StartPatch : PatchEvent, PatchEffect
-	object StartPatchMessageShown : PatchEvent
-	object StartPatchMessageDismissed : PatchEvent
+	data object PatchSizeLoadingStarted : PatchEvent
+	data object PatchRequested : PatchEvent, PatchEffect
+	data object PatchUpdatesRequested : PatchEvent, PatchEffect
+	data object PatchUpdatesLoadingStarted : PatchEvent
+	data object PatchUpdatesLoaded : PatchEvent
+	data object StartPatch : PatchEvent, PatchEffect
+	data object StartPatchMessageShown : PatchEvent
+	data object StartPatchMessageDismissed : PatchEvent
 }
 
 sealed interface RestoreEvent : HomeEvent {
-	object RestoreRequested : RestoreEvent
-	object StartRestore : RestoreEvent, RestoreEffect
-	object StartRestoreMessageShown : RestoreEvent
-	object StartRestoreMessageDismissed : RestoreEvent
+	data object RestoreRequested : RestoreEvent
+	data object StartRestore : RestoreEvent, RestoreEffect
+	data object StartRestoreMessageShown : RestoreEvent
+	data object StartRestoreMessageDismissed : RestoreEvent
 }
 
 sealed interface PatchEffect : JetEffect

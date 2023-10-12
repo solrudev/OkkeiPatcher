@@ -34,9 +34,9 @@ sealed interface WorkState {
 
 	data class Running(val status: LocalizedString, val progressData: ProgressData) : WorkState
 	data class Failed(val reason: LocalizedString, val stackTrace: String) : WorkState
-	object Succeeded : WorkState
-	object Canceled : WorkState
-	object Unknown : WorkState
+	data object Succeeded : WorkState
+	data object Canceled : WorkState
+	data object Unknown : WorkState
 
 	/**
 	 * Returns true for [Failed], [Succeeded] and [Canceled] states.

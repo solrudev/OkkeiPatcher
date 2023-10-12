@@ -40,10 +40,10 @@ data class UpdateUiState(
 
 sealed interface UpdateState {
 	sealed interface Updating
-	object Idle : UpdateState
-	object Downloading : UpdateState, Updating
-	object InstallPending : UpdateState
-	object Installing : UpdateState, Updating
+	data object Idle : UpdateState
+	data object Downloading : UpdateState, Updating
+	data object InstallPending : UpdateState
+	data object Installing : UpdateState, Updating
 }
 
 val UpdateUiState.isChangelogVisible: Boolean

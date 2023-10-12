@@ -22,12 +22,12 @@ import ru.solrudev.okkeipatcher.app.model.ProgressData
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 
 sealed interface UpdateStatus {
-	object NoUpdate : UpdateStatus
-	object UpdateAvailable : UpdateStatus
+	data object NoUpdate : UpdateStatus
+	data object UpdateAvailable : UpdateStatus
 	data class Downloading(val progressData: ProgressData) : UpdateStatus
-	object AwaitingInstallation : UpdateStatus
-	object Installing : UpdateStatus
+	data object AwaitingInstallation : UpdateStatus
+	data object Installing : UpdateStatus
 	data class Failed(val reason: LocalizedString) : UpdateStatus
-	object Canceled : UpdateStatus
-	object Unknown : UpdateStatus
+	data object Canceled : UpdateStatus
+	data object Unknown : UpdateStatus
 }

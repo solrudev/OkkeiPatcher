@@ -27,13 +27,13 @@ sealed class Permission(
 	val description: LocalizedString
 ) {
 
-	object Storage : Permission(
+	data object Storage : Permission(
 		id = 0,
 		title = LocalizedString.resource(R.string.permission_storage_title),
 		description = LocalizedString.resource(R.string.permission_storage_description)
 	)
 
-	object Install : Permission(
+	data object Install : Permission(
 		id = 1,
 		title = LocalizedString.resource(R.string.permission_install_title),
 		description = LocalizedString.resource(R.string.permission_install_description)

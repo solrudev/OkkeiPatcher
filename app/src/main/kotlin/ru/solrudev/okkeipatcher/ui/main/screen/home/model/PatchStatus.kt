@@ -22,9 +22,9 @@ import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchStatus.NotPatched
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchStatus.Patched
 
 sealed interface PatchStatus {
-	object Patched : PatchStatus, PersistentPatchStatus
-	object NotPatched : PatchStatus, PersistentPatchStatus
-	object UpdateAvailable : PatchStatus
+	data object Patched : PatchStatus, PersistentPatchStatus
+	data object NotPatched : PatchStatus, PersistentPatchStatus
+	data object UpdateAvailable : PatchStatus
 	data class WorkStarted(val currentStatus: PersistentPatchStatus) : PatchStatus
 }
 

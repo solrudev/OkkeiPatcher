@@ -22,11 +22,11 @@ import io.github.solrudev.jetmvi.JetEffect
 import io.github.solrudev.jetmvi.JetEvent
 
 sealed interface SaveDataAccessEvent : JetEvent {
-	object RationaleShown : SaveDataAccessEvent
-	object RationaleDismissed : SaveDataAccessEvent
-	object PermissionGranted : SaveDataAccessEvent, SaveDataAccessEffect
-	object HandleSaveDataEnabled : SaveDataAccessEvent
-	object ViewHidden : SaveDataAccessEvent
+	data object RationaleShown : SaveDataAccessEvent
+	data object RationaleDismissed : SaveDataAccessEvent
+	data object PermissionGranted : SaveDataAccessEvent, SaveDataAccessEffect
+	data object HandleSaveDataEnabled : SaveDataAccessEvent
+	data object ViewHidden : SaveDataAccessEvent
 }
 
 sealed interface SaveDataAccessEffect : JetEffect

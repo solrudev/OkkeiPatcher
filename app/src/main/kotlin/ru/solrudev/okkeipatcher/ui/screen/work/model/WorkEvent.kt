@@ -29,21 +29,21 @@ import ru.solrudev.okkeipatcher.ui.shared.model.WorkStateEventFactory
 sealed interface WorkEvent : JetEvent {
 	data class CancelWork(override val work: Work) : WorkEvent, WorkEffect, HasWork
 	data class StartObservingWork(override val work: Work) : WorkEvent, WorkEffect, HasWork
-	object CancelRequested : WorkEvent
-	object CancelMessageShown : WorkEvent
-	object CancelMessageDismissed : WorkEvent
-	object ErrorShown : WorkEvent
-	object ErrorDismissed : WorkEvent
-	object AnimationsPlayed : WorkEvent
-	object ViewHidden : WorkEvent
+	data object CancelRequested : WorkEvent
+	data object CancelMessageShown : WorkEvent
+	data object CancelMessageDismissed : WorkEvent
+	data object ErrorShown : WorkEvent
+	data object ErrorDismissed : WorkEvent
+	data object AnimationsPlayed : WorkEvent
+	data object ViewHidden : WorkEvent
 }
 
 sealed interface WorkStateEvent : WorkEvent {
 	data class Running(val status: LocalizedString, val progressData: ProgressData) : WorkStateEvent
 	data class Failed(val reason: LocalizedString, val stackTrace: String) : WorkStateEvent
-	object Succeeded : WorkStateEvent
-	object Canceled : WorkStateEvent
-	object Unknown : WorkStateEvent
+	data object Succeeded : WorkStateEvent
+	data object Canceled : WorkStateEvent
+	data object Unknown : WorkStateEvent
 }
 
 object WorkStateEventFactoryForWorkScreen : WorkStateEventFactory<WorkEvent> {
