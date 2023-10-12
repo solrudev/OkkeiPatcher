@@ -18,8 +18,10 @@
 
 package ru.solrudev.okkeipatcher.ui.screen.permissions
 
+import android.Manifest.permission.POST_NOTIFICATIONS
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.content.Context
 import android.os.Build
@@ -27,6 +29,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions
+import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.activity.result.launch
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
@@ -54,6 +57,12 @@ class PermissionsFragment : Fragment(R.layout.fragment_permissions), JetView<Per
 		val isGranted = permissions.all { (_, isGranted) -> isGranted }
 		if (isGranted) {
 			viewModel.dispatchEvent(PermissionStateChanged(Permission.Storage, isGranted = true))
+		}
+	}
+
+	private val notificationsPermissionLauncher = registerForActivityResult(RequestPermission()) { isGranted ->
+		if (isGranted) {
+			viewModel.dispatchEvent(PermissionStateChanged(Permission.Notifications, isGranted = true))
 		}
 	}
 
@@ -94,6 +103,7 @@ class PermissionsFragment : Fragment(R.layout.fragment_permissions), JetView<Per
 		}
 	}
 
+	@SuppressLint("InlinedApi")
 	private fun requestPermission(permission: Permission) = when (permission) {
 		Permission.Storage -> {
 			val storagePermissions = arrayOf(READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE)
@@ -101,5 +111,6 @@ class PermissionsFragment : Fragment(R.layout.fragment_permissions), JetView<Per
 		}
 
 		Permission.Install -> installPermissionLauncher?.launch()
+		Permission.Notifications -> notificationsPermissionLauncher.launch(POST_NOTIFICATIONS)
 	}
 }

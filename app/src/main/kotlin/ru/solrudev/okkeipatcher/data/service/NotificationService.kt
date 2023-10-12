@@ -21,6 +21,8 @@ package ru.solrudev.okkeipatcher.data.service
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
+import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE
+import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.content.getSystemService
 import androidx.core.graphics.drawable.toBitmap
@@ -59,7 +61,17 @@ class NotificationServiceImpl(
 	private val progressNotificationId = globalProgressNotificationId.incrementAndGet()
 	private val notificationManager = applicationContext.getSystemService<NotificationManager>()
 
-	override fun createForegroundInfo() = ForegroundInfo(progressNotificationId, progressNotificationBuilder.build())
+	override fun createForegroundInfo(): ForegroundInfo {
+		return if (Build.VERSION.SDK_INT >= 34) {
+			ForegroundInfo(
+				progressNotificationId,
+				progressNotificationBuilder.build(),
+				FOREGROUND_SERVICE_TYPE_SPECIAL_USE
+			)
+		} else {
+			ForegroundInfo(progressNotificationId, progressNotificationBuilder.build())
+		}
+	}
 
 	override fun updateProgressNotification(status: LocalizedString, progressData: ProgressData) {
 		val titleString = progressNotificationTitle.resolve(applicationContext)

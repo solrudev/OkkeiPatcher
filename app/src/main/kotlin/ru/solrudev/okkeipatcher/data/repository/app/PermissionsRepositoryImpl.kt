@@ -18,6 +18,7 @@
 
 package ru.solrudev.okkeipatcher.data.repository.app
 
+import android.Manifest.permission.POST_NOTIFICATIONS
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.content.Context
@@ -37,11 +38,14 @@ class PermissionsRepositoryImpl @Inject constructor(
 ) : PermissionsRepository {
 
 	override fun getRequiredPermissions() = buildMap {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
 			put(Permission.Storage, isStoragePermissionGranted())
 		}
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			put(Permission.Install, isInstallPermissionGranted())
+		}
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+			put(Permission.Notifications, isNotificationsPermissionGranted())
 		}
 	}
 
@@ -68,5 +72,12 @@ class PermissionsRepositoryImpl @Inject constructor(
 			return true
 		}
 		return applicationContext.packageManager.canRequestPackageInstalls()
+	}
+
+	override fun isNotificationsPermissionGranted(): Boolean {
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+			return true
+		}
+		return ContextCompat.checkSelfPermission(applicationContext, POST_NOTIFICATIONS) == PERMISSION_GRANTED
 	}
 }

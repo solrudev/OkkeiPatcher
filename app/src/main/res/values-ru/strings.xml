@@ -94,6 +94,8 @@
 	<string name="permissions_description">Данные разрешения необходимы для работы Okkei Patcher</string>
 	<string name="permission_install_title">Установка пакетов</string>
 	<string name="permission_install_description">Для установки и удаления CHAOS;CHILD, а также доступа к игровым файлам</string>
+	<string name="permission_notifications_title">Уведомления</string>
+	<string name="permission_notifications_description">Для отображения уведомлений о ходе процесса и предупреждениях</string>
 	<string name="permission_save_data_access_title">Доступ к сохранениям</string>
 	<string name="permission_save_data_access_description">На Android 11+ требуется специальное разрешение для доступа к игровым сохранениям CHAOS;CHILD. После клика по кнопке \"Выдать\" нажмите \"Использовать эту папку\" и разрешите доступ.</string>
 	<string name="permission_storage_title">Доступ к памяти</string>

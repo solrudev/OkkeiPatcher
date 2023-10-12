@@ -25,4 +25,5 @@ interface PermissionsRepository {
 	fun isSaveDataAccessGranted(): Boolean
 	fun isStoragePermissionGranted(): Boolean
 	fun isInstallPermissionGranted(): Boolean
+	fun isNotificationsPermissionGranted(): Boolean
 }

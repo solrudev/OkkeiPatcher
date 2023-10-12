@@ -100,6 +100,8 @@
 	<string name="permissions_description">These permissions are required for Okkei Patcher to work</string>
 	<string name="permission_install_title">Packages install</string>
 	<string name="permission_install_description">For installing and uninstalling CHAOS;CHILD, game files access</string>
+	<string name="permission_notifications_title">Notifications</string>
+	<string name="permission_notifications_description">For sending notifications about work progress and warnings</string>
 	<string name="permission_save_data_access_title">Save data access</string>
 	<string name="permission_save_data_access_description">On Android 11+ special permission is needed to access CHAOS;CHILD\'s save data. After pressing the Grant button click \"Use this folder\" and then allow access.</string>
 	<string name="permission_storage_title">Storage access</string>

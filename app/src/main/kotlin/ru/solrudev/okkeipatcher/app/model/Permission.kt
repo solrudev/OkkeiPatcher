@@ -38,4 +38,10 @@ sealed class Permission(
 		title = LocalizedString.resource(R.string.permission_install_title),
 		description = LocalizedString.resource(R.string.permission_install_description)
 	)
+
+	data object Notifications : Permission(
+		id = 2,
+		title = LocalizedString.resource(R.string.permission_notifications_title),
+		description = LocalizedString.resource(R.string.permission_notifications_description)
+	)
 }

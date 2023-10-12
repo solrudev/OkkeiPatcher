@@ -16,9 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import android.annotation.SuppressLint
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
-import java.util.*
+import java.util.Properties
 
 val packageName = "ru.solrudev.okkeipatcher"
 
@@ -48,8 +47,7 @@ android {
 	defaultConfig {
 		applicationId = packageName
 		minSdk = 19
-		@SuppressLint("OldTargetApi")
-		targetSdk = 32
+		targetSdk = 34
 		versionCode = 54
 		versionName = "2.0.12"
 		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

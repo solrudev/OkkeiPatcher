@@ -27,7 +27,10 @@
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+	<uses-permission
+		android:name="android.permission.READ_EXTERNAL_STORAGE"
+		android:maxSdkVersion="32" />
 	<uses-permission
 		android:name="android.permission.WRITE_EXTERNAL_STORAGE"
 		tools:ignore="ScopedStorage" />
@@ -52,6 +55,15 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
+
+		<service
+			android:name="androidx.work.impl.foreground.SystemForegroundService"
+			android:foregroundServiceType="specialUse"
+			tools:node="merge">
+			<property
+				android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+				android:value="Long-running process of applying a localization patch to a game, backing up and restoring game data, downloading large amounts of data." />
+		</service>
 
 		<provider
 			android:name="androidx.startup.InitializationProvider"
