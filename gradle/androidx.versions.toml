@@ -1,6 +1,6 @@
 [versions]
 navigation = "2.7.4"
-room = "2.5.2"
+room = "2.6.0"
 
 [libraries]
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
