@@ -127,11 +127,11 @@ dependencies {
 
 	// Jetpack
 	implementation(dagger.hilt.android)
+	implementation(dagger.hilt.work)
 	implementation(androidx.activity.ktx)
 	implementation(androidx.preference.ktx)
 	implementation(androidx.lifecycle.livedata.ktx)
 	implementation(androidx.fragment.ktx)
-	implementation(androidx.hilt.work)
 	implementation(androidx.work.runtime.ktx)
 	implementation(androidx.bundles.navigation)
 	implementation(androidx.room.ktx)
