@@ -38,6 +38,8 @@ import kotlin.math.abs
  */
 class ProgressIcon : ConstraintLayout {
 
+	private val binding: LayoutProgressIconBinding
+
 	init {
 		LayoutInflater.from(context).inflate(R.layout.layout_progress_icon, this, true)
 		binding = LayoutProgressIconBinding.bind(this)
@@ -65,8 +67,6 @@ class ProgressIcon : ConstraintLayout {
 	 */
 	var isProgressVisible = false
 		private set
-
-	private val binding: LayoutProgressIconBinding
 
 	var progress by binding.progressCircularProgressIcon::progress
 	var max by binding.progressCircularProgressIcon::max
