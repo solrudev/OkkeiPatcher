@@ -23,7 +23,6 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import okio.FileSystem
-import okio.Path.Companion.toPath
 import okio.fakefilesystem.FakeFileSystem
 import ru.solrudev.okkeipatcher.data.FailingFileSystem
 import ru.solrudev.okkeipatcher.data.FakePatcherEnvironment
@@ -46,7 +45,7 @@ class ApkBackupRepositoryImplTest {
 	private val installedApkContent = "ApkBackupRepositoryImpl installed APK test string"
 	private val expectedHash = "2ab5b28f253c33adc5b7830e4b7620cbfb4c2c550daf3bf32887b5931a44830d"
 	private val invalidHash = "invalid APK hash"
-	private val gameInstallationProvider = FakeGameInstallationProvider(isInstalled = true, "/game.apk".toPath())
+	private val gameInstallationProvider = FakeGameInstallationProvider()
 	private val hashRepository = FakeHashRepository()
 	private val fileSystem = FakeFileSystem()
 	private val failingFileSystem = FailingFileSystem(fileSystem, allowedFunctions = listOf("delete"))

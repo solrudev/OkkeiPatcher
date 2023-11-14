@@ -19,10 +19,11 @@
 package ru.solrudev.okkeipatcher.data.service
 
 import okio.Path
+import okio.Path.Companion.toPath
 
 class FakeGameInstallationProvider(
-	private val isInstalled: Boolean,
-	private val apkPath: Path
+	private val isInstalled: Boolean = true,
+	private val apkPath: Path = "/game.apk".toPath()
 ) : GameInstallationProvider {
 	override fun isInstalled() = isInstalled
 	override fun getApkPath() = apkPath
