@@ -30,6 +30,7 @@ import ru.solrudev.okkeipatcher.data.repository.FakeHashRepository
 import ru.solrudev.okkeipatcher.data.repository.gamefile.util.backupPath
 import ru.solrudev.okkeipatcher.data.service.FakeGameInstallationProvider
 import ru.solrudev.okkeipatcher.data.service.FakePackageInstallerFacade
+import ru.solrudev.okkeipatcher.data.util.read
 import ru.solrudev.okkeipatcher.data.util.write
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -63,10 +64,11 @@ class ApkBackupRepositoryImplTest {
 	}
 
 	@Test
-	fun `WHEN apk backup is created THEN backup apk exists`() = runTest {
+	fun `WHEN apk backup is created THEN backup apk contains copy of installed apk`() = runTest {
 		val apkBackupRepository = apkBackupRepositoryImpl()
 		apkBackupRepository.createBackup()
-		assertTrue(fileSystem.exists(backupApk))
+		val backupContent = fileSystem.read(backupApk)
+		assertEquals(installedApkContent, backupContent)
 	}
 
 	@Test
@@ -135,11 +137,7 @@ class ApkBackupRepositoryImplTest {
 	private fun TestScope.apkBackupRepositoryImpl(
 		fileSystem: FileSystem = this@ApkBackupRepositoryImplTest.fileSystem
 	) = ApkBackupRepositoryImpl(
-		environment,
-		gameInstallationProvider,
-		StandardTestDispatcher(testScheduler),
-		packageInstaller,
-		hashRepository,
-		fileSystem
+		environment, gameInstallationProvider, StandardTestDispatcher(testScheduler), packageInstaller,
+		hashRepository, fileSystem
 	)
 }
