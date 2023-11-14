@@ -112,10 +112,10 @@ class ApkRepositoryImplTest {
 	}
 
 	@Test
-	fun `WHEN temp apk exists and its hash is invalid THEN temp apk verification fails`() = runTest {
+	fun `WHEN temp apk exists and signed apk hash is invalid THEN temp apk verification fails`() = runTest {
 		val apkRepository = apkRepositoryImpl()
 		fileSystem.write(tempApk, installedApkContent)
-		hashRepository.backupApkHash.persist(invalidHash)
+		hashRepository.signedApkHash.persist(invalidHash)
 		val isTempApkValid = apkRepository.verifyTemp()
 		assertFalse(isTempApkValid)
 	}
