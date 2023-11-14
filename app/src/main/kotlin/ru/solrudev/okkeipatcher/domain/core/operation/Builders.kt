@@ -117,7 +117,7 @@ private class OperationImpl<out R>(
 		.merge()
 
 	override val progressMax = progressMax + operations.sumOf { it.progressMax }
-	private var accumulatedProgress = AtomicInteger(0)
+	private val accumulatedProgress = AtomicInteger(0)
 
 	private val remainingProgress: Int
 		get() = progressMax - accumulatedProgress.get()
