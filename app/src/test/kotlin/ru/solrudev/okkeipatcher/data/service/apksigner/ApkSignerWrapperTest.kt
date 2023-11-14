@@ -65,12 +65,8 @@ class ApkSignerWrapperTest {
 		val apkSigner = ApkSignerWrapper(
 			StandardTestDispatcher(testScheduler), hashRepository, fileSystem, apkSignerImplementation
 		)
-
-		// WHEN
 		apkSigner.sign(inputApkPath)
 		val actualApkContent = fileSystem.read(inputApkPath)
-
-		// THEN
 		assertEquals(signedApkContent, actualApkContent)
 	}
 
@@ -79,12 +75,8 @@ class ApkSignerWrapperTest {
 		val apkSigner = ApkSignerWrapper(
 			StandardTestDispatcher(testScheduler), hashRepository, fileSystem, apkSignerImplementation
 		)
-
-		// WHEN
 		apkSigner.sign(inputApkPath)
 		val actualSignedApkHash = hashRepository.signedApkHash.retrieve()
-
-		// THEN
 		assertEquals(expectedSignedApkHash, actualSignedApkHash)
 	}
 
@@ -93,15 +85,11 @@ class ApkSignerWrapperTest {
 		val apkSigner = ApkSignerWrapper(
 			StandardTestDispatcher(testScheduler), hashRepository, failingFileSystem, apkSignerImplementation
 		)
-
-		// WHEN
 		try {
 			apkSigner.sign(inputApkPath)
 		} catch (_: Throwable) {
 		}
 		val actualInputApkContent = fileSystem.read(inputApkPath)
-
-		// THEN
 		assertEquals(inputApkContent, actualInputApkContent)
 	}
 }
