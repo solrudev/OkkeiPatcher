@@ -26,6 +26,7 @@ import ru.solrudev.okkeipatcher.data.PatcherEnvironment
 import ru.solrudev.okkeipatcher.data.service.GameInstallationProvider
 import ru.solrudev.okkeipatcher.data.service.PackageInstallerFacade
 import ru.solrudev.okkeipatcher.data.service.factory.ApkZipPackageFactory
+import ru.solrudev.okkeipatcher.data.util.GAME_NAME
 import ru.solrudev.okkeipatcher.data.util.GAME_PACKAGE_NAME
 import ru.solrudev.okkeipatcher.data.util.computeHash
 import ru.solrudev.okkeipatcher.di.IoDispatcher
@@ -89,6 +90,6 @@ class ApkRepositoryImpl @Inject constructor(
 		return fileHash == savedHash
 	}
 
-	override suspend fun installTemp() = packageInstaller.install(temp, appName = "CHAOS;CHILD")
+	override suspend fun installTemp() = packageInstaller.install(temp, appName = GAME_NAME)
 	override suspend fun uninstall() = packageInstaller.uninstall(GAME_PACKAGE_NAME)
 }

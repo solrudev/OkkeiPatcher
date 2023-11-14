@@ -26,6 +26,7 @@ import ru.solrudev.okkeipatcher.data.PatcherEnvironment
 import ru.solrudev.okkeipatcher.data.repository.gamefile.util.backupPath
 import ru.solrudev.okkeipatcher.data.service.GameInstallationProvider
 import ru.solrudev.okkeipatcher.data.service.PackageInstallerFacade
+import ru.solrudev.okkeipatcher.data.util.GAME_NAME
 import ru.solrudev.okkeipatcher.data.util.computeHash
 import ru.solrudev.okkeipatcher.data.util.copy
 import ru.solrudev.okkeipatcher.di.IoDispatcher
@@ -80,5 +81,5 @@ class ApkBackupRepositoryImpl @Inject constructor(
 		return fileHash == savedHash
 	}
 
-	override suspend fun installBackup() = packageInstaller.install(backup, appName = "CHAOS;CHILD")
+	override suspend fun installBackup() = packageInstaller.install(backup, appName = GAME_NAME)
 }
