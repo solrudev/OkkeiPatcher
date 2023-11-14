@@ -21,12 +21,13 @@ package ru.solrudev.okkeipatcher.data.service.apksigner
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
-import okio.ForwardingFileSystem
-import okio.IOException
 import okio.Path
 import okio.Path.Companion.toPath
 import okio.fakefilesystem.FakeFileSystem
+import ru.solrudev.okkeipatcher.data.FailingFileSystem
 import ru.solrudev.okkeipatcher.data.repository.FakeHashRepository
+import ru.solrudev.okkeipatcher.data.util.read
+import ru.solrudev.okkeipatcher.data.util.write
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -40,22 +41,17 @@ class ApkSignerWrapperTest {
 	private val expectedSignedApkHash = "b83021ee45ae504358eb1e3f1550c5dd3b54b199008ce2131123bca6f7827a50"
 	private val hashRepository = FakeHashRepository()
 	private val fileSystem = FakeFileSystem()
-
-	private val failingFileSystem = object : ForwardingFileSystem(fileSystem) {
-		override fun onPathParameter(path: Path, functionName: String, parameterName: String): Path {
-			throw IOException("synthetic failure")
-		}
-	}
+	private val failingFileSystem = FailingFileSystem(fileSystem)
 
 	private val apkSignerImplementation = object : ApkSignerImplementation {
 		override suspend fun sign(apk: Path, outputApk: Path) {
-			outputApk.write(signedApkContent)
+			fileSystem.write(outputApk, signedApkContent)
 		}
 	}
 
 	@BeforeTest
 	fun setUp() {
-		inputApkPath.write(inputApkContent)
+		fileSystem.write(inputApkPath, inputApkContent)
 	}
 
 	@AfterTest
@@ -72,7 +68,7 @@ class ApkSignerWrapperTest {
 
 		// WHEN
 		apkSigner.sign(inputApkPath)
-		val actualApkContent = inputApkPath.read()
+		val actualApkContent = fileSystem.read(inputApkPath)
 
 		// THEN
 		assertEquals(signedApkContent, actualApkContent)
@@ -103,17 +99,9 @@ class ApkSignerWrapperTest {
 			apkSigner.sign(inputApkPath)
 		} catch (_: Throwable) {
 		}
-		val actualInputApkContent = inputApkPath.read()
+		val actualInputApkContent = fileSystem.read(inputApkPath)
 
 		// THEN
 		assertEquals(inputApkContent, actualInputApkContent)
-	}
-
-	private fun Path.read(): String {
-		return fileSystem.read(this) { readUtf8() }
-	}
-
-	private fun Path.write(content: String) {
-		fileSystem.write(this) { writeUtf8(content) }
 	}
 }
