@@ -28,9 +28,12 @@ kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-androi
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 okio-fakefilesystem = { module = "com.squareup.okio:okio-fakefilesystem", version.ref = "okio" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+junit-platform-commons = { module = "org.junit.platform:junit-platform-commons", version = "1.10.1" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version = "5.10.1" }
 
 [bundles]
 retrofit = ["retrofit", "retrofit-converter-moshi"]
+junit = ["junit-platform-commons", "junit-jupiter"]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradleplugin" }

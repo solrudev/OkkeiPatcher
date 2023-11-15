@@ -163,6 +163,7 @@ dependencies {
 	debugImplementation(androidx.multidex)
 
 	testImplementation(libs.kotlin.test)
+	testImplementation(libs.bundles.junit)
 	testImplementation(libs.okio.fakefilesystem)
 	testImplementation(libs.kotlinx.coroutines.test)
 	androidTestImplementation(androidx.test.ext.junit)
