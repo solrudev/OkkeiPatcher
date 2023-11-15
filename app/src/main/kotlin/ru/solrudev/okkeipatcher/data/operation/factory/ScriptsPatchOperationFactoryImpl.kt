@@ -25,6 +25,7 @@ import ru.solrudev.okkeipatcher.data.operation.ScriptsPatchOperation
 import ru.solrudev.okkeipatcher.data.service.FileDownloader
 import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.operation.factory.ScriptsPatchOperationFactory
+import ru.solrudev.okkeipatcher.domain.repository.HashRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFile
 import javax.inject.Inject
@@ -33,6 +34,7 @@ class ScriptsPatchOperationFactoryImpl @Inject constructor(
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	private val environment: PatcherEnvironment,
 	private val apkRepository: ApkRepository,
+	private val hashRepository: HashRepository,
 	private val fileDownloader: FileDownloader,
 	private val fileSystem: FileSystem
 ) : ScriptsPatchOperationFactory {
@@ -40,6 +42,7 @@ class ScriptsPatchOperationFactoryImpl @Inject constructor(
 	override fun create(scriptsPatchFile: PatchFile) = ScriptsPatchOperation(
 		scriptsPatchFile,
 		apkRepository,
+		hashRepository.signedApkHash,
 		ioDispatcher,
 		environment.externalFilesPath,
 		fileDownloader,

@@ -25,9 +25,7 @@ import net.lingala.zip4j.ZipFile
 import okio.FileSystem
 import okio.Path
 import ru.solrudev.okkeipatcher.data.service.util.use
-import ru.solrudev.okkeipatcher.data.util.computeHash
 import ru.solrudev.okkeipatcher.di.IoDispatcher
-import ru.solrudev.okkeipatcher.domain.repository.HashRepository
 import javax.inject.Inject
 
 interface ApkSigner {
@@ -38,7 +36,6 @@ interface ApkSigner {
 @Reusable
 class ApkSignerWrapper @Inject constructor(
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-	private val hashRepository: HashRepository,
 	private val fileSystem: FileSystem,
 	private val apkSigner: ApkSignerImplementation
 ) : ApkSigner {
@@ -47,10 +44,6 @@ class ApkSignerWrapper @Inject constructor(
 		val outputApk = apkPath.parent!! / "${apkPath.name.substringBeforeLast('.')}-signed.apk"
 		try {
 			apkSigner.sign(apkPath, outputApk)
-			val outputApkHash = runInterruptible(ioDispatcher) {
-				fileSystem.computeHash(outputApk)
-			}
-			hashRepository.signedApkHash.persist(outputApkHash)
 			fileSystem.atomicMove(outputApk, apkPath)
 		} catch (t: Throwable) {
 			fileSystem.delete(outputApk)

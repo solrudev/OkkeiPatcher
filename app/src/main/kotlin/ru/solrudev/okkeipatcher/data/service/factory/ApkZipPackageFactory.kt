@@ -19,6 +19,7 @@
 package ru.solrudev.okkeipatcher.data.service.factory
 
 import kotlinx.coroutines.CoroutineDispatcher
+import okio.FileSystem
 import okio.Path
 import ru.solrudev.okkeipatcher.data.service.ApkZipPackage
 import ru.solrudev.okkeipatcher.data.service.apksigner.ApkSigner
@@ -32,10 +33,11 @@ interface ApkZipPackageFactory {
 
 class ApkZipPackageFactoryImpl @Inject constructor(
 	private val apkSigner: ApkSigner,
-	@IoDispatcher private val ioDispatcher: CoroutineDispatcher
+	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+	private val fileSystem: FileSystem
 ) : ApkZipPackageFactory {
 
 	override fun create(tempPath: Path): ZipPackage {
-		return ApkZipPackage(tempPath, apkSigner, ioDispatcher)
+		return ApkZipPackage(tempPath, apkSigner, ioDispatcher, fileSystem)
 	}
 }

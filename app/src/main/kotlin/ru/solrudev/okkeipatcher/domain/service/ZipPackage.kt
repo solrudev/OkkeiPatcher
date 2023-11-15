@@ -25,4 +25,5 @@ interface ZipPackage : AutoCloseable {
 	suspend fun removeFiles(files: List<String>)
 	suspend fun sign()
 	suspend fun removeSignature()
+	suspend fun computeHash(): String
 }

@@ -32,6 +32,7 @@ import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.aggregateOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.core.operation.status
+import ru.solrudev.okkeipatcher.domain.core.persistence.Persistable
 import ru.solrudev.okkeipatcher.domain.model.exception.ScriptsCorruptedException
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFile
@@ -39,6 +40,7 @@ import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFile
 class ScriptsPatchOperation(
 	private val scriptsPatchFile: PatchFile,
 	private val apkRepository: ApkRepository,
+	private val signedApkHash: Persistable<String>,
 	private val ioDispatcher: CoroutineDispatcher,
 	externalDir: Path,
 	private val fileDownloader: FileDownloader,
@@ -106,6 +108,8 @@ class ScriptsPatchOperation(
 			status(R.string.status_signing_apk)
 			apk.removeSignature()
 			apk.sign()
+			val hash = apk.computeHash()
+			signedApkHash.persist(hash)
 		}
 	}
 }

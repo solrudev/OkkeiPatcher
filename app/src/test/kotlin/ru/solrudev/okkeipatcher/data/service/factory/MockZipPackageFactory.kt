@@ -28,5 +28,6 @@ class MockZipPackageFactory : ApkZipPackageFactory {
 		override suspend fun sign() {}
 		override suspend fun removeSignature() {}
 		override fun close() {}
+		override suspend fun computeHash() = ""
 	}
 }

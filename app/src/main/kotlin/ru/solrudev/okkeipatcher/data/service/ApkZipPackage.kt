@@ -22,14 +22,17 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.runInterruptible
 import net.lingala.zip4j.ZipFile
 import net.lingala.zip4j.model.ZipParameters
+import okio.FileSystem
 import okio.Path
 import ru.solrudev.okkeipatcher.data.service.apksigner.ApkSigner
+import ru.solrudev.okkeipatcher.data.util.computeHash
 import ru.solrudev.okkeipatcher.domain.service.ZipPackage
 
 class ApkZipPackage(
 	private val apkPath: Path,
 	private val apkSigner: ApkSigner,
-	private val ioDispatcher: CoroutineDispatcher
+	private val ioDispatcher: CoroutineDispatcher,
+	private val fileSystem: FileSystem
 ) : ZipPackage {
 
 	private val zipFile = ZipFile(apkPath.toString())
@@ -54,5 +57,9 @@ class ApkZipPackage(
 
 	override suspend fun removeSignature() {
 		apkSigner.removeSignature(apkPath)
+	}
+
+	override suspend fun computeHash() = runInterruptible(ioDispatcher) {
+		fileSystem.computeHash(apkPath)
 	}
 }

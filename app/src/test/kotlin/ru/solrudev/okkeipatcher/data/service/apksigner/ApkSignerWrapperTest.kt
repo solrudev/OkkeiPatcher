@@ -25,7 +25,6 @@ import okio.Path
 import okio.Path.Companion.toPath
 import okio.fakefilesystem.FakeFileSystem
 import ru.solrudev.okkeipatcher.data.FailingFileSystem
-import ru.solrudev.okkeipatcher.data.repository.FakeHashRepository
 import ru.solrudev.okkeipatcher.data.util.read
 import ru.solrudev.okkeipatcher.data.util.write
 import kotlin.test.AfterTest
@@ -38,8 +37,6 @@ class ApkSignerWrapperTest {
 	private val inputApkPath = "/file.apk".toPath()
 	private val inputApkContent = "ApkSignerWrapper input test string"
 	private val signedApkContent = "ApkSignerWrapper output test string"
-	private val expectedSignedApkHash = "b83021ee45ae504358eb1e3f1550c5dd3b54b199008ce2131123bca6f7827a50"
-	private val hashRepository = FakeHashRepository()
 	private val fileSystem = FakeFileSystem()
 	private val failingFileSystem = FailingFileSystem(fileSystem)
 
@@ -57,13 +54,12 @@ class ApkSignerWrapperTest {
 	@AfterTest
 	fun tearDown() = runBlocking {
 		fileSystem.checkNoOpenFiles()
-		hashRepository.clear()
 	}
 
 	@Test
 	fun `WHEN apk is signed THEN apk contains signed apk content`() = runTest {
 		val apkSigner = ApkSignerWrapper(
-			StandardTestDispatcher(testScheduler), hashRepository, fileSystem, apkSignerImplementation
+			StandardTestDispatcher(testScheduler), fileSystem, apkSignerImplementation
 		)
 		apkSigner.sign(inputApkPath)
 		val actualApkContent = fileSystem.read(inputApkPath)
@@ -71,19 +67,9 @@ class ApkSignerWrapperTest {
 	}
 
 	@Test
-	fun `WHEN apk is signed THEN signedApkHash in hash repository contains signed apk hash`() = runTest {
-		val apkSigner = ApkSignerWrapper(
-			StandardTestDispatcher(testScheduler), hashRepository, fileSystem, apkSignerImplementation
-		)
-		apkSigner.sign(inputApkPath)
-		val actualSignedApkHash = hashRepository.signedApkHash.retrieve()
-		assertEquals(expectedSignedApkHash, actualSignedApkHash)
-	}
-
-	@Test
 	fun `WHEN apk is signed and exception is thrown THEN apk remains unchanged`() = runTest {
 		val apkSigner = ApkSignerWrapper(
-			StandardTestDispatcher(testScheduler), hashRepository, failingFileSystem, apkSignerImplementation
+			StandardTestDispatcher(testScheduler), failingFileSystem, apkSignerImplementation
 		)
 		try {
 			apkSigner.sign(inputApkPath)
