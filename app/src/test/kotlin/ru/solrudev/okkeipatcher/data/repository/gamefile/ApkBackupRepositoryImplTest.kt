@@ -64,6 +64,25 @@ class ApkBackupRepositoryImplTest {
 	}
 
 	@Test
+	fun `WHEN apk backup is deleted THEN it doesn't exist`() = runTest {
+		val apkBackupRepository = apkBackupRepositoryImpl()
+		fileSystem.write(backupApk, "some content")
+		apkBackupRepository.deleteBackup()
+		assertFalse(fileSystem.exists(backupApk))
+	}
+
+	@Test
+	fun `backupExists returns apk backup existence`() = runTest {
+		val apkBackupRepository = apkBackupRepositoryImpl()
+		fileSystem.write(backupApk, "some content")
+		val exists = apkBackupRepository.backupExists
+		fileSystem.delete(backupApk)
+		val notExists = apkBackupRepository.backupExists
+		assertTrue(exists)
+		assertFalse(notExists)
+	}
+
+	@Test
 	fun `WHEN apk backup is created THEN backup apk contains copy of installed apk`() = runTest {
 		val apkBackupRepository = apkBackupRepositoryImpl()
 		apkBackupRepository.createBackup()

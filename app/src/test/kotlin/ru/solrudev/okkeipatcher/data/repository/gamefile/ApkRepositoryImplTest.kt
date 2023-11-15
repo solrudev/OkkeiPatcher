@@ -65,6 +65,25 @@ class ApkRepositoryImplTest {
 	}
 
 	@Test
+	fun `WHEN temp apk is deleted THEN it doesn't exist`() = runTest {
+		val apkRepository = apkRepositoryImpl()
+		fileSystem.write(tempApk, "some content")
+		apkRepository.deleteTemp()
+		assertFalse(fileSystem.exists(tempApk))
+	}
+
+	@Test
+	fun `tempExists returns temp apk existence`() = runTest {
+		val apkRepository = apkRepositoryImpl()
+		fileSystem.write(tempApk, "some content")
+		val exists = apkRepository.tempExists
+		fileSystem.delete(tempApk)
+		val notExists = apkRepository.tempExists
+		assertTrue(exists)
+		assertFalse(notExists)
+	}
+
+	@Test
 	fun `WHEN apk temp copy is created THEN temp apk contains copy of installed apk`() = runTest {
 		val apkRepository = apkRepositoryImpl()
 		apkRepository.createTemp()
