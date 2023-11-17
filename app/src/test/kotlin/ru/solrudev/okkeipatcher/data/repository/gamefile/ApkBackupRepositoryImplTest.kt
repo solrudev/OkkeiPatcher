@@ -106,9 +106,8 @@ class ApkBackupRepositoryImplTest {
 
 	@Test
 	fun `WHEN apk backup fails with exception THEN backup apk doesn't exist`() = testScope.runTest {
-		try {
+		runCatching {
 			failingApkBackupRepository.createBackup()
-		} catch (_: Throwable) {
 		}
 		assertFalse(fileSystem.exists(backupApk))
 	}
@@ -117,9 +116,8 @@ class ApkBackupRepositoryImplTest {
 	fun `WHEN backup apk exists and apk backup fails with exception THEN backup apk doesn't exist`() =
 		testScope.runTest {
 			fileSystem.write(backupApk, installedApkContent)
-			try {
+			runCatching {
 				failingApkBackupRepository.createBackup()
-			} catch (_: Throwable) {
 			}
 			assertFalse(fileSystem.exists(backupApk))
 		}

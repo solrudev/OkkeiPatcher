@@ -100,9 +100,8 @@ class ApkRepositoryImplTest {
 
 	@Test
 	fun `WHEN apk temp copy creation fails with exception THEN temp apk doesn't exist`() = testScope.runTest {
-		try {
+		runCatching {
 			failingApkRepository.createTemp()
-		} catch (_: Throwable) {
 		}
 		assertFalse(fileSystem.exists(tempApk))
 	}
@@ -121,9 +120,8 @@ class ApkRepositoryImplTest {
 	fun `WHEN temp apk exists and apk temp copy creation fails with exception THEN temp apk doesn't exist`() =
 		testScope.runTest {
 			fileSystem.write(tempApk, installedApkContent)
-			try {
+			runCatching {
 				failingApkRepository.createTemp()
-			} catch (_: Throwable) {
 			}
 			assertFalse(fileSystem.exists(tempApk))
 		}

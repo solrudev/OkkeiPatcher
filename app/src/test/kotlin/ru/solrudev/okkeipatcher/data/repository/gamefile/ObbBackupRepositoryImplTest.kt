@@ -108,9 +108,8 @@ class ObbBackupRepositoryImplTest {
 	@Test
 	fun `WHEN obb backup fails with exception THEN backup obb doesn't exist`() = testScope.runTest {
 		fileSystem.write(obb, obbContent)
-		try {
+		runCatching {
 			failingObbBackupRepository.createBackup().invoke()
-		} catch (_: Throwable) {
 		}
 		assertFalse(fileSystem.exists(backupObb))
 	}
@@ -120,9 +119,8 @@ class ObbBackupRepositoryImplTest {
 		testScope.runTest {
 			fileSystem.write(obb, obbContent)
 			fileSystem.write(backupObb, obbContent)
-			try {
+			runCatching {
 				failingObbBackupRepository.createBackup().invoke()
-			} catch (_: Throwable) {
 			}
 			assertFalse(fileSystem.exists(backupObb))
 		}
@@ -147,9 +145,8 @@ class ObbBackupRepositoryImplTest {
 	@Test
 	fun `WHEN obb restore fails with exception THEN obb doesn't exist`() = testScope.runTest {
 		fileSystem.write(backupObb, obbContent)
-		try {
+		runCatching {
 			failingObbBackupRepository.restoreBackup().invoke()
-		} catch (_: Throwable) {
 		}
 		assertFalse(fileSystem.exists(obb))
 	}
@@ -158,9 +155,8 @@ class ObbBackupRepositoryImplTest {
 	fun `WHEN obb exists and obb restore fails with exception THEN obb doesn't exist`() = testScope.runTest {
 		fileSystem.write(backupObb, obbContent)
 		fileSystem.write(obb, obbContent)
-		try {
+		runCatching {
 			failingObbBackupRepository.restoreBackup().invoke()
-		} catch (_: Throwable) {
 		}
 		assertFalse(fileSystem.exists(obb))
 	}
