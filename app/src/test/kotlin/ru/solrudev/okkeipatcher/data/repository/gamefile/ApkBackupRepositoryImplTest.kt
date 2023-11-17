@@ -22,7 +22,6 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
-import okio.FileSystem
 import okio.fakefilesystem.FakeFileSystem
 import ru.solrudev.okkeipatcher.data.FailingFileSystem
 import ru.solrudev.okkeipatcher.data.FakePatcherEnvironment
@@ -51,6 +50,17 @@ class ApkBackupRepositoryImplTest {
 	private val fileSystem = FakeFileSystem()
 	private val failingFileSystem = FailingFileSystem(fileSystem, allowedFunctions = listOf("delete"))
 	private val packageInstaller = FakePackageInstallerFacade()
+	private val testScope = TestScope()
+
+	private val apkBackupRepository = ApkBackupRepositoryImpl(
+		environment, gameInstallationProvider, StandardTestDispatcher(testScope.testScheduler), packageInstaller,
+		hashRepository, fileSystem
+	)
+
+	private val failingApkBackupRepository = ApkBackupRepositoryImpl(
+		environment, gameInstallationProvider, StandardTestDispatcher(testScope.testScheduler), packageInstaller,
+		hashRepository, failingFileSystem
+	)
 
 	@BeforeTest
 	fun setUp() {
@@ -64,16 +74,14 @@ class ApkBackupRepositoryImplTest {
 	}
 
 	@Test
-	fun `WHEN apk backup is deleted THEN it doesn't exist`() = runTest {
-		val apkBackupRepository = apkBackupRepositoryImpl()
+	fun `WHEN apk backup is deleted THEN it doesn't exist`() {
 		fileSystem.write(backupApk, "some content")
 		apkBackupRepository.deleteBackup()
 		assertFalse(fileSystem.exists(backupApk))
 	}
 
 	@Test
-	fun `backupExists returns apk backup existence`() = runTest {
-		val apkBackupRepository = apkBackupRepositoryImpl()
+	fun `backupExists returns apk backup existence`() {
 		fileSystem.write(backupApk, "some content")
 		val exists = apkBackupRepository.backupExists
 		fileSystem.delete(backupApk)
@@ -83,53 +91,48 @@ class ApkBackupRepositoryImplTest {
 	}
 
 	@Test
-	fun `WHEN apk backup is created THEN backup apk contains copy of installed apk`() = runTest {
-		val apkBackupRepository = apkBackupRepositoryImpl()
+	fun `WHEN apk backup is created THEN backup apk contains copy of installed apk`() = testScope.runTest {
 		apkBackupRepository.createBackup()
 		val backupContent = fileSystem.read(backupApk)
 		assertEquals(installedApkContent, backupContent)
 	}
 
 	@Test
-	fun `WHEN apk backup is created THEN backupApkHash in hash repository contains apk hash`() = runTest {
-		val apkBackupRepository = apkBackupRepositoryImpl()
+	fun `WHEN apk backup is created THEN backupApkHash in hash repository contains apk hash`() = testScope.runTest {
 		apkBackupRepository.createBackup()
 		val actualHash = hashRepository.backupApkHash.retrieve()
 		assertEquals(expectedHash, actualHash)
 	}
 
 	@Test
-	fun `WHEN apk backup fails with exception THEN backup apk doesn't exist`() = runTest {
-		val apkBackupRepository = apkBackupRepositoryImpl(failingFileSystem)
+	fun `WHEN apk backup fails with exception THEN backup apk doesn't exist`() = testScope.runTest {
 		try {
-			apkBackupRepository.createBackup()
+			failingApkBackupRepository.createBackup()
 		} catch (_: Throwable) {
 		}
 		assertFalse(fileSystem.exists(backupApk))
 	}
 
 	@Test
-	fun `WHEN backup apk exists and apk backup fails with exception THEN backup apk doesn't exist`() = runTest {
-		val apkBackupRepository = apkBackupRepositoryImpl(failingFileSystem)
-		fileSystem.write(backupApk, installedApkContent)
-		try {
-			apkBackupRepository.createBackup()
-		} catch (_: Throwable) {
+	fun `WHEN backup apk exists and apk backup fails with exception THEN backup apk doesn't exist`() =
+		testScope.runTest {
+			fileSystem.write(backupApk, installedApkContent)
+			try {
+				failingApkBackupRepository.createBackup()
+			} catch (_: Throwable) {
+			}
+			assertFalse(fileSystem.exists(backupApk))
 		}
-		assertFalse(fileSystem.exists(backupApk))
-	}
 
 	@Test
-	fun `WHEN backup apk doesn't exist THEN backup apk verification fails`() = runTest {
-		val apkBackupRepository = apkBackupRepositoryImpl()
+	fun `WHEN backup apk doesn't exist THEN backup apk verification fails`() = testScope.runTest {
 		fileSystem.delete(backupApk)
 		val isBackupApkValid = apkBackupRepository.verifyBackup()
 		assertFalse(isBackupApkValid)
 	}
 
 	@Test
-	fun `WHEN backup apk exists and its hash is invalid THEN backup apk verification fails`() = runTest {
-		val apkBackupRepository = apkBackupRepositoryImpl()
+	fun `WHEN backup apk exists and its hash is invalid THEN backup apk verification fails`() = testScope.runTest {
 		fileSystem.write(backupApk, installedApkContent)
 		hashRepository.backupApkHash.persist(invalidHash)
 		val isBackupApkValid = apkBackupRepository.verifyBackup()
@@ -137,26 +140,17 @@ class ApkBackupRepositoryImplTest {
 	}
 
 	@Test
-	fun `WHEN backup apk exists and its hash is empty THEN backup apk verification fails`() = runTest {
-		val apkBackupRepository = apkBackupRepositoryImpl()
+	fun `WHEN backup apk exists and its hash is empty THEN backup apk verification fails`() = testScope.runTest {
 		fileSystem.write(backupApk, installedApkContent)
 		val isBackupApkValid = apkBackupRepository.verifyBackup()
 		assertFalse(isBackupApkValid)
 	}
 
 	@Test
-	fun `WHEN backup apk exists and its hash is valid THEN backup apk verification succeeds`() = runTest {
-		val apkBackupRepository = apkBackupRepositoryImpl()
+	fun `WHEN backup apk exists and its hash is valid THEN backup apk verification succeeds`() = testScope.runTest {
 		fileSystem.write(backupApk, installedApkContent)
 		hashRepository.backupApkHash.persist(expectedHash)
 		val isBackupApkValid = apkBackupRepository.verifyBackup()
 		assertTrue(isBackupApkValid)
 	}
-
-	private fun TestScope.apkBackupRepositoryImpl(
-		fileSystem: FileSystem = this@ApkBackupRepositoryImplTest.fileSystem
-	) = ApkBackupRepositoryImpl(
-		environment, gameInstallationProvider, StandardTestDispatcher(testScheduler), packageInstaller,
-		hashRepository, fileSystem
-	)
 }

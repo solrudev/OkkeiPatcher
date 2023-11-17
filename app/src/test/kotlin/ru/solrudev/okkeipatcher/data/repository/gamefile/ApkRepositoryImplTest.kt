@@ -22,7 +22,6 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
-import okio.FileSystem
 import okio.fakefilesystem.FakeFileSystem
 import ru.solrudev.okkeipatcher.data.FailingFileSystem
 import ru.solrudev.okkeipatcher.data.FakePatcherEnvironment
@@ -52,6 +51,17 @@ class ApkRepositoryImplTest {
 	private val fileSystem = FakeFileSystem()
 	private val failingFileSystem = FailingFileSystem(fileSystem, allowedFunctions = listOf("delete"))
 	private val packageInstaller = FakePackageInstallerFacade()
+	private val testScope = TestScope()
+
+	private val apkRepository = ApkRepositoryImpl(
+		environment, gameInstallationProvider, StandardTestDispatcher(testScope.testScheduler), packageInstaller,
+		hashRepository, apkZipPackageFactory, fileSystem
+	)
+
+	private val failingApkRepository = ApkRepositoryImpl(
+		environment, gameInstallationProvider, StandardTestDispatcher(testScope.testScheduler), packageInstaller,
+		hashRepository, apkZipPackageFactory, failingFileSystem
+	)
 
 	@BeforeTest
 	fun setUp() {
@@ -65,16 +75,14 @@ class ApkRepositoryImplTest {
 	}
 
 	@Test
-	fun `WHEN temp apk is deleted THEN it doesn't exist`() = runTest {
-		val apkRepository = apkRepositoryImpl()
+	fun `WHEN temp apk is deleted THEN it doesn't exist`() {
 		fileSystem.write(tempApk, "some content")
 		apkRepository.deleteTemp()
 		assertFalse(fileSystem.exists(tempApk))
 	}
 
 	@Test
-	fun `tempExists returns temp apk existence`() = runTest {
-		val apkRepository = apkRepositoryImpl()
+	fun `tempExists returns temp apk existence`() {
 		fileSystem.write(tempApk, "some content")
 		val exists = apkRepository.tempExists
 		fileSystem.delete(tempApk)
@@ -84,55 +92,51 @@ class ApkRepositoryImplTest {
 	}
 
 	@Test
-	fun `WHEN apk temp copy is created THEN temp apk contains copy of installed apk`() = runTest {
-		val apkRepository = apkRepositoryImpl()
+	fun `WHEN apk temp copy is created THEN temp apk contains copy of installed apk`() = testScope.runTest {
 		apkRepository.createTemp()
 		val tempContent = fileSystem.read(tempApk)
 		assertEquals(installedApkContent, tempContent)
 	}
 
 	@Test
-	fun `WHEN apk temp copy creation fails with exception THEN temp apk doesn't exist`() = runTest {
-		val apkRepository = apkRepositoryImpl(failingFileSystem)
+	fun `WHEN apk temp copy creation fails with exception THEN temp apk doesn't exist`() = testScope.runTest {
 		try {
-			apkRepository.createTemp()
+			failingApkRepository.createTemp()
 		} catch (_: Throwable) {
 		}
 		assertFalse(fileSystem.exists(tempApk))
 	}
 
 	@Test
-	fun `WHEN temp apk exists and apk temp copy creation is attempted THEN temp apk remains unchanged`() = runTest {
-		val apkRepository = apkRepositoryImpl()
-		val expectedContent = "some arbitrary content"
-		fileSystem.write(tempApk, expectedContent)
-		apkRepository.createTemp()
-		val actualContent = fileSystem.read(tempApk)
-		assertEquals(expectedContent, actualContent)
-	}
-
-	@Test
-	fun `WHEN temp apk exists and apk temp copy creation fails with exception THEN temp apk doesn't exist`() = runTest {
-		val apkRepository = apkRepositoryImpl(failingFileSystem)
-		fileSystem.write(tempApk, installedApkContent)
-		try {
+	fun `WHEN temp apk exists and apk temp copy creation is attempted THEN temp apk remains unchanged`() =
+		testScope.runTest {
+			val expectedContent = "some arbitrary content"
+			fileSystem.write(tempApk, expectedContent)
 			apkRepository.createTemp()
-		} catch (_: Throwable) {
+			val actualContent = fileSystem.read(tempApk)
+			assertEquals(expectedContent, actualContent)
 		}
-		assertFalse(fileSystem.exists(tempApk))
-	}
 
 	@Test
-	fun `WHEN temp apk doesn't exist THEN temp apk verification fails`() = runTest {
-		val apkRepository = apkRepositoryImpl()
+	fun `WHEN temp apk exists and apk temp copy creation fails with exception THEN temp apk doesn't exist`() =
+		testScope.runTest {
+			fileSystem.write(tempApk, installedApkContent)
+			try {
+				failingApkRepository.createTemp()
+			} catch (_: Throwable) {
+			}
+			assertFalse(fileSystem.exists(tempApk))
+		}
+
+	@Test
+	fun `WHEN temp apk doesn't exist THEN temp apk verification fails`() = testScope.runTest {
 		fileSystem.delete(tempApk)
 		val isTempApkValid = apkRepository.verifyTemp()
 		assertFalse(isTempApkValid)
 	}
 
 	@Test
-	fun `WHEN temp apk exists and signed apk hash is invalid THEN temp apk verification fails`() = runTest {
-		val apkRepository = apkRepositoryImpl()
+	fun `WHEN temp apk exists and signed apk hash is invalid THEN temp apk verification fails`() = testScope.runTest {
 		fileSystem.write(tempApk, installedApkContent)
 		hashRepository.signedApkHash.persist(invalidHash)
 		val isTempApkValid = apkRepository.verifyTemp()
@@ -140,26 +144,17 @@ class ApkRepositoryImplTest {
 	}
 
 	@Test
-	fun `WHEN temp apk exists and its hash is empty THEN temp apk verification fails`() = runTest {
-		val apkRepository = apkRepositoryImpl()
+	fun `WHEN temp apk exists and its hash is empty THEN temp apk verification fails`() = testScope.runTest {
 		fileSystem.write(tempApk, installedApkContent)
 		val isTempApkValid = apkRepository.verifyTemp()
 		assertFalse(isTempApkValid)
 	}
 
 	@Test
-	fun `WHEN temp apk exists and signed apk hash is valid THEN temp apk verification succeeds`() = runTest {
-		val apkRepository = apkRepositoryImpl()
+	fun `WHEN temp apk exists and signed apk hash is valid THEN temp apk verification succeeds`() = testScope.runTest {
 		fileSystem.write(tempApk, installedApkContent)
 		hashRepository.signedApkHash.persist(expectedHash)
 		val isTempApkValid = apkRepository.verifyTemp()
 		assertTrue(isTempApkValid)
 	}
-
-	private fun TestScope.apkRepositoryImpl(
-		fileSystem: FileSystem = this@ApkRepositoryImplTest.fileSystem
-	) = ApkRepositoryImpl(
-		environment, gameInstallationProvider, StandardTestDispatcher(testScheduler), packageInstaller,
-		hashRepository, apkZipPackageFactory, fileSystem
-	)
 }

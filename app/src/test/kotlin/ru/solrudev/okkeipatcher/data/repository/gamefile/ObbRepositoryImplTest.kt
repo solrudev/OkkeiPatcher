@@ -31,6 +31,7 @@ class ObbRepositoryImplTest {
 	private val environment = FakePatcherEnvironment()
 	private val obb = environment.obbPath
 	private val fileSystem = FakeFileSystem()
+	private val obbRepository = ObbRepositoryImpl(environment, fileSystem)
 
 	@AfterTest
 	fun tearDown() {
@@ -39,7 +40,6 @@ class ObbRepositoryImplTest {
 
 	@Test
 	fun `obbExists returns obb existence`() {
-		val obbRepository = ObbRepositoryImpl(environment, fileSystem)
 		fileSystem.write(obb, "some content")
 		val exists = obbRepository.obbExists
 		fileSystem.delete(obb)
@@ -50,7 +50,6 @@ class ObbRepositoryImplTest {
 
 	@Test
 	fun `WHEN obb is deleted THEN it doesn't exist`() {
-		val obbRepository = ObbRepositoryImpl(environment, fileSystem)
 		fileSystem.write(obb, "some content")
 		obbRepository.deleteObb()
 		assertFalse(fileSystem.exists(obb))

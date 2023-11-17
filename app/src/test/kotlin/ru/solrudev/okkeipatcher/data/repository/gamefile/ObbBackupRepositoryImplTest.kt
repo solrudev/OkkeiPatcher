@@ -20,6 +20,7 @@ package ru.solrudev.okkeipatcher.data.repository.gamefile
 
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import okio.fakefilesystem.FakeFileSystem
 import org.junit.jupiter.api.assertThrows
@@ -47,6 +48,15 @@ class ObbBackupRepositoryImplTest {
 	private val hashRepository = FakeHashRepository()
 	private val fileSystem = FakeFileSystem()
 	private val failingFileSystem = FailingFileSystem(fileSystem, allowedFunctions = listOf("metadataOrNull", "delete"))
+	private val testScope = TestScope()
+
+	private val obbBackupRepository = ObbBackupRepositoryImpl(
+		environment, StandardTestDispatcher(testScope.testScheduler), hashRepository, fileSystem
+	)
+
+	private val failingObbBackupRepository = ObbBackupRepositoryImpl(
+		environment, StandardTestDispatcher(testScope.testScheduler), hashRepository, failingFileSystem
+	)
 
 	@AfterTest
 	fun tearDown() = runBlocking {
@@ -55,20 +65,14 @@ class ObbBackupRepositoryImplTest {
 	}
 
 	@Test
-	fun `WHEN obb backup is deleted THEN it doesn't exist`() = runTest {
-		val obbBackupRepository = ObbBackupRepositoryImpl(
-			environment, StandardTestDispatcher(testScheduler), hashRepository, fileSystem
-		)
+	fun `WHEN obb backup is deleted THEN it doesn't exist`() {
 		fileSystem.write(backupObb, "some content")
 		obbBackupRepository.deleteBackup()
 		assertFalse(fileSystem.exists(backupObb))
 	}
 
 	@Test
-	fun `backupExists returns obb backup existence`() = runTest {
-		val obbBackupRepository = ObbBackupRepositoryImpl(
-			environment, StandardTestDispatcher(testScheduler), hashRepository, fileSystem
-		)
+	fun `backupExists returns obb backup existence`() {
 		fileSystem.write(backupObb, "some content")
 		val exists = obbBackupRepository.backupExists
 		fileSystem.delete(backupObb)
@@ -78,10 +82,7 @@ class ObbBackupRepositoryImplTest {
 	}
 
 	@Test
-	fun `WHEN obb doesn't exist and backup is attempted THEN ObbNotFoundException is thrown`() = runTest {
-		val obbBackupRepository = ObbBackupRepositoryImpl(
-			environment, StandardTestDispatcher(testScheduler), hashRepository, fileSystem
-		)
+	fun `WHEN obb doesn't exist and backup is attempted THEN ObbNotFoundException is thrown`() = testScope.runTest {
 		fileSystem.delete(obb)
 		assertThrows<ObbNotFoundException> {
 			obbBackupRepository.createBackup().invoke()
@@ -89,10 +90,7 @@ class ObbBackupRepositoryImplTest {
 	}
 
 	@Test
-	fun `WHEN obb backup is created THEN backup obb contains copy of installed obb`() = runTest {
-		val obbBackupRepository = ObbBackupRepositoryImpl(
-			environment, StandardTestDispatcher(testScheduler), hashRepository, fileSystem
-		)
+	fun `WHEN obb backup is created THEN backup obb contains copy of installed obb`() = testScope.runTest {
 		fileSystem.write(obb, obbContent)
 		obbBackupRepository.createBackup().invoke()
 		val actualContent = fileSystem.read(backupObb)
@@ -100,10 +98,7 @@ class ObbBackupRepositoryImplTest {
 	}
 
 	@Test
-	fun `WHEN obb backup is created THEN backupObbHash in hash repository contains obb hash`() = runTest {
-		val obbBackupRepository = ObbBackupRepositoryImpl(
-			environment, StandardTestDispatcher(testScheduler), hashRepository, fileSystem
-		)
+	fun `WHEN obb backup is created THEN backupObbHash in hash repository contains obb hash`() = testScope.runTest {
 		fileSystem.write(obb, obbContent)
 		obbBackupRepository.createBackup().invoke()
 		val actualHash = hashRepository.backupObbHash.retrieve()
@@ -111,48 +106,38 @@ class ObbBackupRepositoryImplTest {
 	}
 
 	@Test
-	fun `WHEN obb backup fails with exception THEN backup obb doesn't exist`() = runTest {
-		val obbBackupRepository = ObbBackupRepositoryImpl(
-			environment, StandardTestDispatcher(testScheduler), hashRepository, failingFileSystem
-		)
+	fun `WHEN obb backup fails with exception THEN backup obb doesn't exist`() = testScope.runTest {
 		fileSystem.write(obb, obbContent)
 		try {
-			obbBackupRepository.createBackup().invoke()
+			failingObbBackupRepository.createBackup().invoke()
 		} catch (_: Throwable) {
 		}
 		assertFalse(fileSystem.exists(backupObb))
 	}
 
 	@Test
-	fun `WHEN backup obb exists and obb backup fails with exception THEN backup obb doesn't exist`() = runTest {
-		val obbBackupRepository = ObbBackupRepositoryImpl(
-			environment, StandardTestDispatcher(testScheduler), hashRepository, failingFileSystem
-		)
-		fileSystem.write(obb, obbContent)
-		fileSystem.write(backupObb, obbContent)
-		try {
-			obbBackupRepository.createBackup().invoke()
-		} catch (_: Throwable) {
+	fun `WHEN backup obb exists and obb backup fails with exception THEN backup obb doesn't exist`() =
+		testScope.runTest {
+			fileSystem.write(obb, obbContent)
+			fileSystem.write(backupObb, obbContent)
+			try {
+				failingObbBackupRepository.createBackup().invoke()
+			} catch (_: Throwable) {
+			}
+			assertFalse(fileSystem.exists(backupObb))
 		}
-		assertFalse(fileSystem.exists(backupObb))
-	}
 
 	@Test
-	fun `WHEN backup obb doesn't exist and restore is attempted THEN ObbNotFoundException is thrown`() = runTest {
-		val obbBackupRepository = ObbBackupRepositoryImpl(
-			environment, StandardTestDispatcher(testScheduler), hashRepository, fileSystem
-		)
-		fileSystem.delete(backupObb)
-		assertThrows<ObbNotFoundException> {
-			obbBackupRepository.restoreBackup().invoke()
+	fun `WHEN backup obb doesn't exist and restore is attempted THEN ObbNotFoundException is thrown`() =
+		testScope.runTest {
+			fileSystem.delete(backupObb)
+			assertThrows<ObbNotFoundException> {
+				obbBackupRepository.restoreBackup().invoke()
+			}
 		}
-	}
 
 	@Test
-	fun `WHEN obb backup is restored THEN obb contains copy of backup obb`() = runTest {
-		val obbBackupRepository = ObbBackupRepositoryImpl(
-			environment, StandardTestDispatcher(testScheduler), hashRepository, fileSystem
-		)
+	fun `WHEN obb backup is restored THEN obb contains copy of backup obb`() = testScope.runTest {
 		fileSystem.write(backupObb, obbContent)
 		obbBackupRepository.restoreBackup().invoke()
 		val actualContent = fileSystem.read(obb)
@@ -160,47 +145,35 @@ class ObbBackupRepositoryImplTest {
 	}
 
 	@Test
-	fun `WHEN obb restore fails with exception THEN obb doesn't exist`() = runTest {
-		val obbBackupRepository = ObbBackupRepositoryImpl(
-			environment, StandardTestDispatcher(testScheduler), hashRepository, failingFileSystem
-		)
+	fun `WHEN obb restore fails with exception THEN obb doesn't exist`() = testScope.runTest {
 		fileSystem.write(backupObb, obbContent)
 		try {
-			obbBackupRepository.restoreBackup().invoke()
+			failingObbBackupRepository.restoreBackup().invoke()
 		} catch (_: Throwable) {
 		}
 		assertFalse(fileSystem.exists(obb))
 	}
 
 	@Test
-	fun `WHEN obb exists and obb restore fails with exception THEN obb doesn't exist`() = runTest {
-		val obbBackupRepository = ObbBackupRepositoryImpl(
-			environment, StandardTestDispatcher(testScheduler), hashRepository, failingFileSystem
-		)
+	fun `WHEN obb exists and obb restore fails with exception THEN obb doesn't exist`() = testScope.runTest {
 		fileSystem.write(backupObb, obbContent)
 		fileSystem.write(obb, obbContent)
 		try {
-			obbBackupRepository.restoreBackup().invoke()
+			failingObbBackupRepository.restoreBackup().invoke()
 		} catch (_: Throwable) {
 		}
 		assertFalse(fileSystem.exists(obb))
 	}
 
 	@Test
-	fun `WHEN backup obb doesn't exist THEN backup obb verification fails`() = runTest {
-		val obbBackupRepository = ObbBackupRepositoryImpl(
-			environment, StandardTestDispatcher(testScheduler), hashRepository, fileSystem
-		)
+	fun `WHEN backup obb doesn't exist THEN backup obb verification fails`() = testScope.runTest {
 		fileSystem.delete(backupObb)
 		val isBackupObbValid = obbBackupRepository.verifyBackup().invoke()
 		assertFalse(isBackupObbValid)
 	}
 
 	@Test
-	fun `WHEN backup obb exists and its hash is invalid THEN backup obb verification fails`() = runTest {
-		val obbBackupRepository = ObbBackupRepositoryImpl(
-			environment, StandardTestDispatcher(testScheduler), hashRepository, fileSystem
-		)
+	fun `WHEN backup obb exists and its hash is invalid THEN backup obb verification fails`() = testScope.runTest {
 		fileSystem.write(backupObb, obbContent)
 		hashRepository.backupObbHash.persist(invalidHash)
 		val isBackupObbValid = obbBackupRepository.verifyBackup().invoke()
@@ -208,20 +181,14 @@ class ObbBackupRepositoryImplTest {
 	}
 
 	@Test
-	fun `WHEN backup obb exists and its hash is empty THEN backup obb verification fails`() = runTest {
-		val obbBackupRepository = ObbBackupRepositoryImpl(
-			environment, StandardTestDispatcher(testScheduler), hashRepository, fileSystem
-		)
+	fun `WHEN backup obb exists and its hash is empty THEN backup obb verification fails`() = testScope.runTest {
 		fileSystem.write(backupObb, obbContent)
 		val isBackupObbValid = obbBackupRepository.verifyBackup().invoke()
 		assertFalse(isBackupObbValid)
 	}
 
 	@Test
-	fun `WHEN backup obb exists and its hash is valid THEN backup obb verification succeeds`() = runTest {
-		val obbBackupRepository = ObbBackupRepositoryImpl(
-			environment, StandardTestDispatcher(testScheduler), hashRepository, fileSystem
-		)
+	fun `WHEN backup obb exists and its hash is valid THEN backup obb verification succeeds`() = testScope.runTest {
 		fileSystem.write(backupObb, obbContent)
 		hashRepository.backupObbHash.persist(expectedHash)
 		val isBackupObbValid = obbBackupRepository.verifyBackup().invoke()
