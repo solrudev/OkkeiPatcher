@@ -52,7 +52,7 @@ class ApkSignerWrapperTest {
 	}
 
 	@AfterTest
-	fun tearDown() = runBlocking {
+	fun tearDown() {
 		fileSystem.checkNoOpenFiles()
 	}
 
