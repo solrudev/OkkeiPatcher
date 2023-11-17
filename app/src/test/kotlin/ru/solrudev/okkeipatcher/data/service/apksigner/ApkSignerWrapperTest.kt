@@ -71,9 +71,8 @@ class ApkSignerWrapperTest {
 		val apkSigner = ApkSignerWrapper(
 			StandardTestDispatcher(testScheduler), failingFileSystem, apkSignerImplementation
 		)
-		try {
+		runCatching {
 			apkSigner.sign(inputApkPath)
-		} catch (_: Throwable) {
 		}
 		val actualInputApkContent = fileSystem.read(inputApkPath)
 		assertEquals(inputApkContent, actualInputApkContent)
