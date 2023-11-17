@@ -38,9 +38,9 @@ import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 
-private const val OBB_FILE_NAME = "main.87.com.mages.chaoschild_jp.obb"
+const val OBB_FILE_NAME = "main.87.com.mages.chaoschild_jp.obb"
 
-private val PatcherEnvironment.obbPath: Path
+val PatcherEnvironment.obbPath: Path
 	get() = externalStoragePath / "Android" / "obb" / GAME_PACKAGE_NAME / OBB_FILE_NAME
 
 @Singleton

@@ -20,7 +20,6 @@ package ru.solrudev.okkeipatcher.data.repository.gamefile
 
 import okio.fakefilesystem.FakeFileSystem
 import ru.solrudev.okkeipatcher.data.FakePatcherEnvironment
-import ru.solrudev.okkeipatcher.data.util.GAME_PACKAGE_NAME
 import ru.solrudev.okkeipatcher.data.util.write
 import kotlin.test.AfterTest
 import kotlin.test.Test
@@ -30,10 +29,8 @@ import kotlin.test.assertTrue
 class ObbRepositoryImplTest {
 
 	private val environment = FakePatcherEnvironment()
+	private val obb = environment.obbPath
 	private val fileSystem = FakeFileSystem()
-
-	private val obb =
-		environment.externalStoragePath / "Android/obb/$GAME_PACKAGE_NAME/main.87.com.mages.chaoschild_jp.obb"
 
 	@AfterTest
 	fun tearDown() {
