@@ -40,7 +40,6 @@ private val PatcherEnvironment.saveDataPath: Path
 
 interface SaveDataFile {
 	val exists: Boolean
-	val length: Long
 	fun recreate()
 	fun source(): Source?
 	fun sink(): Sink?
@@ -56,9 +55,6 @@ class SaveDataRawFile @Inject constructor(
 	override val exists: Boolean
 		get() = fileSystem.exists(path)
 
-	override val length: Long
-		get() = fileSystem.metadata(path).size ?: 0
-
 	override fun recreate() = fileSystem.prepareRecreate(path)
 	override fun source() = fileSystem.source(path)
 	override fun sink() = fileSystem.sink(path)
@@ -73,9 +69,6 @@ class SaveDataDocumentFile @Inject constructor(
 
 	override val exists: Boolean
 		get() = createDocumentFile()?.exists() ?: false
-
-	override val length: Long
-		get() = createDocumentFile()?.length() ?: -1L
 
 	override fun recreate() {
 		val file = createDocumentFile()
