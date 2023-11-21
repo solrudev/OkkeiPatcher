@@ -33,9 +33,8 @@ import ru.solrudev.okkeipatcher.data.util.prepareRecreate
 import javax.inject.Inject
 
 private const val FILES_DIR_NAME = "files"
-private const val SAVE_DATA_NAME = "SAVEDATA.DAT"
 
-private val PatcherEnvironment.saveDataPath: Path
+val PatcherEnvironment.saveDataPath: Path
 	get() = externalStoragePath / "Android" / "data" / GAME_PACKAGE_NAME / FILES_DIR_NAME / SAVE_DATA_NAME
 
 interface SaveDataFile {

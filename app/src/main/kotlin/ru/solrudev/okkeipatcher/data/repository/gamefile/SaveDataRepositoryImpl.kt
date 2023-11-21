@@ -34,6 +34,9 @@ import ru.solrudev.okkeipatcher.domain.repository.gamefile.SaveDataRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 
+const val SAVE_DATA_NAME = "SAVEDATA.DAT"
+const val TEMP_SAVE_DATA_NAME = "SAVEDATA_TEMP.DAT"
+
 @Singleton
 class SaveDataRepositoryImpl @Inject constructor(
 	environment: PatcherEnvironment,
@@ -46,8 +49,8 @@ class SaveDataRepositoryImpl @Inject constructor(
 	override val backupExists: Boolean
 		get() = fileSystem.exists(backup)
 
-	private val backup = environment.backupPath / "SAVEDATA.DAT"
-	private val temp = environment.backupPath / "SAVEDATA_TEMP.DAT"
+	private val backup = environment.backupPath / SAVE_DATA_NAME
+	private val temp = environment.backupPath / TEMP_SAVE_DATA_NAME
 
 	override fun deleteBackup() {
 		fileSystem.delete(backup)
