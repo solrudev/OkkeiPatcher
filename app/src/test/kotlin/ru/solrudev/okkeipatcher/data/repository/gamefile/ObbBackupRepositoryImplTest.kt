@@ -23,7 +23,6 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import okio.fakefilesystem.FakeFileSystem
-import org.junit.jupiter.api.assertThrows
 import ru.solrudev.okkeipatcher.data.FailingFileSystem
 import ru.solrudev.okkeipatcher.data.FakePatcherEnvironment
 import ru.solrudev.okkeipatcher.data.repository.FakeHashRepository
@@ -34,6 +33,7 @@ import ru.solrudev.okkeipatcher.domain.model.exception.ObbNotFoundException
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
@@ -84,7 +84,7 @@ class ObbBackupRepositoryImplTest {
 	@Test
 	fun `WHEN obb doesn't exist and backup is attempted THEN ObbNotFoundException is thrown`() = testScope.runTest {
 		fileSystem.delete(obb)
-		assertThrows<ObbNotFoundException> {
+		assertFailsWith<ObbNotFoundException> {
 			obbBackupRepository.createBackup().invoke()
 		}
 	}
@@ -129,7 +129,7 @@ class ObbBackupRepositoryImplTest {
 	fun `WHEN backup obb doesn't exist and restore is attempted THEN ObbNotFoundException is thrown`() =
 		testScope.runTest {
 			fileSystem.delete(backupObb)
-			assertThrows<ObbNotFoundException> {
+			assertFailsWith<ObbNotFoundException> {
 				obbBackupRepository.restoreBackup().invoke()
 			}
 		}
