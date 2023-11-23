@@ -214,7 +214,7 @@ class SaveDataRepositoryImplTest {
 		}
 
 	@Test
-	fun `WHEN temp save data doesn't exist and backup exists THEN saveDataHash in hash repository contains backup hash`() =
+	fun `WHEN temp doesn't exist and backup exists THEN persistTempAsBackup saves backup hash into saveDataHash in hash repository`() =
 		testScope.runTest {
 			fileSystem.write(backupSaveData, saveDataContent)
 			saveDataRepository.persistTempAsBackup()
