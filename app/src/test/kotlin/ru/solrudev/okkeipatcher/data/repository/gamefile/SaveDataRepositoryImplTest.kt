@@ -49,16 +49,16 @@ class SaveDataRepositoryImplTest {
 	private val hashRepository = FakeHashRepository()
 	private val fileSystem = FakeFileSystem()
 	private val failingFileSystem = FailingFileSystem(fileSystem, allowedFunctions = listOf("metadataOrNull", "delete"))
+	private val saveDataFile = SaveDataRawFile(environment, fileSystem)
 	private val testScope = TestScope()
+	private val testDispatcher = StandardTestDispatcher(testScope.testScheduler)
 
 	private val saveDataRepository = SaveDataRepositoryImpl(
-		environment, StandardTestDispatcher(testScope.testScheduler), SaveDataRawFile(environment, fileSystem),
-		hashRepository, fileSystem
+		environment, testDispatcher, saveDataFile, hashRepository, fileSystem
 	)
 
 	private val failingSaveDataRepository = SaveDataRepositoryImpl(
-		environment, StandardTestDispatcher(testScope.testScheduler), SaveDataRawFile(environment, fileSystem),
-		hashRepository, failingFileSystem
+		environment, testDispatcher, saveDataFile, hashRepository, failingFileSystem
 	)
 
 	@AfterTest

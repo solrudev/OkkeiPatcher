@@ -49,13 +49,14 @@ class ObbBackupRepositoryImplTest {
 	private val fileSystem = FakeFileSystem()
 	private val failingFileSystem = FailingFileSystem(fileSystem, allowedFunctions = listOf("metadataOrNull", "delete"))
 	private val testScope = TestScope()
+	private val testDispatcher = StandardTestDispatcher(testScope.testScheduler)
 
 	private val obbBackupRepository = ObbBackupRepositoryImpl(
-		environment, StandardTestDispatcher(testScope.testScheduler), hashRepository, fileSystem
+		environment, testDispatcher, hashRepository, fileSystem
 	)
 
 	private val failingObbBackupRepository = ObbBackupRepositoryImpl(
-		environment, StandardTestDispatcher(testScope.testScheduler), hashRepository, failingFileSystem
+		environment, testDispatcher, hashRepository, failingFileSystem
 	)
 
 	@AfterTest

@@ -51,15 +51,14 @@ class ApkBackupRepositoryImplTest {
 	private val failingFileSystem = FailingFileSystem(fileSystem, allowedFunctions = listOf("delete"))
 	private val packageInstaller = FakePackageInstallerFacade()
 	private val testScope = TestScope()
+	private val testDispatcher = StandardTestDispatcher(testScope.testScheduler)
 
 	private val apkBackupRepository = ApkBackupRepositoryImpl(
-		environment, gameInstallationProvider, StandardTestDispatcher(testScope.testScheduler), packageInstaller,
-		hashRepository, fileSystem
+		environment, gameInstallationProvider, testDispatcher, packageInstaller, hashRepository, fileSystem
 	)
 
 	private val failingApkBackupRepository = ApkBackupRepositoryImpl(
-		environment, gameInstallationProvider, StandardTestDispatcher(testScope.testScheduler), packageInstaller,
-		hashRepository, failingFileSystem
+		environment, gameInstallationProvider, testDispatcher, packageInstaller, hashRepository, failingFileSystem
 	)
 
 	@BeforeTest

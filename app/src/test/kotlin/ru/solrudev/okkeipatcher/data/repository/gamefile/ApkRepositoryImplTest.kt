@@ -52,14 +52,15 @@ class ApkRepositoryImplTest {
 	private val failingFileSystem = FailingFileSystem(fileSystem, allowedFunctions = listOf("delete"))
 	private val packageInstaller = FakePackageInstallerFacade()
 	private val testScope = TestScope()
+	private val testDispatcher = StandardTestDispatcher(testScope.testScheduler)
 
 	private val apkRepository = ApkRepositoryImpl(
-		environment, gameInstallationProvider, StandardTestDispatcher(testScope.testScheduler), packageInstaller,
+		environment, gameInstallationProvider, testDispatcher, packageInstaller,
 		hashRepository, apkZipPackageFactory, fileSystem
 	)
 
 	private val failingApkRepository = ApkRepositoryImpl(
-		environment, gameInstallationProvider, StandardTestDispatcher(testScope.testScheduler), packageInstaller,
+		environment, gameInstallationProvider, testDispatcher, packageInstaller,
 		hashRepository, apkZipPackageFactory, failingFileSystem
 	)
 
