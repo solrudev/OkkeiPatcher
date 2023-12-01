@@ -130,13 +130,13 @@ dependencies {
 	implementation(dagger.hilt.work)
 	implementation(androidx.activity.ktx)
 	implementation(androidx.preference.ktx)
-	implementation(androidx.lifecycle.livedata.ktx)
 	implementation(androidx.fragment.ktx)
-	implementation(androidx.work.runtime.ktx)
+	implementation(androidx.work.runtime)
 	implementation(androidx.bundles.navigation)
 	implementation(androidx.room.ktx)
 	implementation(androidx.datastore.preferences)
 	implementation(androidx.swiperefreshlayout)
+	implementation(androidx.concurrent.futures.ktx)
 
 	// Material Components
 	implementation(libs.materialcomponents)

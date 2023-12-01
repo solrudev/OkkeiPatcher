@@ -18,7 +18,6 @@
 
 package ru.solrudev.okkeipatcher.data.repository.app.work
 
-import androidx.lifecycle.asFlow
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import kotlinx.coroutines.cancel
@@ -62,8 +61,7 @@ class WorkRepositoryImpl @Inject constructor(
 	override fun getWorkStateFlow(workId: UUID) = flow {
 		supervisorScope {
 			workManager
-				.getWorkInfoByIdLiveData(workId)
-				.asFlow()
+				.getWorkInfoByIdFlow(workId)
 				.map(WorkInfo::toWorkState)
 				.onEach(::emit)
 				.filter { it.isFinished }

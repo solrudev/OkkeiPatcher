@@ -21,14 +21,13 @@ package ru.solrudev.okkeipatcher.data.repository.app.work
 import android.app.PendingIntent
 import android.content.Context
 import android.os.Build
-import androidx.lifecycle.asFlow
+import androidx.concurrent.futures.await
 import androidx.navigation.NavDeepLinkBuilder
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import androidx.work.await
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
@@ -43,6 +42,7 @@ import ru.solrudev.okkeipatcher.data.worker.util.extension.getSerializable
 import ru.solrudev.okkeipatcher.data.worker.util.extension.putSerializable
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.ui.screen.work.WorkFragmentArgs
+import androidx.work.await as awaitOperation
 
 private const val WORK_LABEL_KEY = "WORK_LABEL"
 
@@ -63,13 +63,12 @@ open class UniqueWorkRepositoryImpl<T : ForegroundOperationWorker>(
 			.addTag(workName)
 			.build()
 		workRepository.add(workRequest.id)
-		workManager.enqueue(workRequest).await()
+		workManager.enqueue(workRequest).awaitOperation()
 		return Work(workRequest.id, workLabel)
 	}
 
 	override fun getPendingWorkFlow() = workManager
-		.getWorkInfosByTagLiveData(workName)
-		.asFlow()
+		.getWorkInfosByTagFlow(workName)
 		.mapNotNull { workInfoList ->
 			workInfoList.firstOrNull { workRepository.getIsPending(it.id) }
 		}

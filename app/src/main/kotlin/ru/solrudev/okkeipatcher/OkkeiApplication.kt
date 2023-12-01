@@ -48,6 +48,11 @@ class OkkeiApplication : Application(), Configuration.Provider {
 	@Inject
 	lateinit var getThemeFlowUseCase: GetThemeFlowUseCase
 
+	override val workManagerConfiguration: Configuration
+		get() = Configuration.Builder()
+			.setWorkerFactory(workerFactory)
+			.build()
+
 	override fun onCreate() {
 		super.onCreate()
 		AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
@@ -55,10 +60,6 @@ class OkkeiApplication : Application(), Configuration.Provider {
 		startNetworkMonitoringUseCase()
 		createNotificationChannels()
 	}
-
-	override fun getWorkManagerConfiguration() = Configuration.Builder()
-		.setWorkerFactory(workerFactory)
-		.build()
 
 	override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
 		super.onConfigurationChanged(newConfig)
