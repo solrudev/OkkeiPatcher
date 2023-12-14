@@ -22,6 +22,7 @@ import okio.fakefilesystem.FakeFileSystem
 import ru.solrudev.okkeipatcher.data.FakePatcherEnvironment
 import ru.solrudev.okkeipatcher.data.util.write
 import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -32,6 +33,11 @@ class ObbRepositoryImplTest {
 	private val obb = environment.obbPath
 	private val fileSystem = FakeFileSystem()
 	private val obbRepository = ObbRepositoryImpl(environment, fileSystem)
+
+	@BeforeTest
+	fun setUp() {
+		fileSystem.delete(obb)
+	}
 
 	@AfterTest
 	fun tearDown() {

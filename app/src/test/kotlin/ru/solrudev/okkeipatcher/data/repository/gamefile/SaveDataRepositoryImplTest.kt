@@ -31,6 +31,7 @@ import ru.solrudev.okkeipatcher.data.util.read
 import ru.solrudev.okkeipatcher.data.util.write
 import ru.solrudev.okkeipatcher.domain.core.Result
 import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -61,12 +62,16 @@ class SaveDataRepositoryImplTest {
 		environment, testDispatcher, saveDataFile, hashRepository, failingFileSystem
 	)
 
-	@AfterTest
-	fun tearDown() = runBlocking {
-		fileSystem.checkNoOpenFiles()
+	@BeforeTest
+	fun setUp() {
 		fileSystem.delete(saveData)
 		fileSystem.delete(tempSaveData)
 		fileSystem.delete(backupSaveData)
+	}
+
+	@AfterTest
+	fun tearDown() = runBlocking {
+		fileSystem.checkNoOpenFiles()
 		hashRepository.clear()
 	}
 

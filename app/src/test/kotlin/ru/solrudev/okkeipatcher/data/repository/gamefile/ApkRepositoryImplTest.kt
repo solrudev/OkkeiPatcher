@@ -67,6 +67,7 @@ class ApkRepositoryImplTest {
 	@BeforeTest
 	fun setUp() {
 		fileSystem.write(gameInstallationProvider.getApkPath(), installedApkContent)
+		fileSystem.delete(tempApk)
 	}
 
 	@AfterTest
@@ -129,7 +130,6 @@ class ApkRepositoryImplTest {
 
 	@Test
 	fun `WHEN temp apk doesn't exist THEN temp apk verification fails`() = testScope.runTest {
-		fileSystem.delete(tempApk)
 		val isTempApkValid = apkRepository.verifyTemp()
 		assertFalse(isTempApkValid)
 	}

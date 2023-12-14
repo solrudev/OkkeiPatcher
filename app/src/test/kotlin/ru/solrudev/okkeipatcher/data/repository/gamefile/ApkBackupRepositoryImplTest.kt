@@ -64,6 +64,7 @@ class ApkBackupRepositoryImplTest {
 	@BeforeTest
 	fun setUp() {
 		fileSystem.write(gameInstallationProvider.getApkPath(), installedApkContent)
+		fileSystem.delete(backupApk)
 	}
 
 	@AfterTest
@@ -123,7 +124,6 @@ class ApkBackupRepositoryImplTest {
 
 	@Test
 	fun `WHEN backup apk doesn't exist THEN backup apk verification fails`() = testScope.runTest {
-		fileSystem.delete(backupApk)
 		val isBackupApkValid = apkBackupRepository.verifyBackup()
 		assertFalse(isBackupApkValid)
 	}

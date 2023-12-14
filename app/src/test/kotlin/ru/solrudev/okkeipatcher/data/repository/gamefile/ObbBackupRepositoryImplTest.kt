@@ -31,6 +31,7 @@ import ru.solrudev.okkeipatcher.data.util.read
 import ru.solrudev.okkeipatcher.data.util.write
 import ru.solrudev.okkeipatcher.domain.model.exception.ObbNotFoundException
 import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -59,6 +60,12 @@ class ObbBackupRepositoryImplTest {
 		environment, testDispatcher, hashRepository, failingFileSystem
 	)
 
+	@BeforeTest
+	fun setUp() {
+		fileSystem.delete(obb)
+		fileSystem.delete(backupObb)
+	}
+
 	@AfterTest
 	fun tearDown() = runBlocking {
 		fileSystem.checkNoOpenFiles()
@@ -84,7 +91,6 @@ class ObbBackupRepositoryImplTest {
 
 	@Test
 	fun `WHEN obb doesn't exist and backup is attempted THEN ObbNotFoundException is thrown`() = testScope.runTest {
-		fileSystem.delete(obb)
 		assertFailsWith<ObbNotFoundException> {
 			obbBackupRepository.createBackup().invoke()
 		}
@@ -129,7 +135,6 @@ class ObbBackupRepositoryImplTest {
 	@Test
 	fun `WHEN backup obb doesn't exist and restore is attempted THEN ObbNotFoundException is thrown`() =
 		testScope.runTest {
-			fileSystem.delete(backupObb)
 			assertFailsWith<ObbNotFoundException> {
 				obbBackupRepository.restoreBackup().invoke()
 			}
@@ -164,7 +169,6 @@ class ObbBackupRepositoryImplTest {
 
 	@Test
 	fun `WHEN backup obb doesn't exist THEN backup obb verification fails`() = testScope.runTest {
-		fileSystem.delete(backupObb)
 		val isBackupObbValid = obbBackupRepository.verifyBackup().invoke()
 		assertFalse(isBackupObbValid)
 	}
