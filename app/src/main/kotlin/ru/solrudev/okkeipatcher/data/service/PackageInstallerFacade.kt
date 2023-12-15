@@ -25,6 +25,7 @@ import ru.solrudev.ackpine.installer.createSession
 import ru.solrudev.ackpine.session.SessionResult
 import ru.solrudev.ackpine.session.await
 import ru.solrudev.ackpine.session.parameters.Confirmation
+import ru.solrudev.ackpine.session.parameters.NotificationString
 import ru.solrudev.ackpine.session.parameters.notification
 import ru.solrudev.ackpine.uninstaller.PackageUninstaller
 import ru.solrudev.ackpine.uninstaller.UninstallFailure
@@ -35,7 +36,7 @@ import javax.inject.Inject
 
 interface PackageInstallerFacade {
 	suspend fun install(apkPath: Path, appName: String, immediate: Boolean = false): Result<Unit>
-	suspend fun uninstall(packageName: String): Result<Unit>
+	suspend fun uninstall(packageName: String, appName: String): Result<Unit>
 }
 
 class PackageInstallerFacadeImpl @Inject constructor(
@@ -45,13 +46,14 @@ class PackageInstallerFacadeImpl @Inject constructor(
 
 	override suspend fun install(apkPath: Path, appName: String, immediate: Boolean): Result<Unit> {
 		val session = packageInstaller.createSession(apkPath.toFile().toUri()) {
-			name = appName
 			requireUserAction = false
 			if (immediate) {
 				confirmation = Confirmation.IMMEDIATE
 			}
 			notification {
 				icon = R.drawable.ic_notification
+				title = NotificationString.resource(R.string.notification_title_install)
+				contentText = NotificationString.resource(R.string.notification_message_install, appName)
 			}
 		}
 		return when (val result = session.await()) {
@@ -60,10 +62,12 @@ class PackageInstallerFacadeImpl @Inject constructor(
 		}
 	}
 
-	override suspend fun uninstall(packageName: String): Result<Unit> {
+	override suspend fun uninstall(packageName: String, appName: String): Result<Unit> {
 		val session = packageUninstaller.createSession(packageName) {
 			notification {
 				icon = R.drawable.ic_notification
+				title = NotificationString.resource(R.string.notification_title_uninstall)
+				contentText = NotificationString.resource(R.string.notification_message_uninstall, appName)
 			}
 		}
 		return when (val result = session.await()) {

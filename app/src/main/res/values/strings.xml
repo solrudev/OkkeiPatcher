@@ -79,17 +79,21 @@
 	<string name="notification_channel_progress_name">Status and progress</string>
 	<string name="notification_message_downloading_update_failed">Failed to download Okkei Patcher update. Press to learn more.</string>
 	<string name="notification_message_downloading_update_success">Okkei Patcher update was successfully downloaded.</string>
+	<string name="notification_message_install">Please confirm installation of %s.</string>
 	<string name="notification_message_patch_failed">Failed to patch CHAOS;CHILD. Press to learn more.</string>
 	<string name="notification_message_patch_success">CHAOS;CHILD was successfully patched.</string>
 	<string name="notification_message_restore_failed">Failed to restore CHAOS;CHILD backup. Press to learn more.</string>
 	<string name="notification_message_restore_success">CHAOS;CHILD backup was successfully restored.</string>
+	<string name="notification_message_uninstall">Please confirm uninstallation of %s.</string>
 	<string name="notification_title_downloading_update">Downloading update</string>
+	<string name="notification_title_install">Installation</string>
 	<string name="notification_title_patch">Patching</string>
 	<string name="notification_title_restore">Restoring</string>
 	<string name="notification_title_downloading_update_failed">Download failed</string>
 	<string name="notification_title_downloading_update_success">Update ready</string>
 	<string name="notification_title_patch_completed">Patching completed</string>
 	<string name="notification_title_restore_completed">Restoring completed</string>
+	<string name="notification_title_uninstall">Uninstallation</string>
 
 	<!--Patch statuses-->
 	<string name="patch_status_not_patched">Patch for CHAOS;CHILD is not installed</string>

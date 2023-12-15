@@ -91,5 +91,5 @@ class ApkRepositoryImpl @Inject constructor(
 	}
 
 	override suspend fun installTemp() = packageInstaller.install(temp, appName = GAME_NAME)
-	override suspend fun uninstall() = packageInstaller.uninstall(GAME_PACKAGE_NAME)
+	override suspend fun uninstall() = packageInstaller.uninstall(GAME_PACKAGE_NAME, appName = GAME_NAME)
 }
