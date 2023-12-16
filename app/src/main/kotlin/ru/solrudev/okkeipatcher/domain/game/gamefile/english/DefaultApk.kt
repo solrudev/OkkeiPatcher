@@ -20,7 +20,6 @@ package ru.solrudev.okkeipatcher.domain.game.gamefile.english
 
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
-import ru.solrudev.okkeipatcher.domain.core.operation.aggregateOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.core.operation.status
 import ru.solrudev.okkeipatcher.domain.game.gamefile.Apk
@@ -41,29 +40,23 @@ class DefaultApk @Inject constructor(
 	private val scripts = patchRepository.scripts
 	private val scriptsPatchOperation = scriptsPatchOperationFactory.create(scripts)
 
-	override fun patch(): Operation<Unit> {
-		val installPatchedOperation = installPatched(updating = false)
+	override fun patch() = patch(updating = false)
+	override fun update() = patch(updating = true)
+
+	private fun patch(updating: Boolean): Operation<Unit> {
+		val installPatchedOperation = installPatched(updating)
 		return operation(scriptsPatchOperation, installPatchedOperation) {
 			status(R.string.status_comparing_apk)
 			if (apkRepository.verifyTemp()) {
 				progressDelta(scriptsPatchOperation.progressMax)
 				installPatchedOperation()
+				scripts.updateInstalledVersion()
 				return@operation
 			}
+			apkRepository.deleteTemp()
 			scriptsPatchOperation()
 			installPatchedOperation()
 			scripts.updateInstalledVersion()
 		}
 	}
-
-	override fun update() = aggregateOperation(
-		operation {
-			apkRepository.deleteTemp()
-		},
-		scriptsPatchOperation,
-		installPatched(updating = true),
-		operation {
-			scripts.updateInstalledVersion()
-		}
-	)
 }
