@@ -83,7 +83,10 @@ class PatchOperation(
 	private fun update() = with(game) {
 		aggregateOperation(
 			if (parameters.patchUpdates.apkUpdatesAvailable) apk.update() else emptyOperation(),
-			if (parameters.patchUpdates.obbUpdatesAvailable) obb.update() else emptyOperation()
+			if (parameters.patchUpdates.obbUpdatesAvailable) obb.update() else emptyOperation(),
+			operation {
+				patchVersion.persist(parameters.patchVersion)
+			}
 		)
 	}
 }
