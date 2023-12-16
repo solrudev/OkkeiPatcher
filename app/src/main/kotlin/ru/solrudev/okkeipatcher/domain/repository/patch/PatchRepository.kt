@@ -35,3 +35,5 @@ interface PatchFile {
 	suspend fun isUpdateAvailable(refresh: Boolean = false): Boolean
 	suspend fun getSizeInMb(): Double
 }
+
+suspend inline fun PatchFile.updateInstalledVersion() = installedVersion.persist(getData().version)

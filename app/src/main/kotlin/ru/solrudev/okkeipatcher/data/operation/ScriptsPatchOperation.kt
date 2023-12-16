@@ -78,7 +78,6 @@ class ScriptsPatchOperation(
 		if (scriptsHash != scriptsData.hash) {
 			throw ScriptsCorruptedException()
 		}
-		scriptsPatchFile.installedVersion.persist(scriptsData.version)
 	}
 
 	private fun extractScripts(): Operation<Unit> = operation(progressMax = 100) {

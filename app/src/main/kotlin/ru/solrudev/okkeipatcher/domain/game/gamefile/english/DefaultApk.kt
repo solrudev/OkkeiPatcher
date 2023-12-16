@@ -28,6 +28,7 @@ import ru.solrudev.okkeipatcher.domain.operation.factory.ScriptsPatchOperationFa
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkBackupRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.DefaultPatchRepository
+import ru.solrudev.okkeipatcher.domain.repository.patch.updateInstalledVersion
 import javax.inject.Inject
 
 class DefaultApk @Inject constructor(
@@ -37,7 +38,8 @@ class DefaultApk @Inject constructor(
 	apkBackupRepository: ApkBackupRepository
 ) : Apk(apkRepository, apkBackupRepository) {
 
-	private val scriptsPatchOperation = scriptsPatchOperationFactory.create(patchRepository.scripts)
+	private val scripts = patchRepository.scripts
+	private val scriptsPatchOperation = scriptsPatchOperationFactory.create(scripts)
 
 	override fun patch(): Operation<Unit> {
 		val installPatchedOperation = installPatched(updating = false)
@@ -50,6 +52,7 @@ class DefaultApk @Inject constructor(
 			}
 			scriptsPatchOperation()
 			installPatchedOperation()
+			scripts.updateInstalledVersion()
 		}
 	}
 
@@ -58,6 +61,9 @@ class DefaultApk @Inject constructor(
 			apkRepository.deleteTemp()
 		},
 		scriptsPatchOperation,
-		installPatched(updating = true)
+		installPatched(updating = true),
+		operation {
+			scripts.updateInstalledVersion()
+		}
 	)
 }
