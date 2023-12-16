@@ -25,6 +25,7 @@ import ru.solrudev.okkeipatcher.domain.core.operation.status
 import ru.solrudev.okkeipatcher.domain.model.exception.ObbCorruptedException
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFile
+import ru.solrudev.okkeipatcher.domain.repository.patch.updateInstalledVersion
 
 private const val PROGRESS_MULTIPLIER = 10
 
@@ -44,7 +45,7 @@ fun ObbDownloadOperation(
 		if (obbHash != obbData.hash) {
 			throw ObbCorruptedException()
 		}
-		obbPatchFile.installedVersion.persist(obbData.version)
+		obbPatchFile.updateInstalledVersion()
 	} catch (t: Throwable) {
 		obbRepository.deleteObb()
 		throw t
