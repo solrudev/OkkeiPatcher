@@ -39,21 +39,7 @@ class RestoreOperation(
 	private val storageChecker: StorageChecker
 ) : Operation<Result<Unit>> {
 
-	private val operation = with(game) {
-		aggregateOperation(
-			if (parameters.handleSaveData) saveData.backup() else emptyOperation(),
-			apk.restore(),
-			if (parameters.handleSaveData) saveData.restore() else emptyOperation(),
-			obb.restore(),
-			operation {
-				patchVersion.clear()
-				apk.deleteBackup()
-				obb.deleteBackup()
-				patchStatus.persist(false)
-			}
-		)
-	}
-
+	private val operation = game.restore()
 	override val status = operation.status
 	override val messages = operation.messages
 	override val progressDelta = operation.progressDelta
@@ -63,7 +49,7 @@ class RestoreOperation(
 		val isPatched = patchStatus.retrieve()
 		val failureReason = when {
 			!isPatched -> R.string.error_not_patched
-			!isBackupAvailable() -> R.string.error_backup_not_found
+			!game.isBackupAvailable() -> R.string.error_backup_not_found
 			!storageChecker.isEnoughSpace() -> R.string.error_no_free_space
 			else -> null
 		}
@@ -79,7 +65,18 @@ class RestoreOperation(
 		}
 	}
 
-	private fun isBackupAvailable() = with(game) {
-		apk.backupExists && obb.backupExists
-	}
+	private fun BackupableGame.restore() = aggregateOperation(
+		if (parameters.handleSaveData) saveData.backup() else emptyOperation(),
+		apk.restore(),
+		if (parameters.handleSaveData) saveData.restore() else emptyOperation(),
+		obb.restore(),
+		operation {
+			patchVersion.clear()
+			apk.deleteBackup()
+			obb.deleteBackup()
+			patchStatus.persist(false)
+		}
+	)
+
+	private fun BackupableGame.isBackupAvailable() = apk.backupExists && obb.backupExists
 }

@@ -40,7 +40,7 @@ class PatchOperation(
 	private val storageChecker: StorageChecker
 ) : Operation<Result<Unit>> {
 
-	private val operation = if (parameters.patchUpdates.available) update() else patch()
+	private val operation = if (parameters.patchUpdates.available) game.update() else game.patch()
 	override val status = operation.status
 	override val messages = operation.messages
 	override val progressDelta = operation.progressDelta
@@ -65,28 +65,24 @@ class PatchOperation(
 		}
 	}
 
-	private fun patch(): Operation<Unit> = with(game) {
-		aggregateOperation(
-			obb.backup(),
-			apk.backup(),
-			if (parameters.handleSaveData) saveData.backup() else emptyOperation(),
-			apk.patch(),
-			if (parameters.handleSaveData) saveData.restore() else emptyOperation(),
-			obb.patch(),
-			operation {
-				patchVersion.persist(parameters.patchVersion)
-				patchStatus.persist(true)
-			}
-		)
-	}
+	private fun PatchableGame.patch() = aggregateOperation(
+		obb.backup(),
+		apk.backup(),
+		if (parameters.handleSaveData) saveData.backup() else emptyOperation(),
+		apk.patch(),
+		if (parameters.handleSaveData) saveData.restore() else emptyOperation(),
+		obb.patch(),
+		operation {
+			patchVersion.persist(parameters.patchVersion)
+			patchStatus.persist(true)
+		}
+	)
 
-	private fun update() = with(game) {
-		aggregateOperation(
-			if (parameters.patchUpdates.apkUpdatesAvailable) apk.update() else emptyOperation(),
-			if (parameters.patchUpdates.obbUpdatesAvailable) obb.update() else emptyOperation(),
-			operation {
-				patchVersion.persist(parameters.patchVersion)
-			}
-		)
-	}
+	private fun PatchableGame.update() = aggregateOperation(
+		if (parameters.patchUpdates.apkUpdatesAvailable) apk.update() else emptyOperation(),
+		if (parameters.patchUpdates.obbUpdatesAvailable) obb.update() else emptyOperation(),
+		operation {
+			patchVersion.persist(parameters.patchVersion)
+		}
+	)
 }
