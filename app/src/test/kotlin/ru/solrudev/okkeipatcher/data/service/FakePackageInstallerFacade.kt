@@ -29,7 +29,7 @@ class FakePackageInstallerFacade(succeeds: Boolean = true) : PackageInstallerFac
 		return result
 	}
 
-	override suspend fun uninstall(packageName: String): Result<Unit> {
+	override suspend fun uninstall(packageName: String, appName: String): Result<Unit> {
 		return result
 	}
 }
