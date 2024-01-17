@@ -45,6 +45,11 @@
 		<item name="colorOnSurfaceInverse">@color/md_theme_light_inverseOnSurface</item>
 		<item name="colorSurfaceInverse">@color/md_theme_light_inverseSurface</item>
 		<item name="colorPrimaryInverse">@color/md_theme_light_primaryInverse</item>
+		<item name="colorSurfaceContainerLowest">@color/md_theme_light_surface</item>
+		<item name="colorSurfaceContainerLow">@color/md_theme_light_surface</item>
+		<item name="colorSurfaceContainer">@color/md_theme_light_surface</item>
+		<item name="colorSurfaceContainerHigh">@color/md_theme_light_surface</item>
+		<item name="colorSurfaceContainerHighest">@color/md_theme_light_surfaceVariant</item>
 		<item name="android:shadowColor">@color/md_theme_light_shadow</item>
 		<item name="colorAbort">@color/md_theme_light_errorContainer</item>
 		<item name="colorOnAbort">@color/md_theme_light_onErrorContainer</item>
