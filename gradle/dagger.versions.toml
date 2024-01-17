@@ -1,5 +1,5 @@
 [versions]
-dagger = "2.49"
+dagger = "2.50"
 hilt = "1.1.0"
 
 [libraries]
