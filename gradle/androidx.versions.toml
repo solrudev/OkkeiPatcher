@@ -6,7 +6,7 @@ room = "2.6.1"
 concurrent-futures-ktx = { module = "androidx.concurrent:concurrent-futures-ktx", version = "1.1.0" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
-activity-ktx = { module = "androidx.activity:activity-ktx", version = "1.8.1" }
+activity-ktx = { module = "androidx.activity:activity-ktx", version = "1.8.2" }
 fragment-ktx = { module = "androidx.fragment:fragment-ktx", version = "1.6.2" }
 preference-ktx = { module = "androidx.preference:preference-ktx", version = "1.2.1" }
 work-runtime = { module = "androidx.work:work-runtime-ktx", version = "2.9.0" }
