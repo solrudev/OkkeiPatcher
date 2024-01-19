@@ -1,7 +1,7 @@
 [versions]
 android-gradleplugin = "8.2.1"
-kotlin = "1.9.21"
-kotlin-ksp = "1.9.21-1.0.15"
+kotlin = "1.9.22"
+kotlin-ksp = "1.9.22-1.0.17"
 retrofit = "2.9.0"
 moshi = "1.15.0"
 kotlinx-coroutines = "1.7.3"
@@ -38,6 +38,5 @@ junit = ["junit-platform-commons", "junit-jupiter"]
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradleplugin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "kotlin-ksp" }
 android-cachefix = { id = "org.gradle.android.cache-fix", version = "3.0" }

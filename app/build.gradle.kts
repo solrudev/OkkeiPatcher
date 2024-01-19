@@ -24,7 +24,6 @@ val packageName = "ru.solrudev.okkeipatcher"
 plugins {
 	alias(libs.plugins.android.application)
 	alias(libs.plugins.kotlin.android)
-	alias(libs.plugins.kotlin.kapt)
 	alias(libs.plugins.kotlin.ksp)
 	alias(dagger.plugins.hilt.plugin)
 	alias(androidx.plugins.navigation.safeargs)
@@ -121,7 +120,7 @@ tasks.withType<Test>().configureEach {
 }
 
 dependencies {
-	kapt(dagger.bundles.hilt.compilers)
+	ksp(dagger.bundles.hilt.compilers)
 	ksp(libs.moshi.kotlin.codegen)
 	ksp(androidx.room.compiler)
 
@@ -168,8 +167,4 @@ dependencies {
 	testImplementation(libs.kotlinx.coroutines.test)
 	androidTestImplementation(androidx.test.ext.junit)
 	androidTestImplementation(androidx.espresso.core)
-}
-
-kapt {
-	correctErrorTypes = true
 }
