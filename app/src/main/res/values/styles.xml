@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Okkei Patcher
-  ~ Copyright (C) 2023 Ilya Fomichev
+  ~ Copyright (C) 2023-2024 Ilya Fomichev
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -54,6 +54,7 @@
 	<style name="Widget.OkkeiPatcher.Toolbar" parent="Base.Widget.OkkeiPatcher.Toolbar"/>
 
 	<style name="Base.Widget.OkkeiPatcher.AppBarLayout.Light" parent="Widget.Material3.AppBarLayout">
+		<item name="materialThemeOverlay">@style/ThemeOverlay.OkkeiPatcher.Toolbar.Light</item>
 		<item name="android:background">?colorPrimary</item>
 	</style>
 

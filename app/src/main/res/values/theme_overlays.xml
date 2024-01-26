@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Okkei Patcher
-  ~ Copyright (C) 2023 Ilya Fomichev
+  ~ Copyright (C) 2023-2024 Ilya Fomichev
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -24,6 +24,11 @@
 		<item name="colorOnSurface">?colorOnPrimary</item>
 		<item name="colorSurfaceVariant">?colorPrimary</item>
 		<item name="colorOnSurfaceVariant">?colorOnPrimary</item>
+		<item name="colorSurfaceContainerLowest">?colorPrimary</item>
+		<item name="colorSurfaceContainerLow">?colorPrimary</item>
+		<item name="colorSurfaceContainer">?colorPrimary</item>
+		<item name="colorSurfaceContainerHigh">?colorPrimary</item>
+		<item name="colorSurfaceContainerHighest">?colorPrimary</item>
 		<item name="actionMenuTextColor">?colorOnPrimary</item>
 		<item name="colorControlNormal">?colorOnPrimary</item>
 	</style>
