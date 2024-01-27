@@ -22,7 +22,6 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -35,11 +34,26 @@ import ru.solrudev.okkeipatcher.app.model.ProgressData
 import ru.solrudev.okkeipatcher.data.core.resolve
 import ru.solrudev.okkeipatcher.databinding.FragmentWorkBinding
 import ru.solrudev.okkeipatcher.domain.core.Message
-import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEvent.*
+import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEvent.AnimationsPlayed
+import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEvent.CancelMessageDismissed
+import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEvent.CancelMessageShown
+import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEvent.CancelRequested
+import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEvent.CancelWork
+import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEvent.ErrorDismissed
+import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEvent.ErrorShown
+import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEvent.StartObservingWork
+import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkEvent.ViewHidden
 import ru.solrudev.okkeipatcher.ui.screen.work.model.WorkUiState
 import ru.solrudev.okkeipatcher.ui.screen.work.model.percentDone
 import ru.solrudev.okkeipatcher.ui.shared.model.shouldShow
-import ru.solrudev.okkeipatcher.ui.util.*
+import ru.solrudev.okkeipatcher.ui.util.animateLayoutChanges
+import ru.solrudev.okkeipatcher.ui.util.copyTextToClipboard
+import ru.solrudev.okkeipatcher.ui.util.createDialogBuilder
+import ru.solrudev.okkeipatcher.ui.util.doOnAnimationEnd
+import ru.solrudev.okkeipatcher.ui.util.localizedText
+import ru.solrudev.okkeipatcher.ui.util.onBackPressed
+import ru.solrudev.okkeipatcher.ui.util.setOneshotAnimation
+import ru.solrudev.okkeipatcher.ui.util.showWithLifecycle
 
 @AndroidEntryPoint
 class WorkFragment : Fragment(R.layout.fragment_work), JetView<WorkUiState> {
@@ -163,7 +177,7 @@ class WorkFragment : Fragment(R.layout.fragment_work), JetView<WorkUiState> {
 			}
 			.create()
 		currentCancelDialog = dialog
-		dialog.showWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.Event.ON_STOP)
+		dialog.showWithLifecycle(viewLifecycleOwner.lifecycle)
 		viewModel.dispatchEvent(CancelMessageShown)
 	}
 
@@ -178,7 +192,7 @@ class WorkFragment : Fragment(R.layout.fragment_work), JetView<WorkUiState> {
 				viewModel.dispatchEvent(ErrorDismissed)
 				findNavController().popBackStack()
 			}
-			.showWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.Event.ON_STOP)
+			.showWithLifecycle(viewLifecycleOwner.lifecycle)
 		viewModel.dispatchEvent(ErrorShown)
 	}
 }

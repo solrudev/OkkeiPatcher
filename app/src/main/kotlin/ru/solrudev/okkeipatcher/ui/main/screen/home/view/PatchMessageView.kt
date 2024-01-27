@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,9 @@ import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.core.Message
 import ru.solrudev.okkeipatcher.ui.main.screen.home.HomeViewModel
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeUiState
-import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchEvent.*
+import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchEvent.StartPatch
+import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchEvent.StartPatchMessageDismissed
+import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchEvent.StartPatchMessageShown
 import ru.solrudev.okkeipatcher.ui.shared.model.shouldShow
 import ru.solrudev.okkeipatcher.ui.util.createDialogBuilder
 import ru.solrudev.okkeipatcher.ui.util.showWithLifecycle
@@ -54,7 +56,7 @@ class PatchMessageView(
 			.setOnDismissListener {
 				viewModel.dispatchEvent(StartPatchMessageDismissed)
 			}
-			.showWithLifecycle(viewLifecycle, Lifecycle.Event.ON_STOP)
+			.showWithLifecycle(viewLifecycle)
 		viewModel.dispatchEvent(StartPatchMessageShown)
 	}
 }

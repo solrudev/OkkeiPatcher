@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,6 @@ package ru.solrudev.okkeipatcher.ui.main.screen.settings.cleardata
 
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,7 +29,11 @@ import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.core.resolve
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Message
-import ru.solrudev.okkeipatcher.ui.main.screen.settings.cleardata.model.ClearDataEvent.*
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.cleardata.model.ClearDataEvent.ClearingRequested
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.cleardata.model.ClearDataEvent.ErrorMessageShown
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.cleardata.model.ClearDataEvent.ViewHidden
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.cleardata.model.ClearDataEvent.WarningDismissed
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.cleardata.model.ClearDataEvent.WarningShown
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.cleardata.model.ClearDataUiState
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.cleardata.model.shouldShowErrorMessage
 import ru.solrudev.okkeipatcher.ui.main.util.showSnackbar
@@ -82,7 +85,7 @@ class ClearDataFragment : DialogFragment(), JetView<ClearDataUiState> {
 			.setOnDismissListener {
 				viewModel.dispatchEvent(WarningDismissed)
 			}
-			.showWithLifecycle(lifecycle, Lifecycle.Event.ON_STOP)
+			.showWithLifecycle(lifecycle)
 		viewModel.dispatchEvent(WarningShown)
 	}
 

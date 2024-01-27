@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@ import android.content.DialogInterface.OnDismissListener
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
+import androidx.lifecycle.Lifecycle.Event.ON_STOP
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 
@@ -32,7 +33,7 @@ import androidx.lifecycle.LifecycleOwner
  * @param lifecycle a [Lifecycle] to be observed.
  * @param dismissEvent [Lifecycle.Event] on which dialog will be dismissed.
  */
-fun Dialog.showWithLifecycle(lifecycle: Lifecycle, dismissEvent: Lifecycle.Event) {
+fun Dialog.showWithLifecycle(lifecycle: Lifecycle, dismissEvent: Lifecycle.Event = ON_STOP) {
 	val dialogHolder = LifecycleAwareDialogHolder(this, dismissEvent)
 	lifecycle.addObserver(dialogHolder)
 	show()
@@ -45,7 +46,7 @@ fun Dialog.showWithLifecycle(lifecycle: Lifecycle, dismissEvent: Lifecycle.Event
  * @param lifecycle a [Lifecycle] to be observed.
  * @param dismissEvent [Lifecycle.Event] on which dialog will be dismissed.
  */
-fun AlertDialog.Builder.showWithLifecycle(lifecycle: Lifecycle, dismissEvent: Lifecycle.Event) {
+fun AlertDialog.Builder.showWithLifecycle(lifecycle: Lifecycle, dismissEvent: Lifecycle.Event = ON_STOP) {
 	create().showWithLifecycle(lifecycle, dismissEvent)
 }
 

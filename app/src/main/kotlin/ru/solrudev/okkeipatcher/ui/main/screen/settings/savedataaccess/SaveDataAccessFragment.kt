@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,14 +25,16 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.launch
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.solrudev.jetmvi.JetView
 import io.github.solrudev.jetmvi.jetViewModels
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.core.Message
-import ru.solrudev.okkeipatcher.ui.main.screen.settings.savedataaccess.model.SaveDataAccessEvent.*
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.savedataaccess.model.SaveDataAccessEvent.PermissionGranted
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.savedataaccess.model.SaveDataAccessEvent.RationaleDismissed
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.savedataaccess.model.SaveDataAccessEvent.RationaleShown
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.savedataaccess.model.SaveDataAccessEvent.ViewHidden
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.savedataaccess.model.SaveDataAccessUiState
 import ru.solrudev.okkeipatcher.ui.shared.model.shouldShow
 import ru.solrudev.okkeipatcher.ui.util.createDialogBuilder
@@ -96,7 +98,7 @@ class SaveDataAccessFragment : DialogFragment(), JetView<SaveDataAccessUiState> 
 			.setOnDismissListener {
 				viewModel.dispatchEvent(RationaleDismissed)
 			}
-			.showWithLifecycle(lifecycle, Lifecycle.Event.ON_STOP)
+			.showWithLifecycle(lifecycle)
 		viewModel.dispatchEvent(RationaleShown)
 	}
 }
