@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,6 +35,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
+import dev.chrisbanes.insetter.applyInsetter
 import io.github.solrudev.jetmvi.HostJetView
 import io.github.solrudev.jetmvi.bindDerived
 import io.github.solrudev.jetmvi.derivedView
@@ -67,6 +68,7 @@ class MainFragment : Fragment(R.layout.fragment_main), HostJetView<MainUiState> 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?): Unit = with(binding) {
 		containerMain.animateLayoutChanges()
 		val navController = contentMain.getFragment<NavHostFragment>().navController
+		applyInsets()
 		bottomNavigationViewMain?.let { bottomNavigationView ->
 			bottomNavigationView.setupWithNavController(navController)
 			launchBottomNavigationFlows(navController, findParentNavController())
@@ -75,6 +77,32 @@ class MainFragment : Fragment(R.layout.fragment_main), HostJetView<MainUiState> 
 		navigationViewMain?.setupWithNavController(navController)
 		findNavHostToolbar()?.setupWithNavController(navController, appBarConfiguration)
 		viewModel.bindDerived(this@MainFragment, updateBadgeView)
+	}
+
+	private fun FragmentMainBinding.applyInsets() {
+		contentMain.applyInsetter {
+			type(displayCutout = true) {
+				padding(left = bottomNavigationViewMain != null, right = true)
+			}
+		}
+		bottomNavigationViewMain?.applyInsetter {
+			type(navigationBars = true) {
+				padding(bottom = true)
+			}
+			type(displayCutout = true) {
+				padding(left = true, right = true, bottom = true)
+			}
+		}
+		navigationRailViewMain?.applyInsetter {
+			type(displayCutout = true) {
+				padding(left = true)
+			}
+		}
+		navigationViewMain?.applyInsetter {
+			type(displayCutout = true) {
+				padding(left = true)
+			}
+		}
 	}
 
 	private fun launchBottomNavigationFlows(

@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,6 +36,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
+import dev.chrisbanes.insetter.applyInsetter
 import io.github.solrudev.jetmvi.JetView
 import io.github.solrudev.jetmvi.jetViewModels
 import ru.solrudev.okkeipatcher.R
@@ -83,6 +84,7 @@ class PermissionsFragment : Fragment(R.layout.fragment_permissions), JetView<Per
 		onBackPressed {
 			requireActivity().finish()
 		}
+		applyInsets()
 		binding.recyclerviewPermissions.adapter = permissionsAdapter
 	}
 
@@ -92,6 +94,14 @@ class PermissionsFragment : Fragment(R.layout.fragment_permissions), JetView<Per
 			findNavController().popBackStack()
 		}
 		permissionsAdapter.submitList(uiState.permissions)
+	}
+
+	private fun applyInsets() = with(binding) {
+		containerPermissions.applyInsetter {
+			type(displayCutout = true) {
+				padding(left = true, right = true)
+			}
+		}
 	}
 
 	@RequiresApi(Build.VERSION_CODES.O)

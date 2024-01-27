@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -76,7 +76,7 @@ class NavHostActivity : AppCompatActivity(R.layout.okkei_nav_host), HostJetView<
 		viewModel.dispatchEvent(PermissionsChecked(allPermissionsGranted = true))
 	}
 
-	private fun applyInsets(): Unit = with(binding) {
+	private fun OkkeiNavHostBinding.applyInsets() {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
 			containerNavHost.fitsSystemWindows = true
 			appBarLayoutNavHost.fitsSystemWindows = true
@@ -88,6 +88,9 @@ class NavHostActivity : AppCompatActivity(R.layout.okkei_nav_host), HostJetView<
 			}
 			type(navigationBars = true) {
 				margin(horizontal = true)
+			}
+			type(displayCutout = true) {
+				padding(left = true, top = true, right = true)
 			}
 		}
 		contentNavHost.applyInsetter {
