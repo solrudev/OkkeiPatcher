@@ -18,6 +18,7 @@
 
 package ru.solrudev.okkeipatcher.ui.navhost.controller
 
+import android.annotation.SuppressLint
 import androidx.navigation.NavController
 import io.github.solrudev.jetmvi.JetView
 import ru.solrudev.okkeipatcher.OkkeiNavGraphDirections
@@ -53,6 +54,7 @@ class NavigationController(
 		navController.navigateSafely(toPermissionsScreen)
 	}
 
+	@SuppressLint("RestrictedApi")
 	private fun navigateToWorkScreen(work: Work) {
 		viewModel.dispatchEvent(NavigatedToWorkScreen)
 		val workScreen = navController.findDestination(R.id.work_fragment)
