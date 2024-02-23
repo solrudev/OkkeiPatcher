@@ -1,6 +1,6 @@
 [versions]
 dagger = "2.50"
-hilt = "1.1.0"
+hilt = "1.2.0"
 
 [libraries]
 dagger-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "dagger" }
