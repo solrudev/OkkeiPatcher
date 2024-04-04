@@ -5,7 +5,7 @@ kotlin-ksp = "1.9.22-1.0.17"
 retrofit = "2.9.0"
 moshi = "1.15.0"
 kotlinx-coroutines = "1.8.0"
-okio = "3.7.0"
+okio = "3.9.0"
 
 [libraries]
 materialcomponents = { module = "com.google.android.material:material", version = "1.11.0" }
