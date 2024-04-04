@@ -85,7 +85,7 @@ Reliable task execution and status tracking is ensured by using
   simple access to view binding
 
 # Building
-**Okkei Patcher** requires Android Studio Hedgehog and higher to build (Android Gradle Plugin 8.2+).
+**Okkei Patcher** requires Android Studio Iguana and higher to build (Android Gradle Plugin 8.3+).
 
 **Okkei Patcher** has two flavors: **prod** and **mock**.
 
