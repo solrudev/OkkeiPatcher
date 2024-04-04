@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,12 +20,18 @@ package ru.solrudev.okkeipatcher.ui.main.screen.home.middleware
 
 import io.github.solrudev.jetmvi.JetMiddleware
 import io.github.solrudev.jetmvi.MiddlewareScope
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import ru.solrudev.okkeipatcher.app.usecase.patch.GetPatchUpdatesUseCase
 import ru.solrudev.okkeipatcher.app.usecase.work.GetIsWorkPendingFlowUseCase
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeEvent
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeEvent.PatchStatusChanged
-import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchEvent.*
+import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeEvent.RefreshRequested
+import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchEvent.PatchUpdatesLoaded
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchStatus.Patched
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchStatus.UpdateAvailable
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PersistentPatchStatus
@@ -51,8 +57,7 @@ class CheckPatchUpdatesMiddleware @Inject constructor(
 			.filter { it.available }
 			.onEach { send(PatchStatusChanged(UpdateAvailable)) }
 			.launchIn(this)
-		onEvent<PatchUpdatesRequested> {
-			send(PatchUpdatesLoadingStarted)
+		onEvent<RefreshRequested> {
 			if (canLoadPatchUpdates && getPatchUpdatesUseCase(refresh = true).available) {
 				send(PatchStatusChanged(UpdateAvailable))
 			}

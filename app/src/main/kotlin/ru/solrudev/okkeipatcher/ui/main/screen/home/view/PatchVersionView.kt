@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023-2024 Ilya Fomichev
+ * Copyright (C) 2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,32 +18,21 @@
 
 package ru.solrudev.okkeipatcher.ui.main.screen.home.view
 
+import android.content.Context
+import android.widget.TextView
 import io.github.solrudev.jetmvi.JetView
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.databinding.CardGameInfoBinding
-import ru.solrudev.okkeipatcher.ui.main.screen.home.model.GameUiState
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeUiState
 
-class GameInfoView(private val binding: CardGameInfoBinding) : JetView<HomeUiState> {
+class PatchVersionView(
+	private val context: Context,
+	private val textView: TextView
+) : JetView<HomeUiState> {
 
-	private val context by binding.root::context
-
-	init {
-		loadGameInfo()
-	}
-
-	override val trackedState = listOf(HomeUiState::isRefreshing)
+	override val trackedState = listOf(HomeUiState::patchVersion)
 
 	override fun render(uiState: HomeUiState) {
-		if (uiState.isRefreshing) {
-			loadGameInfo()
-		}
-	}
-
-	private fun loadGameInfo() = with(binding) {
-		val gameUiState = GameUiState(context)
-		textviewCardGameTitle.text = gameUiState.title
-		textviewCardGameVersion.text = context.getString(R.string.card_app_version, gameUiState.version)
-		imageviewCardGameIcon.setImageDrawable(gameUiState.icon)
+		val version = uiState.patchVersion.ifEmpty { context.getString(R.string.not_available) }
+		textView.text = context.getString(R.string.card_patch_version, version)
 	}
 }

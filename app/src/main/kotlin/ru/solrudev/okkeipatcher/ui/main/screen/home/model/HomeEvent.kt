@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,14 +25,13 @@ sealed interface HomeEvent : JetEvent {
 	data class PatchStatusChanged(val patchStatus: PatchStatus) : HomeEvent
 	data class PatchVersionChanged(val patchVersion: String) : HomeEvent
 	data object ViewHidden : HomeEvent
+	data object RefreshRequested : HomeEvent
 }
 
 sealed interface PatchEvent : HomeEvent {
 	data class PatchSizeLoaded(val patchSize: Double) : PatchEvent
 	data object PatchSizeLoadingStarted : PatchEvent
 	data object PatchRequested : PatchEvent, PatchEffect
-	data object PatchUpdatesRequested : PatchEvent, PatchEffect
-	data object PatchUpdatesLoadingStarted : PatchEvent
 	data object PatchUpdatesLoaded : PatchEvent
 	data object StartPatch : PatchEvent, PatchEffect
 	data object StartPatchMessageShown : PatchEvent

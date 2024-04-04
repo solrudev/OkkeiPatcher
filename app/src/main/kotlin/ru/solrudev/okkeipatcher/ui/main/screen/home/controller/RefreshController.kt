@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,8 +21,8 @@ package ru.solrudev.okkeipatcher.ui.main.screen.home.controller
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import io.github.solrudev.jetmvi.JetView
 import ru.solrudev.okkeipatcher.ui.main.screen.home.HomeViewModel
+import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeEvent.RefreshRequested
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeUiState
-import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchEvent.PatchUpdatesRequested
 import ru.solrudev.okkeipatcher.ui.main.util.applyDistanceToTrigger
 
 class RefreshController(
@@ -34,16 +34,16 @@ class RefreshController(
 		setupRefresh()
 	}
 
-	override val trackedState = listOf(HomeUiState::isPatchUpdateLoading)
+	override val trackedState = listOf(HomeUiState::isRefreshing)
 
 	override fun render(uiState: HomeUiState) {
-		swipeRefreshLayout.isRefreshing = uiState.isPatchUpdateLoading
+		swipeRefreshLayout.isRefreshing = uiState.isRefreshing
 	}
 
 	private fun setupRefresh() = with(swipeRefreshLayout) {
 		applyDistanceToTrigger()
 		setOnRefreshListener {
-			viewModel.dispatchEvent(PatchUpdatesRequested)
+			viewModel.dispatchEvent(RefreshRequested)
 		}
 	}
 }

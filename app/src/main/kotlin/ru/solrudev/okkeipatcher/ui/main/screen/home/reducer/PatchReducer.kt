@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,7 +49,6 @@ class PatchReducer @Inject constructor() : Reducer<PatchEvent, HomeUiState> {
 			state.copy(startPatchMessage = startPatchMessage)
 		}
 		is StartPatchMessageDismissed -> state.copy(startPatchMessage = MessageUiState())
-		is PatchUpdatesLoadingStarted -> state.copy(isPatchUpdateLoading = true)
-		is PatchUpdatesLoaded -> state.copy(isPatchUpdateLoading = false)
+		is PatchUpdatesLoaded -> state.copy(isRefreshing = false)
 	}
 }

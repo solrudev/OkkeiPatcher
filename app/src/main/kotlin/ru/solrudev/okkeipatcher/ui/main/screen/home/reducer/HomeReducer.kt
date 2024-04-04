@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,10 @@ package ru.solrudev.okkeipatcher.ui.main.screen.home.reducer
 
 import io.github.solrudev.jetmvi.Reducer
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeEvent
-import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeEvent.*
+import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeEvent.PatchStatusChanged
+import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeEvent.PatchVersionChanged
+import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeEvent.RefreshRequested
+import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeEvent.ViewHidden
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeUiState
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchEvent
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.RestoreEvent
@@ -33,6 +36,7 @@ class HomeReducer @Inject constructor(
 ) : Reducer<HomeEvent, HomeUiState> {
 
 	override fun reduce(event: HomeEvent, state: HomeUiState) = when (event) {
+		RefreshRequested -> state.copy(isRefreshing = true)
 		is PatchEvent -> patchReducer.reduce(event, state)
 		is RestoreEvent -> restoreReducer.reduce(event, state)
 		is PatchStatusChanged -> patchStatusReducer.reduce(event, state)

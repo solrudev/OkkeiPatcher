@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ data class HomeUiState(
 	val isRestoreEnabled: Boolean = false,
 	val patchStatus: LocalizedString = LocalizedString.resource(R.string.patch_status_not_patched),
 	val patchVersion: String = "",
-	val isPatchUpdateLoading: Boolean = false,
+	val isRefreshing: Boolean = false,
 	val isPatchSizeLoading: Boolean = false,
 	val startPatchMessage: MessageUiState = MessageUiState(),
 	val startRestoreMessage: MessageUiState = MessageUiState(),

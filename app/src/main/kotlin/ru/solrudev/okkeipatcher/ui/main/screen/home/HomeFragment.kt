@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@ import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeEvent.ViewHidden
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeUiState
 import ru.solrudev.okkeipatcher.ui.main.screen.home.view.ActionsView
 import ru.solrudev.okkeipatcher.ui.main.screen.home.view.GameInfoView
+import ru.solrudev.okkeipatcher.ui.main.screen.home.view.PatchVersionView
 import ru.solrudev.okkeipatcher.ui.main.screen.home.view.PatchMessageView
 import ru.solrudev.okkeipatcher.ui.main.screen.home.view.PatchStatusView
 import ru.solrudev.okkeipatcher.ui.main.screen.home.view.PatchUpdateBadgeView
@@ -47,6 +48,10 @@ class HomeFragment : Fragment(R.layout.fragment_home), HostJetView<HomeUiState> 
 
 	private val gameInfoView by derivedView {
 		GameInfoView(binding.cardHomeGameInfo)
+	}
+
+	private val patchVersionView by derivedView {
+		PatchVersionView(requireContext(), binding.cardHomeGameInfo.textviewCardGamePatch)
 	}
 
 	private val actionsView by derivedView {
@@ -75,6 +80,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), HostJetView<HomeUiState> 
 
 	private val viewModel: HomeViewModel by jetViewModels(
 		HomeFragment::gameInfoView,
+		HomeFragment::patchVersionView,
 		HomeFragment::actionsView,
 		HomeFragment::patchStatusView,
 		HomeFragment::patchMessageView,
