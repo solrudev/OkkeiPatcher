@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ class PermissionsRepositoryImpl @Inject constructor(
 ) : PermissionsRepository {
 
 	override fun getRequiredPermissions() = buildMap {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+		if (Build.VERSION.SDK_INT in Build.VERSION_CODES.M..< Build.VERSION_CODES.TIRAMISU) {
 			put(Permission.Storage, isStoragePermissionGranted())
 		}
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
