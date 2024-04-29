@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,10 +20,11 @@ package ru.solrudev.okkeipatcher.ui.main.screen.home.middleware
 
 import io.github.solrudev.jetmvi.JetMiddleware
 import io.github.solrudev.jetmvi.MiddlewareScope
-import kotlinx.coroutines.flow.*
 import ru.solrudev.okkeipatcher.app.usecase.patch.GetPatchSizeInMbUseCase
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeEvent
-import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchEvent.*
+import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchEvent.PatchRequested
+import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchEvent.PatchSizeLoaded
+import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchEvent.PatchSizeLoadingStarted
 import javax.inject.Inject
 
 class GetPatchSizeMiddleware @Inject constructor(

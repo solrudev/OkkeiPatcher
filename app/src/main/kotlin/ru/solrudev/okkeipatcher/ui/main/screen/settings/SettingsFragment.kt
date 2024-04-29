@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,7 +32,6 @@ import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.controller.AppearanceSettingsController
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.controller.MiscellaneousSettingsController
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.controller.PatcherSettingsController
-import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.*
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsUiState
 
 private const val DIALOG_FRAGMENT_TAG = "androidx.preference.PreferenceFragment.DIALOG"

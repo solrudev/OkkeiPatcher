@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ class TLSSocketFactory : SSLSocketFactory() {
 		trustManagerFactory.init(null as KeyStore?)
 		val trustManagers = trustManagerFactory.trustManagers
 		check(trustManagers.size == 1 && trustManagers[0] is X509TrustManager) {
-			"Unexpected default trust managers: ${Arrays.toString(trustManagers)}"
+			"Unexpected default trust managers: ${trustManagers.contentToString()}"
 		}
 		this.trustManagers = trustManagers
 	}
