@@ -12,7 +12,7 @@ preference-ktx = { module = "androidx.preference:preference-ktx", version = "1.2
 work-runtime = { module = "androidx.work:work-runtime-ktx", version = "2.9.0" }
 navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigation" }
 navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigation" }
-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version = "1.0.0" }
+datastore-preferences = { module = "androidx.datastore:datastore-preferences", version = "1.1.0" }
 swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version = "1.1.0" }
 multidex = { module = "androidx.multidex:multidex", version = "2.0.1" }
 test-ext-junit = { module = "androidx.test.ext:junit", version = "1.1.5" }
