@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Okkei Patcher
-  ~ Copyright (C) 2023 Ilya Fomichev
+  ~ Copyright (C) 2024 Ilya Fomichev
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -17,14 +16,23 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<set xmlns:android="http://schemas.android.com/apk/res/android">
-	<alpha android:duration="@integer/slide_transition_alpha_duration"
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+	android:ordering="together">
+
+	<objectAnimator
+		android:duration="@integer/slide_transition_alpha_duration"
+		android:interpolator="@android:anim/decelerate_interpolator"
+		android:propertyName="alpha"
 		android:startOffset="@integer/slide_transition_enter_alpha_offset"
-		android:interpolator="@android:anim/accelerate_interpolator"
-		android:fromAlpha="0"
-		android:toAlpha="1" />
-	<translate android:duration="@integer/slide_transition_translate_duration"
+		android:valueFrom="0f"
+		android:valueTo="1f" />
+
+	<objectAnimator
+		android:duration="@integer/slide_transition_translate_duration"
 		android:interpolator="@anim/slide_transition_translate_interpolator"
-		android:fromXDelta="@fraction/slide_transition_enter_translate_delta"
-		android:toXDelta="0%" />
+		android:startOffset="@integer/slide_transition_enter_alpha_offset"
+		android:propertyName="x"
+		android:valueFrom="@integer/slide_transition_enter_translate"
+		android:valueTo="0f"
+		android:valueType="floatType" />
 </set>

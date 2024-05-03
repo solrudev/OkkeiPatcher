@@ -19,7 +19,9 @@
 
 <resources>
 	<integer name="slide_transition_alpha_duration">150</integer>
-	<integer name="slide_transition_enter_alpha_offset">150</integer>
+	<integer name="slide_transition_enter_alpha_offset">120</integer>
 	<integer name="slide_transition_translate_duration">300</integer>
+	<integer name="slide_transition_enter_translate">80</integer>
+	<integer name="slide_transition_exit_translate">-80</integer>
 	<integer name="permissions_span_count">1</integer>
 </resources>
