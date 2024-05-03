@@ -80,6 +80,9 @@
 	<style name="Widget.OkkeiPatcher.LinearProgressIndicator" parent="Widget.Material3.LinearProgressIndicator">
 		<item name="trackThickness">@dimen/linear_progress_indicator_track_thickness</item>
 		<item name="trackCornerRadius">@dimen/linear_progress_indicator_track_thickness</item>
+		<item name="showAnimationBehavior">inward</item>
+		<item name="indicatorTrackGapSize">0dp</item>
+		<item name="trackStopIndicatorSize">0dp</item>
 	</style>
 
 	<style name="Widget.OkkeiPatcher.CircularProgressIndicator" parent="Widget.Material3.CircularProgressIndicator">
