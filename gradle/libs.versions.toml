@@ -4,7 +4,7 @@ kotlin = "1.9.24"
 kotlin-ksp = "1.9.24-1.0.20"
 retrofit = "2.11.0"
 moshi = "1.15.1"
-kotlinx-coroutines = "1.8.0"
+kotlinx-coroutines = "1.8.1"
 okio = "3.9.0"
 
 [libraries]
