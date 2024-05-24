@@ -1,7 +1,7 @@
 [versions]
 android-gradleplugin = "8.3.2"
-kotlin = "1.9.24"
-kotlin-ksp = "1.9.24-1.0.20"
+kotlin = "2.0.0"
+kotlin-ksp = "2.0.0-1.0.21"
 retrofit = "2.11.0"
 moshi = "1.15.1"
 kotlinx-coroutines = "1.8.1"
