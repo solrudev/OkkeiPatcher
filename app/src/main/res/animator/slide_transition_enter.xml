@@ -20,6 +20,21 @@
 	android:ordering="together">
 
 	<objectAnimator
+		android:duration="0"
+		android:propertyName="alpha"
+		android:startOffset="0"
+		android:valueFrom="0f"
+		android:valueTo="0f" />
+
+	<objectAnimator
+		android:duration="0"
+		android:propertyName="x"
+		android:startOffset="0"
+		android:valueFrom="@integer/slide_transition_enter_translate"
+		android:valueTo="@integer/slide_transition_enter_translate"
+		android:valueType="floatType" />
+
+	<objectAnimator
 		android:duration="@integer/slide_transition_alpha_duration"
 		android:interpolator="@android:anim/decelerate_interpolator"
 		android:propertyName="alpha"
