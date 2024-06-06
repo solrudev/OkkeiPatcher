@@ -51,6 +51,7 @@ android {
 		versionName = "2.0.17"
 		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 		vectorDrawables.useSupportLibrary = true
+		resourceConfigurations += setOf("en", "ru")
 	}
 
 	val releaseSigningConfig by signingConfigs.registering {
