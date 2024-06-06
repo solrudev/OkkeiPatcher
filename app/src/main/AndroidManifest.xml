@@ -46,7 +46,7 @@
 		android:supportsRtl="true"
 		android:theme="@style/Theme.OkkeiPatcher"
 		android:localeConfig="@xml/locales_config"
-		tools:ignore="UnusedAttribute">
+		tools:targetApi="34">
 
 		<activity
 			android:name=".ui.navhost.NavHostActivity"
