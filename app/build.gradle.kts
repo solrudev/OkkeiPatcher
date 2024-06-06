@@ -16,7 +16,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import java.util.Properties
 
 val packageName = "ru.solrudev.okkeipatcher"
@@ -32,6 +31,10 @@ plugins {
 
 kotlin {
 	jvmToolchain(17)
+
+	compilerOptions {
+		freeCompilerArgs.add("-Xjvm-default=all")
+	}
 }
 
 base {
@@ -107,12 +110,6 @@ android {
 
 	buildFeatures {
 		viewBinding = true
-	}
-}
-
-tasks.withType<KotlinJvmCompile>().configureEach {
-	compilerOptions {
-		freeCompilerArgs.add("-Xjvm-default=all")
 	}
 }
 
