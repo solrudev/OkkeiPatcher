@@ -1,5 +1,5 @@
 [versions]
-android-gradleplugin = "8.3.2"
+android-gradleplugin = "8.4.1"
 kotlin = "2.0.0"
 kotlin-ksp = "2.0.0-1.0.22"
 retrofit = "2.11.0"
