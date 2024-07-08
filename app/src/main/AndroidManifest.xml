@@ -34,6 +34,9 @@
 	<uses-permission
 		android:name="android.permission.WRITE_EXTERNAL_STORAGE"
 		tools:ignore="ScopedStorage" />
+	<uses-permission
+		android:name="android.permission.UPDATE_PACKAGES_WITHOUT_USER_ACTION"
+		tools:node="remove" />
 
 	<application
 		android:name=".OkkeiApplication"
