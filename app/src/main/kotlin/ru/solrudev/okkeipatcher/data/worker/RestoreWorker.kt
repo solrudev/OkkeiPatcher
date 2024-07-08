@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -55,7 +55,8 @@ class RestoreWorker @AssistedInject constructor(
 	context, workerParameters, workManager, restoreOperationFactory,
 	notificationServiceFactory.create(
 		workLabel,
-		workNotificationIntent(context, workerParameters),
+		contentIntent = workNotificationIntent(context, workerParameters),
+		cancelIntent = workNotificationIntent(context, workerParameters, isAbortRequested = true),
 		showGameIconInProgressNotification = true
 	),
 	WorkNotificationsParameters(successMessage, failureMessage)

@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -56,7 +56,8 @@ class DownloadUpdateWorker @AssistedInject constructor(
 	context, workerParameters, workManager, downloadUpdateOperationFactory,
 	notificationServiceFactory.create(
 		workLabel,
-		downloadUpdateNotificationContentIntent(context),
+		contentIntent = downloadUpdateNotificationContentIntent(context),
+		cancelIntent = workManager.createCancelPendingIntent(workerParameters.id),
 		showGameIconInProgressNotification = false
 	),
 	WorkNotificationsParameters(successMessage, failureMessage)

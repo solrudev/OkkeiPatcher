@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,8 +20,10 @@ package ru.solrudev.okkeipatcher.data.service
 
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.ComponentCallbacks
 import android.content.Context
 import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE
+import android.content.res.Configuration
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.content.getSystemService
@@ -39,7 +41,7 @@ import kotlin.random.Random
 private val globalProgressNotificationId = AtomicInteger(Random.nextInt(from = 10000, until = 1000000))
 private val globalMessageNotificationId = AtomicInteger(Random.nextInt(from = 10000, until = 1000000))
 
-interface NotificationService {
+interface NotificationService : AutoCloseable {
 	fun createForegroundInfo(): ForegroundInfo
 	fun updateProgressNotification(status: LocalizedString, progressData: ProgressData)
 	fun displayMessageNotification(message: Message)
@@ -49,6 +51,7 @@ class NotificationServiceImpl(
 	private val applicationContext: Context,
 	private val progressNotificationTitle: LocalizedString,
 	private val contentIntent: PendingIntent,
+	private val cancelIntent: PendingIntent?,
 	showGameIconInProgressNotification: Boolean
 ) : NotificationService {
 
@@ -58,8 +61,18 @@ class NotificationServiceImpl(
 		showGameIconInProgressNotification
 	)
 
+	private val configChangeCallback = object : ComponentCallbacks {
+		override fun onConfigurationChanged(newConfig: Configuration) = updateProgressNotificationStrings()
+		override fun onLowMemory() {}
+	}
+
 	private val progressNotificationId = globalProgressNotificationId.incrementAndGet()
 	private val notificationManager = applicationContext.getSystemService<NotificationManager>()
+	private var currentStatus: LocalizedString = LocalizedString.empty()
+
+	init {
+		applicationContext.registerComponentCallbacks(configChangeCallback)
+	}
 
 	override fun createForegroundInfo(): ForegroundInfo {
 		return if (Build.VERSION.SDK_INT >= 34) {
@@ -74,6 +87,7 @@ class NotificationServiceImpl(
 	}
 
 	override fun updateProgressNotification(status: LocalizedString, progressData: ProgressData) {
+		currentStatus = status
 		val titleString = progressNotificationTitle.resolve(applicationContext)
 		val statusString = status.resolve(applicationContext)
 		val notification = progressNotificationBuilder
@@ -107,6 +121,10 @@ class NotificationServiceImpl(
 		notificationManager?.notify(notificationId, notification)
 	}
 
+	override fun close() {
+		applicationContext.unregisterComponentCallbacks(configChangeCallback)
+	}
+
 	private fun createNotificationBuilder(
 		title: LocalizedString,
 		progressNotification: Boolean,
@@ -124,6 +142,13 @@ class NotificationServiceImpl(
 			priority = NotificationCompat.PRIORITY_DEFAULT
 			setSmallIcon(R.drawable.ic_notification)
 			setContentIntent(contentIntent)
+			if (cancelIntent != null && progressNotification) {
+				addAction(
+					android.R.drawable.ic_delete,
+					applicationContext.getString(R.string.button_text_abort),
+					cancelIntent
+				)
+			}
 			setSound(null)
 			if (progressNotification) {
 				setSubText(applicationContext.getString(R.string.percent_done, 0))
@@ -138,5 +163,22 @@ class NotificationServiceImpl(
 				setAutoCancel(true)
 			}
 		}
+	}
+
+	private fun updateProgressNotificationStrings() {
+		val contentTitle = progressNotificationTitle.resolve(applicationContext)
+		val statusString = currentStatus.resolve(applicationContext)
+		val notification = progressNotificationBuilder
+			.setContentTitle(contentTitle)
+			.setContentText(statusString)
+			.setStyle(NotificationCompat.BigTextStyle().bigText(statusString))
+			.clearActions()
+			.addAction(
+				android.R.drawable.ic_delete,
+				applicationContext.getString(R.string.button_text_abort),
+				cancelIntent
+			)
+			.build()
+		notificationManager?.notify(progressNotificationId, notification)
 	}
 }

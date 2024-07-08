@@ -76,6 +76,7 @@ class WorkFragment : Fragment(R.layout.fragment_work), JetView<WorkUiState> {
 		}
 		setupNavigation()
 		lottieAnimationViewWork.playAnimation()
+		handleAbortRequest()
 	}
 
 	override fun onStart() {
@@ -128,6 +129,13 @@ class WorkFragment : Fragment(R.layout.fragment_work), JetView<WorkUiState> {
 
 	private fun setWorkLabel() {
 		findNavController().currentDestination?.label = args.work.label.resolve(requireContext())
+	}
+
+	private fun handleAbortRequest() {
+		if (args.isAbortRequested) {
+			arguments = WorkFragmentArgs(args.work, isAbortRequested = false).toBundle()
+			viewModel.dispatchEvent(CancelRequested)
+		}
 	}
 
 	private fun onWorkSucceeded(playAnimations: Boolean) = with(binding) {

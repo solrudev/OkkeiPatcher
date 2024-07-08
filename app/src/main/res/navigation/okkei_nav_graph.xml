@@ -19,7 +19,12 @@
 		app:enterAnim="@animator/nav_default_enter_anim"
 		app:exitAnim="@animator/nav_default_exit_anim"
 		app:popEnterAnim="@animator/nav_default_pop_enter_anim"
-		app:popExitAnim="@animator/nav_default_pop_exit_anim" />
+		app:popExitAnim="@animator/nav_default_pop_exit_anim">
+		<argument
+			android:name="isAbortRequested"
+			android:defaultValue="false"
+			app:argType="boolean" />
+	</action>
 
 	<fragment
 		android:id="@+id/main_fragment"
@@ -38,6 +43,9 @@
 		<argument
 			android:name="work"
 			app:argType="ru.solrudev.okkeipatcher.app.model.Work" />
+		<argument
+			android:name="isAbortRequested"
+			app:argType="boolean" />
 	</fragment>
 
 </navigation>

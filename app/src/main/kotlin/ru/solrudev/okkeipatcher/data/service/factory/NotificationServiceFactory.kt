@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@ interface NotificationServiceFactory {
 	fun create(
 		progressNotificationTitle: LocalizedString,
 		contentIntent: PendingIntent,
+		cancelIntent: PendingIntent?,
 		showGameIconInProgressNotification: Boolean
 	): NotificationService
 }
@@ -42,11 +43,13 @@ class NotificationServiceFactoryImpl @Inject constructor(
 	override fun create(
 		progressNotificationTitle: LocalizedString,
 		contentIntent: PendingIntent,
+		cancelIntent: PendingIntent?,
 		showGameIconInProgressNotification: Boolean
 	): NotificationService = NotificationServiceImpl(
 		applicationContext,
 		progressNotificationTitle,
 		contentIntent,
+		cancelIntent,
 		showGameIconInProgressNotification
 	)
 }

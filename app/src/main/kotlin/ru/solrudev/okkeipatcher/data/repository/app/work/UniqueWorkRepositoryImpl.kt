@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -81,12 +81,17 @@ open class UniqueWorkRepositoryImpl<T : ForegroundOperationWorker>(
 		.map { it.toWork(workLabel) }
 }
 
-fun workNotificationIntent(applicationContext: Context, workerParameters: WorkerParameters): PendingIntent {
+fun workNotificationIntent(
+	applicationContext: Context, workerParameters: WorkerParameters, isAbortRequested: Boolean = false
+): PendingIntent {
 	val workLabel = workerParameters.inputData.getSerializable<LocalizedString>(WORK_LABEL_KEY)
 		?: return defaultNotificationIntent(applicationContext)
 	return NavDeepLinkBuilder(applicationContext)
 		.setGraph(R.navigation.okkei_nav_graph)
-		.setDestination(R.id.work_fragment, WorkFragmentArgs(Work(workerParameters.id, workLabel)).toBundle())
+		.setDestination(
+			R.id.work_fragment,
+			WorkFragmentArgs(Work(workerParameters.id, workLabel), isAbortRequested).toBundle()
+		)
 		.createPendingIntent()
 }
 
