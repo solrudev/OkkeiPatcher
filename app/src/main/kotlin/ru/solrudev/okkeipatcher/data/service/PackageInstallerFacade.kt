@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,7 +46,6 @@ class PackageInstallerFacadeImpl @Inject constructor(
 
 	override suspend fun install(apkPath: Path, appName: String, immediate: Boolean): Result<Unit> {
 		val session = packageInstaller.createSession(apkPath.toFile().toUri()) {
-			requireUserAction = false
 			if (immediate) {
 				confirmation = Confirmation.IMMEDIATE
 			}
