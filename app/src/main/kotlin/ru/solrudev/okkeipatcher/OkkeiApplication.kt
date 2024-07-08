@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -94,6 +94,7 @@ class OkkeiApplication : Application(), Configuration.Provider {
 				R.string.notification_channel_messages_name,
 				R.string.notification_channel_messages_description
 			)
+			notificationManager?.deleteNotificationChannel("SimpleInstaller_NotificationChannel")
 		}
 	}
 
