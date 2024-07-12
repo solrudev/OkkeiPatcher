@@ -168,17 +168,19 @@ class NotificationServiceImpl(
 	private fun updateProgressNotificationStrings() {
 		val contentTitle = progressNotificationTitle.resolve(applicationContext)
 		val statusString = currentStatus.resolve(applicationContext)
-		val notification = progressNotificationBuilder
-			.setContentTitle(contentTitle)
-			.setContentText(statusString)
-			.setStyle(NotificationCompat.BigTextStyle().bigText(statusString))
-			.clearActions()
-			.addAction(
-				android.R.drawable.ic_delete,
-				applicationContext.getString(R.string.button_text_abort),
-				cancelIntent
-			)
-			.build()
+		val notification = progressNotificationBuilder.apply {
+			setContentTitle(contentTitle)
+			setContentText(statusString)
+			setStyle(NotificationCompat.BigTextStyle().bigText(statusString))
+			clearActions()
+			if (cancelIntent != null) {
+				addAction(
+					android.R.drawable.ic_delete,
+					applicationContext.getString(R.string.button_text_abort),
+					cancelIntent
+				)
+			}
+		}.build()
 		notificationManager?.notify(progressNotificationId, notification)
 	}
 }
