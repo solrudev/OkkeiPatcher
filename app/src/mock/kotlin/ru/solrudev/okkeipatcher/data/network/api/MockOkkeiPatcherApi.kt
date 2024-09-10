@@ -18,6 +18,7 @@
 
 package ru.solrudev.okkeipatcher.data.network.api
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runInterruptible
 import okio.FileSystem
@@ -25,12 +26,14 @@ import ru.solrudev.okkeipatcher.data.network.model.FileDto
 import ru.solrudev.okkeipatcher.data.network.model.OkkeiPatcherVersionDto
 import ru.solrudev.okkeipatcher.data.service.OkkeiPatcherApkProvider
 import ru.solrudev.okkeipatcher.data.util.computeHash
+import ru.solrudev.okkeipatcher.di.IoDispatcher
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.time.Duration.Companion.seconds
 
 @Singleton
 class MockOkkeiPatcherApi @Inject constructor(
+	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	private val fileSystem: FileSystem,
 	private val okkeiPatcherApkProvider: OkkeiPatcherApkProvider
 ) : OkkeiPatcherApi {
@@ -49,7 +52,7 @@ class MockOkkeiPatcherApi @Inject constructor(
 			return FileDto(version = 0, url = "", hash = "", size = 0L)
 		}
 		val installedApk = okkeiPatcherApkProvider.getOkkeiPatcherApkPath()
-		val hash = runInterruptible { fileSystem.computeHash(installedApk) }
+		val hash = runInterruptible(ioDispatcher) { fileSystem.computeHash(installedApk) }
 		val size = fileSystem.metadata(installedApk).size ?: 0L
 		return FileDto(version = Int.MAX_VALUE, url = installedApk.toString(), hash, size)
 	}
