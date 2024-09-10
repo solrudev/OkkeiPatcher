@@ -52,13 +52,12 @@ class NotificationServiceImpl(
 	private val progressNotificationTitle: LocalizedString,
 	private val contentIntent: PendingIntent,
 	private val cancelIntent: PendingIntent?,
-	showGameIconInProgressNotification: Boolean
+	private val showGameIconInProgressNotification: Boolean
 ) : NotificationService {
 
 	private val progressNotificationBuilder = createNotificationBuilder(
 		progressNotificationTitle,
-		progressNotification = true,
-		showGameIconInProgressNotification
+		progressNotification = true
 	)
 
 	private val configChangeCallback = object : ComponentCallbacks {
@@ -75,7 +74,7 @@ class NotificationServiceImpl(
 	}
 
 	override fun createForegroundInfo(): ForegroundInfo {
-		return if (Build.VERSION.SDK_INT >= 34) {
+		val foregroundInfo = if (Build.VERSION.SDK_INT >= 34) {
 			ForegroundInfo(
 				progressNotificationId,
 				progressNotificationBuilder.build(),
@@ -84,6 +83,10 @@ class NotificationServiceImpl(
 		} else {
 			ForegroundInfo(progressNotificationId, progressNotificationBuilder.build())
 		}
+		if (showGameIconInProgressNotification) {
+			progressNotificationBuilder.attachGameIcon()
+		}
+		return foregroundInfo
 	}
 
 	override fun updateProgressNotification(status: LocalizedString, progressData: ProgressData) {
@@ -107,11 +110,7 @@ class NotificationServiceImpl(
 
 	override fun displayMessageNotification(message: Message) {
 		val messageString = message.text.resolve(applicationContext)
-		val notification = createNotificationBuilder(
-			message.title,
-			progressNotification = false,
-			showGameIcon = false
-		).apply {
+		val notification = createNotificationBuilder(message.title, progressNotification = false).apply {
 			setContentText(messageString)
 			if (messageString.length > 40) {
 				setStyle(NotificationCompat.BigTextStyle().bigText(messageString))
@@ -127,8 +126,7 @@ class NotificationServiceImpl(
 
 	private fun createNotificationBuilder(
 		title: LocalizedString,
-		progressNotification: Boolean,
-		showGameIcon: Boolean
+		progressNotification: Boolean
 	): NotificationCompat.Builder {
 		val contentTitle = title.resolve(applicationContext)
 		val channelId = if (progressNotification) {
@@ -152,10 +150,6 @@ class NotificationServiceImpl(
 			setSound(null)
 			if (progressNotification) {
 				setSubText(applicationContext.getString(R.string.percent_done, 0))
-				if (showGameIcon) {
-					runCatching { applicationContext.packageManager.getApplicationIcon(GAME_PACKAGE_NAME).toBitmap() }
-						.getOrNull()?.let(::setLargeIcon)
-				}
 				setProgress(100, 0, false)
 				setOnlyAlertOnce(true)
 				setStyle(NotificationCompat.BigTextStyle().bigText(""))
@@ -163,6 +157,12 @@ class NotificationServiceImpl(
 				setAutoCancel(true)
 			}
 		}
+	}
+
+	private fun NotificationCompat.Builder.attachGameIcon(): NotificationCompat.Builder {
+		runCatching { applicationContext.packageManager.getApplicationIcon(GAME_PACKAGE_NAME).toBitmap() }
+			.getOrNull()?.let(::setLargeIcon)
+		return this
 	}
 
 	private fun updateProgressNotificationStrings() {
