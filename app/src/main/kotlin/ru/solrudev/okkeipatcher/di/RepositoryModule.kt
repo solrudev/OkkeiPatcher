@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,21 +26,34 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ru.solrudev.okkeipatcher.app.repository.ConnectivityRepository
 import ru.solrudev.okkeipatcher.app.repository.LicensesRepository
+import ru.solrudev.okkeipatcher.app.repository.OkkeiPatcherRepository
 import ru.solrudev.okkeipatcher.app.repository.PermissionsRepository
 import ru.solrudev.okkeipatcher.app.repository.PreferencesRepository
 import ru.solrudev.okkeipatcher.app.repository.work.DownloadUpdateWorkRepository
 import ru.solrudev.okkeipatcher.app.repository.work.WorkRepository
 import ru.solrudev.okkeipatcher.data.repository.HashRepositoryImpl
-import ru.solrudev.okkeipatcher.data.repository.app.*
+import ru.solrudev.okkeipatcher.data.repository.app.ConnectivityRepositoryImpl
+import ru.solrudev.okkeipatcher.data.repository.app.LicensesRepositoryImpl
+import ru.solrudev.okkeipatcher.data.repository.app.OkkeiPatcherRepositoryImpl
+import ru.solrudev.okkeipatcher.data.repository.app.PermissionsRepositoryImpl
+import ru.solrudev.okkeipatcher.data.repository.app.PreferencesRepositoryImpl
 import ru.solrudev.okkeipatcher.data.repository.app.work.DownloadUpdateWorkRepositoryImpl
 import ru.solrudev.okkeipatcher.data.repository.app.work.WorkRepositoryImpl
-import ru.solrudev.okkeipatcher.data.repository.gamefile.*
+import ru.solrudev.okkeipatcher.data.repository.gamefile.ApkBackupRepositoryImpl
+import ru.solrudev.okkeipatcher.data.repository.gamefile.ApkRepositoryImpl
+import ru.solrudev.okkeipatcher.data.repository.gamefile.ObbBackupRepositoryImpl
+import ru.solrudev.okkeipatcher.data.repository.gamefile.ObbRepositoryImpl
+import ru.solrudev.okkeipatcher.data.repository.gamefile.SaveDataRepositoryImpl
 import ru.solrudev.okkeipatcher.domain.repository.HashRepository
 import ru.solrudev.okkeipatcher.domain.repository.PatchStateRepository
-import ru.solrudev.okkeipatcher.domain.repository.gamefile.*
+import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkBackupRepository
+import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
+import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbBackupRepository
+import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbRepository
+import ru.solrudev.okkeipatcher.domain.repository.gamefile.SaveDataRepository
 
 @InstallIn(SingletonComponent::class)
-@Module(includes = [RepositoryFlavorModule::class, PatchRepositoryModule::class])
+@Module(includes = [UniqueWorkRepositoryModule::class, PatchRepositoryModule::class])
 interface RepositoryModule {
 
 	@Binds
@@ -78,6 +91,9 @@ interface RepositoryModule {
 
 	@Binds
 	fun bindLicensesRepository(licensesRepository: LicensesRepositoryImpl): LicensesRepository
+
+	@Binds
+	fun bindOkkeiPatcherRepository(okkeiPatcherRepository: OkkeiPatcherRepositoryImpl): OkkeiPatcherRepository
 
 	@Binds
 	fun bindDownloadUpdateWorkRepository(

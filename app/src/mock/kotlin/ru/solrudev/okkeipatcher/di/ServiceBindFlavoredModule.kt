@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,23 +24,18 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import ru.solrudev.okkeipatcher.app.repository.OkkeiPatcherRepository
-import ru.solrudev.okkeipatcher.app.repository.work.PatchWorkRepository
-import ru.solrudev.okkeipatcher.app.repository.work.RestoreWorkRepository
-import ru.solrudev.okkeipatcher.data.repository.app.OkkeiPatcherRepositoryImpl
-import ru.solrudev.okkeipatcher.data.repository.app.work.PatchWorkRepositoryImpl
-import ru.solrudev.okkeipatcher.data.repository.app.work.RestoreWorkRepositoryImpl
+import ru.solrudev.okkeipatcher.data.service.FileSystemFileDownloader
+import ru.solrudev.okkeipatcher.data.service.FileDownloader
+import ru.solrudev.okkeipatcher.data.service.OkkeiPatcherApkProvider
+import ru.solrudev.okkeipatcher.data.service.OkkeiPatcherApkProviderImpl
 
 @InstallIn(SingletonComponent::class)
 @Module
-interface RepositoryFlavorModule {
+interface ServiceBindFlavoredModule {
 
 	@Binds
-	fun bindOkkeiPatcherRepository(okkeiPatcherRepository: OkkeiPatcherRepositoryImpl): OkkeiPatcherRepository
+	fun bindFileDownloader(fileDownloader: FileSystemFileDownloader): FileDownloader
 
 	@Binds
-	fun bindPatchWorkRepository(patchWorkRepository: PatchWorkRepositoryImpl): PatchWorkRepository
-
-	@Binds
-	fun bindRestoreWorkRepository(restoreWorkRepository: RestoreWorkRepositoryImpl): RestoreWorkRepository
+	fun bindOkkeiPatcherApkProvider(okkeiPatcherApkProvider: OkkeiPatcherApkProviderImpl): OkkeiPatcherApkProvider
 }

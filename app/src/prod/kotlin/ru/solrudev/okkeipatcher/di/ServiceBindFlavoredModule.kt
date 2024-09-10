@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,13 +24,13 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import ru.solrudev.okkeipatcher.data.service.OkkeiPatcherApkProvider
-import ru.solrudev.okkeipatcher.data.service.OkkeiPatcherApkProviderImpl
+import ru.solrudev.okkeipatcher.data.service.FileDownloader
+import ru.solrudev.okkeipatcher.data.service.FileDownloaderImpl
 
 @InstallIn(SingletonComponent::class)
 @Module
-interface MockServiceBindModule {
+interface ServiceBindFlavoredModule {
 
 	@Binds
-	fun bindOkkeiPatcherApkProvider(okkeiPatcherApkProvider: OkkeiPatcherApkProviderImpl): OkkeiPatcherApkProvider
+	fun bindFileDownloader(fileDownloader: FileDownloaderImpl): FileDownloader
 }

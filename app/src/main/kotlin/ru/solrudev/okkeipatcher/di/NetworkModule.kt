@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,6 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
 import ru.solrudev.okkeipatcher.data.network.ConnectivityInterceptor
 import ru.solrudev.okkeipatcher.data.network.TLSSocketFactory
-import ru.solrudev.okkeipatcher.data.network.api.OkkeiPatcherApi
 import ru.solrudev.okkeipatcher.data.network.api.patch.DefaultPatchApi
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
@@ -39,12 +38,8 @@ import javax.inject.Singleton
 private const val BASE_URL = "https://okkeipatcher.solrudev.ru/api/"
 
 @InstallIn(SingletonComponent::class)
-@Module
+@Module(includes = [NetworkFlavoredModule::class])
 object NetworkModule {
-
-	@Provides
-	@Singleton
-	fun provideOkkeiPatcherApi(retrofit: Retrofit) = retrofit.create<OkkeiPatcherApi>()
 
 	@Provides
 	@Singleton

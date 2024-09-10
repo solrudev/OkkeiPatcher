@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,13 +24,17 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import ru.solrudev.okkeipatcher.data.service.*
+import ru.solrudev.okkeipatcher.data.service.GameInstallationProvider
+import ru.solrudev.okkeipatcher.data.service.GameInstallationProviderImpl
+import ru.solrudev.okkeipatcher.data.service.PackageInstallerFacade
+import ru.solrudev.okkeipatcher.data.service.PackageInstallerFacadeImpl
+import ru.solrudev.okkeipatcher.data.service.StorageCheckerImpl
 import ru.solrudev.okkeipatcher.data.service.apksigner.ApkSigner
 import ru.solrudev.okkeipatcher.data.service.apksigner.ApkSignerWrapper
 import ru.solrudev.okkeipatcher.domain.service.StorageChecker
 
 @InstallIn(SingletonComponent::class)
-@Module
+@Module(includes = [ServiceBindFlavoredModule::class])
 interface ServiceBindModule {
 
 	@Binds
@@ -41,9 +45,6 @@ interface ServiceBindModule {
 
 	@Binds
 	fun bindApkSigner(apkSigner: ApkSignerWrapper): ApkSigner
-
-	@Binds
-	fun bindFileDownloader(fileDownloader: FileDownloaderImpl): FileDownloader
 
 	@Binds
 	fun bindPackageInstallerFacade(packageInstallerFacade: PackageInstallerFacadeImpl): PackageInstallerFacade

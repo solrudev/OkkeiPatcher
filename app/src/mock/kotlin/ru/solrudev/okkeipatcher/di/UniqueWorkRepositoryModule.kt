@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,19 +24,14 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import ru.solrudev.okkeipatcher.app.repository.OkkeiPatcherRepository
 import ru.solrudev.okkeipatcher.app.repository.work.PatchWorkRepository
 import ru.solrudev.okkeipatcher.app.repository.work.RestoreWorkRepository
-import ru.solrudev.okkeipatcher.data.repository.app.MockOkkeiPatcherRepository
 import ru.solrudev.okkeipatcher.data.repository.work.MockPatchWorkRepository
 import ru.solrudev.okkeipatcher.data.repository.work.MockRestoreWorkRepository
 
 @InstallIn(SingletonComponent::class)
 @Module
-interface RepositoryFlavorModule {
-
-	@Binds
-	fun bindOkkeiPatcherRepository(okkeiPatcherRepository: MockOkkeiPatcherRepository): OkkeiPatcherRepository
+interface UniqueWorkRepositoryModule {
 
 	@Binds
 	fun bindPatchWorkRepository(patchWorkRepository: MockPatchWorkRepository): PatchWorkRepository
