@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,30 +49,37 @@ sealed interface LocalizedString : Serializable {
 		/**
 		 * Creates an empty [LocalizedString].
 		 */
-		fun empty() = EmptyString
+		fun empty(): LocalizedString {
+			return EmptyString
+		}
 
 		/**
 		 * Creates [LocalizedString] with a hardcoded value.
 		 */
-		fun raw(value: CharSequence): LocalizedString = when {
-			value.isEmpty() -> EmptyString
-			else -> RawString(value)
+		fun raw(value: CharSequence): LocalizedString {
+			return when {
+				value.isEmpty() -> EmptyString
+				else -> RawString(value)
+			}
 		}
 
 		/**
 		 * Creates [LocalizedString] represented by Android resource string with optional arguments. Arguments can be [LocalizedString]s as well.
 		 */
-		fun resource(@StringRes resourceId: Int, vararg args: Any) = ResourceString(resourceId, args.toList())
+		fun resource(@StringRes resourceId: Int, vararg args: Any): LocalizedString {
+			return ResourceString(resourceId, args.toList())
+		}
 
 		/**
 		 * Creates [LocalizedString] represented by plural Android resource with optional arguments. Arguments can be [LocalizedString]s as well.
 		 */
-		fun quantity(@PluralsRes resourceId: Int, quantity: Int, vararg args: Any) =
-			QuantityResourceString(resourceId, quantity, args.toList())
+		fun quantity(@PluralsRes resourceId: Int, quantity: Int, vararg args: Any): LocalizedString {
+			return QuantityResourceString(resourceId, quantity, args.toList())
+		}
 	}
 }
 
-object EmptyString : LocalizedString
+data object EmptyString : LocalizedString
 data class RawString(val value: CharSequence) : LocalizedString
 data class ResourceString(@StringRes val resourceId: Int, val args: List<Any>) : LocalizedString
 data class CompoundString(val parts: List<LocalizedString>) : LocalizedString

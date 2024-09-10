@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -70,7 +70,7 @@ fun WorkInfo?.toWorkState() = when (this?.state) {
 		WorkState.Running(status, progressData)
 	}
 	WorkInfo.State.FAILED -> with(outputData) {
-		val reason = getSerializable<LocalizedString>(FAILURE_REASON) ?: LocalizedString.empty()
+		val reason = getSerializable(FAILURE_REASON) ?: LocalizedString.empty()
 		val stackTrace = getString(STACK_TRACE) ?: ""
 		WorkState.Failed(reason, stackTrace)
 	}

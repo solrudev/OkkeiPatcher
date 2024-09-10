@@ -67,7 +67,7 @@ class NotificationServiceImpl(
 
 	private val progressNotificationId = globalProgressNotificationId.incrementAndGet()
 	private val notificationManager = applicationContext.getSystemService<NotificationManager>()
-	private var currentStatus: LocalizedString = LocalizedString.empty()
+	private var currentStatus = LocalizedString.empty()
 
 	init {
 		applicationContext.registerComponentCallbacks(configChangeCallback)
