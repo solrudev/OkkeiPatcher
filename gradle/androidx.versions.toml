@@ -9,7 +9,7 @@ room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 activity = { module = "androidx.activity:activity", version = "1.9.2" }
 fragment-ktx = { module = "androidx.fragment:fragment-ktx", version = "1.6.2" }
 preference-ktx = { module = "androidx.preference:preference-ktx", version = "1.2.1" }
-work-runtime = { module = "androidx.work:work-runtime", version = "2.9.0" }
+work-runtime = { module = "androidx.work:work-runtime", version = "2.9.1" }
 navigation-fragment = { module = "androidx.navigation:navigation-fragment", version.ref = "navigation" }
 navigation-ui = { module = "androidx.navigation:navigation-ui", version.ref = "navigation" }
 datastore-preferences = { module = "androidx.datastore:datastore-preferences", version = "1.0.0" }
