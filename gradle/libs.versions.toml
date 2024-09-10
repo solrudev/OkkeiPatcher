@@ -39,4 +39,4 @@ junit = ["junit-platform-commons", "junit-jupiter"]
 android-application = { id = "com.android.application", version.ref = "android-gradleplugin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "kotlin-ksp" }
-android-cachefix = { id = "org.gradle.android.cache-fix", version = "3.0" }
+android-cachefix = { id = "org.gradle.android.cache-fix", version = "3.0.1" }
