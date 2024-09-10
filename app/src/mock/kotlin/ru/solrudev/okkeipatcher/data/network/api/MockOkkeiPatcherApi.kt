@@ -44,6 +44,12 @@ class MockOkkeiPatcherApi @Inject constructor(
 		OkkeiPatcherVersionDto(versionName = "1.2", changes = listOf("Change 1", "Change 2", "Change 3"))
 	)
 
+	private val changelogRu = listOf(
+		OkkeiPatcherVersionDto(versionName = "1.0", changes = listOf("Изменение 1", "Изменение 2")),
+		OkkeiPatcherVersionDto(versionName = "1.1", changes = listOf("Изменение 1")),
+		OkkeiPatcherVersionDto(versionName = "1.2", changes = listOf("Изменение 1", "Изменение 2", "Изменение 3"))
+	)
+
 	private var appEndpointHitsCount = 0
 
 	override suspend fun getOkkeiPatcherData(): FileDto {
@@ -62,6 +68,9 @@ class MockOkkeiPatcherApi @Inject constructor(
 		if (appEndpointHitsCount < 1) {
 			return emptyList()
 		}
-		return changelog
+		return when {
+			language.startsWith("ru", ignoreCase = true) -> changelogRu
+			else -> changelog
+		}
 	}
 }
