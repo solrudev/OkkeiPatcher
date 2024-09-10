@@ -20,6 +20,7 @@ package ru.solrudev.okkeipatcher.data.service.apksigner
 
 import android.content.Context
 import com.aefyr.pseudoapksigner.PseudoApkSigner
+import com.android.apksig.KeyConfig
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.runInterruptible
@@ -55,7 +56,7 @@ class ApkSignerApi24 @Inject constructor(
 		val privateKey = getSigningPrivateKey()
 		val signerConfig = com.android.apksig.ApkSigner.SignerConfig.Builder(
 			SIGNER_NAME,
-			privateKey,
+			KeyConfig.Jca(privateKey),
 			listOf(certificate)
 		).build()
 		val apkSigner = com.android.apksig.ApkSigner.Builder(listOf(signerConfig))
