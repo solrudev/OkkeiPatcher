@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ import ru.solrudev.okkeipatcher.data.repository.patch.DefaultPatchRepositoryImpl
 import ru.solrudev.okkeipatcher.domain.repository.patch.DefaultPatchRepository
 
 @InstallIn(SingletonComponent::class)
-@Module(includes = [PatchRepositoryFlavorModule::class])
+@Module(includes = [PatchRepositoryFlavoredModule::class])
 interface PatchRepositoryModule {
 
 	@Binds
