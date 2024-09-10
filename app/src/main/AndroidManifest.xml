@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Okkei Patcher
-  ~ Copyright (C) 2023 Ilya Fomichev
+  ~ Copyright (C) 2023-2024 Ilya Fomichev
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -49,6 +49,7 @@
 		android:supportsRtl="true"
 		android:theme="@style/Theme.OkkeiPatcher"
 		android:localeConfig="@xml/locales_config"
+		android:networkSecurityConfig="@xml/network_security_config"
 		tools:targetApi="34">
 
 		<activity
