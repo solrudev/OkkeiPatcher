@@ -50,8 +50,8 @@ android {
 		applicationId = packageName
 		minSdk = 19
 		targetSdk = 34
-		versionCode = 62
-		versionName = "2.0.20"
+		versionCode = 63
+		versionName = "2.0.21"
 		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 		vectorDrawables.useSupportLibrary = true
 		resourceConfigurations += setOf("en", "ru")
