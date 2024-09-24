@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
 package ru.solrudev.okkeipatcher.data.repository.gamefile
 
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 import okio.FileSystem
 import okio.Path
@@ -87,7 +88,10 @@ class ObbBackupRepositoryImpl @Inject constructor(
 				val hash = withContext(ioDispatcher) {
 					fileSystem.copy(
 						obb, backup, hashing = true,
-						onProgressDeltaChanged = { progressDelta(it * progressMultiplier) }
+						onProgressDeltaChanged = {
+							ensureActive()
+							progressDelta(it * progressMultiplier)
+						}
 					)
 				}
 				hashRepository.backupObbHash.persist(hash)
@@ -106,7 +110,13 @@ class ObbBackupRepositoryImpl @Inject constructor(
 			}
 			try {
 				withContext(ioDispatcher) {
-					fileSystem.copy(backup, obb, onProgressDeltaChanged = { progressDelta(it * progressMultiplier) })
+					fileSystem.copy(
+						backup, obb,
+						onProgressDeltaChanged = {
+							ensureActive()
+							progressDelta(it * progressMultiplier)
+						}
+					)
 				}
 			} catch (t: Throwable) {
 				fileSystem.delete(obb)
@@ -121,7 +131,13 @@ class ObbBackupRepositoryImpl @Inject constructor(
 			return@operation false
 		}
 		val fileHash = withContext(ioDispatcher) {
-			fileSystem.computeHash(backup, onProgressDeltaChanged = { progressDelta(it) })
+			fileSystem.computeHash(
+				backup,
+				onProgressDeltaChanged = {
+					ensureActive()
+					progressDelta(it)
+				}
+			)
 		}
 		return@operation fileHash == savedHash
 	}
