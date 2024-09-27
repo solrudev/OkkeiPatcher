@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,7 +40,7 @@ fun ObbDownloadOperation(
 		val obbData = obbPatchFile.getData()
 		val obbHash = fileDownloader.download(
 			obbData.url, obbRepository.obbPath, hashing = true,
-			onProgressDeltaChanged = { progressDelta(it * PROGRESS_MULTIPLIER) }
+			onProgressChanged = { progressDelta(it * PROGRESS_MULTIPLIER) }
 		)
 		if (obbHash != obbData.hash) {
 			throw ObbCorruptedException()

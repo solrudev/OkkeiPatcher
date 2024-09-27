@@ -44,16 +44,16 @@ class FileSystemFileDownloader @Inject constructor(
 		url: String,
 		path: Path,
 		hashing: Boolean,
-		onProgressDeltaChanged: suspend (Int) -> Unit
+		onProgressChanged: suspend (Int) -> Unit
 	): String {
 		val source = url.toPath()
 		return withContext(ioDispatcher) {
 			fileSystem.copy(
 				source, target = path, hashing,
-				onProgressDeltaChanged = {
+				onProgressChanged = {
 					ensureActive()
 					delay(50.milliseconds) // simulate slow internet connection
-					onProgressDeltaChanged(it)
+					onProgressChanged(it)
 				}
 			)
 		}

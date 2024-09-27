@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,7 +50,7 @@ interface FileDownloader {
 		url: String,
 		path: Path,
 		hashing: Boolean = false,
-		onProgressDeltaChanged: suspend (Int) -> Unit = {}
+		onProgressChanged: suspend (Int) -> Unit = {}
 	): String
 }
 
@@ -67,7 +67,7 @@ class FileDownloaderImpl @Inject constructor(
 		url: String,
 		path: Path,
 		hashing: Boolean,
-		onProgressDeltaChanged: suspend (Int) -> Unit
+		onProgressChanged: suspend (Int) -> Unit
 	): String {
 		try {
 			val request = Request.Builder().url(url).build()
@@ -79,9 +79,9 @@ class FileDownloaderImpl @Inject constructor(
 					sink.buffer().use { bufferedSink ->
 						source.copyTo(
 							bufferedSink, responseBody.contentLength(),
-							onProgressDeltaChanged = {
+							onProgressChanged = {
 								ensureActive()
-								onProgressDeltaChanged(it)
+								onProgressChanged(it)
 							}
 						)
 					}

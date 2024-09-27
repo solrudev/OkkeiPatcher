@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -93,7 +93,7 @@ class OkkeiPatcherRepositoryImpl @Inject constructor(
 			try {
 				val updateData = okkeiPatcherDataCache.retrieve()
 				val updateHash = fileDownloader.download(
-					updateData.url, updateFile, hashing = true, onProgressDeltaChanged = ::progressDelta
+					updateData.url, updateFile, hashing = true, onProgressChanged = ::progressDelta
 				)
 				if (updateHash != updateData.hash) {
 					throw AppUpdateCorruptedException()

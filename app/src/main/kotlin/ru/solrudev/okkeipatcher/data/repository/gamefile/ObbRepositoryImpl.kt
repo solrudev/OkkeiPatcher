@@ -88,7 +88,7 @@ class ObbBackupRepositoryImpl @Inject constructor(
 				val hash = withContext(ioDispatcher) {
 					fileSystem.copy(
 						obb, backup, hashing = true,
-						onProgressDeltaChanged = {
+						onProgressChanged = {
 							ensureActive()
 							progressDelta(it * progressMultiplier)
 						}
@@ -112,7 +112,7 @@ class ObbBackupRepositoryImpl @Inject constructor(
 				withContext(ioDispatcher) {
 					fileSystem.copy(
 						backup, obb,
-						onProgressDeltaChanged = {
+						onProgressChanged = {
 							ensureActive()
 							progressDelta(it * progressMultiplier)
 						}
@@ -133,7 +133,7 @@ class ObbBackupRepositoryImpl @Inject constructor(
 		val fileHash = withContext(ioDispatcher) {
 			fileSystem.computeHash(
 				backup,
-				onProgressDeltaChanged = {
+				onProgressChanged = {
 					ensureActive()
 					progressDelta(it)
 				}

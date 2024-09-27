@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,25 +35,25 @@ inline fun FileSystem.copy(
 	source: Path,
 	target: Path,
 	hashing: Boolean = false,
-	onProgressDeltaChanged: (Int) -> Unit = {}
+	onProgressChanged: (Int) -> Unit = {}
 ): String {
 	val size = metadata(source).size ?: 0
 	source(source).buffer().use { bufferedSource ->
 		prepareRecreate(target)
 		val sink = if (hashing) sha256(sink(target)) else sink(target)
 		sink.buffer().use { bufferedSink ->
-			bufferedSource.copyTo(bufferedSink, size, onProgressDeltaChanged)
+			bufferedSource.copyTo(bufferedSink, size, onProgressChanged)
 		}
 		return if (sink is HashingSink) sink.hash.hex() else ""
 	}
 }
 
-inline fun FileSystem.computeHash(path: Path, onProgressDeltaChanged: (Int) -> Unit = {}): String {
+inline fun FileSystem.computeHash(path: Path, onProgressChanged: (Int) -> Unit = {}): String {
 	val size = metadata(path).size ?: 0
 	source(path).buffer().use { source ->
 		val hashingSink = sha256(blackholeSink())
 		hashingSink.buffer().use { sink ->
-			source.copyTo(sink, size, onProgressDeltaChanged)
+			source.copyTo(sink, size, onProgressChanged)
 		}
 		return hashingSink.hash.hex()
 	}

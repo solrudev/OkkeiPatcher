@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ import kotlin.math.roundToInt
 const val BUFFER_LENGTH = 8192L
 const val STREAM_COPY_PROGRESS_MAX = 100
 
-inline fun BufferedSource.copyTo(sink: BufferedSink, size: Long, onProgressDeltaChanged: (Int) -> Unit = {}) {
+inline fun BufferedSource.copyTo(sink: BufferedSink, size: Long, onProgressChanged: (Int) -> Unit = {}) {
 	val progressRatio = calculateProgressRatio(size, BUFFER_LENGTH, STREAM_COPY_PROGRESS_MAX)
 	Buffer().use { buffer ->
 		var currentProgress = 0
@@ -45,11 +45,11 @@ inline fun BufferedSource.copyTo(sink: BufferedSink, size: Long, onProgressDelta
 				val shouldEmitProgress = currentProgress - (progress * progressRatio) == 0
 				if (shouldEmitProgress && progress <= STREAM_COPY_PROGRESS_MAX) {
 					progressEmitCounter++
-					onProgressDeltaChanged(1)
+					onProgressChanged(1)
 				}
 			}
 		}
-		onProgressDeltaChanged(STREAM_COPY_PROGRESS_MAX - progressEmitCounter)
+		onProgressChanged(STREAM_COPY_PROGRESS_MAX - progressEmitCounter)
 	}
 }
 

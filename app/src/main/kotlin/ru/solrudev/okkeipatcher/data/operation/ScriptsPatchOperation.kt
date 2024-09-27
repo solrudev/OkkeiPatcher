@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -73,7 +73,7 @@ class ScriptsPatchOperation(
 		status(R.string.status_downloading_scripts)
 		val scriptsData = scriptsPatchFile.getData()
 		val scriptsHash = fileDownloader.download(
-			scriptsData.url, scriptsFile, hashing = true, onProgressDeltaChanged = ::progressDelta
+			scriptsData.url, scriptsFile, hashing = true, onProgressChanged = ::progressDelta
 		)
 		if (scriptsHash != scriptsData.hash) {
 			throw ScriptsCorruptedException()
