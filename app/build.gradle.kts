@@ -141,7 +141,7 @@ dependencies {
 	// I/O
 	implementation(libs.okio)
 	implementation(libs.moshi)
-	implementation(libs.okhttp)
+	implementation(libs.bundles.okhttp)
 	implementation(libs.bundles.retrofit)
 
 	// Miscellaneous

@@ -22,50 +22,23 @@ import java.io.IOException
 import java.net.InetAddress
 import java.net.Socket
 import java.net.UnknownHostException
-import java.security.KeyStore
-import java.security.KeyStoreException
-import java.security.NoSuchAlgorithmException
-import java.util.*
-import javax.net.ssl.*
+import javax.net.ssl.SSLSocket
+import javax.net.ssl.SSLSocketFactory
 
-class TLSSocketFactory : SSLSocketFactory() {
+class TLSSocketFactory(private val sslSocketFactory: SSLSocketFactory) : SSLSocketFactory() {
 
-	val trustManager: X509TrustManager
-		get() = trustManagers[0] as X509TrustManager
-
-	private val delegate: SSLSocketFactory
-	private lateinit var trustManagers: Array<TrustManager>
-
-	init {
-		generateTrustManagers()
-		val context = SSLContext.getInstance("TLS")
-		context.init(null, trustManagers, null)
-		delegate = context.socketFactory
-	}
-
-	@Throws(KeyStoreException::class, NoSuchAlgorithmException::class)
-	private fun generateTrustManagers() {
-		val trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
-		trustManagerFactory.init(null as KeyStore?)
-		val trustManagers = trustManagerFactory.trustManagers
-		check(trustManagers.size == 1 && trustManagers[0] is X509TrustManager) {
-			"Unexpected default trust managers: ${trustManagers.contentToString()}"
-		}
-		this.trustManagers = trustManagers
-	}
-
-	override fun getDefaultCipherSuites(): Array<String> = delegate.defaultCipherSuites
-	override fun getSupportedCipherSuites(): Array<String> = delegate.supportedCipherSuites
+	override fun getDefaultCipherSuites(): Array<String> = sslSocketFactory.defaultCipherSuites
+	override fun getSupportedCipherSuites(): Array<String> = sslSocketFactory.supportedCipherSuites
 
 	@Throws(IOException::class)
-	override fun createSocket() = enableTLSOnSocket(delegate.createSocket())
+	override fun createSocket() = enableTLSOnSocket(sslSocketFactory.createSocket())
 
 	@Throws(IOException::class)
 	override fun createSocket(s: Socket, host: String, port: Int, autoClose: Boolean) =
-		enableTLSOnSocket(delegate.createSocket(s, host, port, autoClose))
+		enableTLSOnSocket(sslSocketFactory.createSocket(s, host, port, autoClose))
 
 	@Throws(IOException::class, UnknownHostException::class)
-	override fun createSocket(host: String, port: Int) = enableTLSOnSocket(delegate.createSocket(host, port))
+	override fun createSocket(host: String, port: Int) = enableTLSOnSocket(sslSocketFactory.createSocket(host, port))
 
 	@Throws(IOException::class, UnknownHostException::class)
 	override fun createSocket(
@@ -73,10 +46,11 @@ class TLSSocketFactory : SSLSocketFactory() {
 		port: Int,
 		localHost: InetAddress,
 		localPort: Int
-	) = enableTLSOnSocket(delegate.createSocket(host, port, localHost, localPort))
+	) = enableTLSOnSocket(sslSocketFactory.createSocket(host, port, localHost, localPort))
 
 	@Throws(IOException::class)
-	override fun createSocket(host: InetAddress, port: Int) = enableTLSOnSocket(delegate.createSocket(host, port))
+	override fun createSocket(host: InetAddress, port: Int) =
+		enableTLSOnSocket(sslSocketFactory.createSocket(host, port))
 
 	@Throws(IOException::class)
 	override fun createSocket(
@@ -84,7 +58,7 @@ class TLSSocketFactory : SSLSocketFactory() {
 		port: Int,
 		localAddress: InetAddress,
 		localPort: Int
-	) = enableTLSOnSocket(delegate.createSocket(address, port, localAddress, localPort))
+	) = enableTLSOnSocket(sslSocketFactory.createSocket(address, port, localAddress, localPort))
 
 	private fun enableTLSOnSocket(socket: Socket): Socket {
 		if (socket is SSLSocket) {

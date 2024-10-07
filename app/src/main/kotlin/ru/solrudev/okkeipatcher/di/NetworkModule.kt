@@ -20,18 +20,25 @@
 
 package ru.solrudev.okkeipatcher.di
 
+import android.content.Context
+import android.os.Build
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
+import okhttp3.tls.HandshakeCertificates
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
+import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.network.ConnectivityInterceptor
 import ru.solrudev.okkeipatcher.data.network.TLSSocketFactory
 import ru.solrudev.okkeipatcher.data.network.api.patch.DefaultPatchApi
+import java.security.cert.CertificateFactory
+import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
@@ -57,16 +64,40 @@ object NetworkModule {
 
 	@Provides
 	@Singleton
-	fun provideOkHttpClient(connectivityInterceptor: ConnectivityInterceptor): OkHttpClient {
-		val tlsSocketFactory = TLSSocketFactory()
+	fun provideOkHttpClient(
+		@ApplicationContext context: Context,
+		connectivityInterceptor: ConnectivityInterceptor
+	): OkHttpClient {
 		return OkHttpClient.Builder()
-			.sslSocketFactory(tlsSocketFactory, tlsSocketFactory.trustManager)
+			.fixSsl(context)
 			.followRedirects(true)
 			.followSslRedirects(true)
 			.readTimeout(0, TimeUnit.SECONDS)
 			.writeTimeout(0, TimeUnit.SECONDS)
 			.addInterceptor(connectivityInterceptor)
 			.build()
+	}
+
+	private fun OkHttpClient.Builder.fixSsl(context: Context): OkHttpClient.Builder {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+			return this
+		}
+		val rootCertificate = context.resources.openRawResource(R.raw.isrgrootx1).use { inputStream ->
+			val certificateFactory = CertificateFactory.getInstance("X.509")
+			val certificates = certificateFactory.generateCertificates(inputStream)
+			certificates.single() as X509Certificate
+		}
+		val certificates = HandshakeCertificates.Builder()
+			.addTrustedCertificate(rootCertificate)
+			.addPlatformTrustedCertificates()
+			.build()
+		val socketFactory = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+			TLSSocketFactory(certificates.sslSocketFactory())
+		} else {
+			certificates.sslSocketFactory()
+		}
+		sslSocketFactory(socketFactory, certificates.trustManager())
+		return this
 	}
 
 	@Provides
