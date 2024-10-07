@@ -50,6 +50,7 @@
 		android:theme="@style/Theme.OkkeiPatcher"
 		android:localeConfig="@xml/locales_config"
 		android:networkSecurityConfig="@xml/network_security_config"
+		android:usesCleartextTraffic="false"
 		tools:targetApi="34">
 
 		<activity
