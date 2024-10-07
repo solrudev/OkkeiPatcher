@@ -38,6 +38,8 @@
 		android:name="android.permission.UPDATE_PACKAGES_WITHOUT_USER_ACTION"
 		tools:node="remove" />
 
+	<uses-sdk tools:overrideLibrary="androidx.startup" />
+
 	<application
 		android:name=".OkkeiApplication"
 		android:enableOnBackInvokedCallback="true"
