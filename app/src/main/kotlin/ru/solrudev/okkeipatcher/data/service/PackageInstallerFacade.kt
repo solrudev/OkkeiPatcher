@@ -22,10 +22,11 @@ import androidx.core.net.toUri
 import okio.Path
 import ru.solrudev.ackpine.installer.PackageInstaller
 import ru.solrudev.ackpine.installer.createSession
+import ru.solrudev.ackpine.resources.ResolvableString
 import ru.solrudev.ackpine.session.SessionResult
 import ru.solrudev.ackpine.session.await
 import ru.solrudev.ackpine.session.parameters.Confirmation
-import ru.solrudev.ackpine.session.parameters.NotificationString
+import ru.solrudev.ackpine.session.parameters.DrawableId
 import ru.solrudev.ackpine.session.parameters.notification
 import ru.solrudev.ackpine.uninstaller.PackageUninstaller
 import ru.solrudev.ackpine.uninstaller.UninstallFailure
@@ -50,9 +51,9 @@ class PackageInstallerFacadeImpl @Inject constructor(
 				confirmation = Confirmation.IMMEDIATE
 			}
 			notification {
-				icon = R.drawable.ic_notification
-				title = NotificationString.resource(R.string.notification_title_install)
-				contentText = NotificationString.resource(R.string.notification_message_install, appName)
+				icon = NotificationIcon
+				title = NotificationTitleInstall
+				contentText = NotificationMessageInstall(appName)
 			}
 		}
 		return when (val result = session.await()) {
@@ -64,9 +65,9 @@ class PackageInstallerFacadeImpl @Inject constructor(
 	override suspend fun uninstall(packageName: String, appName: String): Result<Unit> {
 		val session = packageUninstaller.createSession(packageName) {
 			notification {
-				icon = R.drawable.ic_notification
-				title = NotificationString.resource(R.string.notification_title_uninstall)
-				contentText = NotificationString.resource(R.string.notification_message_uninstall, appName)
+				icon = NotificationIcon
+				title = NotificationTitleUninstall
+				contentText = NotificationMessageUninstall(appName)
 			}
 		}
 		return when (val result = session.await()) {
@@ -80,5 +81,37 @@ class PackageInstallerFacadeImpl @Inject constructor(
 				Result.failure(reason)
 			}
 		}
+	}
+}
+
+private data object NotificationIcon : DrawableId {
+	private const val serialVersionUID = -4953042512419246108L
+	private fun readResolve(): Any = NotificationIcon
+	override fun drawableId() = R.drawable.ic_notification
+}
+
+private object NotificationTitleInstall : ResolvableString.Resource() {
+	private const val serialVersionUID = 2562954299038490907L
+	private fun readResolve(): Any = NotificationTitleInstall
+	override fun stringId() = R.string.notification_title_install
+}
+
+private class NotificationMessageInstall(appName: String) : ResolvableString.Resource(appName) {
+	override fun stringId() = R.string.notification_message_install
+	private companion object {
+		private const val serialVersionUID = 625651879829700570L
+	}
+}
+
+private object NotificationTitleUninstall : ResolvableString.Resource() {
+	private const val serialVersionUID = -4596819327544505895L
+	private fun readResolve(): Any = NotificationTitleUninstall
+	override fun stringId() = R.string.notification_title_uninstall
+}
+
+private class NotificationMessageUninstall(appName: String) : ResolvableString.Resource(appName) {
+	override fun stringId() = R.string.notification_message_uninstall
+	private companion object {
+		private const val serialVersionUID = 2870555503021692614L
 	}
 }
