@@ -23,7 +23,7 @@ import okio.Path
 import ru.solrudev.ackpine.installer.PackageInstaller
 import ru.solrudev.ackpine.installer.createSession
 import ru.solrudev.ackpine.resources.ResolvableString
-import ru.solrudev.ackpine.session.SessionResult
+import ru.solrudev.ackpine.session.Session
 import ru.solrudev.ackpine.session.await
 import ru.solrudev.ackpine.session.parameters.Confirmation
 import ru.solrudev.ackpine.session.parameters.DrawableId
@@ -57,8 +57,8 @@ class PackageInstallerFacadeImpl @Inject constructor(
 			}
 		}
 		return when (val result = session.await()) {
-			is SessionResult.Success -> Result.success()
-			is SessionResult.Error -> Result.failure(result.cause.message.orEmpty())
+			Session.State.Succeeded -> Result.success()
+			is Session.State.Failed -> Result.failure(result.failure.message.orEmpty())
 		}
 	}
 
@@ -71,12 +71,11 @@ class PackageInstallerFacadeImpl @Inject constructor(
 			}
 		}
 		return when (val result = session.await()) {
-			is SessionResult.Success -> Result.success()
-			is SessionResult.Error -> {
-				val reason = when (val failure = result.cause) {
+			Session.State.Succeeded -> Result.success()
+			is Session.State.Failed -> {
+				val reason = when (val failure = result.failure) {
 					is UninstallFailure.Aborted -> failure.message
-					is UninstallFailure.Exceptional -> ""
-					UninstallFailure.Generic -> ""
+					else -> ""
 				}
 				Result.failure(reason)
 			}
