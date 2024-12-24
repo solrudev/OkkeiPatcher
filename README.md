@@ -85,8 +85,8 @@ Reliable task execution and status tracking is ensured by using
   simple access to view binding
 
 # Building
-**Okkei Patcher** requires Android Studio Koala Feature Drop and higher to build (Android Gradle
-Plugin 8.6+).
+**Okkei Patcher** requires Android Studio Ladybug and higher to build (Android Gradle
+Plugin 8.7+).
 
 **Okkei Patcher** has two flavors: **prod** and **mock**.
 
