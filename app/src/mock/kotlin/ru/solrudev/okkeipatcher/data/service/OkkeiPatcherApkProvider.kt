@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ class OkkeiPatcherApkProviderImpl @Inject constructor(
 	override fun getOkkeiPatcherApkPath(): Path {
 		return applicationContext.packageManager
 			.getPackageInfoCompat(applicationContext.packageName, 0)
-			.applicationInfo
+			.applicationInfo!!
 			.publicSourceDir
 			.toPath()
 	}

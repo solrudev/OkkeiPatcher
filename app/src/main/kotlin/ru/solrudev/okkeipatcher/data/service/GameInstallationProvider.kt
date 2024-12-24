@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,7 +54,7 @@ class GameInstallationProviderImpl @Inject constructor(
 		}
 		return applicationContext.packageManager
 			.getPackageInfoCompat(GAME_PACKAGE_NAME, 0)
-			.applicationInfo
+			.applicationInfo!!
 			.publicSourceDir
 			.toPath()
 	}
