@@ -50,5 +50,6 @@ fun LottieAnimationView.setOneshotAnimation(fileName: String, start: Boolean) {
 		playAnimation()
 	} else {
 		progress = 1f
+		cancelAnimation()
 	}
 }
