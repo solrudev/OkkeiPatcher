@@ -16,6 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+@file:Suppress("ConstPropertyName", "UNUSED")
+
 package ru.solrudev.okkeipatcher.data.service
 
 import androidx.core.net.toUri
