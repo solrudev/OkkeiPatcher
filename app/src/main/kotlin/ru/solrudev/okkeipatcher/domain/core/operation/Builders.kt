@@ -18,13 +18,10 @@
 
 package ru.solrudev.okkeipatcher.domain.core.operation
 
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.merge
-import kotlinx.coroutines.flow.onEach
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Message
 import ru.solrudev.okkeipatcher.domain.core.Result
@@ -55,7 +52,7 @@ fun <R> operation(
 	block: suspend OperationScope.() -> R
 ): Operation<R> {
 	require(progressMax >= 0) { "progressMax cannot be negative, but was $progressMax" }
-	return OperationImpl(operations, progressMax, canInvoke, block)
+	return OperationImpl(operations, progressMax, hasOwnProgress = progressMax > 0, canInvoke, block)
 }
 
 /**
@@ -66,6 +63,7 @@ fun <R> operation(
  */
 fun aggregateOperation(vararg operations: Operation<*>): Operation<Unit> = OperationImpl(
 	operations,
+	hasOwnProgress = false,
 	canInvokeDelegate = lambda@{
 		operations.forEach { operation ->
 			operation.canInvoke().onFailure { return@lambda it }
@@ -87,12 +85,14 @@ private object EmptyOperation : Operation<Unit> {
 	override val messages = emptyFlow<Message>()
 	override val progressDelta = emptyFlow<Int>()
 	override val progressMax = 0
+	override suspend fun skip() {}
 	override suspend fun invoke() {}
 }
 
 private class OperationImpl<out R>(
-	operations: Array<out Operation<*>>,
-	progressMax: Int = 0,
+	private val operations: Array<out Operation<*>>,
+	private val ownedProgressMax: Int = 0,
+	private val hasOwnProgress: Boolean,
 	private val canInvokeDelegate: suspend () -> Result<Unit> = { Result.success() },
 	private val block: suspend OperationScope.() -> R
 ) : Operation<R>, OperationScope {
@@ -116,37 +116,47 @@ private class OperationImpl<out R>(
 		.plus(_progressDelta)
 		.merge()
 
-	override val progressMax = progressMax + operations.sumOf { it.progressMax }
+	override val progressMax = ownedProgressMax + operations.sumOf { it.progressMax }
 	private val accumulatedProgress = AtomicInteger(0)
-
-	private val remainingProgress: Int
-		get() = progressMax - accumulatedProgress.get()
 
 	override suspend fun canInvoke() = canInvokeDelegate()
 
-	override suspend fun invoke() = coroutineScope {
-		val accumulateProgressJob = if (progressMax > 0) accumulateProgress() else null
-		try {
-			val result = block()
-			progressDelta(remainingProgress)
-			return@coroutineScope result
-		} finally {
-			accumulateProgressJob?.cancel()
-			accumulatedProgress.set(0)
+	override suspend fun skip() {
+		for (operation in operations) {
+			operation.skip()
 		}
+		if (!hasOwnProgress) {
+			return
+		}
+		val remainingProgress = ownedProgressMax - accumulatedProgress.getAndSet(ownedProgressMax)
+		if (remainingProgress != 0) {
+			_progressDelta.emit(remainingProgress)
+		}
+	}
+
+	override suspend fun invoke() = coroutineScope {
+		val result = block()
+		skip()
+		return@coroutineScope result
 	}
 
 	override suspend fun status(status: LocalizedString) = _status.emit(status)
 	override suspend fun message(message: Message) = _messages.emit(message)
 
 	override suspend fun progressDelta(progressDelta: Int) {
-		val coercedProgressDelta = progressDelta.coerceIn(-accumulatedProgress.get(), remainingProgress)
+		if (!hasOwnProgress) {
+			return
+		}
+		var prev: Int
+		var next: Int
+		var coercedProgressDelta: Int
+		do {
+			prev = accumulatedProgress.get()
+			coercedProgressDelta = progressDelta.coerceIn(-prev, ownedProgressMax - prev)
+			next = prev + coercedProgressDelta
+		} while (!accumulatedProgress.compareAndSet(prev, next))
 		if (coercedProgressDelta != 0) {
 			_progressDelta.emit(coercedProgressDelta)
 		}
 	}
-
-	private fun CoroutineScope.accumulateProgress() = progressDelta
-		.onEach(accumulatedProgress::getAndAdd)
-		.launchIn(this)
 }

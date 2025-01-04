@@ -48,7 +48,7 @@ class DefaultApk @Inject constructor(
 		return operation(scriptsPatchOperation, installPatchedOperation) {
 			status(R.string.status_comparing_apk)
 			if (apkRepository.verifyTemp()) {
-				progressDelta(scriptsPatchOperation.progressMax)
+				scriptsPatchOperation.skip()
 				installPatchedOperation()
 				scripts.updateInstalledVersion()
 				return@operation

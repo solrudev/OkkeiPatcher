@@ -59,6 +59,8 @@ class PatchOperation(
 		return Result.success()
 	}
 
+	override suspend fun skip() = operation.skip()
+
 	override suspend fun invoke() = wrapDomainExceptions {
 		game.use {
 			operation()

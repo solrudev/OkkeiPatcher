@@ -60,6 +60,8 @@ class ScriptsPatchOperation(
 	private val scriptsFile = externalDir / "scripts.zip"
 	private val extractedScriptsDirectory = externalDir / "script"
 
+	override suspend fun skip() = operation.skip()
+
 	override suspend fun invoke() = try {
 		operation()
 	} finally {
