@@ -26,6 +26,7 @@ import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Message
 import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.core.onFailure
+import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
@@ -97,6 +98,7 @@ private class OperationImpl<out R>(
 	private val block: suspend OperationScope.() -> R
 ) : Operation<R>, OperationScope {
 
+	private val isSkipped = AtomicBoolean(false)
 	private val _status = MutableSharedFlow<LocalizedString>(replay = 1)
 	private val _messages = MutableSharedFlow<Message>(replay = 1)
 	private val _progressDelta = MutableSharedFlow<Int>(replay = 1)
@@ -122,6 +124,9 @@ private class OperationImpl<out R>(
 	override suspend fun canInvoke() = canInvokeDelegate()
 
 	override suspend fun skip() {
+		if (!isSkipped.compareAndSet(false, true)) {
+			return
+		}
 		for (operation in operations) {
 			operation.skip()
 		}
