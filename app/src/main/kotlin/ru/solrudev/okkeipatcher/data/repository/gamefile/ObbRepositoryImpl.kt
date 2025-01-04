@@ -125,20 +125,23 @@ class ObbBackupRepositoryImpl @Inject constructor(
 		}
 	}
 
-	override fun verifyBackup() = operation(progressMax = STREAM_COPY_PROGRESS_MAX) {
-		val savedHash = hashRepository.backupObbHash.retrieve()
-		if (savedHash.isEmpty() || !fileSystem.exists(backup)) {
-			return@operation false
+	override fun verifyBackup(): ProgressOperation<Boolean> {
+		val progressMultiplier = 2
+		return operation(progressMax = STREAM_COPY_PROGRESS_MAX * progressMultiplier) {
+			val savedHash = hashRepository.backupObbHash.retrieve()
+			if (savedHash.isEmpty() || !fileSystem.exists(backup)) {
+				return@operation false
+			}
+			val fileHash = withContext(ioDispatcher) {
+				fileSystem.computeHash(
+					backup,
+					onProgressChanged = {
+						ensureActive()
+						progressDelta(it * progressMultiplier)
+					}
+				)
+			}
+			return@operation fileHash == savedHash
 		}
-		val fileHash = withContext(ioDispatcher) {
-			fileSystem.computeHash(
-				backup,
-				onProgressChanged = {
-					ensureActive()
-					progressDelta(it)
-				}
-			)
-		}
-		return@operation fileHash == savedHash
 	}
 }
