@@ -90,16 +90,12 @@ class ClearDataFragment : DialogFragment(), JetView<ClearDataUiState> {
 	}
 
 	private fun showSuccessMessage() {
-		parentFragment?.view?.let { parentView ->
-			showSnackbar(R.string.snackbar_data_cleared, Snackbar.LENGTH_SHORT)
-		}
+		showSnackbar(R.string.snackbar_data_cleared, Snackbar.LENGTH_SHORT)
 	}
 
 	private fun showErrorMessage(error: LocalizedString) {
-		parentFragment?.view?.let { parentView ->
-			val errorString = error.resolve(requireContext())
-			showSnackbar(errorString, Snackbar.LENGTH_SHORT)
-		}
+		val errorString = error.resolve(requireContext())
+		showSnackbar(errorString, Snackbar.LENGTH_SHORT)
 		viewModel.dispatchEvent(ErrorMessageShown)
 	}
 }
