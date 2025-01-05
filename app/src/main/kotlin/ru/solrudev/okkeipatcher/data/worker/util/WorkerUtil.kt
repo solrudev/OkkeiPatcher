@@ -24,7 +24,6 @@ import androidx.work.ListenableWorker
 import androidx.work.WorkInfo
 import ru.solrudev.okkeipatcher.app.model.ProgressData
 import ru.solrudev.okkeipatcher.app.model.WorkState
-import ru.solrudev.okkeipatcher.data.worker.model.WorkerFailure
 import ru.solrudev.okkeipatcher.data.worker.util.extension.getSerializable
 import ru.solrudev.okkeipatcher.data.worker.util.extension.putSerializable
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
@@ -47,18 +46,15 @@ suspend fun CoroutineWorker.setProgress(
 		.build()
 )
 
-fun workerFailure(data: WorkerFailure) = ListenableWorker.Result.failure(
-	Data.Builder().apply {
-		when (data) {
-			is WorkerFailure.Domain -> putSerializable(FAILURE_REASON, data.reason)
-			is WorkerFailure.Unhandled -> putString(
-				STACK_TRACE,
-				data.exception
-					.stackTraceToString()
-					.take(5000)
-			)
-		}
-	}.build()
+fun workerFailure(reason: LocalizedString) = ListenableWorker.Result.failure(
+	Data.Builder().putSerializable(FAILURE_REASON, reason).build()
+)
+
+fun workerFailure(exception: Throwable) = ListenableWorker.Result.failure(
+	Data.Builder().putString(
+		STACK_TRACE,
+		exception.stackTraceToString().take(5000)
+	).build()
 )
 
 fun WorkInfo?.toWorkState() = when (this?.state) {

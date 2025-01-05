@@ -33,9 +33,9 @@ import kotlinx.coroutines.launch
 import ru.solrudev.okkeipatcher.app.model.ProgressData
 import ru.solrudev.okkeipatcher.data.service.NotificationService
 import ru.solrudev.okkeipatcher.data.worker.model.WorkNotificationsParameters
-import ru.solrudev.okkeipatcher.data.worker.model.WorkerFailure
 import ru.solrudev.okkeipatcher.data.worker.util.setProgress
 import ru.solrudev.okkeipatcher.data.worker.util.workerFailure
+import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.onFailure
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.extension.statusAndAccumulatedProgress
@@ -60,7 +60,7 @@ abstract class ForegroundOperationWorker(
 			setForeground(notificationService.createForegroundInfo())
 			val operation = operationFactory.create()
 			operation.canInvoke().onFailure { failure ->
-				return createFailure(WorkerFailure.Domain(failure.reason))
+				return createFailure(failure.reason)
 			}
 			val result: DomainResult<Unit>
 			coroutineScope {
@@ -69,13 +69,13 @@ abstract class ForegroundOperationWorker(
 				observeOperationJob.cancel()
 			}
 			result.onFailure { failure ->
-				return createFailure(WorkerFailure.Domain(failure.reason))
+				return createFailure(failure.reason)
 			}
 			return createSuccess()
 		} catch (cancellationException: CancellationException) {
 			throw cancellationException
 		} catch (t: Throwable) {
-			return createFailure(WorkerFailure.Unhandled(t))
+			return createFailure(t)
 		} finally {
 			notificationService.close()
 		}
@@ -93,9 +93,14 @@ abstract class ForegroundOperationWorker(
 		return Result.success()
 	}
 
-	private fun createFailure(failure: WorkerFailure): Result {
+	private fun createFailure(reason: LocalizedString): Result {
 		notificationService.displayMessageNotification(workNotificationsParameters.failureMessage)
-		return workerFailure(failure)
+		return workerFailure(reason)
+	}
+
+	private fun createFailure(exception: Throwable): Result {
+		notificationService.displayMessageNotification(workNotificationsParameters.failureMessage)
+		return workerFailure(exception)
 	}
 
 	private fun Operation<*>.observeIn(scope: CoroutineScope) = scope.launch {
