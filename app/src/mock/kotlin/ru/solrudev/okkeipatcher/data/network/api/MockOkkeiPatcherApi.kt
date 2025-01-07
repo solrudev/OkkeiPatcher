@@ -29,6 +29,7 @@ import ru.solrudev.okkeipatcher.data.util.computeHash
 import ru.solrudev.okkeipatcher.di.IoDispatcher
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 @Singleton
@@ -53,7 +54,8 @@ class MockOkkeiPatcherApi @Inject constructor(
 	private var appEndpointHitsCount = 0
 
 	override suspend fun getOkkeiPatcherData(): FileDto {
-		delay(1.seconds)
+		val delayDuration = if (appEndpointHitsCount > 0) 150.milliseconds else 1.seconds
+		delay(delayDuration)
 		if (appEndpointHitsCount++ < 1) {
 			return FileDto(version = 0, url = "", hash = "", size = 0L)
 		}
