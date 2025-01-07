@@ -36,6 +36,7 @@ import ru.solrudev.okkeipatcher.domain.model.exception.ObbPatchCorruptedExceptio
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbBackupRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFiles
+import ru.solrudev.okkeipatcher.domain.repository.patch.updateInstalledVersion
 import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.seconds
 
@@ -110,6 +111,7 @@ class ObbPatchOperation(
 					throw DomainException(failure.reason)
 				}
 				progressJob.cancel()
+				obbPatchFiles.updateInstalledVersion()
 			}
 		}
 	}
