@@ -58,7 +58,7 @@
 	<string name="error_hash_scripts_mismatch">Скрипты повреждены.</string>
 	<string name="error_install">Произошла ошибка при установке APK.</string>
 	<string name="error_install_with_reason">Произошла ошибка при установке APK.\n%s</string>
-	<string name="error_no_free_space">Недостаточно свободного места. Убедитесь, что на устройстве свободно как минимум 2 ГБ.</string>
+	<string name="error_no_free_space">Недостаточно свободного места. Убедитесь, что на устройстве свободно как минимум 5,5 ГБ.</string>
 	<string name="error_no_network">Отсутствует интернет-соединение.</string>
 	<string name="error_not_patched">Патч ещё не был применён к CHAOS;CHILD.</string>
 	<string name="error_not_trustworthy_apk">Возможно, APK для установки не был создан с помощью Okkei Patcher.</string>

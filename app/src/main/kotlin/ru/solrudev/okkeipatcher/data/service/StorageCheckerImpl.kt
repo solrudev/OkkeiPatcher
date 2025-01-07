@@ -25,12 +25,14 @@ import ru.solrudev.okkeipatcher.data.util.externalDir
 import ru.solrudev.okkeipatcher.domain.service.StorageChecker
 import javax.inject.Inject
 
-private const val TWO_GB: Long = 2_147_483_648
+private const val REQUIRED_FREE_SPACE_BYTES = 5_905_580_032L
 
 @Reusable
 class StorageCheckerImpl @Inject constructor(
 	@ApplicationContext private val applicationContext: Context
 ) : StorageChecker {
 
-	override fun isEnoughSpace() = applicationContext.externalDir.usableSpace >= TWO_GB
+	override fun isEnoughSpace(): Boolean {
+		return applicationContext.externalDir.usableSpace >= REQUIRED_FREE_SPACE_BYTES
+	}
 }

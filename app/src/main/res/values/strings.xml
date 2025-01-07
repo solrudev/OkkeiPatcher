@@ -62,7 +62,7 @@
 	<string name="error_hash_scripts_mismatch">Scripts are corrupted.</string>
 	<string name="error_install">An error occurred while installing APK.</string>
 	<string name="error_install_with_reason">An error occurred while installing APK.\n%s</string>
-	<string name="error_no_free_space">Not enough free disk space. Ensure that you have at least 2 GB of free space.</string>
+	<string name="error_no_free_space">Not enough free disk space. Ensure that you have at least 5.5 GB of free space.</string>
 	<string name="error_no_network">Network is not available.</string>
 	<string name="error_not_patched">CHAOS;CHILD hasn\'t been patched yet.</string>
 	<string name="error_not_trustworthy_apk">APK to be installed might be not created by Okkei Patcher.</string>
