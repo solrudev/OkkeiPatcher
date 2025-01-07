@@ -49,34 +49,16 @@ val PatcherEnvironment.obbPath: Path
 @Singleton
 class ObbRepositoryImpl @Inject constructor(
 	environment: PatcherEnvironment,
-	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	private val fileSystem: FileSystem
 ) : ObbRepository {
 
-	private val obb = environment.obbPath
+	override val obbPath = environment.obbPath
 
 	override val obbExists: Boolean
-		get() = fileSystem.exists(obb)
+		get() = fileSystem.exists(obbPath)
 
 	override fun deleteObb() {
-		fileSystem.delete(obb)
-	}
-
-	override fun copyFrom(path: Path): ProgressOperation<Unit> {
-		val progressMultiplier = 4
-		return operation(progressMax = STREAM_COPY_PROGRESS_MAX * progressMultiplier) {
-			try {
-				withContext(ioDispatcher) {
-					fileSystem.copy(path, obb) { progress ->
-						ensureActive()
-						progressDelta(progress * progressMultiplier)
-					}
-				}
-			} catch (throwable: Throwable) {
-				fileSystem.delete(obb)
-				throw throwable
-			}
-		}
+		fileSystem.delete(obbPath)
 	}
 }
 

@@ -24,37 +24,36 @@ import kotlinx.coroutines.launch
 import okio.FileSystem
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.PatcherEnvironment
-import ru.solrudev.okkeipatcher.data.repository.gamefile.OBB_FILE_NAME
 import ru.solrudev.okkeipatcher.data.service.FileDownloader
+import ru.solrudev.okkeipatcher.domain.core.onFailure
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.aggregateOperation
-import ru.solrudev.okkeipatcher.domain.core.operation.asOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.core.operation.status
 import ru.solrudev.okkeipatcher.domain.model.PatchFileType
+import ru.solrudev.okkeipatcher.domain.model.exception.DomainException
 import ru.solrudev.okkeipatcher.domain.model.exception.ObbPatchCorruptedException
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbBackupRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFiles
-import ru.solrudev.okkeipatcher.domain.repository.patch.updateInstalledVersion
+import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.seconds
 
 class ObbPatchOperation(
 	private val obbPatchFiles: PatchFiles,
 	environment: PatcherEnvironment,
-	private val obbRepository: ObbRepository,
+	obbRepository: ObbRepository,
 	private val obbBackupRepository: ObbBackupRepository,
 	private val fileDownloader: FileDownloader,
 	private val fileSystem: FileSystem
 ) : Operation<Unit> {
 
 	private val obbPatchPath = environment.externalFilesPath / "obbpatch"
-	private val patchedObbPath = environment.externalFilesPath / OBB_FILE_NAME
+	private val obbPath = obbRepository.obbPath
 
 	private val operation = aggregateOperation(
 		downloadPatches(),
-		applyPatches(),
-		replaceObb()
+		applyPatches()
 	)
 
 	override val status = operation.status
@@ -67,15 +66,16 @@ class ObbPatchOperation(
 	override suspend fun invoke() = try {
 		operation()
 	} finally {
-		fileSystem.delete(patchedObbPath)
 		fileSystem.delete(obbPatchPath)
 	}
 
 	private fun downloadPatches(): Operation<Unit> {
-		val progressMultiplier = 3
+		val progressMultiplier = 4
 		return operation(progressMax = fileDownloader.progressMax * progressMultiplier) {
 			status(R.string.status_downloading_obb_patches)
-			val obbPatchData = obbPatchFiles.getData().single { it.type == PatchFileType.OBB_PATCH }
+			val obbPatchData = obbPatchFiles
+				.getData()
+				.single { it.type == PatchFileType.OBB_PATCH }
 			val obbHash = fileDownloader.download(
 				obbPatchData.url, obbPatchPath, hashing = true,
 				onProgressChanged = { progressDelta(it * progressMultiplier) }
@@ -86,23 +86,31 @@ class ObbPatchOperation(
 		}
 	}
 
-	private fun applyPatches(): Operation<Unit> = operation(progressMax = 200) {
-		status(R.string.status_patching_obb)
-		coroutineScope {
-			launch {
-				repeat(4) {
-					delay(5.seconds)
-					progressDelta(50)
+	private fun applyPatches(): Operation<Unit> {
+		val progressMultiplier = 4
+		return operation(progressMax = 100 * progressMultiplier) {
+			status(R.string.status_patching_obb)
+			coroutineScope {
+				val progressJob = launch {
+					val size = obbPatchFiles
+						.getData()
+						.single { it.type == PatchFileType.OBB_PATCH }
+						.patchedSize
+					var previousSize = 0L
+					while (true) {
+						delay(2.seconds)
+						val currentSize = fileSystem.metadataOrNull(obbPath)?.size ?: 0
+						val delta = currentSize - previousSize
+						previousSize = currentSize
+						val normalizedDelta = (delta.toDouble() / size * 100).roundToInt()
+						progressDelta(normalizedDelta * progressMultiplier)
+					}
 				}
+				obbBackupRepository.patchBackup(obbPath, obbPatchPath).onFailure { failure ->
+					throw DomainException(failure.reason)
+				}
+				progressJob.cancel()
 			}
-			obbBackupRepository.patchBackup(patchedObbPath, obbPatchPath)
 		}
 	}
-
-	private fun replaceObb(): Operation<Unit> = aggregateOperation(
-		obbRepository.copyFrom(patchedObbPath).asOperation(),
-		operation {
-			obbPatchFiles.updateInstalledVersion()
-		}
-	)
 }

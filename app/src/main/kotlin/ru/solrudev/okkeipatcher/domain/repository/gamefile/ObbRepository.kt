@@ -19,10 +19,9 @@
 package ru.solrudev.okkeipatcher.domain.repository.gamefile
 
 import okio.Path
-import ru.solrudev.okkeipatcher.domain.core.operation.ProgressOperation
 
 interface ObbRepository {
 	val obbExists: Boolean
+	val obbPath: Path
 	fun deleteObb()
-	fun copyFrom(path: Path): ProgressOperation<Unit>
 }

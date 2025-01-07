@@ -27,5 +27,6 @@ data class PatchFileDto(
 	val version: Int,
 	val url: String,
 	val hash: String,
-	val size: Long
+	val size: Long,
+	val patchedSize: Long
 )

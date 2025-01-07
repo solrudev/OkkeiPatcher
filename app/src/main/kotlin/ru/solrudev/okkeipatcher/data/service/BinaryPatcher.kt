@@ -18,14 +18,20 @@
 
 package ru.solrudev.okkeipatcher.data.service
 
+import android.annotation.SuppressLint
 import com.github.sisong.HPatch
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.runInterruptible
+import kotlinx.coroutines.withContext
 import okio.FileSystem
 import okio.Path
 import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.data.util.prepareRecreate
 import ru.solrudev.okkeipatcher.di.DefaultDispatcher
+import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.core.Result
+import java.io.FileDescriptor
+import java.io.FileOutputStream
 import javax.inject.Inject
 
 fun interface BinaryPatcher {
@@ -33,21 +39,30 @@ fun interface BinaryPatcher {
 }
 
 class BinaryPatcherImpl @Inject constructor(
-	@DefaultDispatcher
-	private val defaultDispatcher: CoroutineDispatcher,
+	@DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
+	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	private val fileSystem: FileSystem
 ) : BinaryPatcher {
 
+	@SuppressLint("DiscouragedPrivateApi")
 	override suspend fun patch(inputPath: Path, outputPath: Path, diffPath: Path): Result<Unit> {
 		try {
-			val result = runInterruptible(defaultDispatcher) {
-				HPatch.patch(inputPath.toString(), diffPath.toString(), outputPath.toString())
+			return withContext(ioDispatcher) {
+				fileSystem.prepareRecreate(outputPath)
+				FileOutputStream(outputPath.toString()).use { outputStream ->
+					val fdGetInt = FileDescriptor::class.java.getDeclaredMethod("getInt$")
+					val fd = fdGetInt.invoke(outputStream.fd) as Int
+					val fdPath = "/proc/self/fd/$fd"
+					val result = runInterruptible(defaultDispatcher) {
+						HPatch.patch(inputPath.toString(), diffPath.toString(), fdPath)
+					}
+					if (result == 0) {
+						return@withContext Result.success()
+					}
+					fileSystem.delete(outputPath)
+					return@withContext Result.failure(R.string.error_binary_patch_failed, inputPath.toString())
+				}
 			}
-			if (result == 0) {
-				return Result.success()
-			}
-			fileSystem.delete(outputPath)
-			return Result.failure(R.string.error_binary_patch_failed, inputPath.toString())
 		} catch (throwable: Throwable) {
 			fileSystem.delete(outputPath)
 			throw throwable

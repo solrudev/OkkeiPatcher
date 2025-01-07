@@ -83,7 +83,7 @@ class ScriptsPatchOperation(
 		}
 	}
 
-	private fun extractScripts(): Operation<Unit> = operation(progressMax = 100) {
+	private fun extractScripts(): Operation<Unit> = operation(progressMax = 50) {
 		status(R.string.status_extracting_scripts)
 		runInterruptible(ioDispatcher) {
 			val scriptsZip = fileSystem.openZip(scriptsFile)
@@ -99,7 +99,7 @@ class ScriptsPatchOperation(
 		}
 	}
 
-	private fun replaceScripts(): Operation<Unit> = operation(progressMax = 100) {
+	private fun replaceScripts(): Operation<Unit> = operation(progressMax = 50) {
 		status(R.string.status_replacing_scripts)
 		val scriptsFolder = "assets/script/"
 		val newScripts = fileSystem.list(extractedScriptsDirectory)
