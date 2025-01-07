@@ -21,6 +21,7 @@ package ru.solrudev.okkeipatcher.data.service
 import com.github.sisong.HPatch
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.runInterruptible
+import okio.FileSystem
 import okio.Path
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.di.DefaultDispatcher
@@ -33,16 +34,23 @@ fun interface BinaryPatcher {
 
 class BinaryPatcherImpl @Inject constructor(
 	@DefaultDispatcher
-	private val defaultDispatcher: CoroutineDispatcher
+	private val defaultDispatcher: CoroutineDispatcher,
+	private val fileSystem: FileSystem
 ) : BinaryPatcher {
 
 	override suspend fun patch(inputPath: Path, outputPath: Path, diffPath: Path): Result<Unit> {
-		val result = runInterruptible(defaultDispatcher) {
-			HPatch.patch(inputPath.toString(), diffPath.toString(), outputPath.toString())
+		try {
+			val result = runInterruptible(defaultDispatcher) {
+				HPatch.patch(inputPath.toString(), diffPath.toString(), outputPath.toString())
+			}
+			if (result == 0) {
+				return Result.success()
+			}
+			fileSystem.delete(outputPath)
+			return Result.failure(R.string.error_binary_patch_failed, inputPath.toString())
+		} catch (throwable: Throwable) {
+			fileSystem.delete(outputPath)
+			throw throwable
 		}
-		if (result == 0) {
-			return Result.success()
-		}
-		return Result.failure(R.string.error_binary_patch_failed, inputPath.toString())
 	}
 }
