@@ -19,13 +19,18 @@
 package ru.solrudev.okkeipatcher.data.service
 
 import android.content.Context
+import android.os.Build
+import android.os.storage.StorageManager
+import androidx.annotation.RequiresApi
+import androidx.core.content.getSystemService
 import dagger.Reusable
 import dagger.hilt.android.qualifiers.ApplicationContext
 import ru.solrudev.okkeipatcher.data.util.externalDir
 import ru.solrudev.okkeipatcher.domain.service.StorageChecker
+import java.io.IOException
 import javax.inject.Inject
 
-private const val REQUIRED_FREE_SPACE_BYTES = 5_905_580_032L
+private const val REQUIRED_ALLOCATABLE_BYTES = 5_905_580_032L
 
 @Reusable
 class StorageCheckerImpl @Inject constructor(
@@ -33,6 +38,29 @@ class StorageCheckerImpl @Inject constructor(
 ) : StorageChecker {
 
 	override fun isEnoughSpace(): Boolean {
-		return applicationContext.externalDir.usableSpace >= REQUIRED_FREE_SPACE_BYTES
+		val storageManager = applicationContext.getSystemService<StorageManager>()
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && storageManager != null) {
+			return useStorageManager(storageManager)
+		}
+		return isEnoughUsableSpace()
+	}
+
+	@RequiresApi(Build.VERSION_CODES.O)
+	private fun useStorageManager(storageManager: StorageManager): Boolean {
+		try {
+			val storageUuid = storageManager.getUuidForPath(applicationContext.externalDir)
+			val allocatableBytes = storageManager.getAllocatableBytes(storageUuid)
+			if (allocatableBytes < REQUIRED_ALLOCATABLE_BYTES) {
+				return false
+			}
+			storageManager.allocateBytes(storageUuid, REQUIRED_ALLOCATABLE_BYTES)
+			return true
+		} catch (_: IOException) {
+			return isEnoughUsableSpace()
+		}
+	}
+
+	private fun isEnoughUsableSpace(): Boolean {
+		return applicationContext.externalDir.usableSpace >= REQUIRED_ALLOCATABLE_BYTES
 	}
 }
