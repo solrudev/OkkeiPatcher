@@ -36,14 +36,14 @@ class SaveData @Inject constructor(private val saveDataRepository: SaveDataRepos
 
 	override fun deleteBackup() = saveDataRepository.deleteBackup()
 
-	override fun backup(): Operation<Unit> = operation(progressMax = 100) {
+	override fun backup(): Operation<Unit> = operation(progressMax = 50) {
 		status(R.string.status_backing_up_save_data)
 		saveDataRepository.createTemp().onFailure { failure ->
 			warning(failure.reason)
 		}
 	}
 
-	override fun restore() = operation(progressMax = 100) {
+	override fun restore() = operation(progressMax = 50) {
 		status(R.string.status_comparing_saves)
 		if (saveDataRepository.verifyBackup()) {
 			status(R.string.status_restoring_saves)

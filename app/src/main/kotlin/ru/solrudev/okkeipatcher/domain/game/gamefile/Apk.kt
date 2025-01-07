@@ -49,7 +49,7 @@ abstract class Apk(
 
 	override fun deleteBackup() = apkBackupRepository.deleteBackup()
 
-	override fun backup() = operation(progressMax = 100) {
+	override fun backup() = operation(progressMax = 50) {
 		status(R.string.status_comparing_apk)
 		if (!apkBackupRepository.verifyBackup()) {
 			status(R.string.status_backing_up_apk)
