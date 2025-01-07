@@ -33,7 +33,7 @@ import ru.solrudev.okkeipatcher.domain.service.StorageChecker
 import java.io.IOException
 import javax.inject.Inject
 
-private const val REQUIRED_ALLOCATABLE_BYTES = 5_905_580_032L
+private const val REQUIRED_ALLOCATABLE_BYTES = 4_294_967_296L
 
 @Reusable
 class StorageCheckerImpl @Inject constructor(
