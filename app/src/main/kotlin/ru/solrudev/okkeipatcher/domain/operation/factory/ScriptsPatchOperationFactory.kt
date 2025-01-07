@@ -19,8 +19,8 @@
 package ru.solrudev.okkeipatcher.domain.operation.factory
 
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
-import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFile
+import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFiles
 
 interface ScriptsPatchOperationFactory {
-	fun create(scriptsPatchFile: PatchFile): Operation<Unit>
+	fun create(scriptsPatchFiles: PatchFiles): Operation<Unit>
 }

@@ -33,4 +33,8 @@ object DispatchersModule {
 	@IoDispatcher
 	@Provides
 	fun provideIoDispatcher() = Dispatchers.IO
+
+	@DefaultDispatcher
+	@Provides
+	fun provideDefaultDispatcher() = Dispatchers.Default
 }

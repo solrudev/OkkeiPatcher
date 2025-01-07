@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2025 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,16 +16,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ru.solrudev.okkeipatcher.domain.model.patchupdates
+package ru.solrudev.okkeipatcher.data.network.model
 
-data class DefaultPatchUpdates(
-	val scriptsUpdateAvailable: Boolean = false,
-	val obbUpdateAvailable: Boolean = false
-) : PatchUpdates {
+import com.squareup.moshi.JsonClass
+import ru.solrudev.okkeipatcher.domain.model.PatchFileType
 
-	override val apkUpdatesAvailable: Boolean
-		get() = scriptsUpdateAvailable
-
-	override val obbUpdatesAvailable: Boolean
-		get() = obbUpdateAvailable
-}
+@JsonClass(generateAdapter = true)
+data class PatchFileDto(
+	val type: PatchFileType,
+	val version: Int,
+	val url: String,
+	val hash: String,
+	val size: Long
+)

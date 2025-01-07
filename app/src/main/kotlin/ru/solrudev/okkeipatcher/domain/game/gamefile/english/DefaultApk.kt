@@ -37,8 +37,8 @@ class DefaultApk @Inject constructor(
 	apkBackupRepository: ApkBackupRepository
 ) : Apk(apkRepository, apkBackupRepository) {
 
-	private val scripts = patchRepository.scripts
-	private val scriptsPatchOperation = scriptsPatchOperationFactory.create(scripts)
+	private val apkPatchFiles = patchRepository.apkPatchFiles
+	private val scriptsPatchOperation = scriptsPatchOperationFactory.create(apkPatchFiles)
 
 	override fun patch() = patch(updating = false)
 	override fun update() = patch(updating = true)
@@ -50,13 +50,13 @@ class DefaultApk @Inject constructor(
 			if (apkRepository.verifyTemp()) {
 				scriptsPatchOperation.skip()
 				installPatchedOperation()
-				scripts.updateInstalledVersion()
+				apkPatchFiles.updateInstalledVersion()
 				return@operation
 			}
 			apkRepository.deleteTemp()
 			scriptsPatchOperation()
 			installPatchedOperation()
-			scripts.updateInstalledVersion()
+			apkPatchFiles.updateInstalledVersion()
 		}
 	}
 }

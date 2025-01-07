@@ -16,13 +16,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ru.solrudev.okkeipatcher.domain.model.patchupdates
+package ru.solrudev.okkeipatcher.data.network.model.patch
 
-interface PatchUpdates {
+import com.squareup.moshi.JsonClass
+import ru.solrudev.okkeipatcher.data.network.model.PatchFileDto
 
-	val apkUpdatesAvailable: Boolean
-	val obbUpdatesAvailable: Boolean
-
-	val available: Boolean
-		get() = apkUpdatesAvailable || obbUpdatesAvailable
-}
+@JsonClass(generateAdapter = true)
+data class PatchResponseDto(
+	val displayVersion: String,
+	val apk: List<PatchFileDto>,
+	val obb: List<PatchFileDto>
+)

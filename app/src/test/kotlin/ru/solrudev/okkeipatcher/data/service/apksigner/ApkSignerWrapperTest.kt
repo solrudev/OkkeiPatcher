@@ -20,7 +20,6 @@ package ru.solrudev.okkeipatcher.data.service.apksigner
 
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
-import okio.Path
 import okio.Path.Companion.toPath
 import okio.fakefilesystem.FakeFileSystem
 import ru.solrudev.okkeipatcher.data.FailingFileSystem
@@ -39,10 +38,8 @@ class ApkSignerWrapperTest {
 	private val fileSystem = FakeFileSystem()
 	private val failingFileSystem = FailingFileSystem(fileSystem)
 
-	private val apkSignerImplementation = object : ApkSignerImplementation {
-		override suspend fun sign(apk: Path, outputApk: Path) {
-			fileSystem.write(outputApk, signedApkContent)
-		}
+	private val apkSignerImplementation = ApkSignerImplementation { _, outputApk ->
+		fileSystem.write(outputApk, signedApkContent)
 	}
 
 	@BeforeTest

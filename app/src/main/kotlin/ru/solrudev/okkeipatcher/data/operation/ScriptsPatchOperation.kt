@@ -33,12 +33,13 @@ import ru.solrudev.okkeipatcher.domain.core.operation.aggregateOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.core.operation.status
 import ru.solrudev.okkeipatcher.domain.core.persistence.Persistable
+import ru.solrudev.okkeipatcher.domain.model.PatchFileType
 import ru.solrudev.okkeipatcher.domain.model.exception.ScriptsCorruptedException
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
-import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFile
+import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFiles
 
 class ScriptsPatchOperation(
-	private val scriptsPatchFile: PatchFile,
+	private val scriptsPatchFiles: PatchFiles,
 	private val apkRepository: ApkRepository,
 	private val signedApkHash: Persistable<String>,
 	private val ioDispatcher: CoroutineDispatcher,
@@ -73,7 +74,7 @@ class ScriptsPatchOperation(
 
 	private fun downloadScripts(): Operation<Unit> = operation(progressMax = fileDownloader.progressMax) {
 		status(R.string.status_downloading_scripts)
-		val scriptsData = scriptsPatchFile.getData()
+		val scriptsData = scriptsPatchFiles.getData().single { it.type == PatchFileType.SCRIPTS }
 		val scriptsHash = fileDownloader.download(
 			scriptsData.url, scriptsFile, hashing = true, onProgressChanged = ::progressDelta
 		)

@@ -27,7 +27,7 @@ import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.operation.factory.ScriptsPatchOperationFactory
 import ru.solrudev.okkeipatcher.domain.repository.HashRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
-import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFile
+import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFiles
 import javax.inject.Inject
 
 class ScriptsPatchOperationFactoryImpl @Inject constructor(
@@ -39,8 +39,8 @@ class ScriptsPatchOperationFactoryImpl @Inject constructor(
 	private val fileSystem: FileSystem
 ) : ScriptsPatchOperationFactory {
 
-	override fun create(scriptsPatchFile: PatchFile) = ScriptsPatchOperation(
-		scriptsPatchFile,
+	override fun create(scriptsPatchFiles: PatchFiles) = ScriptsPatchOperation(
+		scriptsPatchFiles,
 		apkRepository,
 		hashRepository.signedApkHash,
 		ioDispatcher,

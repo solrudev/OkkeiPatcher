@@ -25,11 +25,13 @@ import okio.FileSystem
 import okio.Path
 import ru.solrudev.okkeipatcher.data.PatcherEnvironment
 import ru.solrudev.okkeipatcher.data.repository.gamefile.util.backupPath
+import ru.solrudev.okkeipatcher.data.service.BinaryPatcher
 import ru.solrudev.okkeipatcher.data.util.GAME_PACKAGE_NAME
 import ru.solrudev.okkeipatcher.data.util.STREAM_COPY_PROGRESS_MAX
 import ru.solrudev.okkeipatcher.data.util.computeHash
 import ru.solrudev.okkeipatcher.data.util.copy
 import ru.solrudev.okkeipatcher.di.IoDispatcher
+import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.core.operation.ProgressOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.model.exception.ObbNotFoundException
@@ -47,16 +49,34 @@ val PatcherEnvironment.obbPath: Path
 @Singleton
 class ObbRepositoryImpl @Inject constructor(
 	environment: PatcherEnvironment,
+	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	private val fileSystem: FileSystem
 ) : ObbRepository {
 
-	override val obbExists: Boolean
-		get() = fileSystem.exists(obbPath)
+	private val obb = environment.obbPath
 
-	override val obbPath = environment.obbPath
+	override val obbExists: Boolean
+		get() = fileSystem.exists(obb)
 
 	override fun deleteObb() {
-		fileSystem.delete(obbPath)
+		fileSystem.delete(obb)
+	}
+
+	override fun copyFrom(path: Path): ProgressOperation<Unit> {
+		val progressMultiplier = 4
+		return operation(progressMax = STREAM_COPY_PROGRESS_MAX * progressMultiplier) {
+			try {
+				withContext(ioDispatcher) {
+					fileSystem.copy(path, obb) { progress ->
+						ensureActive()
+						progressDelta(progress * progressMultiplier)
+					}
+				}
+			} catch (throwable: Throwable) {
+				fileSystem.delete(obb)
+				throw throwable
+			}
+		}
 	}
 }
 
@@ -64,6 +84,7 @@ class ObbRepositoryImpl @Inject constructor(
 class ObbBackupRepositoryImpl @Inject constructor(
 	environment: PatcherEnvironment,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+	private val binaryPatcher: BinaryPatcher,
 	private val hashRepository: HashRepository,
 	private val fileSystem: FileSystem
 ) : ObbBackupRepository {
@@ -79,7 +100,7 @@ class ObbBackupRepositoryImpl @Inject constructor(
 	}
 
 	override fun createBackup(): ProgressOperation<Unit> {
-		val progressMultiplier = 6
+		val progressMultiplier = 4
 		return operation(progressMax = STREAM_COPY_PROGRESS_MAX * progressMultiplier) {
 			if (!fileSystem.exists(obb)) {
 				throw ObbNotFoundException()
@@ -143,5 +164,9 @@ class ObbBackupRepositoryImpl @Inject constructor(
 			}
 			return@operation fileHash == savedHash
 		}
+	}
+
+	override suspend fun patchBackup(outputPath: Path, diffPath: Path): Result<Unit> {
+		return binaryPatcher.patch(backup, outputPath, diffPath)
 	}
 }

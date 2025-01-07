@@ -42,7 +42,7 @@ private const val TEMPLATE_FILE_NAME = "testkey.past"
 private const val CREATED_BY = "Okkei Patcher"
 private const val SIGNER_NAME = "Okkei"
 
-interface ApkSignerImplementation {
+fun interface ApkSignerImplementation {
 	suspend fun sign(apk: Path, outputApk: Path)
 }
 

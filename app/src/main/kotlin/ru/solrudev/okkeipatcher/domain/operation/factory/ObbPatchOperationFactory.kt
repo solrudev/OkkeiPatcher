@@ -16,13 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ru.solrudev.okkeipatcher.data.network.api.patch
+package ru.solrudev.okkeipatcher.domain.operation.factory
 
-import retrofit2.http.GET
-import ru.solrudev.okkeipatcher.data.network.model.patch.DefaultPatchDto
+import ru.solrudev.okkeipatcher.domain.core.operation.Operation
+import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFiles
 
-interface DefaultPatchApi {
-
-	@GET("patch/en")
-	suspend fun getPatchData(): DefaultPatchDto
+interface ObbPatchOperationFactory {
+	fun create(obbPatchFiles: PatchFiles): Operation<Unit>
 }

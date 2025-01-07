@@ -23,7 +23,7 @@ import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.core.isEmpty
 
-abstract class DomainException(val reason: LocalizedString) : Exception()
+open class DomainException(val reason: LocalizedString) : Exception()
 
 class NoNetworkException : DomainException(
 	LocalizedString.resource(R.string.error_no_network)
@@ -67,6 +67,10 @@ class ScriptsCorruptedException : DomainException(
 
 class ObbCorruptedException : DomainException(
 	LocalizedString.resource(R.string.error_hash_obb_mismatch)
+)
+
+class ObbPatchCorruptedException : DomainException(
+	LocalizedString.resource(R.string.error_hash_obb_patches_mismatch)
 )
 
 class AppUpdateCorruptedException : DomainException(

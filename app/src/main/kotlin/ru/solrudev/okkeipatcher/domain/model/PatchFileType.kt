@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2025 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,13 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ru.solrudev.okkeipatcher.domain.repository.gamefile
+package ru.solrudev.okkeipatcher.domain.model
 
-import okio.Path
-import ru.solrudev.okkeipatcher.domain.core.operation.ProgressOperation
-
-interface ObbRepository {
-	val obbExists: Boolean
-	fun deleteObb()
-	fun copyFrom(path: Path): ProgressOperation<Unit>
+enum class PatchFileType {
+	SCRIPTS, OBB_PATCH
 }

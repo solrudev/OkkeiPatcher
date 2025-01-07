@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2025 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,13 +16,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ru.solrudev.okkeipatcher.domain.repository.gamefile
+package ru.solrudev.okkeipatcher.data.network.model.patch
 
-import okio.Path
-import ru.solrudev.okkeipatcher.domain.core.operation.ProgressOperation
+import com.squareup.moshi.JsonClass
 
-interface ObbRepository {
-	val obbExists: Boolean
-	fun deleteObb()
-	fun copyFrom(path: Path): ProgressOperation<Unit>
-}
+@JsonClass(generateAdapter = true)
+data class PatchRequestDto(
+	val supportedFeatures: SupportedFeatures = SupportedFeatures()
+)
+
+@JsonClass(generateAdapter = true)
+data class SupportedFeatures(
+	val scripts: Boolean = true,
+	val binaryPatches: Boolean = true
+)

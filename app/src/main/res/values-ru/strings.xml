@@ -50,9 +50,11 @@
 	<string name="error">Ошибка</string>
 	<string name="error_apk_not_found">APK для установки не найден.</string>
 	<string name="error_backup_not_found">Резервная копия CHAOS;CHILD не найдена.</string>
+	<string name="error_binary_patch_failed">Не удалось применить бинарный патч: %s</string>
 	<string name="error_clear_data">При очистке данных произошла ошибка</string>
 	<string name="error_game_not_found">CHAOS;CHILD не найден на этом устройстве.</string>
 	<string name="error_hash_obb_mismatch">OBB повреждён.</string>
+	<string name="error_hash_obb_patches_mismatch">Патчи OBB повреждены.</string>
 	<string name="error_hash_scripts_mismatch">Скрипты повреждены.</string>
 	<string name="error_install">Произошла ошибка при установке APK.</string>
 	<string name="error_install_with_reason">Произошла ошибка при установке APK.\n%s</string>
@@ -137,10 +139,11 @@
 	<string name="status_comparing_apk">Сравнение хэшей APK</string>
 	<string name="status_comparing_obb">Сравнение хэшей OBB</string>
 	<string name="status_comparing_saves">Сравнение хэшей сохранений</string>
-	<string name="status_downloading_obb">Загрузка OBB</string>
+	<string name="status_downloading_obb_patches">Загрузка патчей OBB</string>
 	<string name="status_downloading_scripts">Загрузка скриптов</string>
 	<string name="status_extracting_scripts">Распаковка скриптов</string>
 	<string name="status_installing">Установка</string>
+	<string name="status_patching_obb">Патч OBB</string>
 	<string name="status_persisting_save_data">Запись файла сохранений</string>
 	<string name="status_replacing_scripts">Замена скриптов</string>
 	<string name="status_restoring_obb">Восстановление OBB</string>

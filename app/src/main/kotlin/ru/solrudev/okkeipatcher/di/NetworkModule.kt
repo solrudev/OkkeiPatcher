@@ -42,7 +42,7 @@ import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
-private const val BASE_URL = "https://okkeipatcher.solrudev.ru/api/"
+private const val BASE_URL = "https://okkeipatcher.solrudev.ru/api/v1/"
 
 @InstallIn(SingletonComponent::class)
 @Module(includes = [NetworkFlavoredModule::class])

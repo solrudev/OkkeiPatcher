@@ -19,7 +19,7 @@
 package ru.solrudev.okkeipatcher.domain.game.gamefile.english
 
 import ru.solrudev.okkeipatcher.domain.game.gamefile.Obb
-import ru.solrudev.okkeipatcher.domain.operation.factory.ObbDownloadOperationFactory
+import ru.solrudev.okkeipatcher.domain.operation.factory.ObbPatchOperationFactory
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbBackupRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.DefaultPatchRepository
@@ -27,13 +27,13 @@ import javax.inject.Inject
 
 class DefaultObb @Inject constructor(
 	patchRepository: DefaultPatchRepository,
-	obbDownloadOperationFactory: ObbDownloadOperationFactory,
+	obbPatchOperationFactory: ObbPatchOperationFactory,
 	obbRepository: ObbRepository,
 	obbBackupRepository: ObbBackupRepository
 ) : Obb(obbRepository, obbBackupRepository) {
 
-	private val obbDownloadOperation = obbDownloadOperationFactory.create(patchRepository.obb)
+	private val obbPatchOperation = obbPatchOperationFactory.create(patchRepository.obbPatchFiles)
 
-	override fun patch() = obbDownloadOperation
+	override fun patch() = obbPatchOperation
 	override fun update() = patch()
 }

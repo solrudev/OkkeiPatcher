@@ -16,11 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ru.solrudev.okkeipatcher.domain.operation.factory
+package ru.solrudev.okkeipatcher.domain.model
 
-import ru.solrudev.okkeipatcher.domain.core.operation.Operation
-import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFile
-
-interface ObbDownloadOperationFactory {
-	fun create(obbPatchFile: PatchFile): Operation<Unit>
+data class PatchUpdates(
+	val apkUpdatesAvailable: Boolean,
+	val obbUpdatesAvailable: Boolean
+) {
+	val available: Boolean
+		get() = apkUpdatesAvailable || obbUpdatesAvailable
 }

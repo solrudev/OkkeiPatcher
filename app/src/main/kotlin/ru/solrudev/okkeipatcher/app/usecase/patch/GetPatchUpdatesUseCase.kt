@@ -18,7 +18,7 @@
 
 package ru.solrudev.okkeipatcher.app.usecase.patch
 
-import ru.solrudev.okkeipatcher.domain.model.patchupdates.PatchUpdates
+import ru.solrudev.okkeipatcher.domain.model.PatchUpdates
 import ru.solrudev.okkeipatcher.domain.repository.patch.factory.PatchRepositoryFactory
 import javax.inject.Inject
 

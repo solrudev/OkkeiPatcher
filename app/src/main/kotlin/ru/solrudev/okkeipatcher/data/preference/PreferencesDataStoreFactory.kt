@@ -19,6 +19,7 @@
 package ru.solrudev.okkeipatcher.data.preference
 
 import android.content.Context
+import androidx.datastore.core.DataMigration
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
@@ -27,15 +28,15 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 interface PreferencesDataStoreFactory {
-	fun create(name: String): DataStore<Preferences>
+	fun create(name: String, migrations: List<DataMigration<Preferences>> = emptyList()): DataStore<Preferences>
 }
 
 class PreferencesDataStoreFactoryImpl @Inject constructor(
 	@ApplicationContext private val applicationContext: Context
 ) : PreferencesDataStoreFactory {
 
-	override fun create(name: String): DataStore<Preferences> {
-		return PreferenceDataStoreFactory.create {
+	override fun create(name: String, migrations: List<DataMigration<Preferences>>): DataStore<Preferences> {
+		return PreferenceDataStoreFactory.create(migrations = migrations) {
 			applicationContext.preferencesDataStoreFile(name)
 		}
 	}

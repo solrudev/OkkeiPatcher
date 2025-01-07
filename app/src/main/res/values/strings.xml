@@ -54,9 +54,11 @@
 	<string name="error">Error</string>
 	<string name="error_apk_not_found">APK to be installed was not found.</string>
 	<string name="error_backup_not_found">Backup of CHAOS;CHILD was not found.</string>
+	<string name="error_binary_patch_failed">Binary patch failed: %s</string>
 	<string name="error_clear_data">There was an error clearing data</string>
 	<string name="error_game_not_found">CHAOS;CHILD was not found on this device.</string>
 	<string name="error_hash_obb_mismatch">OBB is corrupted.</string>
+	<string name="error_hash_obb_patches_mismatch">OBB patches are corrupted.</string>
 	<string name="error_hash_scripts_mismatch">Scripts are corrupted.</string>
 	<string name="error_install">An error occurred while installing APK.</string>
 	<string name="error_install_with_reason">An error occurred while installing APK.\n%s</string>
@@ -148,10 +150,11 @@
 	<string name="status_comparing_apk">Comparing APK checksums</string>
 	<string name="status_comparing_obb">Comparing OBB checksums</string>
 	<string name="status_comparing_saves">Comparing save data checksums</string>
-	<string name="status_downloading_obb">Downloading OBB</string>
+	<string name="status_downloading_obb_patches">Downloading OBB patches</string>
 	<string name="status_downloading_scripts">Downloading scripts</string>
 	<string name="status_extracting_scripts">Extracting scripts</string>
 	<string name="status_installing">Installing</string>
+	<string name="status_patching_obb">Patching OBB</string>
 	<string name="status_persisting_save_data">Persisting save data</string>
 	<string name="status_replacing_scripts">Replacing scripts</string>
 	<string name="status_restoring_obb">Restoring OBB</string>

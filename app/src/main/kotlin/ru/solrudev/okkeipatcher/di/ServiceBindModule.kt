@@ -24,6 +24,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import ru.solrudev.okkeipatcher.data.service.BinaryPatcher
+import ru.solrudev.okkeipatcher.data.service.BinaryPatcherImpl
 import ru.solrudev.okkeipatcher.data.service.GameInstallationProvider
 import ru.solrudev.okkeipatcher.data.service.GameInstallationProviderImpl
 import ru.solrudev.okkeipatcher.data.service.PackageInstallerFacade
@@ -48,4 +50,7 @@ interface ServiceBindModule {
 
 	@Binds
 	fun bindPackageInstallerFacade(packageInstallerFacade: PackageInstallerFacadeImpl): PackageInstallerFacade
+
+	@Binds
+	fun bindBinaryPatcher(binaryPatcher: BinaryPatcherImpl): BinaryPatcher
 }

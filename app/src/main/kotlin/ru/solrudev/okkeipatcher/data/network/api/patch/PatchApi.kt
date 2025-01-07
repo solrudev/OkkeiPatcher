@@ -16,14 +16,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ru.solrudev.okkeipatcher.data.network.model.patch
+package ru.solrudev.okkeipatcher.data.network.api.patch
 
-import com.squareup.moshi.JsonClass
-import ru.solrudev.okkeipatcher.data.network.model.FileDto
+import retrofit2.http.Body
+import retrofit2.http.POST
+import ru.solrudev.okkeipatcher.data.network.model.patch.PatchRequestDto
+import ru.solrudev.okkeipatcher.data.network.model.patch.PatchResponseDto
 
-@JsonClass(generateAdapter = true)
-data class DefaultPatchDto(
-	val displayVersion: String,
-	val scripts: FileDto,
-	val obb: FileDto
-)
+interface PatchApi {
+	suspend fun getPatchData(patchRequestDto: PatchRequestDto = PatchRequestDto()): PatchResponseDto
+}
+
+interface DefaultPatchApi : PatchApi {
+
+	@POST("patch/en")
+	override suspend fun getPatchData(@Body patchRequestDto: PatchRequestDto): PatchResponseDto
+}

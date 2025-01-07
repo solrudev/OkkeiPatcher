@@ -18,17 +18,30 @@
 
 package ru.solrudev.okkeipatcher.data.operation.factory
 
-import ru.solrudev.okkeipatcher.data.operation.ObbDownloadOperation
+import okio.FileSystem
+import ru.solrudev.okkeipatcher.data.PatcherEnvironment
+import ru.solrudev.okkeipatcher.data.operation.ObbPatchOperation
 import ru.solrudev.okkeipatcher.data.service.FileDownloader
-import ru.solrudev.okkeipatcher.domain.operation.factory.ObbDownloadOperationFactory
+import ru.solrudev.okkeipatcher.domain.operation.factory.ObbPatchOperationFactory
+import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbBackupRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbRepository
-import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFile
+import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFiles
 import javax.inject.Inject
 
-class ObbDownloadOperationFactoryImpl @Inject constructor(
+class ObbPatchOperationFactoryImpl @Inject constructor(
 	private val obbRepository: ObbRepository,
-	private val fileDownloader: FileDownloader
-) : ObbDownloadOperationFactory {
+	private val obbBackupRepository: ObbBackupRepository,
+	private val environment: PatcherEnvironment,
+	private val fileDownloader: FileDownloader,
+	private val fileSystem: FileSystem
+) : ObbPatchOperationFactory {
 
-	override fun create(obbPatchFile: PatchFile) = ObbDownloadOperation(obbPatchFile, obbRepository, fileDownloader)
+	override fun create(obbPatchFiles: PatchFiles) = ObbPatchOperation(
+		obbPatchFiles,
+		environment,
+		obbRepository,
+		obbBackupRepository,
+		fileDownloader,
+		fileSystem
+	)
 }

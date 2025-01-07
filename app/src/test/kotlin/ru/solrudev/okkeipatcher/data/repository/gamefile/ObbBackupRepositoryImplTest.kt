@@ -27,8 +27,10 @@ import ru.solrudev.okkeipatcher.data.FailingFileSystem
 import ru.solrudev.okkeipatcher.data.FakePatcherEnvironment
 import ru.solrudev.okkeipatcher.data.repository.FakeHashRepository
 import ru.solrudev.okkeipatcher.data.repository.gamefile.util.backupPath
+import ru.solrudev.okkeipatcher.data.service.BinaryPatcher
 import ru.solrudev.okkeipatcher.data.util.read
 import ru.solrudev.okkeipatcher.data.util.write
+import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.model.exception.ObbNotFoundException
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -45,6 +47,9 @@ class ObbBackupRepositoryImplTest {
 	private val backupObb = environment.backupPath / OBB_FILE_NAME
 	private val obbContent = "ObbBackupRepositoryImpl OBB test string"
 	private val expectedHash = "952e311470829e5396f0884c03ee3132b2a074774f55f73df98836994fd070c1"
+	private val expectedPatchedContent = "$obbContent patch"
+	private val patchedObb = environment.filesPath / "patched.obb"
+	private val diff = environment.filesPath / "diff.obb"
 	private val invalidHash = "invalid APK hash"
 	private val hashRepository = FakeHashRepository()
 	private val fileSystem = FakeFileSystem()
@@ -52,16 +57,24 @@ class ObbBackupRepositoryImplTest {
 	private val testScope = TestScope()
 	private val testDispatcher = StandardTestDispatcher(testScope.testScheduler)
 
+	private val binaryPatcher = BinaryPatcher { inputPath, outputPath, diffPath ->
+		val backupContent = fileSystem.read(inputPath)
+		val diffContent = fileSystem.read(diffPath)
+		fileSystem.write(outputPath, "$backupContent $diffContent")
+		Result.success()
+	}
+
 	private val obbBackupRepository = ObbBackupRepositoryImpl(
-		environment, testDispatcher, hashRepository, fileSystem
+		environment, testDispatcher, binaryPatcher, hashRepository, fileSystem
 	)
 
 	private val failingObbBackupRepository = ObbBackupRepositoryImpl(
-		environment, testDispatcher, hashRepository, failingFileSystem
+		environment, testDispatcher, binaryPatcher, hashRepository, failingFileSystem
 	)
 
 	@BeforeTest
 	fun setUp() {
+		fileSystem.write(diff, "patch")
 		fileSystem.delete(obb)
 		fileSystem.delete(backupObb)
 	}
@@ -194,5 +207,13 @@ class ObbBackupRepositoryImplTest {
 		hashRepository.backupObbHash.persist(expectedHash)
 		val isBackupObbValid = obbBackupRepository.verifyBackup().invoke()
 		assertTrue(isBackupObbValid)
+	}
+
+	@Test
+	fun `patchBackup writes patched backup to provided path`() = testScope.runTest {
+		fileSystem.write(backupObb, obbContent)
+		obbBackupRepository.patchBackup(patchedObb, diff)
+		val actualContent = fileSystem.read(patchedObb)
+		assertEquals(expectedPatchedContent, actualContent)
 	}
 }

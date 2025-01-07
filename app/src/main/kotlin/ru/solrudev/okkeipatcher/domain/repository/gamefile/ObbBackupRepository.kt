@@ -18,6 +18,8 @@
 
 package ru.solrudev.okkeipatcher.domain.repository.gamefile
 
+import okio.Path
+import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.core.operation.ProgressOperation
 
 interface ObbBackupRepository {
@@ -26,4 +28,5 @@ interface ObbBackupRepository {
 	fun createBackup(): ProgressOperation<Unit>
 	fun verifyBackup(): ProgressOperation<Boolean>
 	fun restoreBackup(): ProgressOperation<Unit>
+	suspend fun patchBackup(outputPath: Path, diffPath: Path): Result<Unit>
 }
