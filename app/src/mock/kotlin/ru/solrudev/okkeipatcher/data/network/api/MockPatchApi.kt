@@ -46,7 +46,8 @@ class MockPatchApi @Inject constructor() : PatchApi {
 					version = if (isUpdateAvailable) 2 else 1,
 					url = "",
 					hash = "",
-					size = 2000000
+					size = 2000000,
+					patchedSize = -1
 				)
 			),
 			obb = listOf(
@@ -55,7 +56,8 @@ class MockPatchApi @Inject constructor() : PatchApi {
 					version = if (isUpdateAvailable) 2 else 1,
 					url = "",
 					hash = "",
-					size = 90000000
+					size = 90000000,
+					patchedSize = 1700000000
 				)
 			)
 		)
