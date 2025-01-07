@@ -64,7 +64,7 @@ abstract class PatchRepositoryImpl(
 
 	override suspend fun getPatchUpdates(refresh: Boolean) = PatchUpdates(
 		apkPatchFiles.isUpdateAvailable(refresh),
-		obbPatchFiles.isUpdateAvailable(refresh)
+		obbPatchFiles.isUpdateAvailable(refresh = false)
 	)
 
 	override suspend fun getPatchSizeInMb() = try {
