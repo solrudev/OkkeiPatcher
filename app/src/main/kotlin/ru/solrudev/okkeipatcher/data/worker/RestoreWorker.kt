@@ -44,6 +44,8 @@ private val failureMessage = Message(
 	LocalizedString.resource(R.string.notification_message_restore_failed)
 )
 
+private val initialStatus = LocalizedString.resource(R.string.status_checking)
+
 @HiltWorker
 class RestoreWorker @AssistedInject constructor(
 	@Assisted context: Context,
@@ -59,5 +61,5 @@ class RestoreWorker @AssistedInject constructor(
 		cancelIntent = workNotificationIntent(context, workerParameters, isAbortRequested = true),
 		showGameIconInProgressNotification = true
 	),
-	WorkNotificationsParameters(successMessage, failureMessage)
+	WorkNotificationsParameters(successMessage, failureMessage, initialStatus)
 )

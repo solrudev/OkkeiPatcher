@@ -147,6 +147,7 @@
 	<string name="status_backing_up_apk">Backing up APK</string>
 	<string name="status_backing_up_obb">Backing up OBB</string>
 	<string name="status_backing_up_save_data">Backing up save data</string>
+	<string name="status_checking">Checking</string>
 	<string name="status_comparing_apk">Comparing APK checksums</string>
 	<string name="status_comparing_obb">Comparing OBB checksums</string>
 	<string name="status_comparing_saves">Comparing save data checksums</string>

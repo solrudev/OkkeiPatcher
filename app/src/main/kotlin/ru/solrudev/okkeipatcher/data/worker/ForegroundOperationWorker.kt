@@ -36,6 +36,7 @@ import ru.solrudev.okkeipatcher.data.worker.model.WorkNotificationsParameters
 import ru.solrudev.okkeipatcher.data.worker.util.setProgress
 import ru.solrudev.okkeipatcher.data.worker.util.workerFailure
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
+import ru.solrudev.okkeipatcher.domain.core.isEmpty
 import ru.solrudev.okkeipatcher.domain.core.onFailure
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.extension.statusAndAccumulatedProgress
@@ -58,6 +59,7 @@ abstract class ForegroundOperationWorker(
 		cancelOnRetry()
 		try {
 			setForeground(notificationService.createForegroundInfo())
+			emitInitialStatus()
 			val operation = operationFactory.create()
 			operation.canInvoke().onFailure { failure ->
 				return createFailure(failure.reason)
@@ -126,4 +128,14 @@ abstract class ForegroundOperationWorker(
 	private fun Operation<*>.collectMessagesIn(scope: CoroutineScope) = messages
 		.onEach(notificationService::displayMessageNotification)
 		.launchIn(scope)
+
+	private suspend inline fun emitInitialStatus() {
+		val status = workNotificationsParameters.initialStatus
+		if (status.isEmpty()) {
+			return
+		}
+		val progressData = ProgressData()
+		setProgress(status, progressData.progress, progressData.max)
+		notificationService.updateProgressNotification(status, progressData)
+	}
 }
