@@ -48,6 +48,9 @@ class ObbPatchOperation(
 	private val fileSystem: FileSystem
 ) : Operation<Unit> {
 
+	private val obbPatchPath = environment.externalFilesPath / "obbpatch"
+	private val patchedObbPath = environment.externalFilesPath / OBB_FILE_NAME
+
 	private val operation = aggregateOperation(
 		downloadPatches(),
 		applyPatches(),
@@ -58,8 +61,6 @@ class ObbPatchOperation(
 	override val messages = operation.messages
 	override val progressDelta = operation.progressDelta
 	override val progressMax = operation.progressMax
-	private val obbPatchPath = environment.externalFilesPath / "obbpatch"
-	private val patchedObbPath = environment.externalFilesPath / OBB_FILE_NAME
 
 	override suspend fun skip() = operation.skip()
 
@@ -98,7 +99,7 @@ class ObbPatchOperation(
 		}
 	}
 
-	private fun replaceObb() = aggregateOperation(
+	private fun replaceObb(): Operation<Unit> = aggregateOperation(
 		obbRepository.copyFrom(patchedObbPath).asOperation(),
 		operation {
 			obbPatchFiles.updateInstalledVersion()
