@@ -55,23 +55,6 @@ abstract class Apk(
 	override fun patch() = patch(updating = false)
 	override fun update() = patch(updating = true)
 
-	private fun patch(updating: Boolean): Operation<Unit> {
-		val installPatchedOperation = installPatched(updating)
-		return operation(apkPatchOperation, installPatchedOperation) {
-			status(R.string.status_comparing_apk)
-			if (apkRepository.verifyTemp()) {
-				apkPatchOperation.skip()
-				installPatchedOperation()
-				apkPatchFiles.updateInstalledVersion()
-				return@operation
-			}
-			apkRepository.deleteTemp()
-			apkPatchOperation()
-			installPatchedOperation()
-			apkPatchFiles.updateInstalledVersion()
-		}
-	}
-
 	override fun deleteBackup() = apkBackupRepository.deleteBackup()
 
 	override fun backup() = operation(progressMax = 50) {
@@ -106,7 +89,24 @@ abstract class Apk(
 		}
 	}
 
-	protected fun installPatched(updating: Boolean): Operation<Unit> {
+	private fun patch(updating: Boolean): Operation<Unit> {
+		val installPatchedOperation = installPatched(updating)
+		return operation(apkPatchOperation, installPatchedOperation) {
+			status(R.string.status_comparing_apk)
+			if (apkRepository.verifyTemp()) {
+				apkPatchOperation.skip()
+				installPatchedOperation()
+				apkPatchFiles.updateInstalledVersion()
+				return@operation
+			}
+			apkRepository.deleteTemp()
+			apkPatchOperation()
+			installPatchedOperation()
+			apkPatchFiles.updateInstalledVersion()
+		}
+	}
+
+	private fun installPatched(updating: Boolean): Operation<Unit> {
 		val uninstallOperation = uninstall(updating)
 		val installOperation = install(apkRepository::installTemp)
 		return operation(uninstallOperation, installOperation) {
