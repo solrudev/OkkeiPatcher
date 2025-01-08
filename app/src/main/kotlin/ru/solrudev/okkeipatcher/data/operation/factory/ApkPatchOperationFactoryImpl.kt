@@ -39,8 +39,8 @@ class ApkPatchOperationFactoryImpl @Inject constructor(
 	private val fileSystem: FileSystem
 ) : ApkPatchOperationFactory {
 
-	override fun create(scriptsPatchFiles: PatchFiles) = ApkPatchOperation(
-		scriptsPatchFiles,
+	override fun create(apkPatchFiles: PatchFiles) = ApkPatchOperation(
+		apkPatchFiles,
 		apkRepository,
 		hashRepository.signedApkHash,
 		ioDispatcher,

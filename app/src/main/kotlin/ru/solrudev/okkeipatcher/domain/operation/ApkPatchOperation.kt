@@ -74,13 +74,13 @@ class ApkPatchOperation(
 
 	private fun downloadScripts(): Operation<Unit> = operation(progressMax = fileDownloader.progressMax) {
 		status(R.string.status_downloading_scripts)
-		val apkPatchData = apkPatchFiles
+		val scriptsData = apkPatchFiles
 			.getData()
 			.single { it.type == PatchFileType.SCRIPTS }
 		val scriptsHash = fileDownloader.download(
-			apkPatchData.url, scriptsFile, hashing = true, onProgressChanged = ::progressDelta
+			scriptsData.url, scriptsFile, hashing = true, onProgressChanged = ::progressDelta
 		)
-		if (scriptsHash != apkPatchData.hash) {
+		if (scriptsHash != scriptsData.hash) {
 			throw ScriptsCorruptedException()
 		}
 	}

@@ -22,5 +22,5 @@ import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFiles
 
 interface ApkPatchOperationFactory {
-	fun create(scriptsPatchFiles: PatchFiles): Operation<Unit>
+	fun create(apkPatchFiles: PatchFiles): Operation<Unit>
 }
