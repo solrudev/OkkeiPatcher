@@ -126,6 +126,13 @@ class ObbBackupRepositoryImplTest {
 	}
 
 	@Test
+	fun `createBackup returns obb hash`() = testScope.runTest {
+		fileSystem.write(obb, obbContent)
+		val actualHash = obbBackupRepository.createBackup().invoke()
+		assertEquals(expectedHash, actualHash)
+	}
+
+	@Test
 	fun `WHEN obb backup fails with exception THEN backup obb doesn't exist`() = testScope.runTest {
 		fileSystem.write(obb, obbContent)
 		runCatching {

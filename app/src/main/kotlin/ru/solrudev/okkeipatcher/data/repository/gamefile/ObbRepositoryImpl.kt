@@ -81,7 +81,7 @@ class ObbBackupRepositoryImpl @Inject constructor(
 		fileSystem.delete(backup)
 	}
 
-	override fun createBackup(): ProgressOperation<Unit> {
+	override fun createBackup(): ProgressOperation<String> {
 		val progressMultiplier = 4
 		return operation(progressMax = STREAM_COPY_PROGRESS_MAX * progressMultiplier) {
 			if (!fileSystem.exists(obb)) {
@@ -98,6 +98,7 @@ class ObbBackupRepositoryImpl @Inject constructor(
 					)
 				}
 				hashRepository.backupObbHash.persist(hash)
+				return@operation hash
 			} catch (t: Throwable) {
 				fileSystem.delete(backup)
 				throw t

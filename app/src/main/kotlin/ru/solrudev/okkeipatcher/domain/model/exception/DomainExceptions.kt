@@ -77,6 +77,10 @@ class ObbPatchCorruptedException : DomainException(
 	LocalizedString.resource(R.string.error_hash_obb_patches_mismatch)
 )
 
+class IncompatibleObbPatchException : DomainException(
+	LocalizedString.resource(R.string.error_incompatible_obb)
+)
+
 class AppUpdateCorruptedException : DomainException(
 	LocalizedString.resource(R.string.error_update_app_corrupted)
 )
