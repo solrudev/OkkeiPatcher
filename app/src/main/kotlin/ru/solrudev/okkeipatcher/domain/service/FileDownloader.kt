@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2024 Ilya Fomichev
+ * Copyright (C) 2023-2024 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,21 +16,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:Suppress("UNUSED")
+package ru.solrudev.okkeipatcher.domain.service
 
-package ru.solrudev.okkeipatcher.di
+import okio.Path
 
-import dagger.Binds
-import dagger.Module
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import ru.solrudev.okkeipatcher.data.service.FileDownloaderImpl
-import ru.solrudev.okkeipatcher.domain.service.FileDownloader
+interface FileDownloader {
 
-@InstallIn(SingletonComponent::class)
-@Module
-interface ServiceBindFlavoredModule {
+	val progressMax: Int
 
-	@Binds
-	fun bindFileDownloader(fileDownloader: FileDownloaderImpl): FileDownloader
+	/**
+	 * @param hashing Does output stream need to be hashed. Default is `false`.
+	 * @return Output hash. Empty string if [hashing] is `false`.
+	 */
+	suspend fun download(
+		url: String,
+		path: Path,
+		hashing: Boolean = false,
+		onProgressChanged: suspend (Int) -> Unit = {}
+	): String
 }

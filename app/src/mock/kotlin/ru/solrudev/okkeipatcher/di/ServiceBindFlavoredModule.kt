@@ -24,10 +24,10 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import ru.solrudev.okkeipatcher.data.service.FileSystemFileDownloader
-import ru.solrudev.okkeipatcher.data.service.FileDownloader
 import ru.solrudev.okkeipatcher.data.service.OkkeiPatcherApkProvider
 import ru.solrudev.okkeipatcher.data.service.OkkeiPatcherApkProviderImpl
+import ru.solrudev.okkeipatcher.domain.service.FileDownloader
+import ru.solrudev.okkeipatcher.domain.service.FileSystemFileDownloader
 
 @InstallIn(SingletonComponent::class)
 @Module

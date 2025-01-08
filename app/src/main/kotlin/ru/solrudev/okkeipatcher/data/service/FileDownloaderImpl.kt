@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023-2024 Ilya Fomichev
+ * Copyright (C) 2025 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,33 +26,17 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okio.FileSystem
 import okio.HashingSink
-import okio.HashingSink.Companion.sha256
 import okio.Path
 import okio.buffer
 import ru.solrudev.okkeipatcher.data.network.model.exception.NetworkNotAvailableException
 import ru.solrudev.okkeipatcher.data.service.util.await
 import ru.solrudev.okkeipatcher.data.util.STREAM_COPY_PROGRESS_MAX
 import ru.solrudev.okkeipatcher.data.util.copyTo
-import ru.solrudev.okkeipatcher.data.util.prepareRecreate
 import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.model.exception.NoNetworkException
+import ru.solrudev.okkeipatcher.domain.service.FileDownloader
+import ru.solrudev.okkeipatcher.domain.util.prepareRecreate
 import javax.inject.Inject
-
-interface FileDownloader {
-
-	val progressMax: Int
-
-	/**
-	 * @param hashing Does output stream need to be hashed. Default is `false`.
-	 * @return Output hash. Empty string if [hashing] is `false`.
-	 */
-	suspend fun download(
-		url: String,
-		path: Path,
-		hashing: Boolean = false,
-		onProgressChanged: suspend (Int) -> Unit = {}
-	): String
-}
 
 @Reusable
 class FileDownloaderImpl @Inject constructor(
@@ -75,7 +59,7 @@ class FileDownloaderImpl @Inject constructor(
 			return withContext(ioDispatcher) {
 				responseBody.source().use { source ->
 					fileSystem.prepareRecreate(path)
-					val sink = if (hashing) sha256(fileSystem.sink(path)) else fileSystem.sink(path)
+					val sink = if (hashing) HashingSink.sha256(fileSystem.sink(path)) else fileSystem.sink(path)
 					sink.buffer().use { bufferedSink ->
 						source.copyTo(
 							bufferedSink, responseBody.contentLength(),

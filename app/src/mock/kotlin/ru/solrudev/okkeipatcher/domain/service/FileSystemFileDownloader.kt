@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ru.solrudev.okkeipatcher.data.service
+package ru.solrudev.okkeipatcher.domain.service
 
 import dagger.Reusable
 import kotlinx.coroutines.CoroutineDispatcher
