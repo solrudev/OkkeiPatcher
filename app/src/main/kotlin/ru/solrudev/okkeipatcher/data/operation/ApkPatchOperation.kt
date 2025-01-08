@@ -39,7 +39,7 @@ import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFiles
 
 class ApkPatchOperation(
-	private val scriptsPatchFiles: PatchFiles,
+	private val apkPatchFiles: PatchFiles,
 	private val apkRepository: ApkRepository,
 	private val signedApkHash: Persistable<String>,
 	private val ioDispatcher: CoroutineDispatcher,
@@ -74,13 +74,13 @@ class ApkPatchOperation(
 
 	private fun downloadScripts(): Operation<Unit> = operation(progressMax = fileDownloader.progressMax) {
 		status(R.string.status_downloading_scripts)
-		val scriptsData = scriptsPatchFiles
+		val apkPatchData = apkPatchFiles
 			.getData()
 			.single { it.type == PatchFileType.SCRIPTS }
 		val scriptsHash = fileDownloader.download(
-			scriptsData.url, scriptsFile, hashing = true, onProgressChanged = ::progressDelta
+			apkPatchData.url, scriptsFile, hashing = true, onProgressChanged = ::progressDelta
 		)
-		if (scriptsHash != scriptsData.hash) {
+		if (scriptsHash != apkPatchData.hash) {
 			throw ScriptsCorruptedException()
 		}
 	}
