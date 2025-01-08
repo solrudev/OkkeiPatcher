@@ -22,8 +22,8 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import okio.FileSystem
+import okio.Path
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.data.PatcherEnvironment
 import ru.solrudev.okkeipatcher.data.service.FileDownloader
 import ru.solrudev.okkeipatcher.domain.core.onFailure
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
@@ -42,14 +42,14 @@ import kotlin.time.Duration.Companion.seconds
 
 class ObbPatchOperation(
 	private val obbPatchFiles: PatchFiles,
-	environment: PatcherEnvironment,
+	externalDir: Path,
 	obbRepository: ObbRepository,
 	private val obbBackupRepository: ObbBackupRepository,
 	private val fileDownloader: FileDownloader,
 	private val fileSystem: FileSystem
 ) : Operation<Unit> {
 
-	private val obbPatchPath = environment.externalFilesPath / "obbpatch"
+	private val obbPatchPath = externalDir / "obbpatch"
 	private val obbPath = obbRepository.obbPath
 
 	private val operation = aggregateOperation(

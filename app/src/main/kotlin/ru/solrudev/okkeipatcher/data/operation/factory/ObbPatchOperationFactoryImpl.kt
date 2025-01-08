@@ -38,7 +38,7 @@ class ObbPatchOperationFactoryImpl @Inject constructor(
 
 	override fun create(obbPatchFiles: PatchFiles) = ObbPatchOperation(
 		obbPatchFiles,
-		environment,
+		environment.externalFilesPath,
 		obbRepository,
 		obbBackupRepository,
 		fileDownloader,
