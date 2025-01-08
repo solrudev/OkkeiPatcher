@@ -26,11 +26,11 @@ import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.PatcherEnvironment
 import ru.solrudev.okkeipatcher.data.repository.gamefile.util.backupPath
 import ru.solrudev.okkeipatcher.data.util.computeHash
-import ru.solrudev.okkeipatcher.data.util.prepareRecreate
 import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.repository.HashRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.SaveDataRepository
+import ru.solrudev.okkeipatcher.domain.util.prepareRecreate
 import javax.inject.Inject
 import javax.inject.Singleton
 

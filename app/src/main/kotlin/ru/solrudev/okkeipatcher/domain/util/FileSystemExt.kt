@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2025 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,17 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ru.solrudev.okkeipatcher.data.util
+package ru.solrudev.okkeipatcher.domain.util
 
 import okio.FileSystem
 import okio.Path
-import ru.solrudev.okkeipatcher.domain.util.prepareRecreate
 
-fun FileSystem.read(file: Path): String {
-	return read(file) { readUtf8() }
-}
-
-fun FileSystem.write(file: Path, content: String) {
-	prepareRecreate(file)
-	write(file) { writeUtf8(content) }
+fun FileSystem.prepareRecreate(path: Path) {
+	delete(path)
+	path.parent?.let(::createDirectories)
 }

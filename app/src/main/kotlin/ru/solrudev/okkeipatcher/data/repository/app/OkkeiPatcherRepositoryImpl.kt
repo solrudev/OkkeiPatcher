@@ -28,7 +28,6 @@ import ru.solrudev.okkeipatcher.data.PatcherEnvironment
 import ru.solrudev.okkeipatcher.data.core.InMemoryCache
 import ru.solrudev.okkeipatcher.data.network.api.OkkeiPatcherApi
 import ru.solrudev.okkeipatcher.data.network.model.exception.NetworkNotAvailableException
-import ru.solrudev.okkeipatcher.data.service.FileDownloader
 import ru.solrudev.okkeipatcher.data.service.PackageInstallerFacade
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Result
@@ -36,6 +35,7 @@ import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.model.exception.AppUpdateCorruptedException
 import ru.solrudev.okkeipatcher.domain.model.exception.NoNetworkException
 import ru.solrudev.okkeipatcher.domain.model.exception.wrapDomainExceptions
+import ru.solrudev.okkeipatcher.domain.service.FileDownloader
 import java.util.concurrent.CancellationException
 import javax.inject.Inject
 import javax.inject.Singleton

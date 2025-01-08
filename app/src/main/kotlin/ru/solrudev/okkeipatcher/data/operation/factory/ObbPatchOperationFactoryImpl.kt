@@ -20,12 +20,12 @@ package ru.solrudev.okkeipatcher.data.operation.factory
 
 import okio.FileSystem
 import ru.solrudev.okkeipatcher.data.PatcherEnvironment
-import ru.solrudev.okkeipatcher.data.operation.ObbPatchOperation
-import ru.solrudev.okkeipatcher.data.service.FileDownloader
+import ru.solrudev.okkeipatcher.domain.operation.ObbPatchOperation
 import ru.solrudev.okkeipatcher.domain.operation.factory.ObbPatchOperationFactory
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbBackupRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFiles
+import ru.solrudev.okkeipatcher.domain.service.FileDownloader
 import javax.inject.Inject
 
 class ObbPatchOperationFactoryImpl @Inject constructor(

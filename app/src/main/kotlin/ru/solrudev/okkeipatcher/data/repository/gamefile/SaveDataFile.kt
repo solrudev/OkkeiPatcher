@@ -25,11 +25,16 @@ import android.provider.DocumentsContract
 import androidx.annotation.RequiresApi
 import androidx.documentfile.provider.DocumentFile
 import dagger.hilt.android.qualifiers.ApplicationContext
-import okio.*
+import okio.FileSystem
+import okio.Path
+import okio.Sink
+import okio.Source
+import okio.sink
+import okio.source
 import ru.solrudev.okkeipatcher.data.PatcherEnvironment
 import ru.solrudev.okkeipatcher.data.util.ANDROID_DATA_TREE_URI
 import ru.solrudev.okkeipatcher.data.util.GAME_PACKAGE_NAME
-import ru.solrudev.okkeipatcher.data.util.prepareRecreate
+import ru.solrudev.okkeipatcher.domain.util.prepareRecreate
 import javax.inject.Inject
 
 private const val FILES_DIR_NAME = "files"

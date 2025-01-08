@@ -26,10 +26,10 @@ import kotlinx.coroutines.withContext
 import okio.FileSystem
 import okio.Path
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.data.util.prepareRecreate
 import ru.solrudev.okkeipatcher.di.DefaultDispatcher
 import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.core.Result
+import ru.solrudev.okkeipatcher.domain.util.prepareRecreate
 import java.io.FileDescriptor
 import java.io.FileOutputStream
 import javax.inject.Inject

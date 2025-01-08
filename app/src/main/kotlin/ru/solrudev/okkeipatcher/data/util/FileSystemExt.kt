@@ -18,14 +18,13 @@
 
 package ru.solrudev.okkeipatcher.data.util
 
-import okio.*
+import okio.FileSystem
+import okio.HashingSink
 import okio.HashingSink.Companion.sha256
-import kotlin.io.use
-
-fun FileSystem.prepareRecreate(path: Path) {
-	delete(path)
-	path.parent?.let(::createDirectories)
-}
+import okio.Path
+import okio.blackholeSink
+import okio.buffer
+import ru.solrudev.okkeipatcher.domain.util.prepareRecreate
 
 /**
  * @param hashing Does output stream need to be hashed. Default is `false`.

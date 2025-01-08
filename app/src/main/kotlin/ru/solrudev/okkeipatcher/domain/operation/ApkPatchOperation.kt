@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023-2024 Ilya Fomichev
+ * Copyright (C) 2023-2025 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ru.solrudev.okkeipatcher.data.operation
+package ru.solrudev.okkeipatcher.domain.operation
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.runInterruptible
@@ -26,8 +26,6 @@ import okio.Path.Companion.toPath
 import okio.buffer
 import okio.openZip
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.data.service.FileDownloader
-import ru.solrudev.okkeipatcher.data.util.prepareRecreate
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.aggregateOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
@@ -37,6 +35,8 @@ import ru.solrudev.okkeipatcher.domain.model.PatchFileType
 import ru.solrudev.okkeipatcher.domain.model.exception.ScriptsCorruptedException
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFiles
+import ru.solrudev.okkeipatcher.domain.service.FileDownloader
+import ru.solrudev.okkeipatcher.domain.util.prepareRecreate
 
 class ApkPatchOperation(
 	private val apkPatchFiles: PatchFiles,

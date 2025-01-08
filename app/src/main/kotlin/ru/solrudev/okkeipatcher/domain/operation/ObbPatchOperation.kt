@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ru.solrudev.okkeipatcher.data.operation
+package ru.solrudev.okkeipatcher.domain.operation
 
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
@@ -24,7 +24,6 @@ import kotlinx.coroutines.launch
 import okio.FileSystem
 import okio.Path
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.data.service.FileDownloader
 import ru.solrudev.okkeipatcher.domain.core.onFailure
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.aggregateOperation
@@ -37,6 +36,7 @@ import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbBackupRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFiles
 import ru.solrudev.okkeipatcher.domain.repository.patch.updateInstalledVersion
+import ru.solrudev.okkeipatcher.domain.service.FileDownloader
 import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.seconds
 

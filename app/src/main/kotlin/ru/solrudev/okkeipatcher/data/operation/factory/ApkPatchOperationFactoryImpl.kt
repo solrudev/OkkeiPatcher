@@ -21,13 +21,13 @@ package ru.solrudev.okkeipatcher.data.operation.factory
 import kotlinx.coroutines.CoroutineDispatcher
 import okio.FileSystem
 import ru.solrudev.okkeipatcher.data.PatcherEnvironment
-import ru.solrudev.okkeipatcher.data.operation.ApkPatchOperation
-import ru.solrudev.okkeipatcher.data.service.FileDownloader
 import ru.solrudev.okkeipatcher.di.IoDispatcher
+import ru.solrudev.okkeipatcher.domain.operation.ApkPatchOperation
 import ru.solrudev.okkeipatcher.domain.operation.factory.ApkPatchOperationFactory
 import ru.solrudev.okkeipatcher.domain.repository.HashRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFiles
+import ru.solrudev.okkeipatcher.domain.service.FileDownloader
 import javax.inject.Inject
 
 class ApkPatchOperationFactoryImpl @Inject constructor(
