@@ -43,6 +43,7 @@ class MockPatchApi @Inject constructor() : PatchApi {
 			apk = listOf(
 				PatchFileDto(
 					type = PatchFileType.SCRIPTS,
+					targetVersion = 1,
 					version = if (isUpdateAvailable) 2 else 1,
 					url = "",
 					hash = "",
@@ -54,6 +55,7 @@ class MockPatchApi @Inject constructor() : PatchApi {
 			obb = listOf(
 				PatchFileDto(
 					type = PatchFileType.OBB_PATCH,
+					targetVersion = 1,
 					version = if (isUpdateAvailable) 2 else 1,
 					url = "",
 					hash = "",

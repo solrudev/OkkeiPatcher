@@ -24,6 +24,7 @@ import ru.solrudev.okkeipatcher.domain.model.PatchFileType
 @JsonClass(generateAdapter = true)
 data class PatchFileDto(
 	val type: PatchFileType,
+	val targetVersion: Int,
 	val version: Int,
 	val url: String,
 	val hash: String,

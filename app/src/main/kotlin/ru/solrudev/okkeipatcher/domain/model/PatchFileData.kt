@@ -20,6 +20,7 @@ package ru.solrudev.okkeipatcher.domain.model
 
 data class PatchFileData(
 	val type: PatchFileType,
+	val targetVersion: Int,
 	val version: Int,
 	val url: String,
 	val hash: String,

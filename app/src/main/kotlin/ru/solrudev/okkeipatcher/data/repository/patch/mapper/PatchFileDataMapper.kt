@@ -21,4 +21,13 @@ package ru.solrudev.okkeipatcher.data.repository.patch.mapper
 import ru.solrudev.okkeipatcher.data.network.model.PatchFileDto
 import ru.solrudev.okkeipatcher.domain.model.PatchFileData
 
-fun PatchFileDto.toPatchFileData() = PatchFileData(type, version, url, hash, size, patchedSize, compatibleHashes)
+fun PatchFileDto.toPatchFileData() = PatchFileData(
+	type,
+	targetVersion,
+	version,
+	url,
+	hash,
+	size,
+	patchedSize,
+	compatibleHashes
+)
