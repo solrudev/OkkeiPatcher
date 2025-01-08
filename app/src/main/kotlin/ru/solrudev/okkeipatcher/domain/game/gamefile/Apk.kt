@@ -79,12 +79,12 @@ abstract class Apk(
 		if (!apkBackupRepository.verifyBackup()) {
 			status(R.string.status_backing_up_apk)
 			val apkHash = apkBackupRepository.createBackup()
-			val isCompatible = apkPatchFiles
+			val isPatchCompatible = apkPatchFiles
 				.getData()
 				.map { it.compatibleHashes }
 				.flatten()
 				.any { it == apkHash }
-			if (!isCompatible) {
+			if (!isPatchCompatible) {
 				throw IncompatibleApkException()
 			}
 		}
