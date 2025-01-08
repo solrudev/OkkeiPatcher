@@ -34,7 +34,6 @@ import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.core.operation.status
 import ru.solrudev.okkeipatcher.domain.core.persistence.Persistable
 import ru.solrudev.okkeipatcher.domain.model.PatchFileType
-import ru.solrudev.okkeipatcher.domain.model.exception.IncompatibleScriptsException
 import ru.solrudev.okkeipatcher.domain.model.exception.ScriptsCorruptedException
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFiles
@@ -108,15 +107,6 @@ class ScriptsPatchOperation(
 		val newScripts = fileSystem.list(extractedScriptsDirectory)
 		val oldScripts = newScripts.map { "$scriptsFolder${it.name}" }
 		apkRepository.createTemp().use { apk ->
-			val tempHash = apk.computeHash()
-			val isCompatible = scriptsPatchFiles
-				.getData()
-				.single { it.type == PatchFileType.SCRIPTS }
-				.compatibleHashes
-				.any { it == tempHash }
-			if (!isCompatible) {
-				throw IncompatibleScriptsException()
-			}
 			apk.removeFiles(oldScripts)
 			apk.addFiles(newScripts, root = scriptsFolder)
 			status(R.string.status_signing_apk)

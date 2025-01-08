@@ -105,6 +105,12 @@ class ApkBackupRepositoryImplTest {
 	}
 
 	@Test
+	fun `createBackup returns apk hash`() = testScope.runTest {
+		val actualHash = apkBackupRepository.createBackup()
+		assertEquals(expectedHash, actualHash)
+	}
+
+	@Test
 	fun `WHEN apk backup fails with exception THEN backup apk doesn't exist`() = testScope.runTest {
 		runCatching {
 			failingApkBackupRepository.createBackup()

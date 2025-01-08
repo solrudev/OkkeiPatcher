@@ -65,8 +65,8 @@ class ScriptsCorruptedException : DomainException(
 	LocalizedString.resource(R.string.error_hash_scripts_mismatch)
 )
 
-class IncompatibleScriptsException : DomainException(
-	LocalizedString.resource(R.string.error_incompatible_scripts)
+class IncompatibleApkException : DomainException(
+	LocalizedString.resource(R.string.error_incompatible_apk)
 )
 
 class ObbCorruptedException : DomainException(

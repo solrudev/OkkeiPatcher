@@ -25,13 +25,16 @@ import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.core.operation.status
 import ru.solrudev.okkeipatcher.domain.model.exception.ApkNotFoundException
+import ru.solrudev.okkeipatcher.domain.model.exception.IncompatibleApkException
 import ru.solrudev.okkeipatcher.domain.model.exception.InstallException
 import ru.solrudev.okkeipatcher.domain.model.exception.NotTrustworthyApkException
 import ru.solrudev.okkeipatcher.domain.model.exception.UninstallException
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkBackupRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
+import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFiles
 
 abstract class Apk(
+	private val apkPatchFiles: PatchFiles,
 	private val apkRepository: ApkRepository,
 	private val apkBackupRepository: ApkBackupRepository
 ) : PatchableGameFile {
@@ -53,7 +56,15 @@ abstract class Apk(
 		status(R.string.status_comparing_apk)
 		if (!apkBackupRepository.verifyBackup()) {
 			status(R.string.status_backing_up_apk)
-			apkBackupRepository.createBackup()
+			val apkHash = apkBackupRepository.createBackup()
+			val isCompatible = apkPatchFiles
+				.getData()
+				.map { it.compatibleHashes }
+				.flatten()
+				.any { it == apkHash }
+			if (!isCompatible) {
+				throw IncompatibleApkException()
+			}
 		}
 	}
 

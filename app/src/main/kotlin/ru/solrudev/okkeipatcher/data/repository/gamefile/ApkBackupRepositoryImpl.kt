@@ -62,6 +62,7 @@ class ApkBackupRepositoryImpl @Inject constructor(
 			fileSystem.copy(installed, backup, hashing = true)
 		}
 		hashRepository.backupApkHash.persist(hash)
+		hash
 	} catch (t: Throwable) {
 		fileSystem.delete(backup)
 		throw t

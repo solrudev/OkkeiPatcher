@@ -35,7 +35,7 @@ class DefaultApk @Inject constructor(
 	scriptsPatchOperationFactory: ScriptsPatchOperationFactory,
 	private val apkRepository: ApkRepository,
 	apkBackupRepository: ApkBackupRepository
-) : Apk(apkRepository, apkBackupRepository) {
+) : Apk(patchRepository.apkPatchFiles, apkRepository, apkBackupRepository) {
 
 	private val apkPatchFiles = patchRepository.apkPatchFiles
 	private val scriptsPatchOperation = scriptsPatchOperationFactory.create(apkPatchFiles)
