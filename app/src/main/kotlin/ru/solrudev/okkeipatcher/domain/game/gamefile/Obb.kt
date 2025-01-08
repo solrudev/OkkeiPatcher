@@ -33,6 +33,7 @@ import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFiles
 
 abstract class Obb(
 	private val obbPatchFiles: PatchFiles,
+	private val obbPatchOperation: Operation<Unit>,
 	private val obbRepository: ObbRepository,
 	private val obbBackupRepository: ObbBackupRepository
 ) : PatchableGameFile {
@@ -47,6 +48,8 @@ abstract class Obb(
 		return Result.success()
 	}
 
+	override fun patch() = obbPatchOperation
+	override fun update() = patch()
 	override fun deleteBackup() = obbBackupRepository.deleteBackup()
 
 	override fun backup(): Operation<Unit> {
@@ -56,12 +59,12 @@ abstract class Obb(
 			status(R.string.status_comparing_obb)
 			if (!verifyBackupOperation()) {
 				status(R.string.status_backing_up_obb)
-				val obbHash = backupOperation()
+				val hash = backupOperation()
 				val isPatchCompatible = obbPatchFiles
 					.getData()
 					.single { it.type == PatchFileType.OBB_PATCH }
 					.compatibleHashes
-					.single() == obbHash
+					.single() == hash
 				if (!isPatchCompatible) {
 					throw IncompatibleObbPatchException()
 				}

@@ -30,10 +30,9 @@ class DefaultObb @Inject constructor(
 	obbPatchOperationFactory: ObbPatchOperationFactory,
 	obbRepository: ObbRepository,
 	obbBackupRepository: ObbBackupRepository
-) : Obb(patchRepository.obbPatchFiles, obbRepository, obbBackupRepository) {
-
-	private val obbPatchOperation = obbPatchOperationFactory.create(patchRepository.obbPatchFiles)
-
-	override fun patch() = obbPatchOperation
-	override fun update() = patch()
-}
+) : Obb(
+	patchRepository.obbPatchFiles,
+	obbPatchOperationFactory.create(patchRepository.obbPatchFiles),
+	obbRepository,
+	obbBackupRepository
+)
