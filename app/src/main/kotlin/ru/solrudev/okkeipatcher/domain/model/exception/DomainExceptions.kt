@@ -77,7 +77,7 @@ class ObbPatchCorruptedException : DomainException(
 	LocalizedString.resource(R.string.error_hash_obb_patches_mismatch)
 )
 
-class IncompatibleObbPatchException : DomainException(
+class IncompatibleObbException : DomainException(
 	LocalizedString.resource(R.string.error_incompatible_obb)
 )
 

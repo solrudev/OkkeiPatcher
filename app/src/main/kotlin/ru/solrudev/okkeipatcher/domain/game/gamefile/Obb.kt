@@ -24,7 +24,7 @@ import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.asOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.core.operation.status
-import ru.solrudev.okkeipatcher.domain.model.exception.IncompatibleObbPatchException
+import ru.solrudev.okkeipatcher.domain.model.exception.IncompatibleObbException
 import ru.solrudev.okkeipatcher.domain.model.exception.ObbCorruptedException
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbBackupRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbRepository
@@ -65,7 +65,7 @@ abstract class Obb(
 					.flatten()
 					.any { it == hash }
 				if (!isPatchCompatible) {
-					throw IncompatibleObbPatchException()
+					throw IncompatibleObbException()
 				}
 			}
 		}
