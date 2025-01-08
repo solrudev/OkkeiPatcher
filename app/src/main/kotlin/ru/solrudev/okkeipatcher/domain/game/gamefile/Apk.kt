@@ -32,9 +32,11 @@ import ru.solrudev.okkeipatcher.domain.model.exception.UninstallException
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkBackupRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFiles
+import ru.solrudev.okkeipatcher.domain.repository.patch.updateInstalledVersion
 
 abstract class Apk(
 	private val apkPatchFiles: PatchFiles,
+	private val apkPatchOperation: Operation<Unit>,
 	private val apkRepository: ApkRepository,
 	private val apkBackupRepository: ApkBackupRepository
 ) : PatchableGameFile {
@@ -48,6 +50,26 @@ abstract class Apk(
 			return Result.failure(R.string.error_game_not_found)
 		}
 		return Result.success()
+	}
+
+	override fun patch() = patch(updating = false)
+	override fun update() = patch(updating = true)
+
+	private fun patch(updating: Boolean): Operation<Unit> {
+		val installPatchedOperation = installPatched(updating)
+		return operation(apkPatchOperation, installPatchedOperation) {
+			status(R.string.status_comparing_apk)
+			if (apkRepository.verifyTemp()) {
+				apkPatchOperation.skip()
+				installPatchedOperation()
+				apkPatchFiles.updateInstalledVersion()
+				return@operation
+			}
+			apkRepository.deleteTemp()
+			apkPatchOperation()
+			installPatchedOperation()
+			apkPatchFiles.updateInstalledVersion()
+		}
 	}
 
 	override fun deleteBackup() = apkBackupRepository.deleteBackup()

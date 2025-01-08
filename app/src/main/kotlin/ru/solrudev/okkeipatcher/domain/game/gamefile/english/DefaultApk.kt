@@ -18,45 +18,21 @@
 
 package ru.solrudev.okkeipatcher.domain.game.gamefile.english
 
-import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.domain.core.operation.Operation
-import ru.solrudev.okkeipatcher.domain.core.operation.operation
-import ru.solrudev.okkeipatcher.domain.core.operation.status
 import ru.solrudev.okkeipatcher.domain.game.gamefile.Apk
 import ru.solrudev.okkeipatcher.domain.operation.factory.ApkPatchOperationFactory
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkBackupRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.DefaultPatchRepository
-import ru.solrudev.okkeipatcher.domain.repository.patch.updateInstalledVersion
 import javax.inject.Inject
 
 class DefaultApk @Inject constructor(
 	patchRepository: DefaultPatchRepository,
 	apkPatchOperationFactory: ApkPatchOperationFactory,
-	private val apkRepository: ApkRepository,
+	apkRepository: ApkRepository,
 	apkBackupRepository: ApkBackupRepository
-) : Apk(patchRepository.apkPatchFiles, apkRepository, apkBackupRepository) {
-
-	private val apkPatchFiles = patchRepository.apkPatchFiles
-	private val apkPatchOperation = apkPatchOperationFactory.create(apkPatchFiles)
-
-	override fun patch() = patch(updating = false)
-	override fun update() = patch(updating = true)
-
-	private fun patch(updating: Boolean): Operation<Unit> {
-		val installPatchedOperation = installPatched(updating)
-		return operation(apkPatchOperation, installPatchedOperation) {
-			status(R.string.status_comparing_apk)
-			if (apkRepository.verifyTemp()) {
-				apkPatchOperation.skip()
-				installPatchedOperation()
-				apkPatchFiles.updateInstalledVersion()
-				return@operation
-			}
-			apkRepository.deleteTemp()
-			apkPatchOperation()
-			installPatchedOperation()
-			apkPatchFiles.updateInstalledVersion()
-		}
-	}
-}
+) : Apk(
+	patchRepository.apkPatchFiles,
+	apkPatchOperationFactory.create(patchRepository.apkPatchFiles),
+	apkRepository,
+	apkBackupRepository
+)
