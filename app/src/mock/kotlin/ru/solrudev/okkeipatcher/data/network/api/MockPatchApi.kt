@@ -47,7 +47,8 @@ class MockPatchApi @Inject constructor() : PatchApi {
 					url = "",
 					hash = "",
 					size = 2000000,
-					patchedSize = -1
+					patchedSize = -1,
+					compatibleHashes = emptyList()
 				)
 			),
 			obb = listOf(
@@ -57,7 +58,8 @@ class MockPatchApi @Inject constructor() : PatchApi {
 					url = "",
 					hash = "",
 					size = 90000000,
-					patchedSize = 1700000000
+					patchedSize = 1700000000,
+					compatibleHashes = emptyList()
 				)
 			)
 		)
