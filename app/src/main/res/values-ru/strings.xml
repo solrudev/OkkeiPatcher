@@ -56,6 +56,7 @@
 	<string name="error_hash_obb_mismatch">OBB повреждён.</string>
 	<string name="error_hash_obb_patches_mismatch">Патчи OBB повреждены.</string>
 	<string name="error_hash_scripts_mismatch">Скрипты повреждены.</string>
+	<string name="error_incompatible_scripts">Патч скриптов несовместим с установленной игрой. Убедитесь, что владеете легальной копией игры.</string>
 	<string name="error_install">Произошла ошибка при установке APK.</string>
 	<string name="error_install_with_reason">Произошла ошибка при установке APK.\n%s</string>
 	<string name="error_no_free_space">Недостаточно свободного места. Убедитесь, что на устройстве свободно как минимум 4 ГБ.</string>

@@ -60,6 +60,7 @@
 	<string name="error_hash_obb_mismatch">OBB is corrupted.</string>
 	<string name="error_hash_obb_patches_mismatch">OBB patches are corrupted.</string>
 	<string name="error_hash_scripts_mismatch">Scripts are corrupted.</string>
+	<string name="error_incompatible_scripts">Scripts patch is incompatible with the installed game. Ensure you own a legal copy of the game.</string>
 	<string name="error_install">An error occurred while installing APK.</string>
 	<string name="error_install_with_reason">An error occurred while installing APK.\n%s</string>
 	<string name="error_no_free_space">Not enough free disk space. Ensure that you have at least 4 GB of free space.</string>
