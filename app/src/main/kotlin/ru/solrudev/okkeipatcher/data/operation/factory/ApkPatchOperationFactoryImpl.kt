@@ -21,25 +21,25 @@ package ru.solrudev.okkeipatcher.data.operation.factory
 import kotlinx.coroutines.CoroutineDispatcher
 import okio.FileSystem
 import ru.solrudev.okkeipatcher.data.PatcherEnvironment
-import ru.solrudev.okkeipatcher.data.operation.ScriptsPatchOperation
+import ru.solrudev.okkeipatcher.data.operation.ApkPatchOperation
 import ru.solrudev.okkeipatcher.data.service.FileDownloader
 import ru.solrudev.okkeipatcher.di.IoDispatcher
-import ru.solrudev.okkeipatcher.domain.operation.factory.ScriptsPatchOperationFactory
+import ru.solrudev.okkeipatcher.domain.operation.factory.ApkPatchOperationFactory
 import ru.solrudev.okkeipatcher.domain.repository.HashRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFiles
 import javax.inject.Inject
 
-class ScriptsPatchOperationFactoryImpl @Inject constructor(
+class ApkPatchOperationFactoryImpl @Inject constructor(
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	private val environment: PatcherEnvironment,
 	private val apkRepository: ApkRepository,
 	private val hashRepository: HashRepository,
 	private val fileDownloader: FileDownloader,
 	private val fileSystem: FileSystem
-) : ScriptsPatchOperationFactory {
+) : ApkPatchOperationFactory {
 
-	override fun create(scriptsPatchFiles: PatchFiles) = ScriptsPatchOperation(
+	override fun create(scriptsPatchFiles: PatchFiles) = ApkPatchOperation(
 		scriptsPatchFiles,
 		apkRepository,
 		hashRepository.signedApkHash,

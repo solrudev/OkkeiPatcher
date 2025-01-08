@@ -23,7 +23,7 @@ import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.core.operation.status
 import ru.solrudev.okkeipatcher.domain.game.gamefile.Apk
-import ru.solrudev.okkeipatcher.domain.operation.factory.ScriptsPatchOperationFactory
+import ru.solrudev.okkeipatcher.domain.operation.factory.ApkPatchOperationFactory
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkBackupRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.DefaultPatchRepository
@@ -32,29 +32,29 @@ import javax.inject.Inject
 
 class DefaultApk @Inject constructor(
 	patchRepository: DefaultPatchRepository,
-	scriptsPatchOperationFactory: ScriptsPatchOperationFactory,
+	apkPatchOperationFactory: ApkPatchOperationFactory,
 	private val apkRepository: ApkRepository,
 	apkBackupRepository: ApkBackupRepository
 ) : Apk(patchRepository.apkPatchFiles, apkRepository, apkBackupRepository) {
 
 	private val apkPatchFiles = patchRepository.apkPatchFiles
-	private val scriptsPatchOperation = scriptsPatchOperationFactory.create(apkPatchFiles)
+	private val apkPatchOperation = apkPatchOperationFactory.create(apkPatchFiles)
 
 	override fun patch() = patch(updating = false)
 	override fun update() = patch(updating = true)
 
 	private fun patch(updating: Boolean): Operation<Unit> {
 		val installPatchedOperation = installPatched(updating)
-		return operation(scriptsPatchOperation, installPatchedOperation) {
+		return operation(apkPatchOperation, installPatchedOperation) {
 			status(R.string.status_comparing_apk)
 			if (apkRepository.verifyTemp()) {
-				scriptsPatchOperation.skip()
+				apkPatchOperation.skip()
 				installPatchedOperation()
 				apkPatchFiles.updateInstalledVersion()
 				return@operation
 			}
 			apkRepository.deleteTemp()
-			scriptsPatchOperation()
+			apkPatchOperation()
 			installPatchedOperation()
 			apkPatchFiles.updateInstalledVersion()
 		}

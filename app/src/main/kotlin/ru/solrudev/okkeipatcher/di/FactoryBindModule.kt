@@ -25,7 +25,7 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ru.solrudev.okkeipatcher.data.operation.factory.ObbPatchOperationFactoryImpl
-import ru.solrudev.okkeipatcher.data.operation.factory.ScriptsPatchOperationFactoryImpl
+import ru.solrudev.okkeipatcher.data.operation.factory.ApkPatchOperationFactoryImpl
 import ru.solrudev.okkeipatcher.data.preference.PreferencesDataStoreFactory
 import ru.solrudev.okkeipatcher.data.preference.PreferencesDataStoreFactoryImpl
 import ru.solrudev.okkeipatcher.data.service.factory.ApkZipPackageFactory
@@ -33,7 +33,7 @@ import ru.solrudev.okkeipatcher.data.service.factory.ApkZipPackageFactoryImpl
 import ru.solrudev.okkeipatcher.data.service.factory.NotificationServiceFactory
 import ru.solrudev.okkeipatcher.data.service.factory.NotificationServiceFactoryImpl
 import ru.solrudev.okkeipatcher.domain.operation.factory.ObbPatchOperationFactory
-import ru.solrudev.okkeipatcher.domain.operation.factory.ScriptsPatchOperationFactory
+import ru.solrudev.okkeipatcher.domain.operation.factory.ApkPatchOperationFactory
 
 @InstallIn(SingletonComponent::class)
 @Module
@@ -41,8 +41,8 @@ interface FactoryBindModule {
 
 	@Binds
 	fun bindScriptsPatchOperationFactory(
-		scriptsPatchOperationFactory: ScriptsPatchOperationFactoryImpl
-	): ScriptsPatchOperationFactory
+		scriptsPatchOperationFactory: ApkPatchOperationFactoryImpl
+	): ApkPatchOperationFactory
 
 	@Binds
 	fun bindObbDownloadOperationFactory(

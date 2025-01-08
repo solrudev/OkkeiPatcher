@@ -38,7 +38,7 @@ import ru.solrudev.okkeipatcher.domain.model.exception.ScriptsCorruptedException
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFiles
 
-class ScriptsPatchOperation(
+class ApkPatchOperation(
 	private val scriptsPatchFiles: PatchFiles,
 	private val apkRepository: ApkRepository,
 	private val signedApkHash: Persistable<String>,
