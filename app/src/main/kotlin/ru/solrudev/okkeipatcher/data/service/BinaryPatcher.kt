@@ -18,54 +18,112 @@
 
 package ru.solrudev.okkeipatcher.data.service
 
-import android.annotation.SuppressLint
-import com.github.sisong.HPatch
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.runInterruptible
-import kotlinx.coroutines.withContext
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
+import android.os.Handler
+import android.os.IBinder
+import android.os.Looper
+import android.os.Message
+import android.os.Messenger
+import android.os.RemoteException
+import androidx.core.os.bundleOf
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CancellableContinuation
+import kotlinx.coroutines.suspendCancellableCoroutine
 import okio.FileSystem
 import okio.Path
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.di.DefaultDispatcher
-import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.core.Result
-import ru.solrudev.okkeipatcher.domain.util.prepareRecreate
-import java.io.FileDescriptor
-import java.io.FileOutputStream
 import javax.inject.Inject
+import kotlin.coroutines.resume
 
 fun interface BinaryPatcher {
 	suspend fun patch(inputPath: Path, outputPath: Path, diffPath: Path): Result<Unit>
 }
 
 class BinaryPatcherImpl @Inject constructor(
-	@DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
-	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+	@ApplicationContext private val applicationContext: Context,
 	private val fileSystem: FileSystem
 ) : BinaryPatcher {
 
-	@SuppressLint("DiscouragedPrivateApi")
 	override suspend fun patch(inputPath: Path, outputPath: Path, diffPath: Path): Result<Unit> {
 		try {
-			return withContext(ioDispatcher) {
-				fileSystem.prepareRecreate(outputPath)
-				FileOutputStream(outputPath.toString()).use { outputStream ->
-					val fdGetInt = FileDescriptor::class.java.getDeclaredMethod("getInt$")
-					val fd = fdGetInt.invoke(outputStream.fd) as Int
-					val fdPath = "/proc/self/fd/$fd"
-					val result = runInterruptible(defaultDispatcher) {
-						HPatch.patch(inputPath.toString(), diffPath.toString(), fdPath)
-					}
-					if (result == 0) {
-						return@withContext Result.success()
-					}
-					fileSystem.delete(outputPath)
-					return@withContext Result.failure(R.string.error_binary_patch_failed, inputPath.toString())
-				}
+			val result = patchCancellable(inputPath, outputPath, diffPath)
+			if (result == 0) {
+				return Result.success()
 			}
+			fileSystem.delete(outputPath)
+			return Result.failure(R.string.error_binary_patch_failed, inputPath.toString())
 		} catch (throwable: Throwable) {
 			fileSystem.delete(outputPath)
 			throw throwable
+		}
+	}
+
+	private suspend inline fun patchCancellable(
+		inputPath: Path,
+		outputPath: Path,
+		diffPath: Path
+	) = suspendCancellableCoroutine { continuation ->
+		val resultHandler = BinaryPatchResultHandler(continuation::resume)
+		val serviceConnection = BinaryPatchServiceConnection(
+			continuation,
+			applicationContext,
+			resultHandler,
+			inputPath,
+			outputPath,
+			diffPath
+		)
+		applicationContext.bindService(
+			Intent(applicationContext, BinaryPatchService::class.java),
+			serviceConnection,
+			Context.BIND_AUTO_CREATE
+		)
+	}
+
+	private class BinaryPatchResultHandler(
+		private val resultHandler: (Int) -> Unit
+	) : Handler(Looper.getMainLooper()) {
+		override fun handleMessage(msg: Message) {
+			if (msg.what == BinaryPatchService.MSG_RESULT) {
+				resultHandler(msg.arg1)
+			}
+		}
+	}
+
+	private class BinaryPatchServiceConnection(
+		private val continuation: CancellableContinuation<Int>,
+		private val context: Context,
+		private val resultHandler: Handler,
+		private val inputPath: Path,
+		private val outputPath: Path,
+		private val diffPath: Path
+	) : ServiceConnection {
+
+		override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+			val serviceMessenger = Messenger(service)
+			val resultMessenger = Messenger(resultHandler)
+			try {
+				continuation.invokeOnCancellation {
+					serviceMessenger.send(Message.obtain(null, BinaryPatchService.MSG_CANCEL))
+				}
+				val msg = Message.obtain(null, BinaryPatchService.MSG_START).apply {
+					data = bundleOf(
+						BinaryPatchService.DATA_INPUT_PATH to inputPath.toString(),
+						BinaryPatchService.DATA_OUTPUT_PATH to outputPath.toString(),
+						BinaryPatchService.DATA_DIFF_PATH to diffPath.toString()
+					)
+					replyTo = resultMessenger
+				}
+				serviceMessenger.send(msg)
+			} catch (_: RemoteException) { /* no-op */
+			}
+		}
+
+		override fun onServiceDisconnected(name: ComponentName?) {
+			context.unbindService(this)
 		}
 	}
 }

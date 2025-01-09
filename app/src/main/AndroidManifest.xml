@@ -75,6 +75,11 @@
 				android:value="Long-running process of applying a localization patch to a game, backing up and restoring game data, downloading large amounts of data." />
 		</service>
 
+		<service
+			android:name=".data.service.BinaryPatchService"
+			android:exported="false"
+			android:process=":binarypatch" />
+
 		<provider
 			android:name="androidx.startup.InitializationProvider"
 			android:authorities="${applicationId}.androidx-startup"
