@@ -60,7 +60,17 @@ abstract class Apk(
 
 	override fun backup() = operation(progressMax = 50) {
 		status(R.string.status_comparing_apk)
-		if (!apkBackupRepository.verifyBackup()) {
+		if (apkBackupRepository.verifyBackup()) {
+			if (apkRepository.verifyTemp()) {
+				return@operation
+			}
+			apkRepository.deleteTemp()
+			val apkHash = apkRepository.createTemp().use { it.computeHash() }
+			if (!apkPatchFiles.isCompatible(apkHash)) {
+				apkRepository.deleteTemp()
+				throw IncompatibleApkException()
+			}
+		} else {
 			status(R.string.status_backing_up_apk)
 			val apkHash = apkBackupRepository.createBackup()
 			if (!apkPatchFiles.isCompatible(apkHash)) {
@@ -100,6 +110,13 @@ abstract class Apk(
 			apkPatchOperation()
 			installPatchedOperation()
 			apkPatchFiles.updateInstalledVersion()
+		}
+	}
+
+	private suspend inline fun checkApkCompatibility(installedHash: String) {
+		if (!apkPatchFiles.isCompatible(installedHash)) {
+			apkBackupRepository.deleteBackup()
+			throw IncompatibleApkException()
 		}
 	}
 
