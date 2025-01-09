@@ -23,9 +23,11 @@ import io.github.solrudev.jetmvi.MiddlewareScope
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import ru.solrudev.okkeipatcher.app.usecase.patch.GetPatchStatusFlowUseCase
 import ru.solrudev.okkeipatcher.app.usecase.patch.GetPatchUpdatesUseCase
 import ru.solrudev.okkeipatcher.app.usecase.work.GetIsWorkPendingFlowUseCase
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeEvent
@@ -39,7 +41,8 @@ import javax.inject.Inject
 
 class CheckPatchUpdatesMiddleware @Inject constructor(
 	private val getPatchUpdatesUseCase: GetPatchUpdatesUseCase,
-	private val getIsWorkPendingFlowUseCase: GetIsWorkPendingFlowUseCase
+	private val getIsWorkPendingFlowUseCase: GetIsWorkPendingFlowUseCase,
+	private val getPatchStatusFlowUseCase: GetPatchStatusFlowUseCase
 ) : JetMiddleware<HomeEvent> {
 
 	override fun MiddlewareScope<HomeEvent>.apply() {
@@ -54,14 +57,14 @@ class CheckPatchUpdatesMiddleware @Inject constructor(
 			}
 			.filter { it }
 			.map { getPatchUpdatesUseCase(refresh = true) }
+			.onEach { send(PatchUpdatesLoaded) }
 			.filter { it.available }
 			.onEach { send(PatchStatusChanged(UpdateAvailable)) }
 			.launchIn(this)
-		onEvent<RefreshRequested> {
-			if (canLoadPatchUpdates && getPatchUpdatesUseCase(refresh = true).available) {
-				send(PatchStatusChanged(UpdateAvailable))
-			}
-			send(PatchUpdatesLoaded)
-		}
+		filterIsInstance<RefreshRequested>()
+			.filter { canLoadPatchUpdates }
+			.map { PersistentPatchStatus.of(getPatchStatusFlowUseCase().first()) }
+			.onEach { patchStatus -> send(PatchStatusChanged(patchStatus)) }
+			.launchIn(this)
 	}
 }
