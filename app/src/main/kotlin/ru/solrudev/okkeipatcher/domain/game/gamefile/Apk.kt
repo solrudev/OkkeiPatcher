@@ -32,6 +32,7 @@ import ru.solrudev.okkeipatcher.domain.model.exception.UninstallException
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkBackupRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFiles
+import ru.solrudev.okkeipatcher.domain.repository.patch.isCompatible
 import ru.solrudev.okkeipatcher.domain.repository.patch.updateInstalledVersion
 
 abstract class Apk(
@@ -62,12 +63,8 @@ abstract class Apk(
 		if (!apkBackupRepository.verifyBackup()) {
 			status(R.string.status_backing_up_apk)
 			val apkHash = apkBackupRepository.createBackup()
-			val isPatchCompatible = apkPatchFiles
-				.getData()
-				.map { it.compatibleHashes }
-				.flatten()
-				.any { it == apkHash }
-			if (!isPatchCompatible) {
+			if (!apkPatchFiles.isCompatible(apkHash)) {
+				apkBackupRepository.deleteBackup()
 				throw IncompatibleApkException()
 			}
 		}

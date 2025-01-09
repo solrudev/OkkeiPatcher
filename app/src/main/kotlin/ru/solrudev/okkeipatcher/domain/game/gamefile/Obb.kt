@@ -29,6 +29,7 @@ import ru.solrudev.okkeipatcher.domain.model.exception.ObbCorruptedException
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbBackupRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFiles
+import ru.solrudev.okkeipatcher.domain.repository.patch.isCompatible
 
 abstract class Obb(
 	private val obbPatchFiles: PatchFiles,
@@ -58,13 +59,9 @@ abstract class Obb(
 			status(R.string.status_comparing_obb)
 			if (!verifyBackupOperation()) {
 				status(R.string.status_backing_up_obb)
-				val hash = backupOperation()
-				val isPatchCompatible = obbPatchFiles
-					.getData()
-					.map { it.compatibleHashes }
-					.flatten()
-					.any { it == hash }
-				if (!isPatchCompatible) {
+				val obbHash = backupOperation()
+				if (!obbPatchFiles.isCompatible(obbHash)) {
+					obbBackupRepository.deleteBackup()
 					throw IncompatibleObbException()
 				}
 			}

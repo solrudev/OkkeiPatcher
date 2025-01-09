@@ -39,3 +39,8 @@ interface PatchFiles {
 }
 
 suspend inline fun PatchFiles.updateInstalledVersion() = installedVersion.persist(getData().maxOf { it.version })
+
+suspend inline fun PatchFiles.isCompatible(hash: String) = getData()
+	.map { it.compatibleHashes }
+	.flatten()
+	.any { it == hash }
