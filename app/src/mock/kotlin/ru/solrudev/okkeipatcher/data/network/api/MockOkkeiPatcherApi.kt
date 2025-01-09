@@ -54,8 +54,7 @@ class MockOkkeiPatcherApi @Inject constructor(
 	private var appEndpointHitsCount = 0
 
 	override suspend fun getOkkeiPatcherData(): FileDto {
-		val delayDuration = if (appEndpointHitsCount > 0) 150.milliseconds else 1.seconds
-		delay(delayDuration)
+		delay()
 		if (appEndpointHitsCount++ < 1) {
 			return FileDto(version = 0, url = "", hash = "", size = 0L)
 		}
@@ -66,7 +65,7 @@ class MockOkkeiPatcherApi @Inject constructor(
 	}
 
 	override suspend fun getChangelog(currentVersion: Int, language: String): List<OkkeiPatcherVersionDto> {
-		delay(1.seconds)
+		delay()
 		if (appEndpointHitsCount < 1) {
 			return emptyList()
 		}
@@ -74,5 +73,10 @@ class MockOkkeiPatcherApi @Inject constructor(
 			language.startsWith("ru", ignoreCase = true) -> changelogRu
 			else -> changelog
 		}
+	}
+
+	private suspend inline fun delay() {
+		val delayDuration = if (appEndpointHitsCount > 0) 150.milliseconds else 1.seconds
+		delay(delayDuration)
 	}
 }
