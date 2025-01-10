@@ -26,6 +26,7 @@ import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.core.operation.status
 import ru.solrudev.okkeipatcher.domain.model.exception.IncompatibleObbException
 import ru.solrudev.okkeipatcher.domain.model.exception.ObbCorruptedException
+import ru.solrudev.okkeipatcher.domain.operation.factory.ObbPatchOperationFactory
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbBackupRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFiles
@@ -33,7 +34,7 @@ import ru.solrudev.okkeipatcher.domain.repository.patch.isCompatible
 
 abstract class Obb(
 	private val obbPatchFiles: PatchFiles,
-	private val obbPatchOperation: Operation<Unit>,
+	private val obbPatchOperationFactory: ObbPatchOperationFactory,
 	private val obbRepository: ObbRepository,
 	private val obbBackupRepository: ObbBackupRepository
 ) : PatchableGameFile {
@@ -48,7 +49,7 @@ abstract class Obb(
 		return Result.success()
 	}
 
-	override fun patch() = obbPatchOperation
+	override fun patch() = obbPatchOperationFactory.create(obbPatchFiles)
 	override fun update() = patch()
 	override fun deleteBackup() = obbBackupRepository.deleteBackup()
 

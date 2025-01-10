@@ -29,6 +29,7 @@ import ru.solrudev.okkeipatcher.domain.model.exception.IncompatibleApkException
 import ru.solrudev.okkeipatcher.domain.model.exception.InstallException
 import ru.solrudev.okkeipatcher.domain.model.exception.NotTrustworthyApkException
 import ru.solrudev.okkeipatcher.domain.model.exception.UninstallException
+import ru.solrudev.okkeipatcher.domain.operation.factory.ApkPatchOperationFactory
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkBackupRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFiles
@@ -37,7 +38,7 @@ import ru.solrudev.okkeipatcher.domain.repository.patch.updateInstalledVersion
 
 abstract class Apk(
 	private val apkPatchFiles: PatchFiles,
-	private val apkPatchOperation: Operation<Unit>,
+	private val apkPatchOperationFactory: ApkPatchOperationFactory,
 	private val apkRepository: ApkRepository,
 	private val apkBackupRepository: ApkBackupRepository
 ) : PatchableGameFile {
@@ -98,6 +99,7 @@ abstract class Apk(
 
 	private fun patch(updating: Boolean): Operation<Unit> {
 		val installPatchedOperation = installPatched(updating)
+		val apkPatchOperation = apkPatchOperationFactory.create(apkPatchFiles)
 		return operation(apkPatchOperation, installPatchedOperation) {
 			status(R.string.status_comparing_apk)
 			if (apkRepository.verifyTemp()) {
@@ -110,13 +112,6 @@ abstract class Apk(
 			apkPatchOperation()
 			installPatchedOperation()
 			apkPatchFiles.updateInstalledVersion()
-		}
-	}
-
-	private suspend inline fun checkApkCompatibility(installedHash: String) {
-		if (!apkPatchFiles.isCompatible(installedHash)) {
-			apkBackupRepository.deleteBackup()
-			throw IncompatibleApkException()
 		}
 	}
 

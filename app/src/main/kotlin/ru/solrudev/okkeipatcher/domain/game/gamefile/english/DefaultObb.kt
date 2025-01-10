@@ -32,7 +32,7 @@ class DefaultObb @Inject constructor(
 	obbBackupRepository: ObbBackupRepository
 ) : Obb(
 	patchRepository.obbPatchFiles,
-	obbPatchOperationFactory.create(patchRepository.obbPatchFiles),
+	obbPatchOperationFactory,
 	obbRepository,
 	obbBackupRepository
 )

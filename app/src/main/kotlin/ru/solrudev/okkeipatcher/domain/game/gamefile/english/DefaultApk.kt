@@ -32,7 +32,7 @@ class DefaultApk @Inject constructor(
 	apkBackupRepository: ApkBackupRepository
 ) : Apk(
 	patchRepository.apkPatchFiles,
-	apkPatchOperationFactory.create(patchRepository.apkPatchFiles),
+	apkPatchOperationFactory,
 	apkRepository,
 	apkBackupRepository
 )
