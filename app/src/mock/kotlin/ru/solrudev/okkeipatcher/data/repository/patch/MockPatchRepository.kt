@@ -18,20 +18,20 @@
 
 package ru.solrudev.okkeipatcher.data.repository.patch
 
-import ru.solrudev.okkeipatcher.app.repository.PreferencesRepository
 import ru.solrudev.okkeipatcher.data.network.api.MockPatchApi
 import ru.solrudev.okkeipatcher.data.preference.PreferencesDataStoreFactory
+import ru.solrudev.okkeipatcher.domain.repository.PatchStateRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class MockPatchRepository @Inject constructor(
 	patchApi: MockPatchApi,
-	preferencesRepository: PreferencesRepository,
+	patchStateRepository: PatchStateRepository,
 	preferencesDataStoreFactory: PreferencesDataStoreFactory
 ) : PatchRepositoryImpl(
 	patchApi,
-	preferencesRepository,
+	patchStateRepository,
 	preferencesDataStoreFactory,
 	dataStoreName = "patch_files_mock"
 )

@@ -18,9 +18,9 @@
 
 package ru.solrudev.okkeipatcher.patch.english.data
 
-import ru.solrudev.okkeipatcher.app.repository.PreferencesRepository
 import ru.solrudev.okkeipatcher.data.preference.PreferencesDataStoreFactory
 import ru.solrudev.okkeipatcher.data.repository.patch.PatchRepositoryImpl
+import ru.solrudev.okkeipatcher.domain.repository.PatchStateRepository
 import ru.solrudev.okkeipatcher.patch.english.domain.DefaultPatchRepository
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -28,11 +28,11 @@ import javax.inject.Singleton
 @Singleton
 class DefaultPatchRepositoryImpl @Inject constructor(
 	defaultPatchApi: DefaultPatchApi,
-	preferencesRepository: PreferencesRepository,
+	patchStateRepository: PatchStateRepository,
 	preferencesDataStoreFactory: PreferencesDataStoreFactory
 ) : PatchRepositoryImpl(
 	defaultPatchApi,
-	preferencesRepository,
+	patchStateRepository,
 	preferencesDataStoreFactory,
 	dataStoreName = "patch_files_en"
 ), DefaultPatchRepository

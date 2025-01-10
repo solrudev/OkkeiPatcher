@@ -19,16 +19,16 @@
 package ru.solrudev.okkeipatcher.data.repository.patch
 
 import androidx.datastore.preferences.core.edit
-import ru.solrudev.okkeipatcher.app.repository.PreferencesRepository
 import ru.solrudev.okkeipatcher.data.core.InMemoryCache
 import ru.solrudev.okkeipatcher.data.network.api.patch.PatchApi
 import ru.solrudev.okkeipatcher.data.preference.PreferencesDataStoreFactory
 import ru.solrudev.okkeipatcher.domain.model.PatchUpdates
+import ru.solrudev.okkeipatcher.domain.repository.PatchStateRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchRepository
 
 abstract class PatchRepositoryImpl(
 	patchApi: PatchApi,
-	preferencesRepository: PreferencesRepository,
+	patchStateRepository: PatchStateRepository,
 	preferencesDataStoreFactory: PreferencesDataStoreFactory,
 	dataStoreName: String
 ) : PatchRepository {
@@ -44,7 +44,7 @@ abstract class PatchRepositoryImpl(
 		cache = patchDataCache,
 		name = "apk",
 		selector = { it.apk },
-		patchStatus = preferencesRepository.patchStatus,
+		patchStatus = patchStateRepository.patchStatus,
 		preferences
 	)
 
@@ -52,7 +52,7 @@ abstract class PatchRepositoryImpl(
 		cache = patchDataCache,
 		name = "obb",
 		selector = { it.obb },
-		patchStatus = preferencesRepository.patchStatus,
+		patchStatus = patchStateRepository.patchStatus,
 		preferences
 	)
 
