@@ -27,12 +27,12 @@ import dagger.assisted.AssistedInject
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.app.repository.PreferencesRepository
 import ru.solrudev.okkeipatcher.data.repository.app.work.workNotificationIntent
+import ru.solrudev.okkeipatcher.data.repository.patch.MockPatchRepository
 import ru.solrudev.okkeipatcher.data.service.factory.NotificationServiceFactory
 import ru.solrudev.okkeipatcher.data.worker.model.WorkNotificationsParameters
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Message
 import ru.solrudev.okkeipatcher.domain.operation.factory.MockOperationFactory
-import ru.solrudev.okkeipatcher.domain.repository.patch.factory.PatchRepositoryFactory
 
 private val workLabel = LocalizedString.resource(R.string.notification_title_test)
 
@@ -53,11 +53,11 @@ class MockWorker @AssistedInject constructor(
 	notificationServiceFactory: NotificationServiceFactory,
 	workManager: WorkManager,
 	preferencesRepository: PreferencesRepository,
-	patchRepositoryFactory: PatchRepositoryFactory
+	patchRepository: MockPatchRepository
 ) : ForegroundOperationWorker(
 	context, workerParameters, workManager,
 	MockOperationFactory(
-		patchRepositoryFactory,
+		patchRepository,
 		preferencesRepository.patchVersion,
 		preferencesRepository.patchStatus,
 		isPatchWork = "PatchWork" in workerParameters.tags
