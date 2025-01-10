@@ -53,7 +53,7 @@ import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.SaveDataRepository
 
 @InstallIn(SingletonComponent::class)
-@Module(includes = [UniqueWorkRepositoryModule::class, PatchRepositoryModule::class])
+@Module(includes = [UniqueWorkRepositoryModule::class])
 interface RepositoryModule {
 
 	@Binds

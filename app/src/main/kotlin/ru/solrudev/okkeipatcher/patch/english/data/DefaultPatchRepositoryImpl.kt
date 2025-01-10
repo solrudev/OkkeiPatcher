@@ -16,12 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ru.solrudev.okkeipatcher.data.repository.patch
+package ru.solrudev.okkeipatcher.patch.english.data
 
 import ru.solrudev.okkeipatcher.app.repository.PreferencesRepository
-import ru.solrudev.okkeipatcher.data.network.api.patch.DefaultPatchApi
 import ru.solrudev.okkeipatcher.data.preference.PreferencesDataStoreFactory
-import ru.solrudev.okkeipatcher.domain.repository.patch.DefaultPatchRepository
+import ru.solrudev.okkeipatcher.data.repository.patch.PatchRepositoryImpl
+import ru.solrudev.okkeipatcher.patch.english.domain.DefaultPatchRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 

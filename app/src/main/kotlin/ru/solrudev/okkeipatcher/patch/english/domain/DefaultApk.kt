@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2025 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,23 +16,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ru.solrudev.okkeipatcher.domain.game.gamefile.english
+package ru.solrudev.okkeipatcher.patch.english.domain
 
-import ru.solrudev.okkeipatcher.domain.game.gamefile.Obb
-import ru.solrudev.okkeipatcher.domain.operation.factory.ObbPatchOperationFactory
-import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbBackupRepository
-import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbRepository
-import ru.solrudev.okkeipatcher.domain.repository.patch.DefaultPatchRepository
+import ru.solrudev.okkeipatcher.domain.game.gamefile.Apk
+import ru.solrudev.okkeipatcher.domain.operation.factory.ApkPatchOperationFactory
+import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkBackupRepository
+import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
 import javax.inject.Inject
 
-class DefaultObb @Inject constructor(
+class DefaultApk @Inject constructor(
 	patchRepository: DefaultPatchRepository,
-	obbPatchOperationFactory: ObbPatchOperationFactory,
-	obbRepository: ObbRepository,
-	obbBackupRepository: ObbBackupRepository
-) : Obb(
-	patchRepository.obbPatchFiles,
-	obbPatchOperationFactory,
-	obbRepository,
-	obbBackupRepository
+	apkPatchOperationFactory: ApkPatchOperationFactory,
+	apkRepository: ApkRepository,
+	apkBackupRepository: ApkBackupRepository
+) : Apk(
+	patchRepository.apkPatchFiles,
+	apkPatchOperationFactory,
+	apkRepository,
+	apkBackupRepository
 )

@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023-2024 Ilya Fomichev
+ * Copyright (C) 2025 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,27 +18,22 @@
 
 @file:Suppress("UNUSED")
 
-package ru.solrudev.okkeipatcher.di
+package ru.solrudev.okkeipatcher.patch.english.di
 
-import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dagger.multibindings.IntoMap
-import ru.solrudev.okkeipatcher.data.repository.patch.DefaultPatchRepositoryImpl
-import ru.solrudev.okkeipatcher.domain.model.Language
-import ru.solrudev.okkeipatcher.domain.repository.patch.DefaultPatchRepository
-import ru.solrudev.okkeipatcher.domain.repository.patch.PatchRepository
+import retrofit2.Retrofit
+import retrofit2.create
+import ru.solrudev.okkeipatcher.patch.english.data.DefaultPatchApi
+import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
 @Module
-interface PatchRepositoryModule {
+object PatchApiModule {
 
-	@Binds
-	fun bindDefaultPatchRepository(defaultPatchRepository: DefaultPatchRepositoryImpl): DefaultPatchRepository
-
-	@Binds
-	@IntoMap
-	@LanguageKey(Language.English)
-	fun bindDefaultPatchRepositoryIntoMap(defaultPatchRepository: DefaultPatchRepository): PatchRepository
+	@Provides
+	@Singleton
+	fun provideDefaultPatchApi(retrofit: Retrofit) = retrofit.create<DefaultPatchApi>()
 }

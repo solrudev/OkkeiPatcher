@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2025 Ilya Fomichev
+ * Copyright (C) 2023-2025 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,11 +16,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ru.solrudev.okkeipatcher.data.network.api.patch
+package ru.solrudev.okkeipatcher.patch.english.domain
 
-import ru.solrudev.okkeipatcher.data.network.model.patch.PatchRequestDto
-import ru.solrudev.okkeipatcher.data.network.model.patch.PatchResponseDto
+import ru.solrudev.okkeipatcher.domain.game.Game
+import ru.solrudev.okkeipatcher.domain.game.gamefile.SaveData
+import javax.inject.Inject
 
-interface PatchApi {
-	suspend fun getPatchData(patchRequestDto: PatchRequestDto = PatchRequestDto()): PatchResponseDto
-}
+class DefaultGame @Inject constructor(
+	override val apk: DefaultApk,
+	override val obb: DefaultObb,
+	override val saveData: SaveData
+) : Game

@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2023-2025 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,15 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ru.solrudev.okkeipatcher.domain.game
+package ru.solrudev.okkeipatcher.patch.english.domain
 
-import ru.solrudev.okkeipatcher.domain.game.gamefile.SaveData
-import ru.solrudev.okkeipatcher.domain.game.gamefile.english.DefaultApk
-import ru.solrudev.okkeipatcher.domain.game.gamefile.english.DefaultObb
-import javax.inject.Inject
+import ru.solrudev.okkeipatcher.domain.repository.patch.PatchRepository
 
-class DefaultGame @Inject constructor(
-	override val apk: DefaultApk,
-	override val obb: DefaultObb,
-	override val saveData: SaveData
-) : Game
+interface DefaultPatchRepository : PatchRepository

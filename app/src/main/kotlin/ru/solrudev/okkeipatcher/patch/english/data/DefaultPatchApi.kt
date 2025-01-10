@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2025 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,24 +16,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:Suppress("UNUSED")
+package ru.solrudev.okkeipatcher.patch.english.data
 
-package ru.solrudev.okkeipatcher.di
+import retrofit2.http.Body
+import retrofit2.http.POST
+import ru.solrudev.okkeipatcher.data.network.api.patch.PatchApi
+import ru.solrudev.okkeipatcher.data.network.model.patch.PatchRequestDto
+import ru.solrudev.okkeipatcher.data.network.model.patch.PatchResponseDto
 
-import dagger.Binds
-import dagger.Module
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import dagger.multibindings.IntoMap
-import ru.solrudev.okkeipatcher.domain.game.DefaultGame
-import ru.solrudev.okkeipatcher.domain.game.Game
-import ru.solrudev.okkeipatcher.domain.model.Language
+interface DefaultPatchApi : PatchApi {
 
-@InstallIn(SingletonComponent::class)
-@Module
-interface GameModule {
-
-	@[Binds IntoMap]
-	@LanguageKey(Language.English)
-	fun bindDefaultGame(defaultGame: DefaultGame): Game
+	@POST("patch/en")
+	override suspend fun getPatchData(@Body patchRequestDto: PatchRequestDto): PatchResponseDto
 }

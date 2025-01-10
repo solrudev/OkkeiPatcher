@@ -32,11 +32,9 @@ import okhttp3.OkHttpClient
 import okhttp3.tls.HandshakeCertificates
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import retrofit2.create
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.data.network.ConnectivityInterceptor
 import ru.solrudev.okkeipatcher.data.network.TLSSocketFactory
-import ru.solrudev.okkeipatcher.data.network.api.patch.DefaultPatchApi
 import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
@@ -47,10 +45,6 @@ private const val BASE_URL = "https://okkeipatcher.solrudev.ru/api/v1/"
 @InstallIn(SingletonComponent::class)
 @Module(includes = [NetworkFlavoredModule::class])
 object NetworkModule {
-
-	@Provides
-	@Singleton
-	fun provideDefaultPatchApi(retrofit: Retrofit) = retrofit.create<DefaultPatchApi>()
 
 	@Provides
 	@Singleton
