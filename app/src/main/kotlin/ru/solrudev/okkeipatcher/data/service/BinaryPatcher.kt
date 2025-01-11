@@ -31,17 +31,30 @@ import android.os.RemoteException
 import androidx.core.os.bundleOf
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CancellableContinuation
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okio.FileSystem
 import okio.Path
 import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.data.util.STREAM_COPY_PROGRESS_MAX
 import ru.solrudev.okkeipatcher.domain.core.Result
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
+import kotlin.math.roundToInt
+import kotlin.time.Duration.Companion.seconds
 
 fun interface BinaryPatcher {
-	suspend fun patch(inputPath: Path, outputPath: Path, diffPath: Path): Result<Unit>
+	suspend fun patch(
+		inputPath: Path,
+		outputPath: Path,
+		diffPath: Path,
+		patchedSize: Long,
+		onProgress: suspend (Int) -> Unit
+	): Result<Unit>
 }
 
 class BinaryPatcherImpl @Inject constructor(
@@ -49,14 +62,22 @@ class BinaryPatcherImpl @Inject constructor(
 	private val fileSystem: FileSystem
 ) : BinaryPatcher {
 
-	override suspend fun patch(inputPath: Path, outputPath: Path, diffPath: Path): Result<Unit> {
+	override suspend fun patch(
+		inputPath: Path,
+		outputPath: Path,
+		diffPath: Path,
+		patchedSize: Long,
+		onProgress: suspend (Int) -> Unit
+	): Result<Unit> = coroutineScope {
+		val progressJob = reportProgressIn(outputPath, patchedSize, onProgress, this)
 		try {
 			val result = patchCancellable(inputPath, outputPath, diffPath)
+			progressJob.cancel()
 			if (result == 0) {
-				return Result.success()
+				return@coroutineScope Result.success()
 			}
 			fileSystem.delete(outputPath)
-			return Result.failure(R.string.error_binary_patch_failed, inputPath.toString())
+			return@coroutineScope Result.failure(R.string.error_binary_patch_failed, inputPath.toString())
 		} catch (throwable: Throwable) {
 			fileSystem.delete(outputPath)
 			throw throwable
@@ -82,6 +103,23 @@ class BinaryPatcherImpl @Inject constructor(
 			serviceConnection,
 			Context.BIND_AUTO_CREATE
 		)
+	}
+
+	private fun reportProgressIn(
+		outputPath: Path,
+		patchedSize: Long,
+		onProgress: suspend (Int) -> Unit,
+		scope: CoroutineScope
+	) = scope.launch {
+		var previousSize = 0L
+		while (true) {
+			delay(2.seconds)
+			val currentSize = this@BinaryPatcherImpl.fileSystem.metadataOrNull(outputPath)?.size ?: 0
+			val delta = currentSize - previousSize
+			previousSize = currentSize
+			val normalizedDelta = (delta.toDouble() / patchedSize * STREAM_COPY_PROGRESS_MAX).roundToInt()
+			onProgress(normalizedDelta)
+		}
 	}
 
 	private class BinaryPatchResultHandler(

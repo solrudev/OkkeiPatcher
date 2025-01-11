@@ -30,7 +30,6 @@ import ru.solrudev.okkeipatcher.data.util.GAME_PACKAGE_NAME
 import ru.solrudev.okkeipatcher.data.util.computeHash
 import ru.solrudev.okkeipatcher.data.util.copy
 import ru.solrudev.okkeipatcher.di.IoDispatcher
-import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.model.exception.ObbNotFoundException
 import ru.solrudev.okkeipatcher.domain.repository.HashRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbBackupRepository
@@ -137,7 +136,10 @@ class ObbBackupRepositoryImpl @Inject constructor(
 		return fileHash == savedHash
 	}
 
-	override suspend fun patchBackup(outputPath: Path, diffPath: Path): Result<Unit> {
-		return binaryPatcher.patch(backup, outputPath, diffPath)
-	}
+	override suspend fun patchBackup(
+		outputPath: Path,
+		diffPath: Path,
+		patchedSize: Long,
+		onProgress: suspend (progressDelta: Int) -> Unit
+	) = binaryPatcher.patch(backup, outputPath, diffPath, patchedSize, onProgress)
 }

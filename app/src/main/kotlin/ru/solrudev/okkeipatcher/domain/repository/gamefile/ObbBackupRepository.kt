@@ -22,10 +22,17 @@ import okio.Path
 import ru.solrudev.okkeipatcher.domain.core.Result
 
 interface ObbBackupRepository {
+
 	val backupExists: Boolean
 	fun deleteBackup()
 	suspend fun createBackup(onProgress: suspend (progressDelta: Int) -> Unit = {}): String
 	suspend fun verifyBackup(onProgress: suspend (progressDelta: Int) -> Unit = {}): Boolean
 	suspend fun restoreBackup(onProgress: suspend (progressDelta: Int) -> Unit = {})
-	suspend fun patchBackup(outputPath: Path, diffPath: Path): Result<Unit>
+
+	suspend fun patchBackup(
+		outputPath: Path,
+		diffPath: Path,
+		patchedSize: Long,
+		onProgress: suspend (progressDelta: Int) -> Unit = {}
+	): Result<Unit>
 }

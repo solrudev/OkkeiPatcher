@@ -18,9 +18,6 @@
 
 package ru.solrudev.okkeipatcher.domain.operation
 
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import okio.FileSystem
 import okio.Path
 import ru.solrudev.okkeipatcher.R
@@ -37,8 +34,6 @@ import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFiles
 import ru.solrudev.okkeipatcher.domain.repository.patch.updateInstalledVersion
 import ru.solrudev.okkeipatcher.domain.service.FileDownloader
-import kotlin.math.roundToInt
-import kotlin.time.Duration.Companion.seconds
 
 class ObbPatchOperation(
 	private val obbPatchFiles: PatchFiles,
@@ -91,28 +86,16 @@ class ObbPatchOperation(
 		val progressMultiplier = 4
 		return operation(progressMax = 100 * progressMultiplier) {
 			status(R.string.status_patching_obb)
-			coroutineScope {
-				val progressJob = launch {
-					val size = obbPatchFiles
-						.getData()
-						.single { it.type == PatchFileType.OBB_PATCH }
-						.patchedSize
-					var previousSize = 0L
-					while (true) {
-						delay(2.seconds)
-						val currentSize = fileSystem.metadataOrNull(obbPath)?.size ?: 0
-						val delta = currentSize - previousSize
-						previousSize = currentSize
-						val normalizedDelta = (delta.toDouble() / size * 100).roundToInt()
-						progressDelta(normalizedDelta * progressMultiplier)
-					}
-				}
-				obbBackupRepository.patchBackup(obbPath, obbPatchPath).onFailure { failure ->
-					throw DomainException(failure.reason)
-				}
-				progressJob.cancel()
-				obbPatchFiles.updateInstalledVersion()
+			val patchedSize = obbPatchFiles
+				.getData()
+				.single { it.type == PatchFileType.OBB_PATCH }
+				.patchedSize
+			obbBackupRepository.patchBackup(obbPath, obbPatchPath, patchedSize) { progressDelta ->
+				progressDelta(progressDelta * progressMultiplier)
+			}.onFailure { failure ->
+				throw DomainException(failure.reason)
 			}
+			obbPatchFiles.updateInstalledVersion()
 		}
 	}
 }

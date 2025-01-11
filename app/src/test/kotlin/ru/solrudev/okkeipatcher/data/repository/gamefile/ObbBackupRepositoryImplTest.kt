@@ -57,7 +57,7 @@ class ObbBackupRepositoryImplTest {
 	private val testScope = TestScope()
 	private val testDispatcher = StandardTestDispatcher(testScope.testScheduler)
 
-	private val binaryPatcher = BinaryPatcher { inputPath, outputPath, diffPath ->
+	private val binaryPatcher = BinaryPatcher { inputPath, outputPath, diffPath, _, _ ->
 		val backupContent = fileSystem.read(inputPath)
 		val diffContent = fileSystem.read(diffPath)
 		fileSystem.write(outputPath, "$backupContent $diffContent")
@@ -219,7 +219,7 @@ class ObbBackupRepositoryImplTest {
 	@Test
 	fun `patchBackup writes patched backup to provided path`() = testScope.runTest {
 		fileSystem.write(backupObb, obbContent)
-		obbBackupRepository.patchBackup(patchedObb, diff)
+		obbBackupRepository.patchBackup(patchedObb, diff, patchedSize = 0)
 		val actualContent = fileSystem.read(patchedObb)
 		assertEquals(expectedPatchedContent, actualContent)
 	}
