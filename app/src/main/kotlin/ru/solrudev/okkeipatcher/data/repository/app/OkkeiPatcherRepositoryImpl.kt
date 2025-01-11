@@ -93,7 +93,7 @@ class OkkeiPatcherRepositoryImpl @Inject constructor(
 			try {
 				val updateData = okkeiPatcherDataCache.retrieve()
 				val updateHash = fileDownloader.download(
-					updateData.url, updateFile, hashing = true, onProgressChanged = ::progressDelta
+					updateData.url, updateFile, hashing = true, onProgress = ::progressDelta
 				)
 				if (updateHash != updateData.hash) {
 					throw AppUpdateCorruptedException()

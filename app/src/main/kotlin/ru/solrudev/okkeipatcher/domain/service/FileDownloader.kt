@@ -32,6 +32,6 @@ interface FileDownloader {
 		url: String,
 		path: Path,
 		hashing: Boolean = false,
-		onProgressChanged: suspend (Int) -> Unit = {}
+		onProgress: suspend (Int) -> Unit = {}
 	): String
 }

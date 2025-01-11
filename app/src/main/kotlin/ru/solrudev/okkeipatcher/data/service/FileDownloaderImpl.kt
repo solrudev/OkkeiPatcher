@@ -51,7 +51,7 @@ class FileDownloaderImpl @Inject constructor(
 		url: String,
 		path: Path,
 		hashing: Boolean,
-		onProgressChanged: suspend (Int) -> Unit
+		onProgress: suspend (Int) -> Unit
 	): String {
 		try {
 			val request = Request.Builder().url(url).build()
@@ -65,7 +65,7 @@ class FileDownloaderImpl @Inject constructor(
 							bufferedSink, responseBody.contentLength(),
 							onProgressChanged = {
 								ensureActive()
-								onProgressChanged(it)
+								onProgress(it)
 							}
 						)
 					}

@@ -44,7 +44,7 @@ class FileSystemFileDownloader @Inject constructor(
 		url: String,
 		path: Path,
 		hashing: Boolean,
-		onProgressChanged: suspend (Int) -> Unit
+		onProgress: suspend (Int) -> Unit
 	): String {
 		val source = url.toPath()
 		return withContext(ioDispatcher) {
@@ -53,7 +53,7 @@ class FileSystemFileDownloader @Inject constructor(
 				onProgressChanged = {
 					ensureActive()
 					delay(50.milliseconds) // simulate slow internet connection
-					onProgressChanged(it)
+					onProgress(it)
 				}
 			)
 		}

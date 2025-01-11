@@ -78,7 +78,7 @@ class ApkPatchOperation(
 			.getData()
 			.single { it.type == PatchFileType.SCRIPTS }
 		val scriptsHash = fileDownloader.download(
-			scriptsData.url, scriptsFile, hashing = true, onProgressChanged = ::progressDelta
+			scriptsData.url, scriptsFile, hashing = true, onProgress = ::progressDelta
 		)
 		if (scriptsHash != scriptsData.hash) {
 			throw ScriptsCorruptedException()
