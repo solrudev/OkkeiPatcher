@@ -57,6 +57,7 @@
 	<string name="error_binary_patch_failed">Binary patch failed: %s</string>
 	<string name="error_clear_data">There was an error clearing data</string>
 	<string name="error_game_not_found">CHAOS;CHILD was not found on this device.</string>
+	<string name="error_game_version_not_supported">Installed CHAOS;CHILD version is not supported.</string>
 	<string name="error_hash_obb_mismatch">OBB is corrupted.</string>
 	<string name="error_hash_obb_patches_mismatch">OBB patches are corrupted.</string>
 	<string name="error_hash_scripts_mismatch">Scripts are corrupted.</string>

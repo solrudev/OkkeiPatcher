@@ -53,6 +53,7 @@
 	<string name="error_binary_patch_failed">Не удалось применить бинарный патч: %s</string>
 	<string name="error_clear_data">При очистке данных произошла ошибка</string>
 	<string name="error_game_not_found">CHAOS;CHILD не найден на этом устройстве.</string>
+	<string name="error_game_version_not_supported">Установленная версия CHAOS;CHILD не поддерживается.</string>
 	<string name="error_hash_obb_mismatch">OBB повреждён.</string>
 	<string name="error_hash_obb_patches_mismatch">Патчи OBB повреждены.</string>
 	<string name="error_hash_scripts_mismatch">Скрипты повреждены.</string>

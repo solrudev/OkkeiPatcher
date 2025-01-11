@@ -85,6 +85,10 @@ class AppUpdateCorruptedException : DomainException(
 	LocalizedString.resource(R.string.error_update_app_corrupted)
 )
 
+class GameVersionNotSupportedException : DomainException(
+	LocalizedString.resource(R.string.error_game_version_not_supported)
+)
+
 /**
  * Catches and wraps _only_ [DomainExceptions][DomainException] as [Result.Failure].
  */

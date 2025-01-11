@@ -25,6 +25,7 @@ import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.core.operation.status
 import ru.solrudev.okkeipatcher.domain.model.exception.ApkNotFoundException
+import ru.solrudev.okkeipatcher.domain.model.exception.GameVersionNotSupportedException
 import ru.solrudev.okkeipatcher.domain.model.exception.IncompatibleApkException
 import ru.solrudev.okkeipatcher.domain.model.exception.InstallException
 import ru.solrudev.okkeipatcher.domain.model.exception.NotTrustworthyApkException
@@ -60,6 +61,9 @@ abstract class Apk(
 	override fun deleteBackup() = apkBackupRepository.deleteBackup()
 
 	override fun backup() = operation(progressMax = 50) {
+		if (apkPatchFiles.getData().isEmpty()) {
+			throw GameVersionNotSupportedException()
+		}
 		status(R.string.status_comparing_apk)
 		if (apkBackupRepository.verifyBackup()) {
 			if (apkRepository.verifyTemp()) {
