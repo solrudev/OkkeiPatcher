@@ -21,6 +21,7 @@ package ru.solrudev.okkeipatcher.data.repository.patch
 import androidx.datastore.preferences.core.edit
 import ru.solrudev.okkeipatcher.data.core.InMemoryCache
 import ru.solrudev.okkeipatcher.data.network.api.patch.PatchApi
+import ru.solrudev.okkeipatcher.data.network.api.patch.getPatchData
 import ru.solrudev.okkeipatcher.data.preference.PreferencesDataStoreFactory
 import ru.solrudev.okkeipatcher.data.service.GameInstallationProvider
 import ru.solrudev.okkeipatcher.domain.model.PatchUpdates
