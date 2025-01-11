@@ -68,12 +68,12 @@ class PatchOperation(
 	}
 
 	private fun PatchableGame.patch() = aggregateOperation(
-		obb.backup(),
 		apk.backup(),
+		obb.backup(),
 		if (parameters.handleSaveData) saveData.backup() else emptyOperation(),
 		apk.patch(),
-		if (parameters.handleSaveData) saveData.restore() else emptyOperation(),
 		obb.patch(),
+		if (parameters.handleSaveData) saveData.restore() else emptyOperation(),
 		operation {
 			patchVersion.persist(parameters.patchVersion)
 			patchStatus.persist(true)
