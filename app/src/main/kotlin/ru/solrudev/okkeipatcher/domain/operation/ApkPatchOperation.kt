@@ -106,7 +106,7 @@ class ApkPatchOperation(
 		val scriptsFolder = "assets/script/"
 		val newScripts = fileSystem.list(extractedScriptsDirectory)
 		val oldScripts = newScripts.map { "$scriptsFolder${it.name}" }
-		apkRepository.createTemp().use { apk ->
+		apkRepository.getTemp().use { apk ->
 			apk.removeFiles(oldScripts)
 			apk.addFiles(newScripts, root = scriptsFolder)
 			status(R.string.status_signing_apk)

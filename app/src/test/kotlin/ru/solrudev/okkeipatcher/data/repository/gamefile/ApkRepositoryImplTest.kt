@@ -95,7 +95,7 @@ class ApkRepositoryImplTest {
 
 	@Test
 	fun `WHEN apk temp copy is created THEN temp apk contains copy of installed apk`() = testScope.runTest {
-		apkRepository.createTemp()
+		apkRepository.getTemp()
 		val tempContent = fileSystem.read(tempApk)
 		assertEquals(installedApkContent, tempContent)
 	}
@@ -103,7 +103,7 @@ class ApkRepositoryImplTest {
 	@Test
 	fun `WHEN apk temp copy creation fails with exception THEN temp apk doesn't exist`() = testScope.runTest {
 		runCatching {
-			failingApkRepository.createTemp()
+			failingApkRepository.getTemp()
 		}
 		assertFalse(fileSystem.exists(tempApk))
 	}
@@ -113,7 +113,7 @@ class ApkRepositoryImplTest {
 		testScope.runTest {
 			val expectedContent = "some arbitrary content"
 			fileSystem.write(tempApk, expectedContent)
-			apkRepository.createTemp()
+			apkRepository.getTemp()
 			val actualContent = fileSystem.read(tempApk)
 			assertEquals(expectedContent, actualContent)
 		}
@@ -123,7 +123,7 @@ class ApkRepositoryImplTest {
 		testScope.runTest {
 			fileSystem.write(tempApk, installedApkContent)
 			runCatching {
-				failingApkRepository.createTemp()
+				failingApkRepository.getTemp()
 			}
 			assertFalse(fileSystem.exists(tempApk))
 		}

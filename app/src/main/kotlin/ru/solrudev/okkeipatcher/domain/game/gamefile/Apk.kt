@@ -66,7 +66,7 @@ abstract class Apk(
 				return@operation
 			}
 			apkRepository.deleteTemp()
-			val apkHash = apkRepository.createTemp().use { it.computeHash() }
+			val apkHash = apkRepository.getTemp().use { it.computeHash() }
 			if (!apkPatchFiles.isCompatible(apkHash)) {
 				apkRepository.deleteTemp()
 				throw IncompatibleApkException()

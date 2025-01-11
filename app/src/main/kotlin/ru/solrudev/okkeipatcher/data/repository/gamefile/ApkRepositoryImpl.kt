@@ -62,7 +62,7 @@ class ApkRepositoryImpl @Inject constructor(
 		fileSystem.delete(temp)
 	}
 
-	override suspend fun createTemp(): ZipPackage {
+	override suspend fun getTemp(): ZipPackage {
 		try {
 			if (!fileSystem.exists(temp)) {
 				runInterruptible(ioDispatcher) {

@@ -25,7 +25,7 @@ interface ApkRepository {
 	val isInstalled: Boolean
 	val tempExists: Boolean
 	fun deleteTemp()
-	suspend fun createTemp(): ZipPackage
+	suspend fun getTemp(): ZipPackage
 	suspend fun verifyTemp(): Boolean
 	suspend fun installTemp(): Result<Unit>
 	suspend fun uninstall(): Result<Unit>
