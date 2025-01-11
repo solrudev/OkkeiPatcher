@@ -19,9 +19,9 @@
 package ru.solrudev.okkeipatcher.domain.game.gamefile
 
 import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.data.util.STREAM_COPY_PROGRESS_MAX
 import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
-import ru.solrudev.okkeipatcher.domain.core.operation.asOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.core.operation.status
 import ru.solrudev.okkeipatcher.domain.model.exception.IncompatibleObbException
@@ -54,8 +54,8 @@ abstract class Obb(
 	override fun deleteBackup() = obbBackupRepository.deleteBackup()
 
 	override fun backup(): Operation<Unit> {
-		val verifyBackupOperation = obbBackupRepository.verifyBackup().asOperation()
-		val backupOperation = obbBackupRepository.createBackup().asOperation()
+		val verifyBackupOperation = createVerifyBackupOperation()
+		val backupOperation = createOperation(progressMultiplier = 4, obbBackupRepository::createBackup)
 		return operation(verifyBackupOperation, backupOperation) {
 			status(R.string.status_comparing_obb)
 			if (!verifyBackupOperation()) {
@@ -70,8 +70,8 @@ abstract class Obb(
 	}
 
 	override fun restore(): Operation<Unit> {
-		val verifyBackupOperation = obbBackupRepository.verifyBackup().asOperation()
-		val restoreOperation = obbBackupRepository.restoreBackup().asOperation()
+		val verifyBackupOperation = createVerifyBackupOperation()
+		val restoreOperation = createOperation(progressMultiplier = 3, obbBackupRepository::restoreBackup)
 		return operation(verifyBackupOperation, restoreOperation) {
 			status(R.string.status_restoring_obb)
 			if (!verifyBackupOperation()) {
@@ -80,4 +80,18 @@ abstract class Obb(
 			restoreOperation()
 		}
 	}
+
+	private inline fun <T> createOperation(
+		progressMultiplier: Int,
+		crossinline action: suspend (suspend (Int) -> Unit) -> T
+	) = operation(progressMax = STREAM_COPY_PROGRESS_MAX * progressMultiplier) {
+		action { progressDelta ->
+			progressDelta(progressDelta * progressMultiplier)
+		}
+	}
+
+	private fun createVerifyBackupOperation() = createOperation(
+		progressMultiplier = 2,
+		obbBackupRepository::verifyBackup
+	)
 }

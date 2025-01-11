@@ -27,13 +27,10 @@ import ru.solrudev.okkeipatcher.data.PatcherEnvironment
 import ru.solrudev.okkeipatcher.data.repository.gamefile.util.backupPath
 import ru.solrudev.okkeipatcher.data.service.BinaryPatcher
 import ru.solrudev.okkeipatcher.data.util.GAME_PACKAGE_NAME
-import ru.solrudev.okkeipatcher.data.util.STREAM_COPY_PROGRESS_MAX
 import ru.solrudev.okkeipatcher.data.util.computeHash
 import ru.solrudev.okkeipatcher.data.util.copy
 import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.core.Result
-import ru.solrudev.okkeipatcher.domain.core.operation.ProgressOperation
-import ru.solrudev.okkeipatcher.domain.core.operation.operation
 import ru.solrudev.okkeipatcher.domain.model.exception.ObbNotFoundException
 import ru.solrudev.okkeipatcher.domain.repository.HashRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbBackupRepository
@@ -81,72 +78,63 @@ class ObbBackupRepositoryImpl @Inject constructor(
 		fileSystem.delete(backup)
 	}
 
-	override fun createBackup(): ProgressOperation<String> {
-		val progressMultiplier = 4
-		return operation(progressMax = STREAM_COPY_PROGRESS_MAX * progressMultiplier) {
-			if (!fileSystem.exists(obb)) {
-				throw ObbNotFoundException()
-			}
-			try {
-				val hash = withContext(ioDispatcher) {
-					fileSystem.copy(
-						obb, backup, hashing = true,
-						onProgressChanged = {
-							ensureActive()
-							progressDelta(it * progressMultiplier)
-						}
-					)
-				}
-				hashRepository.backupObbHash.persist(hash)
-				return@operation hash
-			} catch (t: Throwable) {
-				fileSystem.delete(backup)
-				throw t
-			}
+	override suspend fun createBackup(onProgress: suspend (progressDelta: Int) -> Unit): String {
+		if (!fileSystem.exists(obb)) {
+			throw ObbNotFoundException()
 		}
-	}
-
-	override fun restoreBackup(): ProgressOperation<Unit> {
-		val progressMultiplier = 3
-		return operation(progressMax = STREAM_COPY_PROGRESS_MAX * progressMultiplier) {
-			if (!fileSystem.exists(backup)) {
-				throw ObbNotFoundException()
-			}
-			try {
-				withContext(ioDispatcher) {
-					fileSystem.copy(
-						backup, obb,
-						onProgressChanged = {
-							ensureActive()
-							progressDelta(it * progressMultiplier)
-						}
-					)
-				}
-			} catch (t: Throwable) {
-				fileSystem.delete(obb)
-				throw t
-			}
-		}
-	}
-
-	override fun verifyBackup(): ProgressOperation<Boolean> {
-		val progressMultiplier = 2
-		return operation(progressMax = STREAM_COPY_PROGRESS_MAX * progressMultiplier) {
-			val savedHash = hashRepository.backupObbHash.retrieve()
-			if (savedHash.isEmpty() || !fileSystem.exists(backup)) {
-				return@operation false
-			}
-			val fileHash = withContext(ioDispatcher) {
-				fileSystem.computeHash(
-					backup,
+		try {
+			val hash = withContext(ioDispatcher) {
+				fileSystem.copy(
+					obb, backup, hashing = true,
 					onProgressChanged = {
 						ensureActive()
-						progressDelta(it * progressMultiplier)
+						onProgress(it)
 					}
 				)
 			}
-			return@operation fileHash == savedHash
+			hashRepository.backupObbHash.persist(hash)
+			return hash
+		} catch (t: Throwable) {
+			fileSystem.delete(backup)
+			throw t
 		}
+	}
+
+	override suspend fun restoreBackup(onProgress: suspend (progressDelta: Int) -> Unit) {
+		if (!fileSystem.exists(backup)) {
+			throw ObbNotFoundException()
+		}
+		try {
+			withContext(ioDispatcher) {
+				fileSystem.copy(
+					backup, obb,
+					onProgressChanged = {
+						ensureActive()
+						onProgress(it)
+					}
+				)
+			}
+		} catch (t: Throwable) {
+			fileSystem.delete(obb)
+			throw t
+		}
+	}
+
+	override suspend fun verifyBackup(onProgress: suspend (progressDelta: Int) -> Unit): Boolean {
+		val savedHash = hashRepository.backupObbHash.retrieve()
+		if (savedHash.isEmpty() || !fileSystem.exists(backup)) {
+			return false
+		}
+		val fileHash = withContext(ioDispatcher) {
+			fileSystem.computeHash(
+				backup,
+				onProgressChanged = {
+					ensureActive()
+					onProgress(it)
+				}
+			)
+		}
+		return fileHash == savedHash
 	}
 
 	override suspend fun patchBackup(outputPath: Path, diffPath: Path): Result<Unit> {

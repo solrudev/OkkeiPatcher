@@ -20,13 +20,12 @@ package ru.solrudev.okkeipatcher.domain.repository.gamefile
 
 import okio.Path
 import ru.solrudev.okkeipatcher.domain.core.Result
-import ru.solrudev.okkeipatcher.domain.core.operation.ProgressOperation
 
 interface ObbBackupRepository {
 	val backupExists: Boolean
 	fun deleteBackup()
-	fun createBackup(): ProgressOperation<String>
-	fun verifyBackup(): ProgressOperation<Boolean>
-	fun restoreBackup(): ProgressOperation<Unit>
+	suspend fun createBackup(onProgress: suspend (progressDelta: Int) -> Unit = {}): String
+	suspend fun verifyBackup(onProgress: suspend (progressDelta: Int) -> Unit = {}): Boolean
+	suspend fun restoreBackup(onProgress: suspend (progressDelta: Int) -> Unit = {})
 	suspend fun patchBackup(outputPath: Path, diffPath: Path): Result<Unit>
 }
