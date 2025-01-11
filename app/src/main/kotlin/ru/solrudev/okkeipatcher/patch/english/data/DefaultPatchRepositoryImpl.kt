@@ -20,6 +20,7 @@ package ru.solrudev.okkeipatcher.patch.english.data
 
 import ru.solrudev.okkeipatcher.data.preference.PreferencesDataStoreFactory
 import ru.solrudev.okkeipatcher.data.repository.patch.PatchRepositoryImpl
+import ru.solrudev.okkeipatcher.data.service.GameInstallationProvider
 import ru.solrudev.okkeipatcher.domain.repository.PatchStateRepository
 import ru.solrudev.okkeipatcher.patch.english.domain.DefaultPatchRepository
 import javax.inject.Inject
@@ -29,10 +30,12 @@ import javax.inject.Singleton
 class DefaultPatchRepositoryImpl @Inject constructor(
 	defaultPatchApi: DefaultPatchApi,
 	patchStateRepository: PatchStateRepository,
+	gameInstallationProvider: GameInstallationProvider,
 	preferencesDataStoreFactory: PreferencesDataStoreFactory
 ) : PatchRepositoryImpl(
 	defaultPatchApi,
 	patchStateRepository,
+	gameInstallationProvider,
 	preferencesDataStoreFactory,
 	dataStoreName = "patch_files_en"
 ), DefaultPatchRepository

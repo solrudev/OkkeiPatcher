@@ -20,6 +20,7 @@ package ru.solrudev.okkeipatcher.data.service
 
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
 import dagger.Reusable
 import dagger.hilt.android.qualifiers.ApplicationContext
 import okio.Path
@@ -30,6 +31,7 @@ import ru.solrudev.okkeipatcher.domain.model.exception.GameNotFoundException
 import javax.inject.Inject
 
 interface GameInstallationProvider {
+	fun getVersionCode(): Int?
 	fun isInstalled(): Boolean
 	fun getApkPath(): Path
 }
@@ -38,6 +40,19 @@ interface GameInstallationProvider {
 class GameInstallationProviderImpl @Inject constructor(
 	@ApplicationContext private val applicationContext: Context
 ) : GameInstallationProvider {
+
+	@Suppress("DEPRECATION")
+	override fun getVersionCode(): Int? {
+		val packageManager = applicationContext.packageManager
+		try {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+				return packageManager.getPackageInfoCompat(GAME_PACKAGE_NAME, 0).longVersionCode.toInt()
+			}
+			return packageManager.getPackageInfoCompat(GAME_PACKAGE_NAME, 0).versionCode
+		} catch (_: PackageManager.NameNotFoundException) {
+			return null
+		}
+	}
 
 	override fun isInstalled(): Boolean {
 		return try {

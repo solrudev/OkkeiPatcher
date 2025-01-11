@@ -20,6 +20,7 @@ package ru.solrudev.okkeipatcher.data.repository.patch
 
 import ru.solrudev.okkeipatcher.data.network.api.MockPatchApi
 import ru.solrudev.okkeipatcher.data.preference.PreferencesDataStoreFactory
+import ru.solrudev.okkeipatcher.data.service.MockGameInstallationProvider
 import ru.solrudev.okkeipatcher.domain.repository.PatchStateRepository
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -28,10 +29,12 @@ import javax.inject.Singleton
 class MockPatchRepository @Inject constructor(
 	patchApi: MockPatchApi,
 	patchStateRepository: PatchStateRepository,
+	gameInstallationProvider: MockGameInstallationProvider,
 	preferencesDataStoreFactory: PreferencesDataStoreFactory
 ) : PatchRepositoryImpl(
 	patchApi,
 	patchStateRepository,
+	gameInstallationProvider,
 	preferencesDataStoreFactory,
 	dataStoreName = "patch_files_mock"
 )

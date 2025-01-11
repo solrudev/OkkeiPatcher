@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2025 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,15 +18,11 @@
 
 package ru.solrudev.okkeipatcher.data.service
 
-import okio.Path
 import okio.Path.Companion.toPath
+import javax.inject.Inject
 
-class FakeGameInstallationProvider(
-	private val versionCode: Int = 0,
-	private val isInstalled: Boolean = true,
-	private val apkPath: Path = "/game.apk".toPath()
-) : GameInstallationProvider {
-	override fun getVersionCode() = versionCode
-	override fun isInstalled() = isInstalled
-	override fun getApkPath() = apkPath
+class MockGameInstallationProvider @Inject constructor() : GameInstallationProvider {
+	override fun getVersionCode() = 0
+	override fun isInstalled() = true
+	override fun getApkPath() = "/".toPath()
 }

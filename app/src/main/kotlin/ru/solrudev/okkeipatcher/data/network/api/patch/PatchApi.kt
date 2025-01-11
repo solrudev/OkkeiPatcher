@@ -22,5 +22,6 @@ import ru.solrudev.okkeipatcher.data.network.model.patch.PatchRequestDto
 import ru.solrudev.okkeipatcher.data.network.model.patch.PatchResponseDto
 
 interface PatchApi {
-	suspend fun getPatchData(patchRequestDto: PatchRequestDto = PatchRequestDto()): PatchResponseDto
+	suspend fun getPatchData(patchRequestDto: PatchRequestDto): PatchResponseDto
+	suspend fun getPatchData(gameVersion: Int?) = getPatchData(PatchRequestDto(gameVersion))
 }
