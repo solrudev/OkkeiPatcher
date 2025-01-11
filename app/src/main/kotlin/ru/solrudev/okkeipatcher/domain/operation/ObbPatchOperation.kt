@@ -107,6 +107,9 @@ class ObbPatchOperation(
 	}
 
 	private suspend inline fun OperationScope.applyPatches(progressMultiplier: Int) {
+		if (obbPatchFiles.getData().isEmpty()) {
+			return
+		}
 		status(R.string.status_patching_obb)
 		val patchedSize = obbPatchFiles
 			.getData()
