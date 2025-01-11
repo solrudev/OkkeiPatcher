@@ -38,6 +38,7 @@ import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.core.Result
 import javax.inject.Inject
 import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 fun interface BinaryPatcher {
 	suspend fun patch(inputPath: Path, outputPath: Path, diffPath: Path): Result<Unit>
@@ -118,7 +119,8 @@ class BinaryPatcherImpl @Inject constructor(
 					replyTo = resultMessenger
 				}
 				serviceMessenger.send(msg)
-			} catch (_: RemoteException) { /* no-op */
+			} catch (exception: RemoteException) {
+				continuation.resumeWithException(exception)
 			}
 		}
 
