@@ -22,5 +22,5 @@ import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFiles
 
 interface ObbPatchOperationFactory {
-	fun create(obbPatchFiles: PatchFiles): Operation<Unit>
+	fun create(obbPatchFiles: PatchFiles, isUpdating: Boolean): Operation<Unit>
 }

@@ -49,8 +49,8 @@ abstract class Obb(
 		return Result.success()
 	}
 
-	override fun patch() = obbPatchOperationFactory.create(obbPatchFiles)
-	override fun update() = patch()
+	override fun patch() = obbPatchOperationFactory.create(obbPatchFiles, isUpdating = false)
+	override fun update() = obbPatchOperationFactory.create(obbPatchFiles, isUpdating = true)
 	override fun deleteBackup() = obbBackupRepository.deleteBackup()
 
 	override fun backup(): Operation<Unit> {

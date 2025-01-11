@@ -38,7 +38,10 @@ interface PatchFiles {
 	suspend fun getSizeInMb(): Double
 }
 
-suspend inline fun PatchFiles.updateInstalledVersion() = installedVersion.persist(getData().maxOf { it.version })
+suspend inline fun PatchFiles.updateInstalledVersion() {
+	val newVersion = getData().maxOfOrNull { it.version } ?: return
+	installedVersion.persist(newVersion)
+}
 
 suspend inline fun PatchFiles.isCompatible(hash: String) = getData()
 	.map { it.compatibleHashes }

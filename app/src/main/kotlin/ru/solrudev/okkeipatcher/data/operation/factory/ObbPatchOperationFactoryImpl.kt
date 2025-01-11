@@ -36,7 +36,8 @@ class ObbPatchOperationFactoryImpl @Inject constructor(
 	private val fileSystem: FileSystem
 ) : ObbPatchOperationFactory {
 
-	override fun create(obbPatchFiles: PatchFiles) = ObbPatchOperation(
+	override fun create(obbPatchFiles: PatchFiles, isUpdating: Boolean) = ObbPatchOperation(
+		isUpdating,
 		obbPatchFiles,
 		environment.externalFilesPath,
 		obbRepository,
