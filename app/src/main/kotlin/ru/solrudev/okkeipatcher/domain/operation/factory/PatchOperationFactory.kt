@@ -19,18 +19,19 @@
 package ru.solrudev.okkeipatcher.domain.operation.factory
 
 import ru.solrudev.okkeipatcher.domain.core.Result
+import ru.solrudev.okkeipatcher.domain.core.factory.SuspendFactory
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.game.GameFactory
 import ru.solrudev.okkeipatcher.domain.model.PatchParameters
 import ru.solrudev.okkeipatcher.domain.operation.PatchOperation
 import ru.solrudev.okkeipatcher.domain.repository.PatchStateRepository
-import ru.solrudev.okkeipatcher.domain.repository.patch.factory.PatchRepositoryFactory
+import ru.solrudev.okkeipatcher.domain.repository.patch.PatchRepository
 import ru.solrudev.okkeipatcher.domain.service.StorageChecker
 import javax.inject.Inject
 
 class PatchOperationFactory @Inject constructor(
 	private val patchStateRepository: PatchStateRepository,
-	private val patchRepositoryFactory: PatchRepositoryFactory,
+	private val patchRepositoryFactory: SuspendFactory<PatchRepository>,
 	private val gameFactory: GameFactory,
 	private val storageChecker: StorageChecker
 ) : OperationFactory<Result<Unit>> {

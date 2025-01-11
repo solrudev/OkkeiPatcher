@@ -18,11 +18,14 @@
 
 package ru.solrudev.okkeipatcher.app.usecase.patch
 
+import ru.solrudev.okkeipatcher.domain.core.factory.SuspendFactory
 import ru.solrudev.okkeipatcher.domain.model.PatchUpdates
-import ru.solrudev.okkeipatcher.domain.repository.patch.factory.PatchRepositoryFactory
+import ru.solrudev.okkeipatcher.domain.repository.patch.PatchRepository
 import javax.inject.Inject
 
-class GetPatchUpdatesUseCase @Inject constructor(private val patchRepositoryFactory: PatchRepositoryFactory) {
+class GetPatchUpdatesUseCase @Inject constructor(
+	private val patchRepositoryFactory: SuspendFactory<PatchRepository>
+) {
 	suspend operator fun invoke(refresh: Boolean): PatchUpdates {
 		val patchRepository = patchRepositoryFactory.create()
 		return patchRepository.getPatchUpdates(refresh)

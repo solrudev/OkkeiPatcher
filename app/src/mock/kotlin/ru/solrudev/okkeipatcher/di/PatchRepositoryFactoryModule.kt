@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2025 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,17 +16,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ru.solrudev.okkeipatcher.app.usecase.patch
+package ru.solrudev.okkeipatcher.di
 
+import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import ru.solrudev.okkeipatcher.domain.core.factory.SuspendFactory
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchRepository
-import javax.inject.Inject
+import ru.solrudev.okkeipatcher.domain.repository.patch.factory.MockPatchRepositoryFactory
 
-class GetPatchSizeInMbUseCase @Inject constructor(
-	private val patchRepositoryFactory: SuspendFactory<PatchRepository>
-) {
-	suspend operator fun invoke(): Double {
-		val patchRepository = patchRepositoryFactory.create()
-		return patchRepository.getPatchSizeInMb()
-	}
+@InstallIn(SingletonComponent::class)
+@Module
+interface PatchRepositoryFactoryModule {
+
+	@Binds
+	fun bind(patchRepositoryFactory: MockPatchRepositoryFactory): SuspendFactory<@JvmWildcard PatchRepository>
 }
