@@ -26,9 +26,9 @@ import kotlinx.coroutines.withContext
 import okio.FileSystem
 import okio.Path
 import okio.Path.Companion.toPath
-import ru.solrudev.okkeipatcher.data.util.STREAM_COPY_PROGRESS_MAX
 import ru.solrudev.okkeipatcher.data.util.copy
 import ru.solrudev.okkeipatcher.di.IoDispatcher
+import ru.solrudev.okkeipatcher.domain.util.DEFAULT_PROGRESS_MAX
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -38,7 +38,7 @@ class FileSystemFileDownloader @Inject constructor(
 	private val fileSystem: FileSystem
 ) : FileDownloader {
 
-	override val progressMax = STREAM_COPY_PROGRESS_MAX
+	override val progressMax = DEFAULT_PROGRESS_MAX
 
 	override suspend fun download(
 		url: String,

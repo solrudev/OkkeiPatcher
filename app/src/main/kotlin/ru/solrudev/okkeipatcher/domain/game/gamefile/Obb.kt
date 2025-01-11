@@ -19,7 +19,6 @@
 package ru.solrudev.okkeipatcher.domain.game.gamefile
 
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.data.util.STREAM_COPY_PROGRESS_MAX
 import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
@@ -31,6 +30,7 @@ import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbBackupRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFiles
 import ru.solrudev.okkeipatcher.domain.repository.patch.isCompatible
+import ru.solrudev.okkeipatcher.domain.util.DEFAULT_PROGRESS_MAX
 
 abstract class Obb(
 	private val obbPatchFiles: PatchFiles,
@@ -84,7 +84,7 @@ abstract class Obb(
 	private inline fun <T> createOperation(
 		progressMultiplier: Int,
 		crossinline action: suspend (suspend (Int) -> Unit) -> T
-	) = operation(progressMax = STREAM_COPY_PROGRESS_MAX * progressMultiplier) {
+	) = operation(progressMax = DEFAULT_PROGRESS_MAX * progressMultiplier) {
 		action { progressDelta ->
 			progressDelta(progressDelta * progressMultiplier)
 		}

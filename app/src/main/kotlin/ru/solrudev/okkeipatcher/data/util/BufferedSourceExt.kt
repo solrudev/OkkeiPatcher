@@ -21,13 +21,13 @@ package ru.solrudev.okkeipatcher.data.util
 import okio.Buffer
 import okio.BufferedSink
 import okio.BufferedSource
+import ru.solrudev.okkeipatcher.domain.util.DEFAULT_PROGRESS_MAX
 import kotlin.math.roundToInt
 
 const val BUFFER_LENGTH = 8192L
-const val STREAM_COPY_PROGRESS_MAX = 100
 
 inline fun BufferedSource.copyTo(sink: BufferedSink, size: Long, onProgressChanged: (Int) -> Unit = {}) {
-	val progressRatio = calculateProgressRatio(size, BUFFER_LENGTH, STREAM_COPY_PROGRESS_MAX)
+	val progressRatio = calculateProgressRatio(size, BUFFER_LENGTH, DEFAULT_PROGRESS_MAX)
 	Buffer().use { buffer ->
 		var currentProgress = 0
 		var accumulatedBytesRead = 0L
@@ -43,13 +43,13 @@ inline fun BufferedSource.copyTo(sink: BufferedSink, size: Long, onProgressChang
 				accumulatedBytesRead = 0
 				val progress = ++currentProgress / progressRatio
 				val shouldEmitProgress = currentProgress - (progress * progressRatio) == 0
-				if (shouldEmitProgress && progress <= STREAM_COPY_PROGRESS_MAX) {
+				if (shouldEmitProgress && progress <= DEFAULT_PROGRESS_MAX) {
 					progressEmitCounter++
 					onProgressChanged(1)
 				}
 			}
 		}
-		onProgressChanged(STREAM_COPY_PROGRESS_MAX - progressEmitCounter)
+		onProgressChanged(DEFAULT_PROGRESS_MAX - progressEmitCounter)
 	}
 }
 

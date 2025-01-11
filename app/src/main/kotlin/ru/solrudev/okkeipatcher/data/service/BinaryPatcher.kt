@@ -39,8 +39,8 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import okio.FileSystem
 import okio.Path
 import ru.solrudev.okkeipatcher.R
-import ru.solrudev.okkeipatcher.data.util.STREAM_COPY_PROGRESS_MAX
 import ru.solrudev.okkeipatcher.domain.core.Result
+import ru.solrudev.okkeipatcher.domain.util.DEFAULT_PROGRESS_MAX
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -48,6 +48,7 @@ import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.seconds
 
 fun interface BinaryPatcher {
+
 	suspend fun patch(
 		inputPath: Path,
 		outputPath: Path,
@@ -117,7 +118,7 @@ class BinaryPatcherImpl @Inject constructor(
 			val currentSize = this@BinaryPatcherImpl.fileSystem.metadataOrNull(outputPath)?.size ?: 0
 			val delta = currentSize - previousSize
 			previousSize = currentSize
-			val normalizedDelta = (delta.toDouble() / patchedSize * STREAM_COPY_PROGRESS_MAX).roundToInt()
+			val normalizedDelta = (delta.toDouble() / patchedSize * DEFAULT_PROGRESS_MAX).roundToInt()
 			onProgress(normalizedDelta)
 		}
 	}

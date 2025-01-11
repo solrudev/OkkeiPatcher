@@ -30,11 +30,11 @@ import okio.Path
 import okio.buffer
 import ru.solrudev.okkeipatcher.data.network.model.exception.NetworkNotAvailableException
 import ru.solrudev.okkeipatcher.data.service.util.await
-import ru.solrudev.okkeipatcher.data.util.STREAM_COPY_PROGRESS_MAX
 import ru.solrudev.okkeipatcher.data.util.copyTo
 import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.model.exception.NoNetworkException
 import ru.solrudev.okkeipatcher.domain.service.FileDownloader
+import ru.solrudev.okkeipatcher.domain.util.DEFAULT_PROGRESS_MAX
 import ru.solrudev.okkeipatcher.domain.util.prepareRecreate
 import javax.inject.Inject
 
@@ -45,7 +45,7 @@ class FileDownloaderImpl @Inject constructor(
 	private val fileSystem: FileSystem
 ) : FileDownloader {
 
-	override val progressMax = STREAM_COPY_PROGRESS_MAX
+	override val progressMax = DEFAULT_PROGRESS_MAX
 
 	override suspend fun download(
 		url: String,
