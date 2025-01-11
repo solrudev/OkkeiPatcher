@@ -52,7 +52,7 @@ class PatchFilesImpl<T>(
 		}
 		val currentVersion = installedVersion.retrieve()
 		val latestVersion = try {
-			getData(refresh).maxOf { it.version }
+			getData(refresh).maxOfOrNull { it.version } ?: 1
 		} catch (_: NetworkNotAvailableException) {
 			currentVersion
 		}
