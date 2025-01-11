@@ -78,11 +78,11 @@ class ObbPatchOperation(
 			val obbPatchData = obbPatchFiles
 				.getData()
 				.single { it.type == PatchFileType.OBB_PATCH }
-			val obbHash = fileDownloader.download(
+			val obbPatchHash = fileDownloader.download(
 				obbPatchData.url, obbPatchPath, hashing = true,
 				onProgress = { progressDelta(it * progressMultiplier) }
 			)
-			if (obbHash != obbPatchData.hash) {
+			if (obbPatchHash != obbPatchData.hash) {
 				throw ObbPatchCorruptedException()
 			}
 		}
