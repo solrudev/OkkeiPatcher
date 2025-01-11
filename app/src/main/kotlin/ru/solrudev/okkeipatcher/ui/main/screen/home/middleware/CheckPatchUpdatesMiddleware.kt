@@ -27,6 +27,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.transform
 import ru.solrudev.okkeipatcher.app.usecase.patch.GetPatchStatusFlowUseCase
 import ru.solrudev.okkeipatcher.app.usecase.patch.GetPatchUpdatesUseCase
 import ru.solrudev.okkeipatcher.app.usecase.work.GetIsWorkPendingFlowUseCase
@@ -62,7 +63,7 @@ class CheckPatchUpdatesMiddleware @Inject constructor(
 			.onEach { send(PatchStatusChanged(UpdateAvailable)) }
 			.launchIn(this)
 		filterIsInstance<RefreshRequested>()
-			.filter { canLoadPatchUpdates }
+			.transform { if (canLoadPatchUpdates) emit(it) else send(PatchUpdatesLoaded) }
 			.map { PersistentPatchStatus.of(getPatchStatusFlowUseCase().first()) }
 			.onEach { patchStatus -> send(PatchStatusChanged(patchStatus)) }
 			.launchIn(this)
