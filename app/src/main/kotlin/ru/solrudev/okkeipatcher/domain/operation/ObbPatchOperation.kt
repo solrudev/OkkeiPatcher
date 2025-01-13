@@ -31,7 +31,6 @@ import ru.solrudev.okkeipatcher.domain.model.PatchFileType
 import ru.solrudev.okkeipatcher.domain.model.exception.DomainException
 import ru.solrudev.okkeipatcher.domain.model.exception.ObbPatchCorruptedException
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbBackupRepository
-import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFiles
 import ru.solrudev.okkeipatcher.domain.repository.patch.updateInstalledVersion
 import ru.solrudev.okkeipatcher.domain.service.FileDownloader
@@ -41,14 +40,13 @@ class ObbPatchOperation(
 	private val isUpdating: Boolean,
 	private val obbPatchFiles: PatchFiles,
 	externalDir: Path,
-	obbRepository: ObbRepository,
+	private val obbPath: Path,
 	private val obbBackupRepository: ObbBackupRepository,
 	private val fileDownloader: FileDownloader,
 	private val fileSystem: FileSystem
 ) : Operation<Unit> {
 
 	private val obbPatchPath = externalDir / "obbpatch"
-	private val obbPath = obbRepository.obbPath
 
 	private val operation = aggregateOperation(
 		downloadPatches(),

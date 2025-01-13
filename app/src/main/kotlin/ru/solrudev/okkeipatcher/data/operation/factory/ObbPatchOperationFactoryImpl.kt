@@ -40,7 +40,7 @@ class ObbPatchOperationFactoryImpl @Inject constructor(
 		isUpdating,
 		obbPatchFiles,
 		environment.externalFilesPath,
-		obbRepository,
+		obbRepository.obbPath,
 		obbBackupRepository,
 		fileDownloader,
 		fileSystem
