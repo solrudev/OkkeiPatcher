@@ -67,14 +67,14 @@ class BinaryPatchService : Service() {
 			val outFile = File(outputPath)
 			outFile.parentFile?.mkdirs()
 			outFile.createNewFile()
-			outFile.outputStream().use { outputStream ->
+			val result = outFile.outputStream().use { outputStream ->
 				val fdGetInt = FileDescriptor::class.java.getDeclaredMethod("getInt$")
 				val fd = fdGetInt.invoke(outputStream.fd) as Int
 				val fdPath = "/proc/self/fd/$fd"
-				val result = HPatch.patch(inputPath, diffPath, fdPath)
-				sendResult(result)
-				exitProcess(result)
+				HPatch.patch(inputPath, diffPath, fdPath)
 			}
+			sendResult(result)
+			exitProcess(result)
 		}
 	}
 
