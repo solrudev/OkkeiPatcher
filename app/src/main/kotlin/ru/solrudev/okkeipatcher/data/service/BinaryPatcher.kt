@@ -115,7 +115,7 @@ class BinaryPatcherImpl @Inject constructor(
 		var previousSize = 0L
 		while (true) {
 			delay(2.seconds)
-			val currentSize = this@BinaryPatcherImpl.fileSystem.metadataOrNull(outputPath)?.size ?: 0
+			val currentSize = fileSystem.metadataOrNull(outputPath)?.size ?: 0
 			val delta = currentSize - previousSize
 			previousSize = currentSize
 			val normalizedDelta = (delta.toDouble() / patchedSize * DEFAULT_PROGRESS_MAX).roundToInt()
