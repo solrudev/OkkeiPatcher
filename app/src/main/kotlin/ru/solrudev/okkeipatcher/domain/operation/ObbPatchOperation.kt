@@ -32,6 +32,8 @@ import ru.solrudev.okkeipatcher.domain.model.exception.DomainException
 import ru.solrudev.okkeipatcher.domain.model.exception.ObbPatchCorruptedException
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbBackupRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFiles
+import ru.solrudev.okkeipatcher.domain.repository.patch.get
+import ru.solrudev.okkeipatcher.domain.repository.patch.isEmpty
 import ru.solrudev.okkeipatcher.domain.repository.patch.updateInstalledVersion
 import ru.solrudev.okkeipatcher.domain.service.FileDownloader
 import ru.solrudev.okkeipatcher.domain.util.DEFAULT_PROGRESS_MAX
@@ -69,13 +71,11 @@ class ObbPatchOperation(
 	private fun downloadPatches(): Operation<Unit> {
 		val progressMultiplier = 4
 		return operation(progressMax = fileDownloader.progressMax * progressMultiplier) {
-			if (obbPatchFiles.getData().isEmpty()) {
+			if (obbPatchFiles.isEmpty()) {
 				return@operation
 			}
 			status(R.string.status_downloading_obb_patches)
-			val obbPatchData = obbPatchFiles
-				.getData()
-				.single { it.type == PatchFileType.OBB_PATCH }
+			val obbPatchData = obbPatchFiles.get(PatchFileType.OBB_PATCH).single()
 			val obbPatchHash = fileDownloader.download(
 				obbPatchData.url, obbPatchPath, hashing = true,
 				onProgress = { progressDelta(it * progressMultiplier) }
@@ -89,7 +89,7 @@ class ObbPatchOperation(
 	private fun applyPatches(): Operation<Unit> {
 		val progressMultiplier = 4
 		return operation(progressMax = DEFAULT_PROGRESS_MAX * progressMultiplier) {
-			if (obbPatchFiles.getData().isEmpty() && !isUpdating) {
+			if (obbPatchFiles.isEmpty() && !isUpdating) {
 				restoreObbBackup(progressMultiplier)
 			} else {
 				applyPatches(progressMultiplier)
@@ -105,14 +105,11 @@ class ObbPatchOperation(
 	}
 
 	private suspend inline fun OperationScope.applyPatches(progressMultiplier: Int) {
-		if (obbPatchFiles.getData().isEmpty()) {
+		if (obbPatchFiles.isEmpty()) {
 			return
 		}
 		status(R.string.status_patching_obb)
-		val patchedSize = obbPatchFiles
-			.getData()
-			.single { it.type == PatchFileType.OBB_PATCH }
-			.patchedSize
+		val patchedSize = obbPatchFiles.get(PatchFileType.OBB_PATCH).single().patchedSize
 		obbBackupRepository.patchBackup(obbPath, obbPatchPath, patchedSize) { progressDelta ->
 			progressDelta(progressDelta * progressMultiplier)
 		}.onFailure { failure ->

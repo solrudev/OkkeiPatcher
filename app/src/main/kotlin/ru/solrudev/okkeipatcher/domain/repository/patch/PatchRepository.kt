@@ -20,6 +20,7 @@ package ru.solrudev.okkeipatcher.domain.repository.patch
 
 import ru.solrudev.okkeipatcher.domain.core.persistence.Dao
 import ru.solrudev.okkeipatcher.domain.model.PatchFileData
+import ru.solrudev.okkeipatcher.domain.model.PatchFileType
 import ru.solrudev.okkeipatcher.domain.model.PatchUpdates
 
 interface PatchRepository {
@@ -47,3 +48,6 @@ suspend inline fun PatchFiles.isCompatible(hash: String) = getData()
 	.map { it.compatibleHashes }
 	.flatten()
 	.any { it == hash }
+
+suspend inline fun PatchFiles.get(patchFileType: PatchFileType) = getData().filter { it.type == patchFileType }
+suspend inline fun PatchFiles.isEmpty() = getData().isEmpty()
