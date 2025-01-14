@@ -33,7 +33,7 @@ import ru.solrudev.okkeipatcher.domain.core.Message
 fun Context.copyTextToClipboard(clipLabel: CharSequence, text: CharSequence) {
 	val clipboard = getSystemService<ClipboardManager>()
 	clipboard?.setPrimaryClip(ClipData.newPlainText(clipLabel, text))
-	Toast.makeText(this, R.string.toast_copied_to_clipboard, Toast.LENGTH_SHORT).show()
+	Toast.makeText(applicationContext, R.string.toast_copied_to_clipboard, Toast.LENGTH_SHORT).show()
 }
 
 /**
