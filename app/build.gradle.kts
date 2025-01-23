@@ -54,7 +54,6 @@ android {
 		versionName = "2.1.2"
 		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 		vectorDrawables.useSupportLibrary = true
-		resourceConfigurations += setOf("en", "ru")
 	}
 
 	val releaseSigningConfig by signingConfigs.registering {
@@ -101,6 +100,7 @@ android {
 
 	androidResources {
 		noCompress += listOf("pem", "pk8", "past")
+		localeFilters += setOf("en", "ru")
 	}
 
 	compileOptions {
