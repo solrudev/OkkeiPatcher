@@ -99,7 +99,7 @@ android {
 	}
 
 	androidResources {
-		noCompress += listOf("pem", "pk8", "past")
+		noCompress += setOf("pem", "pk8", "past")
 		localeFilters += setOf("en", "ru")
 	}
 
