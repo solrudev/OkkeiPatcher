@@ -19,6 +19,7 @@
 package ru.solrudev.okkeipatcher.ui.main.screen.settings
 
 import android.os.Bundle
+import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.preference.ListPreference
 import androidx.preference.Preference
@@ -62,11 +63,22 @@ class SettingsFragment : PreferenceFragmentCompat(), HostJetView<SettingsUiState
 		get() = findPreference(getString(R.string.preference_key_licenses))
 
 	private val patcherSettingsController by derivedView {
-		PatcherSettingsController(handleSaveData, clearData, findNavController(), viewModel)
+		PatcherSettingsController(
+			handleSaveData,
+			clearData,
+			findNavController(),
+			viewModel,
+			requireView()::performHapticFeedback
+		)
 	}
 
 	private val updatesSettingsController by derivedView {
-		UpdatesSettingsController(isAppUpdatesCheckEnabled, isPatchUpdatesCheckEnabled, viewModel)
+		UpdatesSettingsController(
+			isAppUpdatesCheckEnabled,
+			isPatchUpdatesCheckEnabled,
+			viewModel,
+			requireView()::performHapticFeedback
+		)
 	}
 
 	private val appearanceSettingsController by derivedView {
@@ -83,6 +95,11 @@ class SettingsFragment : PreferenceFragmentCompat(), HostJetView<SettingsUiState
 		SettingsFragment::appearanceSettingsController,
 		SettingsFragment::miscellaneousSettingsController
 	)
+
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		super.onViewCreated(view, savedInstanceState)
+		view.isHapticFeedbackEnabled = true
+	}
 
 	override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
 		setPreferencesFromResource(R.xml.okkei_preferences, rootKey)

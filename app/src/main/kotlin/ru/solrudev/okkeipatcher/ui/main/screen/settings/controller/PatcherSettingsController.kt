@@ -18,10 +18,12 @@
 
 package ru.solrudev.okkeipatcher.ui.main.screen.settings.controller
 
+import androidx.core.view.HapticFeedbackConstantsCompat
 import androidx.navigation.NavController
 import androidx.preference.Preference
 import androidx.preference.SwitchPreferenceCompat
 import io.github.solrudev.jetmvi.JetView
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.HapticFeedbackCallback
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.SettingsFragmentDirections
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.SettingsViewModel
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.HandleSaveDataToggled
@@ -33,12 +35,14 @@ class PatcherSettingsController(
 	private val handleSaveData: SwitchPreferenceCompat?,
 	clearData: Preference?,
 	private val navController: NavController,
-	private val viewModel: SettingsViewModel
+	private val viewModel: SettingsViewModel,
+	private val hapticFeedbackCallback: HapticFeedbackCallback
 ) : JetView<SettingsUiState> {
 
 	init {
 		handleSaveData?.setOnPreferenceClickListener {
 			viewModel.dispatchEvent(HandleSaveDataToggled)
+			hapticFeedbackCallback.performHapticFeedback(HapticFeedbackConstantsCompat.CONTEXT_CLICK)
 			false
 		}
 		clearData?.setOnPreferenceClickListener {

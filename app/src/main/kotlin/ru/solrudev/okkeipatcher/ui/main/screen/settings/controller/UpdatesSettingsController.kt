@@ -18,8 +18,10 @@
 
 package ru.solrudev.okkeipatcher.ui.main.screen.settings.controller
 
+import androidx.core.view.HapticFeedbackConstantsCompat
 import androidx.preference.SwitchPreferenceCompat
 import io.github.solrudev.jetmvi.JetView
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.HapticFeedbackCallback
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.SettingsViewModel
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.IsAppUpdatesCheckEnabledToggled
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.IsPatchUpdatesCheckEnabledToggled
@@ -28,16 +30,19 @@ import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsUiState
 class UpdatesSettingsController(
 	private val isAppUpdatesCheckEnabled: SwitchPreferenceCompat?,
 	private val isPatchUpdatesCheckEnabled: SwitchPreferenceCompat?,
-	private val viewModel: SettingsViewModel
+	private val viewModel: SettingsViewModel,
+	private val hapticFeedbackCallback: HapticFeedbackCallback
 ) : JetView<SettingsUiState> {
 
 	init {
 		isAppUpdatesCheckEnabled?.setOnPreferenceClickListener {
 			viewModel.dispatchEvent(IsAppUpdatesCheckEnabledToggled)
+			hapticFeedbackCallback.performHapticFeedback(HapticFeedbackConstantsCompat.CONTEXT_CLICK)
 			true
 		}
 		isPatchUpdatesCheckEnabled?.setOnPreferenceClickListener {
 			viewModel.dispatchEvent(IsPatchUpdatesCheckEnabledToggled)
+			hapticFeedbackCallback.performHapticFeedback(HapticFeedbackConstantsCompat.CONTEXT_CLICK)
 			true
 		}
 	}
