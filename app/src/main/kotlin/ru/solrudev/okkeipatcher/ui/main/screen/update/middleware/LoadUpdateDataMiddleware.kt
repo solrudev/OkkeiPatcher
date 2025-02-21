@@ -20,8 +20,9 @@ package ru.solrudev.okkeipatcher.ui.main.screen.update.middleware
 
 import io.github.solrudev.jetmvi.JetMiddleware
 import io.github.solrudev.jetmvi.MiddlewareScope
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import ru.solrudev.okkeipatcher.app.usecase.GetIsAppUpdatesCheckEnabledFlowUseCase
 import ru.solrudev.okkeipatcher.app.usecase.GetUpdateDataUseCase
 import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateEvent
@@ -38,11 +39,10 @@ class LoadUpdateDataMiddleware @Inject constructor(
 ) : JetMiddleware<UpdateEvent> {
 
 	override fun MiddlewareScope<UpdateEvent>.apply() {
-		launch {
-			if (getIsAppUpdatesCheckEnabledFlowUseCase().first()) {
-				send(UpdateDataRequested(refresh = false))
-			}
-		}
+		getIsAppUpdatesCheckEnabledFlowUseCase()
+			.filter { it }
+			.onEach { send(UpdateDataRequested(refresh = false)) }
+			.launchIn(this)
 		onEvent<UpdateDataRequested> { event ->
 			send(UpdateDataLoadingStarted)
 			val updateData = getUpdateDataUseCase(refresh = event.refresh)

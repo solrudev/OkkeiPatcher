@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -55,9 +56,7 @@ class CheckPatchUpdatesMiddleware @Inject constructor(
 		filterIsInstance<PatchStatusChanged>()
 			.map { event -> event.patchStatus }
 			.filterIsInstance<PersistentPatchStatus>()
-			.checkPatchUpdatesIn(this) {
-				getIsPatchUpdatesCheckEnabledFlowUseCase().first()
-			}
+			.checkPatchUpdatesIn(this, getIsPatchUpdatesCheckEnabledFlowUseCase())
 		filterIsInstance<RefreshRequested>()
 			.transform { if (canLoadPatchUpdates) emit(it) else send(PatchUpdatesLoaded) }
 			.map { PersistentPatchStatus.of(getPatchStatusFlowUseCase().first()) }
@@ -66,10 +65,10 @@ class CheckPatchUpdatesMiddleware @Inject constructor(
 
 	private fun Flow<PersistentPatchStatus>.checkPatchUpdatesIn(
 		scope: MiddlewareScope<HomeEvent>,
-		canCheckPatchUpdates: suspend () -> Boolean = { true }
+		canCheckPatchUpdates: Flow<Boolean> = flow { emit(true) }
 	) {
-		combine(getIsWorkPendingFlowUseCase(), ::canLoadUpdates)
-			.filter { it && canCheckPatchUpdates() }
+		combine(this, getIsWorkPendingFlowUseCase(), canCheckPatchUpdates, ::canLoadUpdates)
+			.filter { it }
 			.map { getPatchUpdatesUseCase(refresh = true) }
 			.onEach { scope.send(PatchUpdatesLoaded) }
 			.filter { it.available }
@@ -77,9 +76,13 @@ class CheckPatchUpdatesMiddleware @Inject constructor(
 			.launchIn(scope)
 	}
 
-	private fun canLoadUpdates(patchStatus: PersistentPatchStatus, isWorkPending: Boolean): Boolean {
+	private fun canLoadUpdates(
+		patchStatus: PersistentPatchStatus,
+		isWorkPending: Boolean,
+		canCheckPatchUpdates: Boolean
+	): Boolean {
 		val canLoadUpdates = !isWorkPending && patchStatus is Patched
 		canLoadPatchUpdates = canLoadUpdates
-		return canLoadUpdates
+		return canLoadUpdates && canCheckPatchUpdates
 	}
 }
