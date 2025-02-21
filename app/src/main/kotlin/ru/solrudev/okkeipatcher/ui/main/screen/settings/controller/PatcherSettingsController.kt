@@ -23,12 +23,12 @@ import androidx.navigation.NavController
 import androidx.preference.Preference
 import androidx.preference.SwitchPreferenceCompat
 import io.github.solrudev.jetmvi.JetView
-import ru.solrudev.okkeipatcher.ui.main.screen.settings.HapticFeedbackCallback
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.SettingsFragmentDirections
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.SettingsViewModel
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.HandleSaveDataToggled
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.SaveDataAccessRequestHandled
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsUiState
+import ru.solrudev.okkeipatcher.ui.main.util.HapticFeedbackCallback
 import ru.solrudev.okkeipatcher.ui.util.navigateSafely
 
 class PatcherSettingsController(

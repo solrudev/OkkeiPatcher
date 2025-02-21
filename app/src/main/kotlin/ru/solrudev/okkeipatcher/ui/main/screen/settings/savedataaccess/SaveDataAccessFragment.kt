@@ -38,6 +38,7 @@ import ru.solrudev.okkeipatcher.ui.main.screen.settings.savedataaccess.model.Sav
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.savedataaccess.model.SaveDataAccessUiState
 import ru.solrudev.okkeipatcher.ui.shared.model.shouldShow
 import ru.solrudev.okkeipatcher.ui.util.createDialogBuilder
+import ru.solrudev.okkeipatcher.ui.util.performHapticContextClick
 import ru.solrudev.okkeipatcher.ui.util.showWithLifecycle
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -88,6 +89,7 @@ class SaveDataAccessFragment : DialogFragment(), JetView<SaveDataAccessUiState> 
 			.setIcon(R.drawable.ic_save_data)
 			.setPositiveButton(R.string.button_text_grant) { _, _ ->
 				permissionRequestLauncher.launch()
+				performHapticContextClick()
 			}
 			.setNegativeButton(R.string.button_text_cancel) { _, _ ->
 				findNavController().popBackStack()

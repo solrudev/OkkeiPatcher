@@ -63,11 +63,21 @@ class HomeFragment : Fragment(R.layout.fragment_home), HostJetView<HomeUiState> 
 	}
 
 	private val patchMessageView by derivedView {
-		PatchMessageView(requireContext(), viewLifecycleOwner.lifecycle, viewModel)
+		PatchMessageView(
+			requireContext(),
+			viewLifecycleOwner.lifecycle,
+			viewModel,
+			requireView()::performHapticFeedback
+		)
 	}
 
 	private val restoreMessageView by derivedView {
-		RestoreMessageView(requireContext(), viewLifecycleOwner.lifecycle, viewModel)
+		RestoreMessageView(
+			requireContext(),
+			viewLifecycleOwner.lifecycle,
+			viewModel,
+			requireView()::performHapticFeedback
+		)
 	}
 
 	private val patchUpdateBadgeView by derivedView {

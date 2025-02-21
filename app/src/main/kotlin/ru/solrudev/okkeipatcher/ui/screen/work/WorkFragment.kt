@@ -52,6 +52,7 @@ import ru.solrudev.okkeipatcher.ui.util.createDialogBuilder
 import ru.solrudev.okkeipatcher.ui.util.doOnAnimationEnd
 import ru.solrudev.okkeipatcher.ui.util.localizedText
 import ru.solrudev.okkeipatcher.ui.util.onBackPressed
+import ru.solrudev.okkeipatcher.ui.util.performHapticContextClick
 import ru.solrudev.okkeipatcher.ui.util.setOneshotAnimation
 import ru.solrudev.okkeipatcher.ui.util.showWithLifecycle
 
@@ -177,6 +178,7 @@ class WorkFragment : Fragment(R.layout.fragment_work), JetView<WorkUiState> {
 			.setIcon(R.drawable.ic_cancel)
 			.setPositiveButton(R.string.button_text_abort) { _, _ ->
 				viewModel.dispatchEvent(CancelWork(args.work))
+				performHapticContextClick()
 			}
 			.setNegativeButton(R.string.button_text_cancel, null)
 			.setOnDismissListener {
@@ -195,6 +197,7 @@ class WorkFragment : Fragment(R.layout.fragment_work), JetView<WorkUiState> {
 			.setIcon(R.drawable.ic_error)
 			.setNeutralButton(R.string.button_text_copy_to_clipboard) { _, _ ->
 				requireContext().copyTextToClipboard("Okkei Patcher Exception", message)
+				performHapticContextClick()
 			}
 			.setOnDismissListener {
 				viewModel.dispatchEvent(ErrorDismissed)

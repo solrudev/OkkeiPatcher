@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ru.solrudev.okkeipatcher.ui.main.screen.settings
+package ru.solrudev.okkeipatcher.ui.main.util
 
 import androidx.core.view.HapticFeedbackConstantsCompat.HapticFeedbackType
 

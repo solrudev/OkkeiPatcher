@@ -18,8 +18,10 @@
 
 package ru.solrudev.okkeipatcher.ui.util
 
+import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.HapticFeedbackConstantsCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -49,3 +51,9 @@ fun Fragment.findParentNavController(): NavController? {
 
 fun Fragment.findNavHostToolbar(): Toolbar? = requireActivity().findViewById(R.id.toolbar_nav_host)
 fun Fragment.requireNavHostActivity() = requireActivity() as NavHostActivity
+
+fun Fragment.performHapticContextClick() {
+	requireActivity()
+		.findViewById<View>(android.R.id.content)
+		.performHapticFeedback(HapticFeedbackConstantsCompat.CONTEXT_CLICK)
+}

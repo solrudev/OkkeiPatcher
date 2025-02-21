@@ -39,6 +39,7 @@ import ru.solrudev.okkeipatcher.ui.main.screen.settings.cleardata.model.shouldSh
 import ru.solrudev.okkeipatcher.ui.main.util.showSnackbar
 import ru.solrudev.okkeipatcher.ui.shared.model.shouldShow
 import ru.solrudev.okkeipatcher.ui.util.createDialogBuilder
+import ru.solrudev.okkeipatcher.ui.util.performHapticContextClick
 import ru.solrudev.okkeipatcher.ui.util.showWithLifecycle
 
 @AndroidEntryPoint
@@ -75,6 +76,7 @@ class ClearDataFragment : DialogFragment(), JetView<ClearDataUiState> {
 			.setIcon(R.drawable.ic_clear_data)
 			.setPositiveButton(R.string.button_text_clear) { _, _ ->
 				viewModel.dispatchEvent(ClearingRequested)
+				performHapticContextClick()
 			}
 			.setNegativeButton(R.string.button_text_cancel) { _, _ ->
 				findNavController().popBackStack()

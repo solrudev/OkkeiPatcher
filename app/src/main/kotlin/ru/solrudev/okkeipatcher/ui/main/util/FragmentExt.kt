@@ -28,14 +28,14 @@ import ru.solrudev.okkeipatcher.R
 
 fun Fragment.showSnackbar(@StringRes resId: Int, @Duration duration: Int) {
 	val bottomNavigationView = requireActivity().findViewById<View>(R.id.bottomNavigationView_main)
-	Snackbar.make(requireActivity().findViewById(R.id.content_main), resId, duration).apply {
+	Snackbar.make(findContentView(), resId, duration).apply {
 		bottomNavigationView?.let(::setAnchorView)
 	}.show()
 }
 
 fun Fragment.showSnackbar(text: CharSequence, @Duration duration: Int) {
 	val bottomNavigationView = requireActivity().findViewById<View>(R.id.bottomNavigationView_main)
-	Snackbar.make(requireActivity().findViewById(R.id.content_main), text, duration).apply {
+	Snackbar.make(findContentView(), text, duration).apply {
 		bottomNavigationView?.let(::setAnchorView)
 	}.show()
 }
@@ -44,3 +44,5 @@ fun Fragment.findNavigationBarView(): NavigationBarView? {
 	return requireActivity().findViewById(R.id.bottomNavigationView_main)
 		?: requireActivity().findViewById(R.id.navigationRailView_main)
 }
+
+private fun Fragment.findContentView(): View = requireActivity().findViewById(R.id.content_main)

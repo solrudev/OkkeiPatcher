@@ -21,11 +21,11 @@ package ru.solrudev.okkeipatcher.ui.main.screen.settings.controller
 import androidx.core.view.HapticFeedbackConstantsCompat
 import androidx.preference.SwitchPreferenceCompat
 import io.github.solrudev.jetmvi.JetView
-import ru.solrudev.okkeipatcher.ui.main.screen.settings.HapticFeedbackCallback
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.SettingsViewModel
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.IsAppUpdatesCheckEnabledToggled
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.IsPatchUpdatesCheckEnabledToggled
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsUiState
+import ru.solrudev.okkeipatcher.ui.main.util.HapticFeedbackCallback
 
 class UpdatesSettingsController(
 	private val isAppUpdatesCheckEnabled: SwitchPreferenceCompat?,

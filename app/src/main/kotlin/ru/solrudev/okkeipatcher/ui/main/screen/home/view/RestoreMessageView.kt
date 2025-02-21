@@ -19,6 +19,7 @@
 package ru.solrudev.okkeipatcher.ui.main.screen.home.view
 
 import android.content.Context
+import androidx.core.view.HapticFeedbackConstantsCompat
 import androidx.lifecycle.Lifecycle
 import io.github.solrudev.jetmvi.JetView
 import ru.solrudev.okkeipatcher.R
@@ -28,6 +29,7 @@ import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeUiState
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.RestoreEvent.StartRestore
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.RestoreEvent.StartRestoreMessageDismissed
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.RestoreEvent.StartRestoreMessageShown
+import ru.solrudev.okkeipatcher.ui.main.util.HapticFeedbackCallback
 import ru.solrudev.okkeipatcher.ui.shared.model.shouldShow
 import ru.solrudev.okkeipatcher.ui.util.createDialogBuilder
 import ru.solrudev.okkeipatcher.ui.util.showWithLifecycle
@@ -35,7 +37,8 @@ import ru.solrudev.okkeipatcher.ui.util.showWithLifecycle
 class RestoreMessageView(
 	private val context: Context,
 	private val viewLifecycle: Lifecycle,
-	private val viewModel: HomeViewModel
+	private val viewModel: HomeViewModel,
+	private val hapticFeedbackCallback: HapticFeedbackCallback
 ) : JetView<HomeUiState> {
 
 	override val trackedState = listOf(HomeUiState::startRestoreMessage)
@@ -51,6 +54,7 @@ class RestoreMessageView(
 			.setIcon(R.drawable.ic_start_work)
 			.setPositiveButton(R.string.button_text_start) { _, _ ->
 				viewModel.dispatchEvent(StartRestore)
+				hapticFeedbackCallback.performHapticFeedback(HapticFeedbackConstantsCompat.CONTEXT_CLICK)
 			}
 			.setNegativeButton(R.string.button_text_cancel, null)
 			.setOnDismissListener {
