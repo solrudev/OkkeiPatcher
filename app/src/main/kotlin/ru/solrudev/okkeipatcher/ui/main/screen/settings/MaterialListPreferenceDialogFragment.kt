@@ -19,7 +19,9 @@
 package ru.solrudev.okkeipatcher.ui.main.screen.settings
 
 import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
+import androidx.core.view.HapticFeedbackConstantsCompat
 import androidx.preference.ListPreferenceDialogFragmentCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
@@ -40,6 +42,13 @@ class MaterialListPreferenceDialogFragment : ListPreferenceDialogFragmentCompat(
 		}
 		onPrepareDialogBuilder(builder)
 		return builder.create()
+	}
+
+	override fun onClick(dialog: DialogInterface, which: Int) {
+		super.onClick(dialog, which)
+		if (which == DialogInterface.BUTTON_POSITIVE) {
+			requireActivity().window.decorView.performHapticFeedback(HapticFeedbackConstantsCompat.CONTEXT_CLICK)
+		}
 	}
 
 	companion object {
