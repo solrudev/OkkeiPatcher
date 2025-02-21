@@ -55,7 +55,6 @@
 	<string name="error_apk_not_found">APK to be installed was not found.</string>
 	<string name="error_backup_not_found">Backup of CHAOS;CHILD was not found.</string>
 	<string name="error_binary_patch_failed">Binary patch failed: %s</string>
-	<string name="error_clear_data">There was an error clearing data</string>
 	<string name="error_game_not_found">CHAOS;CHILD was not found on this device.</string>
 	<string name="error_game_version_not_supported">Installed CHAOS;CHILD version is not supported.</string>
 	<string name="error_hash_obb_mismatch">OBB is corrupted.</string>
@@ -145,6 +144,7 @@
 
 	<!--Snackbars-->
 	<string name="snackbar_data_cleared">All data cleared</string>
+	<string name="snackbar_error_clear_data">There was an error clearing data</string>
 
 	<!--Statuses-->
 	<string name="status_backing_up_apk">Backing up APK</string>

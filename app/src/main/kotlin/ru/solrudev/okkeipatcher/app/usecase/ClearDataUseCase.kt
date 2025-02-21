@@ -53,6 +53,6 @@ class ClearDataUseCase @Inject constructor(
 		}
 		Result.success()
 	} catch (_: Throwable) {
-		Result.failure(R.string.error_clear_data)
+		Result.failure(R.string.snackbar_error_clear_data)
 	}
 }

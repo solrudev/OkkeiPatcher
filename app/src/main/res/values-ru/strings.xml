@@ -51,7 +51,6 @@
 	<string name="error_apk_not_found">APK для установки не найден.</string>
 	<string name="error_backup_not_found">Резервная копия CHAOS;CHILD не найдена.</string>
 	<string name="error_binary_patch_failed">Не удалось применить бинарный патч: %s</string>
-	<string name="error_clear_data">При очистке данных произошла ошибка</string>
 	<string name="error_game_not_found">CHAOS;CHILD не найден на этом устройстве.</string>
 	<string name="error_game_version_not_supported">Установленная версия CHAOS;CHILD не поддерживается.</string>
 	<string name="error_hash_obb_mismatch">OBB повреждён.</string>
@@ -134,6 +133,7 @@
 
 	<!--Snackbars-->
 	<string name="snackbar_data_cleared">Данные очищены</string>
+	<string name="snackbar_error_clear_data">При очистке данных произошла ошибка</string>
 
 	<!--Statuses-->
 	<string name="status_backing_up_apk">Создание резервной копии APK</string>
