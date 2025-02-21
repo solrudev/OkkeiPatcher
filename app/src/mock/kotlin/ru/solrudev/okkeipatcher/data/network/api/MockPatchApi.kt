@@ -35,8 +35,7 @@ class MockPatchApi @Inject constructor() : PatchApi {
 	private var checkCount = 0
 
 	override suspend fun getPatchData(patchRequestDto: PatchRequestDto): PatchResponseDto {
-		val delayDuration = if (checkCount > 0) 150.milliseconds else 2.seconds
-		val isUpdateAvailable = checkCount++ % 2 == 0
+		val delayDuration = if (checkCount++ > 0) 150.milliseconds else 2.seconds
 		delay(delayDuration)
 		return PatchResponseDto(
 			displayVersion = "1.0(mock)",
@@ -44,7 +43,7 @@ class MockPatchApi @Inject constructor() : PatchApi {
 				PatchFileDto(
 					type = PatchFileType.SCRIPTS,
 					targetVersion = 1,
-					version = if (isUpdateAvailable) 2 else 1,
+					version = Int.MAX_VALUE,
 					url = "",
 					hash = "",
 					size = 2000000,
@@ -56,7 +55,7 @@ class MockPatchApi @Inject constructor() : PatchApi {
 				PatchFileDto(
 					type = PatchFileType.OBB_PATCH,
 					targetVersion = 1,
-					version = if (isUpdateAvailable) 2 else 1,
+					version = Int.MAX_VALUE,
 					url = "",
 					hash = "",
 					size = 90000000,

@@ -55,9 +55,7 @@ class MockOkkeiPatcherApi @Inject constructor(
 
 	override suspend fun getOkkeiPatcherData(): FileDto {
 		delay()
-		if (appEndpointHitsCount++ < 1) {
-			return FileDto(version = 0, url = "", hash = "", size = 0L)
-		}
+		appEndpointHitsCount++
 		val installedApk = okkeiPatcherApkProvider.getOkkeiPatcherApkPath()
 		val hash = runInterruptible(ioDispatcher) { fileSystem.computeHash(installedApk) }
 		val size = fileSystem.metadata(installedApk).size ?: 0L
@@ -66,9 +64,6 @@ class MockOkkeiPatcherApi @Inject constructor(
 
 	override suspend fun getChangelog(currentVersion: Int, language: String): List<OkkeiPatcherVersionDto> {
 		delay()
-		if (appEndpointHitsCount < 1) {
-			return emptyList()
-		}
 		return when {
 			language.startsWith("ru", ignoreCase = true) -> changelogRu
 			else -> changelog
