@@ -23,7 +23,7 @@ import io.github.solrudev.jetmvi.MiddlewareScope
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import ru.solrudev.okkeipatcher.app.usecase.GetIsAppUpdatesCheckEnabledFlowUseCase
+import ru.solrudev.okkeipatcher.app.usecase.GetIsUpdateAvailableFlowUseCase
 import ru.solrudev.okkeipatcher.app.usecase.GetUpdateDataUseCase
 import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateEvent
 import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateEvent.UpdateDataLoaded
@@ -35,11 +35,11 @@ import javax.inject.Inject
 
 class LoadUpdateDataMiddleware @Inject constructor(
 	private val getUpdateDataUseCase: GetUpdateDataUseCase,
-	private val getIsAppUpdatesCheckEnabledFlowUseCase: GetIsAppUpdatesCheckEnabledFlowUseCase
+	private val getIsUpdateAvailableFlowUseCase: GetIsUpdateAvailableFlowUseCase,
 ) : JetMiddleware<UpdateEvent> {
 
 	override fun MiddlewareScope<UpdateEvent>.apply() {
-		getIsAppUpdatesCheckEnabledFlowUseCase()
+		getIsUpdateAvailableFlowUseCase()
 			.filter { it }
 			.onEach { send(UpdateDataRequested(refresh = false)) }
 			.launchIn(this)

@@ -84,6 +84,7 @@ class OkkeiPatcherRepositoryImpl @Inject constructor(
 		t.printStackTrace()
 		Result.failure(LocalizedString.empty())
 	} finally {
+		_isUpdateAvailable.value = false
 		_isUpdateInstallPending.value = false
 		fileSystem.delete(updateFile)
 	}
@@ -100,6 +101,7 @@ class OkkeiPatcherRepositoryImpl @Inject constructor(
 				}
 				_isUpdateInstallPending.value = true
 			} catch (t: Throwable) {
+				_isUpdateAvailable.value = false
 				fileSystem.delete(updateFile)
 				if (t is NetworkNotAvailableException) {
 					throw NoNetworkException()
