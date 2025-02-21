@@ -21,7 +21,12 @@ package ru.solrudev.okkeipatcher.ui.main.screen.settings.reducer
 import io.github.solrudev.jetmvi.Reducer
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEffect
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent
-import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.*
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.HandleSaveDataChanged
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.IsAppUpdatesCheckEnabledChanged
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.IsPatchUpdatesCheckEnabledChanged
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.SaveDataAccessRequestHandled
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.SaveDataAccessRequested
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.ThemeChanged
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsUiState
 import javax.inject.Inject
 
@@ -33,5 +38,9 @@ class SettingsReducer @Inject constructor() : Reducer<SettingsEvent, SettingsUiS
 		is SaveDataAccessRequested -> state.copy(requestSaveDataAccess = true)
 		is SaveDataAccessRequestHandled -> state.copy(requestSaveDataAccess = false)
 		is ThemeChanged -> state.copy(theme = event.theme)
+		is IsAppUpdatesCheckEnabledChanged -> state.copy(isAppUpdatesCheckEnabled = event.isAppUpdatesCheckEnabled)
+		is IsPatchUpdatesCheckEnabledChanged -> state.copy(
+			isPatchUpdatesCheckEnabled = event.isPatchUpdatesCheckEnabled
+		)
 	}
 }

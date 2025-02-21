@@ -26,7 +26,11 @@ sealed interface SettingsEvent : JetEvent {
 	data object HandleSaveDataToggled : SettingsEvent, SettingsEffect
 	data object SaveDataAccessRequested : SettingsEvent
 	data object SaveDataAccessRequestHandled : SettingsEvent
+	data object IsAppUpdatesCheckEnabledToggled : SettingsEvent, SettingsEffect
+	data object IsPatchUpdatesCheckEnabledToggled : SettingsEvent, SettingsEffect
 	data class HandleSaveDataChanged(val handleSaveData: Boolean) : SettingsEvent
+	data class IsAppUpdatesCheckEnabledChanged(val isAppUpdatesCheckEnabled: Boolean) : SettingsEvent
+	data class IsPatchUpdatesCheckEnabledChanged(val isPatchUpdatesCheckEnabled: Boolean) : SettingsEvent
 	data class ThemeChanged(val theme: Theme) : SettingsEvent
 	data class PersistTheme(val theme: Theme) : SettingsEvent, SettingsEffect
 }

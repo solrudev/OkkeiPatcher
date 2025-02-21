@@ -121,17 +121,26 @@
 	<string name="preference_key_handle_save_data" translatable="false">handle_save_data</string>
 	<string name="preference_key_licenses" translatable="false">licenses</string>
 	<string name="preference_key_theme" translatable="false">theme</string>
+	<string name="preference_key_updates_app" translatable="false">check_app_updates</string>
+	<string name="preference_key_updates_patch" translatable="false">check_patch_updates</string>
 	<string name="preference_appearance_header">Appearance</string>
 	<string name="preference_miscellaneous_header">Miscellaneous</string>
+	<string name="preference_updates_header">Updates</string>
 	<string name="preference_patcher_header">Patcher</string>
 	<string name="preference_about_title">About</string>
 	<string name="preference_clear_data_title">Clear all data</string>
 	<string name="preference_save_data_title">Game save data</string>
 	<string name="preference_licenses_title">Licenses</string>
 	<string name="preference_theme_title">App theme</string>
+	<string name="preference_updates_app_title">App</string>
+	<string name="preference_updates_patch_title">Patch</string>
 	<string name="preference_clear_data_summary">Use this ONLY when reinstalling CHAOS;CHILD due to data damage</string>
 	<string name="preference_save_data_summary_off">Don\'t backup and restore game save data</string>
 	<string name="preference_save_data_summary_on">Backup and restore game save data</string>
+	<string name="preference_updates_app_summary_off">Don\'t check app updates automatically</string>
+	<string name="preference_updates_app_summary_on">Check app updates automatically</string>
+	<string name="preference_updates_patch_summary_off">Don\'t check patch updates automatically</string>
+	<string name="preference_updates_patch_summary_on">Check patch updates automatically</string>
 	<string name="preference_follow_system_theme">Follow system settings</string>
 	<string name="preference_light_theme">Light</string>
 	<string name="preference_dark_theme">Dark</string>

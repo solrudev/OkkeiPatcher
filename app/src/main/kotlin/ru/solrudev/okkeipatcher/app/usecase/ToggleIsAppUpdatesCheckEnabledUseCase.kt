@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2025 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,15 +16,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ru.solrudev.okkeipatcher.ui.main.screen.settings.model
+package ru.solrudev.okkeipatcher.app.usecase
 
-import io.github.solrudev.jetmvi.JetState
-import ru.solrudev.okkeipatcher.app.model.Theme
+import ru.solrudev.okkeipatcher.app.repository.PreferencesRepository
+import javax.inject.Inject
 
-data class SettingsUiState(
-	val handleSaveData: Boolean = true,
-	val isAppUpdatesCheckEnabled: Boolean = true,
-	val isPatchUpdatesCheckEnabled: Boolean = true,
-	val requestSaveDataAccess: Boolean = false,
-	val theme: Theme = Theme.FollowSystem
-) : JetState
+class ToggleIsAppUpdatesCheckEnabledUseCase @Inject constructor(preferencesRepository: PreferencesRepository) {
+
+	private val preference = preferencesRepository.isAppUpdatesCheckEnabled
+
+	suspend operator fun invoke() {
+		val isAppUpdatesCheckEnabled = preference.retrieve()
+		preference.persist(!isAppUpdatesCheckEnabled)
+	}
+}

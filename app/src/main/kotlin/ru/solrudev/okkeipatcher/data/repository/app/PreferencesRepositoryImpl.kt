@@ -37,6 +37,8 @@ private val IS_PATCHED = booleanPreferencesKey("is_patched")
 private val PATCH_LANGUAGE = stringPreferencesKey("patch_language")
 private val PATCH_VERSION = stringPreferencesKey("patch_version")
 private val THEME = intPreferencesKey("theme")
+private val CHECK_APP_UPDATES = booleanPreferencesKey("check_app_updates")
+private val CHECK_PATCH_UPDATES = booleanPreferencesKey("check_patch_updates")
 
 @Singleton
 class PreferencesRepositoryImpl @Inject constructor(
@@ -66,6 +68,18 @@ class PreferencesRepositoryImpl @Inject constructor(
 		key = THEME,
 		toDataType = Theme::ordinal,
 		toDomainType = Theme::fromOrdinal,
+		preferences
+	)
+
+	override val isAppUpdatesCheckEnabled = Preference(
+		key = CHECK_APP_UPDATES,
+		defaultValue = { true },
+		preferences
+	)
+
+	override val isPatchUpdatesCheckEnabled = Preference(
+		key = CHECK_PATCH_UPDATES,
+		defaultValue = { true },
 		preferences
 	)
 

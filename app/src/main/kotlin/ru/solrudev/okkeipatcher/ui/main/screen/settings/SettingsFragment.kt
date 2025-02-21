@@ -32,6 +32,7 @@ import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.controller.AppearanceSettingsController
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.controller.MiscellaneousSettingsController
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.controller.PatcherSettingsController
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.controller.UpdatesSettingsController
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsUiState
 
 private const val DIALOG_FRAGMENT_TAG = "androidx.preference.PreferenceFragment.DIALOG"
@@ -48,6 +49,12 @@ class SettingsFragment : PreferenceFragmentCompat(), HostJetView<SettingsUiState
 	private val theme: ListPreference?
 		get() = findPreference(getString(R.string.preference_key_theme))
 
+	private val isAppUpdatesCheckEnabled: SwitchPreferenceCompat?
+		get() = findPreference(getString(R.string.preference_key_updates_app))
+
+	private val isPatchUpdatesCheckEnabled: SwitchPreferenceCompat?
+		get() = findPreference(getString(R.string.preference_key_updates_patch))
+
 	private val about: Preference?
 		get() = findPreference(getString(R.string.preference_key_about))
 
@@ -56,6 +63,10 @@ class SettingsFragment : PreferenceFragmentCompat(), HostJetView<SettingsUiState
 
 	private val patcherSettingsController by derivedView {
 		PatcherSettingsController(handleSaveData, clearData, findNavController(), viewModel)
+	}
+
+	private val updatesSettingsController by derivedView {
+		UpdatesSettingsController(isAppUpdatesCheckEnabled, isPatchUpdatesCheckEnabled, viewModel)
 	}
 
 	private val appearanceSettingsController by derivedView {
@@ -68,6 +79,7 @@ class SettingsFragment : PreferenceFragmentCompat(), HostJetView<SettingsUiState
 
 	private val viewModel: SettingsViewModel by jetViewModels(
 		SettingsFragment::patcherSettingsController,
+		SettingsFragment::updatesSettingsController,
 		SettingsFragment::appearanceSettingsController,
 		SettingsFragment::miscellaneousSettingsController
 	)

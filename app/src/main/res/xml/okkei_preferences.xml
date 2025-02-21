@@ -38,6 +38,28 @@
 
 	</PreferenceCategory>
 
+	<PreferenceCategory app:title="@string/preference_updates_header">
+
+		<SwitchPreferenceCompat
+			app:icon="@drawable/ic_update_app_preference"
+			app:key="@string/preference_key_updates_app"
+			app:persistent="false"
+			app:summaryOff="@string/preference_updates_app_summary_off"
+			app:summaryOn="@string/preference_updates_app_summary_on"
+			app:title="@string/preference_updates_app_title"
+			app:widgetLayout="@layout/preference_material_switch" />
+
+		<SwitchPreferenceCompat
+			app:icon="@drawable/ic_update_patch_preference"
+			app:key="@string/preference_key_updates_patch"
+			app:persistent="false"
+			app:summaryOff="@string/preference_updates_patch_summary_off"
+			app:summaryOn="@string/preference_updates_patch_summary_on"
+			app:title="@string/preference_updates_patch_title"
+			app:widgetLayout="@layout/preference_material_switch" />
+
+	</PreferenceCategory>
+
 	<PreferenceCategory app:title="@string/preference_appearance_header">
 
 		<ListPreference

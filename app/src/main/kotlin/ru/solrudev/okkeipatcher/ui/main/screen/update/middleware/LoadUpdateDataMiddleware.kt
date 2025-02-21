@@ -20,20 +20,28 @@ package ru.solrudev.okkeipatcher.ui.main.screen.update.middleware
 
 import io.github.solrudev.jetmvi.JetMiddleware
 import io.github.solrudev.jetmvi.MiddlewareScope
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import ru.solrudev.okkeipatcher.app.usecase.GetIsAppUpdatesCheckEnabledFlowUseCase
 import ru.solrudev.okkeipatcher.app.usecase.GetUpdateDataUseCase
 import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateEvent
-import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateEvent.*
+import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateEvent.UpdateDataLoaded
+import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateEvent.UpdateDataLoadingStarted
+import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateEvent.UpdateDataRequested
+import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateEvent.UpdateStatusChanged
 import ru.solrudev.okkeipatcher.ui.main.screen.update.model.UpdateStatus.UpdateAvailable
 import javax.inject.Inject
 
 class LoadUpdateDataMiddleware @Inject constructor(
-	private val getUpdateDataUseCase: GetUpdateDataUseCase
+	private val getUpdateDataUseCase: GetUpdateDataUseCase,
+	private val getIsAppUpdatesCheckEnabledFlowUseCase: GetIsAppUpdatesCheckEnabledFlowUseCase
 ) : JetMiddleware<UpdateEvent> {
 
 	override fun MiddlewareScope<UpdateEvent>.apply() {
 		launch {
-			send(UpdateDataRequested(refresh = false))
+			if (getIsAppUpdatesCheckEnabledFlowUseCase().first()) {
+				send(UpdateDataRequested(refresh = false))
+			}
 		}
 		onEvent<UpdateDataRequested> { event ->
 			send(UpdateDataLoadingStarted)

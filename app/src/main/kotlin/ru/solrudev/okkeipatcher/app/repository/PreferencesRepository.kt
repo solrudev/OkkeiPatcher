@@ -23,6 +23,8 @@ import ru.solrudev.okkeipatcher.domain.core.persistence.ReactiveDao
 import ru.solrudev.okkeipatcher.domain.repository.PatchStateRepository
 
 interface PreferencesRepository : PatchStateRepository {
+	val isAppUpdatesCheckEnabled: ReactiveDao<Boolean>
+	val isPatchUpdatesCheckEnabled: ReactiveDao<Boolean>
 	val theme: ReactiveDao<Theme>
 	suspend fun reset()
 }
