@@ -57,7 +57,7 @@ class OkkeiPatcherRepositoryImpl @Inject constructor(
 
 	private val okkeiPatcherDataCache = InMemoryCache(okkeiPatcherApi::getOkkeiPatcherData)
 	private val updateFile = environment.externalFilesPath / APP_UPDATE_FILE_NAME
-	private val _isUpdateAvailable = MutableStateFlow(false)
+	private val _isUpdateAvailable = MutableStateFlow(fileSystem.exists(updateFile))
 	private val _isUpdateInstallPending = MutableStateFlow(fileSystem.exists(updateFile))
 	override val isUpdateAvailable = _isUpdateAvailable.asStateFlow()
 	override val isUpdateInstallPending = _isUpdateInstallPending.asStateFlow()
