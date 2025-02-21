@@ -43,7 +43,7 @@ base {
 
 android {
 	compileSdk = 35
-	buildToolsVersion = "35.0.0"
+	buildToolsVersion = "35.0.1"
 	namespace = packageName
 
 	defaultConfig {
