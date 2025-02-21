@@ -44,7 +44,9 @@
 	<uses-sdk tools:overrideLibrary="androidx.navigation.common,
 		androidx.navigation,
 		androidx.navigation.fragment,
-		androidx.navigation.ui" />
+		androidx.navigation.ui,
+		androidx.fragment.ktx,
+		androidx.fragment" />
 
 	<application
 		android:name=".OkkeiApplication"
