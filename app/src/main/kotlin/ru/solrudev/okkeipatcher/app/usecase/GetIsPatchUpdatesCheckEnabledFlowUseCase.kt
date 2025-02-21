@@ -18,11 +18,12 @@
 
 package ru.solrudev.okkeipatcher.app.usecase
 
+import kotlinx.coroutines.flow.distinctUntilChanged
 import ru.solrudev.okkeipatcher.app.repository.PreferencesRepository
 import javax.inject.Inject
 
 class GetIsPatchUpdatesCheckEnabledFlowUseCase @Inject constructor(
 	private val preferencesRepository: PreferencesRepository
 ) {
-	operator fun invoke() = preferencesRepository.isPatchUpdatesCheckEnabled.flow
+	operator fun invoke() = preferencesRepository.isPatchUpdatesCheckEnabled.flow.distinctUntilChanged()
 }
