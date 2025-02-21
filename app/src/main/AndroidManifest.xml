@@ -41,6 +41,11 @@
 		android:name="android.permission.ENFORCE_UPDATE_OWNERSHIP"
 		tools:node="remove" />
 
+	<uses-sdk tools:overrideLibrary="androidx.navigation.common,
+		androidx.navigation,
+		androidx.navigation.fragment,
+		androidx.navigation.ui" />
+
 	<application
 		android:name=".OkkeiApplication"
 		android:enableOnBackInvokedCallback="true"
