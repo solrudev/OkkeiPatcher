@@ -20,18 +20,18 @@ package ru.solrudev.okkeipatcher.ui.main.screen.home.middleware
 
 import io.github.solrudev.jetmvi.JetMiddleware
 import io.github.solrudev.jetmvi.MiddlewareScope
-import ru.solrudev.okkeipatcher.app.usecase.work.EnqueuePatchWorkAndGetPatchStatusUseCase
+import ru.solrudev.okkeipatcher.app.usecase.work.EnqueuePatchWorkUseCase
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeEvent
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchEvent.StartPatch
 import javax.inject.Inject
 
 class EnqueuePatchWorkMiddleware @Inject constructor(
-	private val enqueuePatchWorkAndGetPatchStatusUseCase: EnqueuePatchWorkAndGetPatchStatusUseCase
+	private val enqueuePatchWorkUseCase: EnqueuePatchWorkUseCase
 ) : JetMiddleware<HomeEvent> {
 
 	override fun MiddlewareScope<HomeEvent>.apply() {
 		onEvent<StartPatch> {
-			enqueuePatchWorkAndGetPatchStatusUseCase()
+			enqueuePatchWorkUseCase()
 		}
 	}
 }
