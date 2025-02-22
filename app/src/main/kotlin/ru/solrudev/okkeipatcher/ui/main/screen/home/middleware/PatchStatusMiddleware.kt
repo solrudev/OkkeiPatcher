@@ -24,7 +24,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.combineTransform
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.first
@@ -33,10 +32,8 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.transform
-import kotlinx.coroutines.flow.withIndex
-import ru.solrudev.okkeipatcher.app.usecase.GetIsPatchUpdatesCheckEnabledFlowUseCase
+import ru.solrudev.okkeipatcher.app.usecase.GetCanPerformAutoPatchUpdatesCheckFlowUseCase
 import ru.solrudev.okkeipatcher.app.usecase.patch.GetPatchStatusFlowUseCase
 import ru.solrudev.okkeipatcher.app.usecase.patch.GetPatchUpdatesUseCase
 import ru.solrudev.okkeipatcher.app.usecase.work.GetIsWorkPendingFlowUseCase
@@ -53,7 +50,7 @@ class PatchStatusMiddleware @Inject constructor(
 	private val getPatchUpdatesUseCase: GetPatchUpdatesUseCase,
 	private val getIsWorkPendingFlowUseCase: GetIsWorkPendingFlowUseCase,
 	private val getPatchStatusFlowUseCase: GetPatchStatusFlowUseCase,
-	private val getIsPatchUpdatesCheckEnabledFlowUseCase: GetIsPatchUpdatesCheckEnabledFlowUseCase
+	private val getCanPerformAutoPatchUpdatesCheckFlowUseCase: GetCanPerformAutoPatchUpdatesCheckFlowUseCase
 ) : JetMiddleware<HomeEvent> {
 
 	private var canLoadPatchUpdates = false
@@ -70,11 +67,7 @@ class PatchStatusMiddleware @Inject constructor(
 			.map { event -> event.patchStatus }
 			.filterIsInstance<PersistentPatchStatus>()
 		val canPerformAutoPatchUpdatesCheckFlow = persistentPatchStatusFlow.flatMapLatest {
-			getIsPatchUpdatesCheckEnabledFlowUseCase()
-				.withIndex()
-				.map { (index, value) -> if (index < 2) value else false }
-				.take(3)
-				.distinctUntilChanged()
+			getCanPerformAutoPatchUpdatesCheckFlowUseCase()
 		}
 		combineTransform(
 			persistentPatchStatusFlow,
