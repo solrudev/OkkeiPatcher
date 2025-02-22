@@ -49,7 +49,7 @@ class UpdateFragment : Fragment(R.layout.fragment_update), HostJetView<UpdateUiS
 	}
 
 	private val refreshController by derivedView {
-		RefreshController(binding.swipeRefreshLayoutUpdate, viewModel)
+		RefreshController(binding.swipeRefreshLayoutUpdate, viewModel, requireView()::performHapticFeedback)
 	}
 
 	private val updateButtonClickController by derivedView {

@@ -85,7 +85,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), HostJetView<HomeUiState> 
 	}
 
 	private val refreshController by derivedView {
-		RefreshController(binding.swipeRefreshLayoutHome, viewModel)
+		RefreshController(binding.swipeRefreshLayoutHome, viewModel, requireView()::performHapticFeedback)
 	}
 
 	private val viewModel: HomeViewModel by jetViewModels(

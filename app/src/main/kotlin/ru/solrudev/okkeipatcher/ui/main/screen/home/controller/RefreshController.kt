@@ -18,16 +18,19 @@
 
 package ru.solrudev.okkeipatcher.ui.main.screen.home.controller
 
+import androidx.core.view.HapticFeedbackConstantsCompat
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import io.github.solrudev.jetmvi.JetView
 import ru.solrudev.okkeipatcher.ui.main.screen.home.HomeViewModel
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeEvent.RefreshRequested
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeUiState
+import ru.solrudev.okkeipatcher.ui.main.util.HapticFeedbackCallback
 import ru.solrudev.okkeipatcher.ui.main.util.applyDistanceToTrigger
 
 class RefreshController(
 	private val swipeRefreshLayout: SwipeRefreshLayout,
-	private val viewModel: HomeViewModel
+	private val viewModel: HomeViewModel,
+	private val hapticFeedbackCallback: HapticFeedbackCallback
 ) : JetView<HomeUiState> {
 
 	init {
@@ -44,6 +47,7 @@ class RefreshController(
 		applyDistanceToTrigger()
 		setOnRefreshListener {
 			viewModel.dispatchEvent(RefreshRequested)
+			hapticFeedbackCallback.performHapticFeedback(HapticFeedbackConstantsCompat.CONTEXT_CLICK)
 		}
 	}
 }
