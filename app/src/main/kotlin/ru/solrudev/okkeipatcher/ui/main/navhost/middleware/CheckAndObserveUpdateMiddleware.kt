@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.take
 import ru.solrudev.okkeipatcher.app.usecase.GetIsAppUpdatesCheckEnabledFlowUseCase
 import ru.solrudev.okkeipatcher.app.usecase.GetIsUpdateAvailableFlowUseCase
 import ru.solrudev.okkeipatcher.app.usecase.GetUpdateDataUseCase
@@ -40,6 +41,7 @@ class CheckAndObserveUpdateMiddleware @Inject constructor(
 	override fun MiddlewareScope<MainEvent>.apply() {
 		getIsAppUpdatesCheckEnabledFlowUseCase()
 			.filter { it }
+			.take(1)
 			.onEach { getUpdateDataUseCase(refresh = true) }
 			.launchIn(this)
 		getIsUpdateAvailableFlowUseCase()
