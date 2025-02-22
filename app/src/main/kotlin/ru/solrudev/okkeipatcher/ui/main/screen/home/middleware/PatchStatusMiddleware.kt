@@ -20,16 +20,22 @@ package ru.solrudev.okkeipatcher.ui.main.screen.home.middleware
 
 import io.github.solrudev.jetmvi.JetMiddleware
 import io.github.solrudev.jetmvi.MiddlewareScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.combineTransform
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.transform
+import kotlinx.coroutines.flow.withIndex
 import ru.solrudev.okkeipatcher.app.usecase.GetIsPatchUpdatesCheckEnabledFlowUseCase
 import ru.solrudev.okkeipatcher.app.usecase.patch.GetPatchStatusFlowUseCase
 import ru.solrudev.okkeipatcher.app.usecase.patch.GetPatchUpdatesUseCase
@@ -43,7 +49,7 @@ import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchStatus.UpdateAvai
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PersistentPatchStatus
 import javax.inject.Inject
 
-class CheckPatchUpdatesMiddleware @Inject constructor(
+class PatchStatusMiddleware @Inject constructor(
 	private val getPatchUpdatesUseCase: GetPatchUpdatesUseCase,
 	private val getIsWorkPendingFlowUseCase: GetIsWorkPendingFlowUseCase,
 	private val getPatchStatusFlowUseCase: GetPatchStatusFlowUseCase,
@@ -52,37 +58,46 @@ class CheckPatchUpdatesMiddleware @Inject constructor(
 
 	private var canLoadPatchUpdates = false
 
+	@OptIn(ExperimentalCoroutinesApi::class)
 	override fun MiddlewareScope<HomeEvent>.apply() {
-		filterIsInstance<PatchStatusChanged>()
+		combine(
+			getPatchStatusFlowUseCase(),
+			getIsWorkPendingFlowUseCase().onStart { emit(false) }
+		) { patchStatus, _ ->
+			send(PatchStatusChanged(PersistentPatchStatus.of(patchStatus)))
+		}.launchIn(this)
+		val persistentPatchStatusFlow = filterIsInstance<PatchStatusChanged>()
 			.map { event -> event.patchStatus }
 			.filterIsInstance<PersistentPatchStatus>()
-			.checkPatchUpdatesIn(this, getIsPatchUpdatesCheckEnabledFlowUseCase())
+		val canPerformAutoPatchUpdatesCheckFlow = persistentPatchStatusFlow.flatMapLatest {
+			getIsPatchUpdatesCheckEnabledFlowUseCase()
+				.withIndex()
+				.map { (index, value) -> if (index < 2) value else false }
+				.take(3)
+				.distinctUntilChanged()
+		}
+		combineTransform(
+			persistentPatchStatusFlow,
+			getIsWorkPendingFlowUseCase(),
+			canPerformAutoPatchUpdatesCheckFlow
+		) { patchStatus, isWorkPending, canPerformAutoPatchUpdatesCheck ->
+			val canLoadUpdates = !isWorkPending && patchStatus is Patched
+			canLoadPatchUpdates = canLoadUpdates
+			if (canLoadUpdates && canPerformAutoPatchUpdatesCheck) {
+				emit(Unit)
+			}
+		}.checkPatchUpdatesIn(this)
 		filterIsInstance<RefreshRequested>()
 			.transform { if (canLoadPatchUpdates) emit(it) else send(PatchUpdatesLoaded) }
 			.map { PersistentPatchStatus.of(getPatchStatusFlowUseCase().first()) }
 			.checkPatchUpdatesIn(this)
 	}
 
-	private fun Flow<PersistentPatchStatus>.checkPatchUpdatesIn(
-		scope: MiddlewareScope<HomeEvent>,
-		canCheckPatchUpdates: Flow<Boolean> = flow { emit(true) }
-	) {
-		combine(this, getIsWorkPendingFlowUseCase(), canCheckPatchUpdates, ::canLoadUpdates)
-			.filter { it }
-			.map { getPatchUpdatesUseCase(refresh = true) }
+	private fun Flow<*>.checkPatchUpdatesIn(scope: MiddlewareScope<HomeEvent>) {
+		map { getPatchUpdatesUseCase(refresh = true) }
 			.onEach { scope.send(PatchUpdatesLoaded) }
 			.filter { it.available }
 			.onEach { scope.send(PatchStatusChanged(UpdateAvailable)) }
 			.launchIn(scope)
-	}
-
-	private fun canLoadUpdates(
-		patchStatus: PersistentPatchStatus,
-		isWorkPending: Boolean,
-		canCheckPatchUpdates: Boolean
-	): Boolean {
-		val canLoadUpdates = !isWorkPending && patchStatus is Patched
-		canLoadPatchUpdates = canLoadUpdates
-		return canLoadUpdates && canCheckPatchUpdates
 	}
 }

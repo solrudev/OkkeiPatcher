@@ -22,10 +22,7 @@ import io.github.solrudev.jetmvi.JetMiddleware
 import io.github.solrudev.jetmvi.MiddlewareScope
 import ru.solrudev.okkeipatcher.app.usecase.work.EnqueuePatchWorkAndGetPatchStatusUseCase
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeEvent
-import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeEvent.PatchStatusChanged
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchEvent.StartPatch
-import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchStatus.WorkStarted
-import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PersistentPatchStatus
 import javax.inject.Inject
 
 class EnqueuePatchWorkMiddleware @Inject constructor(
@@ -34,9 +31,7 @@ class EnqueuePatchWorkMiddleware @Inject constructor(
 
 	override fun MiddlewareScope<HomeEvent>.apply() {
 		onEvent<StartPatch> {
-			val isPatched = enqueuePatchWorkAndGetPatchStatusUseCase()
-			val currentStatus = PersistentPatchStatus.of(isPatched)
-			send(PatchStatusChanged(WorkStarted(currentStatus)))
+			enqueuePatchWorkAndGetPatchStatusUseCase()
 		}
 	}
 }

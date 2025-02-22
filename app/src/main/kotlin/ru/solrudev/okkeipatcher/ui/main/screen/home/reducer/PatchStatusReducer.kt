@@ -23,7 +23,9 @@ import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeEvent.PatchStatusChanged
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.HomeUiState
-import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchStatus.*
+import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchStatus.NotPatched
+import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchStatus.Patched
+import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PatchStatus.UpdateAvailable
 import ru.solrudev.okkeipatcher.ui.main.screen.home.model.PersistentPatchStatus
 import javax.inject.Inject
 
@@ -31,7 +33,6 @@ class PatchStatusReducer @Inject constructor() : Reducer<PatchStatusChanged, Hom
 
 	override fun reduce(event: PatchStatusChanged, state: HomeUiState): HomeUiState = when (event.patchStatus) {
 		is PersistentPatchStatus -> reduce(state, event.patchStatus)
-		is WorkStarted -> reduce(state, event.patchStatus.currentStatus)
 		is UpdateAvailable -> state.copy(
 			isPatchEnabled = true,
 			patchStatus = LocalizedString.resource(R.string.patch_status_update_available),
