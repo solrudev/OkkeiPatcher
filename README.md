@@ -69,6 +69,7 @@ Reliable task execution and status tracking is ensured by using
 - [Ackpine](https://github.com/solrudev/Ackpine) for handling APK install sessions
   with Kotlin Coroutines
 - [JetMVI](https://github.com/solrudev/JetMVI) for implementing UI state management
+- [HDiffPatch](https://github.com/sisong/HDiffPatch) for binary patches
 - [Okio](https://square.github.io/okio/) for I/O operations and file system abstraction
 - [Zip4j](https://github.com/srikanth-lingala/zip4j) for working with ZIP archives
 - [apksig](https://android.googlesource.com/platform/tools/apksig/+/master) for signing APK files
