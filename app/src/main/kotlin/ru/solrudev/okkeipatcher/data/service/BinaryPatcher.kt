@@ -79,7 +79,7 @@ class BinaryPatcherImpl @Inject constructor(
 				return@coroutineScope Result.success()
 			}
 			fileSystem.delete(outputPath)
-			return@coroutineScope Result.failure(R.string.error_binary_patch_failed, inputPath.toString())
+			return@coroutineScope Result.failure(R.string.error_binary_patch_failed, result, inputPath.toString())
 		} catch (throwable: Throwable) {
 			fileSystem.delete(outputPath)
 			throw throwable

@@ -50,7 +50,7 @@
 	<string name="error">Ошибка</string>
 	<string name="error_apk_not_found">APK для установки не найден.</string>
 	<string name="error_backup_not_found">Резервная копия CHAOS;CHILD не найдена.</string>
-	<string name="error_binary_patch_failed">Не удалось применить бинарный патч: %s</string>
+	<string name="error_binary_patch_failed">Не удалось применить бинарный патч. Код ошибки: %d\nПуть к файлу: %s</string>
 	<string name="error_game_not_found">CHAOS;CHILD не найден на этом устройстве.</string>
 	<string name="error_game_version_not_supported">Установленная версия CHAOS;CHILD не поддерживается.</string>
 	<string name="error_hash_obb_mismatch">OBB повреждён.</string>
