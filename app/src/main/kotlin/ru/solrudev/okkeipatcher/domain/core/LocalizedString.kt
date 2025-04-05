@@ -66,7 +66,7 @@ sealed interface LocalizedString : Serializable {
 		/**
 		 * Creates [LocalizedString] represented by Android resource string with optional arguments. Arguments can be [LocalizedString]s as well.
 		 */
-		fun resource(@StringRes resourceId: Int, vararg args: Any): LocalizedString {
+		fun resource(@StringRes resourceId: Int, vararg args: Serializable): LocalizedString {
 			return ResourceString(resourceId, args.toList())
 		}
 
@@ -81,7 +81,7 @@ sealed interface LocalizedString : Serializable {
 
 data object EmptyString : LocalizedString
 data class RawString(val value: CharSequence) : LocalizedString
-data class ResourceString(@StringRes val resourceId: Int, val args: List<Any>) : LocalizedString
+data class ResourceString(@StringRes val resourceId: Int, val args: List<Serializable>) : LocalizedString
 data class CompoundString(val parts: List<LocalizedString>) : LocalizedString
 
 data class QuantityResourceString(
