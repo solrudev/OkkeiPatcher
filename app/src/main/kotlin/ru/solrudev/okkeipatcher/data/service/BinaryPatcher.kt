@@ -34,6 +34,7 @@ import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okio.FileSystem
@@ -113,7 +114,7 @@ class BinaryPatcherImpl @Inject constructor(
 		scope: CoroutineScope
 	) = scope.launch {
 		var previousSize = 0L
-		while (true) {
+		while (isActive) {
 			delay(2.seconds)
 			val currentSize = fileSystem.metadataOrNull(outputPath)?.size ?: 0
 			val delta = currentSize - previousSize
