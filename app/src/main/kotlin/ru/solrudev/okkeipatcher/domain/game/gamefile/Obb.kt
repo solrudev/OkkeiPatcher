@@ -32,7 +32,7 @@ import ru.solrudev.okkeipatcher.domain.repository.patch.PatchFiles
 import ru.solrudev.okkeipatcher.domain.repository.patch.isCompatible
 import ru.solrudev.okkeipatcher.domain.util.DEFAULT_PROGRESS_MAX
 
-abstract class Obb(
+class Obb(
 	private val obbPatchFiles: PatchFiles,
 	private val obbPatchOperationFactory: ObbPatchOperationFactory,
 	private val obbRepository: ObbRepository,

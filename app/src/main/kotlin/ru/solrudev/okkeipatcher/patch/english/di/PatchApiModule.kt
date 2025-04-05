@@ -24,16 +24,20 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import dagger.multibindings.IntoMap
 import retrofit2.Retrofit
 import retrofit2.create
+import ru.solrudev.okkeipatcher.data.network.api.patch.PatchApi
+import ru.solrudev.okkeipatcher.di.LanguageKey
+import ru.solrudev.okkeipatcher.domain.model.Language
 import ru.solrudev.okkeipatcher.patch.english.data.DefaultPatchApi
-import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
 @Module
 object PatchApiModule {
 
 	@Provides
-	@Singleton
-	fun provideDefaultPatchApi(retrofit: Retrofit) = retrofit.create<DefaultPatchApi>()
+	@IntoMap
+	@LanguageKey(Language.English)
+	fun provideDefaultPatchApiIntoMap(retrofit: Retrofit): PatchApi = retrofit.create<DefaultPatchApi>()
 }

@@ -28,7 +28,7 @@ import ru.solrudev.okkeipatcher.domain.model.PatchUpdates
 import ru.solrudev.okkeipatcher.domain.repository.PatchStateRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchRepository
 
-abstract class PatchRepositoryImpl(
+class PatchRepositoryImpl(
 	patchApi: PatchApi,
 	patchStateRepository: PatchStateRepository,
 	gameInstallationProvider: GameInstallationProvider,

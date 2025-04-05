@@ -22,9 +22,10 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import ru.solrudev.okkeipatcher.data.repository.patch.factory.MockPatchRepositoryFactory
 import ru.solrudev.okkeipatcher.domain.core.factory.SuspendFactory
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchRepository
-import ru.solrudev.okkeipatcher.domain.repository.patch.factory.MockPatchRepositoryFactory
+import ru.solrudev.okkeipatcher.domain.repository.patch.factory.PatchRepositoriesProvider
 
 @InstallIn(SingletonComponent::class)
 @Module
@@ -32,4 +33,7 @@ interface PatchRepositoryFactoryModule {
 
 	@Binds
 	fun bind(patchRepositoryFactory: MockPatchRepositoryFactory): SuspendFactory<@JvmWildcard PatchRepository>
+
+	@Binds
+	fun bindProvider(patchRepositoryFactory: MockPatchRepositoryFactory): PatchRepositoriesProvider
 }

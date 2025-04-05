@@ -21,7 +21,11 @@ package ru.solrudev.okkeipatcher.domain.game
 import ru.solrudev.okkeipatcher.domain.game.gamefile.GameFile
 import ru.solrudev.okkeipatcher.domain.game.gamefile.PatchableGameFile
 
-interface Game : PatchableGame, BackupableGame {
+class Game(
+	override val apk: PatchableGameFile,
+	override val obb: PatchableGameFile,
+	override val saveData: GameFile
+) : PatchableGame, BackupableGame {
 
 	override fun close() {
 		apk.close()

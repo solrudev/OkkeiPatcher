@@ -38,7 +38,7 @@ import ru.solrudev.okkeipatcher.domain.repository.patch.isCompatible
 import ru.solrudev.okkeipatcher.domain.repository.patch.isEmpty
 import ru.solrudev.okkeipatcher.domain.repository.patch.updateInstalledVersion
 
-abstract class Apk(
+class Apk(
 	private val apkPatchFiles: PatchFiles,
 	private val apkPatchOperationFactory: ApkPatchOperationFactory,
 	private val apkRepository: ApkRepository,

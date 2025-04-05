@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2025 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,25 +16,38 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ru.solrudev.okkeipatcher.data.repository.patch
+package ru.solrudev.okkeipatcher.data.repository.patch.factory
 
 import ru.solrudev.okkeipatcher.data.network.api.MockPatchApi
 import ru.solrudev.okkeipatcher.data.preference.PreferencesDataStoreFactory
+import ru.solrudev.okkeipatcher.data.repository.patch.PatchRepositoryImpl
 import ru.solrudev.okkeipatcher.data.service.MockGameInstallationProvider
+import ru.solrudev.okkeipatcher.domain.core.factory.SuspendFactory
+import ru.solrudev.okkeipatcher.domain.model.Language
 import ru.solrudev.okkeipatcher.domain.repository.PatchStateRepository
+import ru.solrudev.okkeipatcher.domain.repository.patch.PatchRepository
+import ru.solrudev.okkeipatcher.domain.repository.patch.factory.PatchRepositoriesProvider
 import javax.inject.Inject
-import javax.inject.Singleton
+import javax.inject.Provider
 
-@Singleton
-class MockPatchRepository @Inject constructor(
+class MockPatchRepositoryFactory @Inject constructor(
 	patchApi: MockPatchApi,
 	patchStateRepository: PatchStateRepository,
 	gameInstallationProvider: MockGameInstallationProvider,
 	preferencesDataStoreFactory: PreferencesDataStoreFactory
-) : PatchRepositoryImpl(
-	patchApi,
-	patchStateRepository,
-	gameInstallationProvider,
-	preferencesDataStoreFactory,
-	dataStoreName = "patch_files_mock"
-)
+) : SuspendFactory<PatchRepository>, PatchRepositoriesProvider {
+
+	private val patchRepository: PatchRepository = PatchRepositoryImpl(
+		patchApi,
+		patchStateRepository,
+		gameInstallationProvider,
+		preferencesDataStoreFactory,
+		dataStoreName = "patch_files_mock"
+	)
+
+	override suspend fun create() = patchRepository
+
+	override fun get() = Language.entries.associate { language ->
+		language to Provider { patchRepository }
+	}
+}

@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023-2025 Ilya Fomichev
+ * Copyright (C) 2025 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,26 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:Suppress("UNUSED")
+package ru.solrudev.okkeipatcher.domain.repository.patch.factory
 
-package ru.solrudev.okkeipatcher.patch.english.di
-
-import dagger.Binds
-import dagger.Module
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import dagger.multibindings.IntoMap
-import ru.solrudev.okkeipatcher.di.LanguageKey
-import ru.solrudev.okkeipatcher.domain.game.Game
 import ru.solrudev.okkeipatcher.domain.model.Language
-import ru.solrudev.okkeipatcher.patch.english.domain.DefaultGame
+import ru.solrudev.okkeipatcher.domain.repository.patch.PatchRepository
+import javax.inject.Provider
 
-@InstallIn(SingletonComponent::class)
-@Module
-interface GameModule {
-
-	@Binds
-	@IntoMap
-	@LanguageKey(Language.English)
-	fun bindDefaultGame(defaultGame: DefaultGame): Game
+interface PatchRepositoriesProvider {
+	fun get(): Map<Language, Provider<PatchRepository>>
 }
