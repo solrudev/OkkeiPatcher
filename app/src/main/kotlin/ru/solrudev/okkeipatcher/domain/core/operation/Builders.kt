@@ -18,7 +18,6 @@
 
 package ru.solrudev.okkeipatcher.domain.core.operation
 
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.merge
@@ -53,7 +52,7 @@ fun <R> operation(
 	block: suspend OperationScope.() -> R
 ): Operation<R> {
 	require(progressMax >= 0) { "progressMax cannot be negative, but was $progressMax" }
-	return OperationImpl(operations, progressMax, hasOwnProgress = progressMax > 0, canInvoke, block)
+	return OperationImpl(operations, progressMax, canInvoke, block)
 }
 
 /**
@@ -64,7 +63,6 @@ fun <R> operation(
  */
 fun aggregateOperation(vararg operations: Operation<*>): Operation<Unit> = OperationImpl(
 	operations,
-	hasOwnProgress = false,
 	canInvokeDelegate = lambda@{
 		for (operation in operations) {
 			operation.canInvoke().onFailure { return@lambda it }
@@ -95,11 +93,11 @@ private object EmptyOperation : Operation<Unit> {
 private class OperationImpl<out R>(
 	private val operations: Array<out Operation<*>>,
 	private val ownedProgressMax: Int = 0,
-	private val hasOwnProgress: Boolean,
 	private val canInvokeDelegate: suspend () -> Result<Unit> = { Result.success() },
 	private val block: suspend OperationScope.() -> R
 ) : Operation<R>, OperationScope {
 
+	private val hasOwnProgress = ownedProgressMax > 0
 	private val isSkipped = AtomicBoolean(false)
 	private val _status = MutableSharedFlow<LocalizedString>(replay = 1)
 	private val _messages = MutableSharedFlow<Message>(replay = 1)
@@ -141,10 +139,10 @@ private class OperationImpl<out R>(
 		}
 	}
 
-	override suspend fun invoke() = coroutineScope {
+	override suspend fun invoke(): R {
 		val result = block()
 		skip()
-		return@coroutineScope result
+		return result
 	}
 
 	override suspend fun status(status: LocalizedString) = _status.emit(status)
