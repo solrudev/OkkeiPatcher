@@ -22,6 +22,7 @@ import ru.solrudev.okkeipatcher.data.network.api.patch.PatchApi
 import ru.solrudev.okkeipatcher.data.preference.PreferencesDataStoreFactory
 import ru.solrudev.okkeipatcher.data.repository.patch.PatchRepositoryImpl
 import ru.solrudev.okkeipatcher.data.service.GameInstallationProvider
+import ru.solrudev.okkeipatcher.data.util.computeIfAbsentCompat
 import ru.solrudev.okkeipatcher.domain.core.factory.SuspendFactory
 import ru.solrudev.okkeipatcher.domain.model.Language
 import ru.solrudev.okkeipatcher.domain.repository.PatchStateRepository
@@ -30,7 +31,9 @@ import ru.solrudev.okkeipatcher.domain.repository.patch.factory.PatchRepositorie
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Provider
+import javax.inject.Singleton
 
+@Singleton
 class PatchRepositoryFactory @Inject constructor(
 	private val patchStateRepository: PatchStateRepository,
 	private val patchApis: Map<Language, @JvmSuppressWildcards Provider<PatchApi>>,
@@ -51,16 +54,14 @@ class PatchRepositoryFactory @Inject constructor(
 		}
 	}
 
-	private fun create(patchLanguage: Language): PatchRepository {
-		cache[patchLanguage]?.let { return it }
-		val patchApi = patchApis.getValue(patchLanguage).get()
-		val patchRepository = PatchRepositoryImpl(
+	private fun create(patchLanguage: Language) = cache.computeIfAbsentCompat(patchLanguage) { language ->
+		val patchApi = patchApis.getValue(language).get()
+		PatchRepositoryImpl(
 			patchApi,
 			patchStateRepository,
 			gameInstallationProvider,
 			preferencesDataStoreFactory,
-			dataStoreName = "patch_files_${patchLanguage.shortName}"
+			dataStoreName = "patch_files_${language.shortName}"
 		)
-		return cache.putIfAbsent(patchLanguage, patchRepository) ?: patchRepository
 	}
 }

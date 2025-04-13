@@ -29,6 +29,7 @@ import android.os.Message
 import android.os.Messenger
 import android.os.RemoteException
 import androidx.core.os.bundleOf
+import dagger.Reusable
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.CoroutineScope
@@ -59,6 +60,7 @@ fun interface BinaryPatcher {
 	): Result<Unit>
 }
 
+@Reusable
 class BinaryPatcherImpl @Inject constructor(
 	@ApplicationContext private val applicationContext: Context,
 	private val fileSystem: FileSystem

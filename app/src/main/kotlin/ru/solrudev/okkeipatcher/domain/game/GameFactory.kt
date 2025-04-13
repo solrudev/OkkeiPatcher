@@ -18,6 +18,7 @@
 
 package ru.solrudev.okkeipatcher.domain.game
 
+import dagger.Reusable
 import ru.solrudev.okkeipatcher.domain.core.factory.SuspendFactory
 import ru.solrudev.okkeipatcher.domain.game.gamefile.Apk
 import ru.solrudev.okkeipatcher.domain.game.gamefile.Obb
@@ -31,6 +32,7 @@ import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchRepository
 import javax.inject.Inject
 
+@Reusable
 class GameFactory @Inject constructor(
 	private val patchRepositoryFactory: SuspendFactory<PatchRepository>,
 	private val apkPatchOperationFactory: ApkPatchOperationFactory,

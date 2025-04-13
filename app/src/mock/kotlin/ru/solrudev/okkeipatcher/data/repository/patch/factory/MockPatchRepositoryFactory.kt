@@ -29,7 +29,9 @@ import ru.solrudev.okkeipatcher.domain.repository.patch.PatchRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.factory.PatchRepositoriesProvider
 import javax.inject.Inject
 import javax.inject.Provider
+import javax.inject.Singleton
 
+@Singleton
 class MockPatchRepositoryFactory @Inject constructor(
 	patchApi: MockPatchApi,
 	patchStateRepository: PatchStateRepository,
