@@ -149,7 +149,7 @@ dependencies {
 	implementation(libs.pseudoapksigner)
 	implementation(libs.apksig)
 	implementation(libs.zip4j)
-	implementation(libs.ackpine)
+	implementation(libs.bundles.ackpine)
 	implementation(libs.jetmvi)
 	implementation(libs.viewbindingpropertydelegate)
 	implementation(libs.progressbutton)
