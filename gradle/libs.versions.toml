@@ -6,7 +6,7 @@ retrofit = "2.11.0"
 moshi = "1.15.2"
 kotlinx-coroutines = "1.10.2"
 okio = "3.10.2"
-ackpine = "0.11.2"
+ackpine = "0.12.2"
 
 [libraries]
 materialcomponents = { module = "com.google.android.material:material", version = "1.12.0" }
