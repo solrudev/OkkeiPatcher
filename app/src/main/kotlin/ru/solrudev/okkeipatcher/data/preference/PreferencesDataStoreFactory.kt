@@ -25,19 +25,27 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import dagger.hilt.android.qualifiers.ApplicationContext
+import ru.solrudev.okkeipatcher.data.util.computeIfAbsentCompat
+import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
+import javax.inject.Singleton
 
 interface PreferencesDataStoreFactory {
 	fun create(name: String, migrations: List<DataMigration<Preferences>> = emptyList()): DataStore<Preferences>
 }
 
+@Singleton
 class PreferencesDataStoreFactoryImpl @Inject constructor(
 	@ApplicationContext private val applicationContext: Context
 ) : PreferencesDataStoreFactory {
 
+	private val cache = ConcurrentHashMap<String, DataStore<Preferences>>()
+
 	override fun create(name: String, migrations: List<DataMigration<Preferences>>): DataStore<Preferences> {
-		return PreferenceDataStoreFactory.create(migrations = migrations) {
-			applicationContext.preferencesDataStoreFile(name)
+		return cache.computeIfAbsentCompat(name) { name ->
+			PreferenceDataStoreFactory.create(migrations = migrations) {
+				applicationContext.preferencesDataStoreFile(name)
+			}
 		}
 	}
 }

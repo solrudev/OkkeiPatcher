@@ -16,26 +16,40 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ru.solrudev.okkeipatcher.patch.english.data
+package ru.solrudev.okkeipatcher.data.repository.patch.factory
 
+import ru.solrudev.okkeipatcher.data.network.api.MockPatchApi
 import ru.solrudev.okkeipatcher.data.preference.PreferencesDataStoreFactory
 import ru.solrudev.okkeipatcher.data.repository.patch.PatchRepositoryImpl
-import ru.solrudev.okkeipatcher.data.service.GameInstallationProvider
+import ru.solrudev.okkeipatcher.data.service.MockGameInstallationProvider
+import ru.solrudev.okkeipatcher.domain.core.factory.SuspendFactory
+import ru.solrudev.okkeipatcher.domain.model.Language
 import ru.solrudev.okkeipatcher.domain.repository.PatchStateRepository
-import ru.solrudev.okkeipatcher.patch.english.domain.DefaultPatchRepository
+import ru.solrudev.okkeipatcher.domain.repository.patch.PatchRepository
+import ru.solrudev.okkeipatcher.domain.repository.patch.factory.PatchRepositoriesProvider
 import javax.inject.Inject
+import javax.inject.Provider
 import javax.inject.Singleton
 
 @Singleton
-class DefaultPatchRepositoryImpl @Inject constructor(
-	defaultPatchApi: DefaultPatchApi,
+class MockPatchRepositoryFactory @Inject constructor(
+	patchApi: MockPatchApi,
 	patchStateRepository: PatchStateRepository,
-	gameInstallationProvider: GameInstallationProvider,
+	gameInstallationProvider: MockGameInstallationProvider,
 	preferencesDataStoreFactory: PreferencesDataStoreFactory
-) : PatchRepositoryImpl(
-	defaultPatchApi,
-	patchStateRepository,
-	gameInstallationProvider,
-	preferencesDataStoreFactory,
-	dataStoreName = "patch_files_en"
-), DefaultPatchRepository
+) : SuspendFactory<PatchRepository>, PatchRepositoriesProvider {
+
+	private val patchRepository: PatchRepository = PatchRepositoryImpl(
+		patchApi,
+		patchStateRepository,
+		gameInstallationProvider,
+		preferencesDataStoreFactory,
+		dataStoreName = "patch_files_mock"
+	)
+
+	override suspend fun create() = patchRepository
+
+	override fun get() = Language.entries.associate { language ->
+		language to Provider { patchRepository }
+	}
+}

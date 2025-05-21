@@ -29,18 +29,24 @@ import android.os.Message
 import android.os.Messenger
 import android.os.RemoteException
 import androidx.core.os.bundleOf
+import dagger.Reusable
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CancellableContinuation
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.asExecutor
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
 import okio.FileSystem
 import okio.Path
 import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.util.DEFAULT_PROGRESS_MAX
+import java.util.concurrent.Executor
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -58,10 +64,14 @@ fun interface BinaryPatcher {
 	): Result<Unit>
 }
 
+@Reusable
 class BinaryPatcherImpl @Inject constructor(
 	@ApplicationContext private val applicationContext: Context,
+	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	private val fileSystem: FileSystem
 ) : BinaryPatcher {
+
+	private val executor = ioDispatcher.asExecutor()
 
 	override suspend fun patch(
 		inputPath: Path,
@@ -69,16 +79,16 @@ class BinaryPatcherImpl @Inject constructor(
 		diffPath: Path,
 		patchedSize: Long,
 		onProgress: suspend (Int) -> Unit
-	): Result<Unit> = coroutineScope {
+	): Result<Unit> = withContext(ioDispatcher) {
 		val progressJob = reportProgressIn(outputPath, patchedSize, onProgress, this)
 		try {
 			val result = patchCancellable(inputPath, outputPath, diffPath)
 			progressJob.cancel()
 			if (result == 0) {
-				return@coroutineScope Result.success()
+				return@withContext Result.success()
 			}
 			fileSystem.delete(outputPath)
-			return@coroutineScope Result.failure(R.string.error_binary_patch_failed, inputPath.toString())
+			return@withContext Result.failure(R.string.error_binary_patch_failed, result, inputPath.toString())
 		} catch (throwable: Throwable) {
 			fileSystem.delete(outputPath)
 			throw throwable
@@ -90,10 +100,13 @@ class BinaryPatcherImpl @Inject constructor(
 		outputPath: Path,
 		diffPath: Path
 	) = suspendCancellableCoroutine { continuation ->
-		val resultHandler = BinaryPatchResultHandler(continuation::resume)
+		val resultHandler = BinaryPatchResultHandler { result ->
+			executor.execute { continuation.resume(result) }
+		}
 		val serviceConnection = BinaryPatchServiceConnection(
 			continuation,
 			applicationContext,
+			executor,
 			resultHandler,
 			inputPath,
 			outputPath,
@@ -113,7 +126,7 @@ class BinaryPatcherImpl @Inject constructor(
 		scope: CoroutineScope
 	) = scope.launch {
 		var previousSize = 0L
-		while (true) {
+		while (isActive) {
 			delay(2.seconds)
 			val currentSize = fileSystem.metadataOrNull(outputPath)?.size ?: 0
 			val delta = currentSize - previousSize
@@ -136,13 +149,14 @@ class BinaryPatcherImpl @Inject constructor(
 	private class BinaryPatchServiceConnection(
 		private val continuation: CancellableContinuation<Int>,
 		private val context: Context,
+		private val executor: Executor,
 		private val resultHandler: Handler,
 		private val inputPath: Path,
 		private val outputPath: Path,
 		private val diffPath: Path
 	) : ServiceConnection {
 
-		override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+		override fun onServiceConnected(name: ComponentName?, service: IBinder?) = executor.execute {
 			val serviceMessenger = Messenger(service)
 			val resultMessenger = Messenger(resultHandler)
 			try {
@@ -163,7 +177,7 @@ class BinaryPatcherImpl @Inject constructor(
 			}
 		}
 
-		override fun onServiceDisconnected(name: ComponentName?) {
+		override fun onServiceDisconnected(name: ComponentName?) = executor.execute {
 			context.unbindService(this)
 		}
 	}

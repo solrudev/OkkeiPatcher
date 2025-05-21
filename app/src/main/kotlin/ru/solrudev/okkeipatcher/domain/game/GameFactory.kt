@@ -18,19 +18,46 @@
 
 package ru.solrudev.okkeipatcher.domain.game
 
+import dagger.Reusable
 import ru.solrudev.okkeipatcher.domain.core.factory.SuspendFactory
-import ru.solrudev.okkeipatcher.domain.model.Language
-import ru.solrudev.okkeipatcher.domain.repository.PatchStateRepository
+import ru.solrudev.okkeipatcher.domain.game.gamefile.Apk
+import ru.solrudev.okkeipatcher.domain.game.gamefile.Obb
+import ru.solrudev.okkeipatcher.domain.game.gamefile.SaveData
+import ru.solrudev.okkeipatcher.domain.operation.factory.ApkPatchOperationFactory
+import ru.solrudev.okkeipatcher.domain.operation.factory.ObbPatchOperationFactory
+import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkBackupRepository
+import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
+import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbBackupRepository
+import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbRepository
+import ru.solrudev.okkeipatcher.domain.repository.patch.PatchRepository
 import javax.inject.Inject
-import javax.inject.Provider
 
+@Reusable
 class GameFactory @Inject constructor(
-	private val patchStateRepository: PatchStateRepository,
-	private val games: Map<Language, @JvmSuppressWildcards Provider<Game>>
+	private val patchRepositoryFactory: SuspendFactory<PatchRepository>,
+	private val apkPatchOperationFactory: ApkPatchOperationFactory,
+	private val obbPatchOperationFactory: ObbPatchOperationFactory,
+	private val apkRepository: ApkRepository,
+	private val obbRepository: ObbRepository,
+	private val apkBackupRepository: ApkBackupRepository,
+	private val obbBackupRepository: ObbBackupRepository,
+	private val saveData: SaveData
 ) : SuspendFactory<Game> {
 
 	override suspend fun create(): Game {
-		val patchLanguage = patchStateRepository.patchLanguage.retrieve()
-		return games.getValue(patchLanguage).get()
+		val patchRepository = patchRepositoryFactory.create()
+		val apk = Apk(
+			patchRepository.apkPatchFiles,
+			apkPatchOperationFactory,
+			apkRepository,
+			apkBackupRepository
+		)
+		val obb = Obb(
+			patchRepository.obbPatchFiles,
+			obbPatchOperationFactory,
+			obbRepository,
+			obbBackupRepository
+		)
+		return Game(apk, obb, saveData)
 	}
 }

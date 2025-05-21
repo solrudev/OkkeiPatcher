@@ -18,8 +18,8 @@
 
 package ru.solrudev.okkeipatcher.domain.model
 
-enum class Language {
-	English;
+enum class Language(val shortName: String) {
+	English("en");
 
 	companion object {
 		fun fromString(languageName: String?): Language {

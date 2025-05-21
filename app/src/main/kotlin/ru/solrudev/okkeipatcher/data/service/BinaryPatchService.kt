@@ -58,7 +58,6 @@ class BinaryPatchService : Service() {
 		}
 	}
 
-	@SuppressLint("DiscouragedPrivateApi")
 	private fun startPatch(data: Bundle) {
 		val inputPath = requireNotNull(data.getString(DATA_INPUT_PATH)) { "$TAG: no input path provided" }
 		val outputPath = requireNotNull(data.getString(DATA_OUTPUT_PATH)) { "$TAG: no output path provided" }
@@ -68,8 +67,7 @@ class BinaryPatchService : Service() {
 			outFile.parentFile?.mkdirs()
 			outFile.createNewFile()
 			val result = outFile.outputStream().use { outputStream ->
-				val fdGetInt = FileDescriptor::class.java.getDeclaredMethod("getInt$")
-				val fd = fdGetInt.invoke(outputStream.fd) as Int
+				val fd = outputStream.fd.getInt()
 				val fdPath = "/proc/self/fd/$fd"
 				HPatch.patch(inputPath, diffPath, fdPath)
 			}
@@ -89,6 +87,7 @@ class BinaryPatchService : Service() {
 	}
 
 	companion object {
+
 		const val MSG_START = 1
 		const val MSG_CANCEL = 2
 		const val MSG_RESULT = 3
@@ -96,5 +95,10 @@ class BinaryPatchService : Service() {
 		const val DATA_OUTPUT_PATH = "OUTPUT_PATH"
 		const val DATA_DIFF_PATH = "DIFF_PATH"
 		const val EXIT_STATUS_CANCELLED = -1
+
+		@SuppressLint("DiscouragedPrivateApi")
+		private val fdGetInt = FileDescriptor::class.java.getDeclaredMethod("getInt$")
+
+		private fun FileDescriptor.getInt() = fdGetInt.invoke(this) as Int
 	}
 }

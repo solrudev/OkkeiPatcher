@@ -19,6 +19,7 @@
 package ru.solrudev.okkeipatcher.domain.core
 
 import androidx.annotation.StringRes
+import java.io.Serializable
 
 /**
  * Represents either a successful result or a failure with a reason.
@@ -46,8 +47,8 @@ sealed interface Result<T> {
 		 * Creates [Failure] instance with a [LocalizedString] represented by Android resource string as its
 		 * [Failure.reason].
 		 */
-		fun <T> failure(@StringRes resourceId: Int, vararg args: Any): Failure<T> {
-			return Failure(LocalizedString.resource(resourceId, args))
+		fun <T> failure(@StringRes resourceId: Int, vararg args: Serializable): Failure<T> {
+			return Failure(LocalizedString.resource(resourceId, *args))
 		}
 
 		/**

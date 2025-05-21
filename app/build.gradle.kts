@@ -50,8 +50,8 @@ android {
 		applicationId = packageName
 		minSdk = 19
 		targetSdk = 35
-		versionCode = 76
-		versionName = "2.1.4"
+		versionCode = 77
+		versionName = "2.1.5"
 		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 		vectorDrawables.useSupportLibrary = true
 	}
@@ -149,7 +149,7 @@ dependencies {
 	implementation(libs.pseudoapksigner)
 	implementation(libs.apksig)
 	implementation(libs.zip4j)
-	implementation(libs.ackpine)
+	implementation(libs.bundles.ackpine)
 	implementation(libs.jetmvi)
 	implementation(libs.viewbindingpropertydelegate)
 	implementation(libs.progressbutton)

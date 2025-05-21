@@ -18,13 +18,10 @@
 
 package ru.solrudev.okkeipatcher.domain.repository.patch.factory
 
-import ru.solrudev.okkeipatcher.data.repository.patch.MockPatchRepository
-import ru.solrudev.okkeipatcher.domain.core.factory.SuspendFactory
+import ru.solrudev.okkeipatcher.domain.model.Language
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchRepository
-import javax.inject.Inject
+import javax.inject.Provider
 
-class MockPatchRepositoryFactory @Inject constructor(
-	private val patchRepository: MockPatchRepository
-) : SuspendFactory<PatchRepository> {
-	override suspend fun create() = patchRepository
+interface PatchRepositoriesProvider {
+	fun get(): Map<Language, Provider<PatchRepository>>
 }

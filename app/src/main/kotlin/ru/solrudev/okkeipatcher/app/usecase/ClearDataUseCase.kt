@@ -21,15 +21,13 @@ package ru.solrudev.okkeipatcher.app.usecase
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.app.repository.PreferencesRepository
 import ru.solrudev.okkeipatcher.domain.core.Result
-import ru.solrudev.okkeipatcher.domain.model.Language
 import ru.solrudev.okkeipatcher.domain.repository.HashRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkBackupRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbBackupRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.SaveDataRepository
-import ru.solrudev.okkeipatcher.domain.repository.patch.PatchRepository
+import ru.solrudev.okkeipatcher.domain.repository.patch.factory.PatchRepositoriesProvider
 import javax.inject.Inject
-import javax.inject.Provider
 
 class ClearDataUseCase @Inject constructor(
 	private val apkRepository: ApkRepository,
@@ -38,7 +36,7 @@ class ClearDataUseCase @Inject constructor(
 	private val saveDataRepository: SaveDataRepository,
 	private val preferencesRepository: PreferencesRepository,
 	private val hashRepository: HashRepository,
-	private val patchRepositories: Map<Language, @JvmSuppressWildcards Provider<PatchRepository>>
+	private val patchRepositories: PatchRepositoriesProvider
 ) {
 
 	suspend operator fun invoke() = try {
@@ -48,7 +46,7 @@ class ClearDataUseCase @Inject constructor(
 		saveDataRepository.deleteBackup()
 		preferencesRepository.reset()
 		hashRepository.clear()
-		patchRepositories.values.forEach {
+		patchRepositories.get().values.forEach {
 			it.get().clearPersistedData()
 		}
 		Result.success()
