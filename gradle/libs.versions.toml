@@ -1,12 +1,12 @@
 [versions]
-android-gradleplugin = "8.9.2"
+android-gradleplugin = "8.12.3"
 kotlin = "2.1.21"
-kotlin-ksp = "2.1.21-2.0.1"
+kotlin-ksp = "2.1.21-2.0.2"
 retrofit = "2.12.0"
 moshi = "1.15.2"
 kotlinx-coroutines = "1.10.2"
-okio = "3.10.2"
-ackpine = "0.12.2"
+okio = "3.15.0"
+ackpine = "0.16.1"
 
 [libraries]
 materialcomponents = { module = "com.google.android.material:material", version = "1.12.0" }
@@ -31,8 +31,8 @@ kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-androi
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 okio-fakefilesystem = { module = "com.squareup.okio:okio-fakefilesystem", version.ref = "okio" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
-junit-platform-commons = { module = "org.junit.platform:junit-platform-commons", version = "1.11.4" }
-junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version = "5.11.4" }
+junit-platform-commons = { module = "org.junit.platform:junit-platform-commons", version = "1.13.4" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version = "5.13.4" }
 
 [bundles]
 retrofit = ["retrofit", "retrofit-converter-moshi"]
