@@ -76,7 +76,7 @@ class PackageInstallerFacadeImpl @Inject constructor(
 			Session.State.Succeeded -> Result.success()
 			is Session.State.Failed -> {
 				val reason = when (val failure = result.failure) {
-					is UninstallFailure.Aborted -> failure.message
+					is UninstallFailure.Aborted -> failure.message.orEmpty()
 					else -> ""
 				}
 				Result.failure(reason)
