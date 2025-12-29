@@ -16,6 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import org.jetbrains.kotlin.gradle.dsl.JvmDefaultMode
 import java.util.Properties
 
 val packageName = "ru.solrudev.okkeipatcher"
@@ -33,7 +34,8 @@ kotlin {
 	jvmToolchain(21)
 
 	compilerOptions {
-		freeCompilerArgs.add("-Xjvm-default=all")
+		jvmDefault = JvmDefaultMode.NO_COMPATIBILITY
+		freeCompilerArgs.add("-Xannotation-default-target=param-property")
 	}
 }
 
