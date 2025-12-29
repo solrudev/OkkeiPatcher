@@ -27,7 +27,6 @@ plugins {
 	alias(libs.plugins.kotlin.ksp)
 	alias(dagger.plugins.hilt.plugin)
 	alias(androidx.plugins.navigation.safeargs)
-	alias(libs.plugins.android.cachefix)
 }
 
 kotlin {
