@@ -22,6 +22,7 @@ import dagger.hilt.android.scopes.ViewModelScoped
 import io.github.solrudev.jetmvi.JetFeature
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.middleware.ObserveHandleSaveDataMiddleware
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.middleware.ObserveThemeMiddleware
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.middleware.PatchApiUrlMiddleware
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.middleware.PersistThemeMiddleware
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.middleware.ToggleHandleSaveDataMiddleware
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.middleware.UpdateChecksMiddleware
@@ -37,6 +38,7 @@ class SettingsFeature @Inject constructor(
 	observeThemeMiddleware: ObserveThemeMiddleware,
 	persistThemeMiddleware: PersistThemeMiddleware,
 	updateChecksMiddleware: UpdateChecksMiddleware,
+	patchApiUrlMiddleware: PatchApiUrlMiddleware,
 	settingsReducer: SettingsReducer
 ) : JetFeature<SettingsEvent, SettingsUiState>(
 	middlewares = listOf(
@@ -44,7 +46,8 @@ class SettingsFeature @Inject constructor(
 		toggleHandleSaveDataMiddleware,
 		observeThemeMiddleware,
 		persistThemeMiddleware,
-		updateChecksMiddleware
+		updateChecksMiddleware,
+		patchApiUrlMiddleware
 	),
 	reducer = settingsReducer,
 	initialUiState = SettingsUiState()

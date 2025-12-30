@@ -26,5 +26,6 @@ data class SettingsUiState(
 	val isAppUpdatesCheckEnabled: Boolean = true,
 	val isPatchUpdatesCheckEnabled: Boolean = true,
 	val requestSaveDataAccess: Boolean = false,
-	val theme: Theme = Theme.FollowSystem
+	val theme: Theme = Theme.FollowSystem,
+	val patchApiUrl: String = ""
 ) : JetState

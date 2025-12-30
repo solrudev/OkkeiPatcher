@@ -33,6 +33,7 @@ sealed interface SettingsEvent : JetEvent {
 	data class IsPatchUpdatesCheckEnabledChanged(val isPatchUpdatesCheckEnabled: Boolean) : SettingsEvent
 	data class ThemeChanged(val theme: Theme) : SettingsEvent
 	data class PersistTheme(val theme: Theme) : SettingsEvent, SettingsEffect
+	data class PatchApiUrlChanged(val patchApiUrl: String) : SettingsEvent
 }
 
 sealed interface SettingsEffect : JetEffect

@@ -120,6 +120,7 @@
 	<string name="preference_key_clear_data" translatable="false">clear_data</string>
 	<string name="preference_key_handle_save_data" translatable="false">handle_save_data</string>
 	<string name="preference_key_licenses" translatable="false">licenses</string>
+	<string name="preference_key_patch_api_url" translatable="false">patch_api_url</string>
 	<string name="preference_key_theme" translatable="false">theme</string>
 	<string name="preference_key_updates_app" translatable="false">check_app_updates</string>
 	<string name="preference_key_updates_patch" translatable="false">check_patch_updates</string>
@@ -131,10 +132,12 @@
 	<string name="preference_clear_data_title">Clear all data</string>
 	<string name="preference_save_data_title">Game save data</string>
 	<string name="preference_licenses_title">Licenses</string>
+	<string name="preference_patch_api_url_title">Patch API URL</string>
 	<string name="preference_theme_title">App theme</string>
 	<string name="preference_updates_app_title">App</string>
 	<string name="preference_updates_patch_title">Patch</string>
 	<string name="preference_clear_data_summary">Use this ONLY when reinstalling CHAOS;CHILD due to data damage</string>
+	<string name="preference_patch_api_url_summary">Base URL for patch metadata backend API</string>
 	<string name="preference_save_data_summary_off">Don\'t backup and restore game save data</string>
 	<string name="preference_save_data_summary_on">Backup and restore game save data</string>
 	<string name="preference_updates_app_summary_off">Don\'t check app updates automatically</string>

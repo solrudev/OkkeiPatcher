@@ -21,6 +21,7 @@ package ru.solrudev.okkeipatcher.ui.main.screen.settings
 import android.os.Bundle
 import android.view.View
 import androidx.navigation.fragment.findNavController
+import androidx.preference.EditTextPreference
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
@@ -32,6 +33,7 @@ import io.github.solrudev.jetmvi.jetViewModels
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.controller.AppearanceSettingsController
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.controller.MiscellaneousSettingsController
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.controller.PatchApiUrlController
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.controller.PatcherSettingsController
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.controller.UpdatesSettingsController
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsUiState
@@ -46,6 +48,9 @@ class SettingsFragment : PreferenceFragmentCompat(), HostJetView<SettingsUiState
 
 	private val clearData: Preference?
 		get() = findPreference(getString(R.string.preference_key_clear_data))
+
+	private val patchApiUrl: EditTextPreference?
+		get() = findPreference(getString(R.string.preference_key_patch_api_url))
 
 	private val theme: ListPreference?
 		get() = findPreference(getString(R.string.preference_key_theme))
@@ -72,6 +77,10 @@ class SettingsFragment : PreferenceFragmentCompat(), HostJetView<SettingsUiState
 		)
 	}
 
+	private val patchApiUrlController by derivedView {
+		PatchApiUrlController(patchApiUrl, viewModel)
+	}
+
 	private val updatesSettingsController by derivedView {
 		UpdatesSettingsController(
 			isAppUpdatesCheckEnabled,
@@ -91,6 +100,7 @@ class SettingsFragment : PreferenceFragmentCompat(), HostJetView<SettingsUiState
 
 	private val viewModel: SettingsViewModel by jetViewModels(
 		SettingsFragment::patcherSettingsController,
+		SettingsFragment::patchApiUrlController,
 		SettingsFragment::updatesSettingsController,
 		SettingsFragment::appearanceSettingsController,
 		SettingsFragment::miscellaneousSettingsController
@@ -109,8 +119,12 @@ class SettingsFragment : PreferenceFragmentCompat(), HostJetView<SettingsUiState
 		if (parentFragmentManager.findFragmentByTag(DIALOG_FRAGMENT_TAG) != null) {
 			return
 		}
-		if (preference is ListPreference) {
-			val dialogFragment = MaterialListPreferenceDialogFragment.newInstance(preference.key)
+		val dialogFragment = when (preference) {
+			is ListPreference -> MaterialListPreferenceDialogFragment.newInstance(preference.key)
+			is EditTextPreference -> MaterialEditTextPreferenceDialogFragment.newInstance(preference.key)
+			else -> null
+		}
+		if (dialogFragment != null) {
 			@Suppress("DEPRECATION")
 			dialogFragment.setTargetFragment(this, 0)
 			dialogFragment.show(parentFragmentManager, DIALOG_FRAGMENT_TAG)

@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2025 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,9 +21,9 @@ package ru.solrudev.okkeipatcher.ui.main.screen.settings
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
-import androidx.preference.ListPreferenceDialogFragmentCompat
+import androidx.preference.EditTextPreferenceDialogFragmentCompat
 
-class MaterialListPreferenceDialogFragment : ListPreferenceDialogFragmentCompat() {
+class MaterialEditTextPreferenceDialogFragment : EditTextPreferenceDialogFragmentCompat() {
 
 	override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 		return onCreateDialogMaterial()
@@ -34,7 +34,7 @@ class MaterialListPreferenceDialogFragment : ListPreferenceDialogFragmentCompat(
 		onClickMaterial(which)
 	}
 
-	companion object : MaterialPreferenceDialogFragment<MaterialListPreferenceDialogFragment>({
-		MaterialListPreferenceDialogFragment()
+	companion object : MaterialPreferenceDialogFragment<MaterialEditTextPreferenceDialogFragment>({
+		MaterialEditTextPreferenceDialogFragment()
 	})
 }
