@@ -20,17 +20,23 @@
 
 package ru.solrudev.okkeipatcher.di
 
-import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import ru.solrudev.okkeipatcher.data.network.api.MockOkkeiPatcherApi
 import ru.solrudev.okkeipatcher.data.network.api.OkkeiPatcherApi
+import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
 @Module
-interface NetworkFlavoredModule {
+object NetworkFlavoredModule {
 
-	@Binds
-	fun bindOkkeiPatcherApi(okkeiPatcherApi: MockOkkeiPatcherApi): OkkeiPatcherApi
+	@Provides
+	@Singleton
+	fun provideOkkeiPatcherApi(okkeiPatcherApi: MockOkkeiPatcherApi): Flow<@JvmWildcard OkkeiPatcherApi> {
+		return flowOf(okkeiPatcherApi)
+	}
 }

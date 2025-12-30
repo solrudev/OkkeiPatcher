@@ -32,6 +32,7 @@ import ru.solrudev.okkeipatcher.domain.model.Language
 import javax.inject.Inject
 import javax.inject.Singleton
 
+private const val BASE_URL = "https://okkeipatcher.solrudev.ru/api/v1/"
 private val HANDLE_SAVE_DATA = booleanPreferencesKey("handle_save_data")
 private val IS_PATCHED = booleanPreferencesKey("is_patched")
 private val PATCH_LANGUAGE = stringPreferencesKey("patch_language")
@@ -39,6 +40,7 @@ private val PATCH_VERSION = stringPreferencesKey("patch_version")
 private val THEME = intPreferencesKey("theme")
 private val CHECK_APP_UPDATES = booleanPreferencesKey("check_app_updates")
 private val CHECK_PATCH_UPDATES = booleanPreferencesKey("check_patch_updates")
+private val API_URL = stringPreferencesKey("api_url")
 
 @Singleton
 class PreferencesRepositoryImpl @Inject constructor(
@@ -80,6 +82,12 @@ class PreferencesRepositoryImpl @Inject constructor(
 	override val isPatchUpdatesCheckEnabled = Preference(
 		key = CHECK_PATCH_UPDATES,
 		defaultValue = { true },
+		preferences
+	)
+
+	override val apiUrl = Preference(
+		key = API_URL,
+		defaultValue = ::BASE_URL,
 		preferences
 	)
 

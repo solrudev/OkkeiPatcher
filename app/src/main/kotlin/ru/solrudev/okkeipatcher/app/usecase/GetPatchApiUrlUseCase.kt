@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2025 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,16 +16,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ru.solrudev.okkeipatcher.app.repository
+package ru.solrudev.okkeipatcher.app.usecase
 
-import ru.solrudev.okkeipatcher.app.model.Theme
-import ru.solrudev.okkeipatcher.domain.core.persistence.ReactiveDao
-import ru.solrudev.okkeipatcher.domain.repository.PatchStateRepository
+import ru.solrudev.okkeipatcher.app.repository.PreferencesRepository
+import javax.inject.Inject
 
-interface PreferencesRepository : PatchStateRepository {
-	val isAppUpdatesCheckEnabled: ReactiveDao<Boolean>
-	val isPatchUpdatesCheckEnabled: ReactiveDao<Boolean>
-	val theme: ReactiveDao<Theme>
-	val apiUrl: ReactiveDao<String>
-	suspend fun reset()
+class GetPatchApiUrlUseCase @Inject constructor(
+	private val preferencesRepository: PreferencesRepository
+) {
+	suspend operator fun invoke() = preferencesRepository.apiUrl.retrieve()
 }

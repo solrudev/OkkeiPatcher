@@ -18,8 +18,10 @@
 
 package ru.solrudev.okkeipatcher.data.repository.app
 
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import okio.FileSystem
 import ru.solrudev.okkeipatcher.app.model.OkkeiPatcherUpdateData
 import ru.solrudev.okkeipatcher.app.model.OkkeiPatcherVersion
@@ -45,17 +47,20 @@ const val APP_UPDATE_FILE_NAME = "OkkeiPatcher.apk"
 @Singleton
 class OkkeiPatcherRepositoryImpl @Inject constructor(
 	private val environment: PatcherEnvironment,
-	private val okkeiPatcherApi: OkkeiPatcherApi,
+	private val okkeiPatcherApi: Flow<OkkeiPatcherApi>,
 	private val fileDownloader: FileDownloader,
 	private val packageInstaller: PackageInstallerFacade,
 	private val fileSystem: FileSystem
 ) : OkkeiPatcherRepository {
 
 	private val changelogCache = InMemoryCache {
-		okkeiPatcherApi.getChangelog(environment.versionCode, environment.locale.language)
+		okkeiPatcherApi.first().getChangelog(environment.versionCode, environment.locale.language)
 	}
 
-	private val okkeiPatcherDataCache = InMemoryCache(okkeiPatcherApi::getOkkeiPatcherData)
+	private val okkeiPatcherDataCache = InMemoryCache {
+		okkeiPatcherApi.first().getOkkeiPatcherData()
+	}
+
 	private val updateFile = environment.externalFilesPath / APP_UPDATE_FILE_NAME
 	private val _isUpdateAvailable = MutableStateFlow(fileSystem.exists(updateFile))
 	private val _isUpdateInstallPending = MutableStateFlow(fileSystem.exists(updateFile))

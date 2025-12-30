@@ -19,6 +19,8 @@
 package ru.solrudev.okkeipatcher.data.repository.patch
 
 import androidx.datastore.preferences.core.edit
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import ru.solrudev.okkeipatcher.data.core.InMemoryCache
 import ru.solrudev.okkeipatcher.data.network.api.patch.PatchApi
 import ru.solrudev.okkeipatcher.data.network.api.patch.getPatchData
@@ -29,7 +31,7 @@ import ru.solrudev.okkeipatcher.domain.repository.PatchStateRepository
 import ru.solrudev.okkeipatcher.domain.repository.patch.PatchRepository
 
 class PatchRepositoryImpl(
-	patchApi: PatchApi,
+	patchApi: Flow<PatchApi>,
 	patchStateRepository: PatchStateRepository,
 	gameInstallationProvider: GameInstallationProvider,
 	preferencesDataStoreFactory: PreferencesDataStoreFactory,
@@ -42,7 +44,7 @@ class PatchRepositoryImpl(
 	)
 
 	private val patchDataCache = InMemoryCache {
-		patchApi.getPatchData(gameInstallationProvider.getVersionCode())
+		patchApi.first().getPatchData(gameInstallationProvider.getVersionCode())
 	}
 
 	override val apkPatchFiles = PatchFilesImpl(

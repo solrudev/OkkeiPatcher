@@ -24,9 +24,9 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import retrofit2.Retrofit
-import retrofit2.create
+import kotlinx.coroutines.flow.Flow
 import ru.solrudev.okkeipatcher.data.network.api.OkkeiPatcherApi
+import ru.solrudev.okkeipatcher.data.network.api.patch.ApiFlowFactory
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
@@ -35,5 +35,7 @@ object NetworkFlavoredModule {
 
 	@Provides
 	@Singleton
-	fun provideOkkeiPatcherApi(retrofit: Retrofit) = retrofit.create<OkkeiPatcherApi>()
+	fun provideOkkeiPatcherApi(apiFlowFactory: ApiFlowFactory): Flow<@JvmWildcard OkkeiPatcherApi> {
+		return apiFlowFactory.create<OkkeiPatcherApi>()
+	}
 }

@@ -18,11 +18,54 @@
 
 package ru.solrudev.okkeipatcher.data.network.api.patch
 
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import retrofit2.Retrofit
+import ru.solrudev.okkeipatcher.app.repository.PreferencesRepository
 import ru.solrudev.okkeipatcher.data.network.model.patch.PatchRequestDto
 import ru.solrudev.okkeipatcher.data.network.model.patch.PatchResponseDto
+import ru.solrudev.okkeipatcher.di.DefaultDispatcher
+import javax.inject.Inject
+import javax.inject.Singleton
 
 interface PatchApi {
 	suspend fun getPatchData(patchRequestDto: PatchRequestDto): PatchResponseDto
 }
 
 suspend inline fun PatchApi.getPatchData(gameVersion: Int?) = getPatchData(PatchRequestDto(gameVersion))
+
+@Singleton
+class ApiFlowFactory @Inject constructor(
+	private val preferencesRepository: PreferencesRepository,
+	private val retrofitBuilder: Retrofit.Builder,
+	@DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher
+) {
+
+	private val coroutineScope = CoroutineScope(defaultDispatcher)
+	private val mutex = Mutex()
+
+	fun <T> create(apiClass: Class<T>) = preferencesRepository
+		.apiUrl
+		.flow
+		.distinctUntilChanged()
+		.map { apiUrl ->
+			mutex.withLock {
+				retrofitBuilder
+					.baseUrl(apiUrl)
+					.build()
+					.create(apiClass)
+			}
+		}
+		.stateIn(coroutineScope, SharingStarted.Lazily, initialValue = null)
+		.filterNotNull()
+
+	inline fun <reified T> create() = create(T::class.java)
+}

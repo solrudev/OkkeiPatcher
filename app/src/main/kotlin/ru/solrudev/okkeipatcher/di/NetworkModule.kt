@@ -40,20 +40,16 @@ import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
-private const val BASE_URL = "https://okkeipatcher.solrudev.ru/api/v1/"
-
 @InstallIn(SingletonComponent::class)
 @Module(includes = [NetworkFlavoredModule::class])
 object NetworkModule {
 
 	@Provides
 	@Singleton
-	fun provideRetrofit(okHttpClient: OkHttpClient, moshi: Moshi): Retrofit {
+	fun provideRetrofitBuilder(okHttpClient: OkHttpClient, moshi: Moshi): Retrofit.Builder {
 		return Retrofit.Builder()
 			.client(okHttpClient)
 			.addConverterFactory(MoshiConverterFactory.create(moshi))
-			.baseUrl(BASE_URL)
-			.build()
 	}
 
 	@Provides

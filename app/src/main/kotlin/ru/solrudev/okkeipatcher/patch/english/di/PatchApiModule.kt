@@ -25,8 +25,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoMap
-import retrofit2.Retrofit
-import retrofit2.create
+import kotlinx.coroutines.flow.Flow
+import ru.solrudev.okkeipatcher.data.network.api.patch.ApiFlowFactory
 import ru.solrudev.okkeipatcher.data.network.api.patch.PatchApi
 import ru.solrudev.okkeipatcher.di.LanguageKey
 import ru.solrudev.okkeipatcher.domain.model.Language
@@ -39,5 +39,7 @@ object PatchApiModule {
 	@Provides
 	@IntoMap
 	@LanguageKey(Language.English)
-	fun provideDefaultPatchApiIntoMap(retrofit: Retrofit): PatchApi = retrofit.create<DefaultPatchApi>()
+	fun provideDefaultPatchApiIntoMap(apiFlowFactory: ApiFlowFactory): Flow<PatchApi> {
+		return apiFlowFactory.create<DefaultPatchApi>()
+	}
 }

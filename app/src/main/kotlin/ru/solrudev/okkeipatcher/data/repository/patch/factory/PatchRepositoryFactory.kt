@@ -18,6 +18,7 @@
 
 package ru.solrudev.okkeipatcher.data.repository.patch.factory
 
+import kotlinx.coroutines.flow.Flow
 import ru.solrudev.okkeipatcher.data.network.api.patch.PatchApi
 import ru.solrudev.okkeipatcher.data.preference.PreferencesDataStoreFactory
 import ru.solrudev.okkeipatcher.data.repository.patch.PatchRepositoryImpl
@@ -36,7 +37,7 @@ import javax.inject.Singleton
 @Singleton
 class PatchRepositoryFactory @Inject constructor(
 	private val patchStateRepository: PatchStateRepository,
-	private val patchApis: Map<Language, @JvmSuppressWildcards Provider<PatchApi>>,
+	private val patchApis: Map<Language, @JvmSuppressWildcards Flow<PatchApi>>,
 	private val gameInstallationProvider: GameInstallationProvider,
 	private val preferencesDataStoreFactory: PreferencesDataStoreFactory
 ) : SuspendFactory<PatchRepository>, PatchRepositoriesProvider {
@@ -48,14 +49,14 @@ class PatchRepositoryFactory @Inject constructor(
 		return create(patchLanguage)
 	}
 
-	override fun get() = Language.entries.associate { language ->
-		language to Provider {
+	override fun get() = Language.entries.associateWith { language ->
+		Provider {
 			create(language)
 		}
 	}
 
 	private fun create(patchLanguage: Language) = cache.computeIfAbsentCompat(patchLanguage) { language ->
-		val patchApi = patchApis.getValue(language).get()
+		val patchApi = patchApis.getValue(language)
 		PatchRepositoryImpl(
 			patchApi,
 			patchStateRepository,

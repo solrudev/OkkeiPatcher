@@ -18,6 +18,7 @@
 
 package ru.solrudev.okkeipatcher.data.repository.patch.factory
 
+import kotlinx.coroutines.flow.flowOf
 import ru.solrudev.okkeipatcher.data.network.api.MockPatchApi
 import ru.solrudev.okkeipatcher.data.preference.PreferencesDataStoreFactory
 import ru.solrudev.okkeipatcher.data.repository.patch.PatchRepositoryImpl
@@ -40,7 +41,7 @@ class MockPatchRepositoryFactory @Inject constructor(
 ) : SuspendFactory<PatchRepository>, PatchRepositoriesProvider {
 
 	private val patchRepository: PatchRepository = PatchRepositoryImpl(
-		patchApi,
+		flowOf(patchApi),
 		patchStateRepository,
 		gameInstallationProvider,
 		preferencesDataStoreFactory,
@@ -49,7 +50,7 @@ class MockPatchRepositoryFactory @Inject constructor(
 
 	override suspend fun create() = patchRepository
 
-	override fun get() = Language.entries.associate { language ->
-		language to Provider { patchRepository }
+	override fun get() = Language.entries.associateWith {
+		Provider { patchRepository }
 	}
 }
