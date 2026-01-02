@@ -26,6 +26,7 @@ import okio.FileSystem
 import okio.Path
 import ru.solrudev.okkeipatcher.data.service.util.use
 import ru.solrudev.okkeipatcher.di.IoDispatcher
+import ru.solrudev.okkeipatcher.di.LocalFileSystem
 import javax.inject.Inject
 
 interface ApkSigner {
@@ -36,7 +37,7 @@ interface ApkSigner {
 @Reusable
 class ApkSignerWrapper @Inject constructor(
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-	private val fileSystem: FileSystem,
+	@LocalFileSystem private val fileSystem: FileSystem,
 	private val apkSigner: ApkSignerImplementation
 ) : ApkSigner {
 

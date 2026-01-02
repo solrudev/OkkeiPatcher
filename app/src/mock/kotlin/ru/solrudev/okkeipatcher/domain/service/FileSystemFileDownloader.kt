@@ -28,6 +28,7 @@ import okio.Path
 import okio.Path.Companion.toPath
 import ru.solrudev.okkeipatcher.data.util.copy
 import ru.solrudev.okkeipatcher.di.IoDispatcher
+import ru.solrudev.okkeipatcher.di.LocalFileSystem
 import ru.solrudev.okkeipatcher.domain.util.DEFAULT_PROGRESS_MAX
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
@@ -35,7 +36,7 @@ import kotlin.time.Duration.Companion.milliseconds
 @Reusable
 class FileSystemFileDownloader @Inject constructor(
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-	private val fileSystem: FileSystem
+	@LocalFileSystem private val fileSystem: FileSystem
 ) : FileDownloader {
 
 	override val progressMax = DEFAULT_PROGRESS_MAX

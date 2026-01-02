@@ -27,7 +27,9 @@ import ru.solrudev.okkeipatcher.data.PatcherEnvironment
 import ru.solrudev.okkeipatcher.data.repository.gamefile.util.backupPath
 import ru.solrudev.okkeipatcher.data.util.computeHash
 import ru.solrudev.okkeipatcher.di.IoDispatcher
+import ru.solrudev.okkeipatcher.di.LocalFileSystem
 import ru.solrudev.okkeipatcher.domain.core.Result
+import ru.solrudev.okkeipatcher.domain.core.factory.SuspendFactory
 import ru.solrudev.okkeipatcher.domain.repository.HashRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.SaveDataRepository
 import ru.solrudev.okkeipatcher.domain.util.prepareRecreate
@@ -41,9 +43,9 @@ const val TEMP_SAVE_DATA_NAME = "SAVEDATA_TEMP.DAT"
 class SaveDataRepositoryImpl @Inject constructor(
 	environment: PatcherEnvironment,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-	private val saveDataFile: SaveDataFile,
+	private val saveDataFileFactory: SuspendFactory<SaveDataFile>,
 	private val hashRepository: HashRepository,
-	private val fileSystem: FileSystem
+	@LocalFileSystem private val fileSystem: FileSystem
 ) : SaveDataRepository {
 
 	override val backupExists: Boolean
@@ -62,6 +64,7 @@ class SaveDataRepositoryImpl @Inject constructor(
 
 	override suspend fun createTemp(): Result<Unit> {
 		val failure = Result.failure<Unit>(R.string.warning_could_not_backup_save_data)
+		val saveDataFile = saveDataFileFactory.create()
 		if (!saveDataFile.exists) {
 			return failure
 		}
@@ -76,7 +79,7 @@ class SaveDataRepositoryImpl @Inject constructor(
 					}
 				}
 			}
-		} catch (t: Throwable) {
+		} catch (_: Throwable) {
 			return failure
 		}
 	}
@@ -95,6 +98,7 @@ class SaveDataRepositoryImpl @Inject constructor(
 	override suspend fun restoreBackup(): Result<Unit> {
 		val failure = Result.failure<Unit>(R.string.warning_could_not_restore_save_data)
 		try {
+			val saveDataFile = saveDataFileFactory.create()
 			return runInterruptible(ioDispatcher) {
 				saveDataFile.recreate()
 				val saveDataSink = saveDataFile.sink() ?: return@runInterruptible failure
@@ -105,7 +109,7 @@ class SaveDataRepositoryImpl @Inject constructor(
 					}
 				}
 			}
-		} catch (t: Throwable) {
+		} catch (_: Throwable) {
 			return failure
 		}
 	}

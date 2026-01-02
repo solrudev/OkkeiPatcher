@@ -21,27 +21,30 @@ package ru.solrudev.okkeipatcher.data.service
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.ServiceConnection
 import android.os.IBinder
 import android.os.RemoteException
 import dagger.Reusable
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asExecutor
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import okio.FileSystem
 import okio.Path
+import rikka.shizuku.Shizuku
+import rikka.shizuku.Shizuku.UserServiceArgs
 import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.app.repository.PreferencesRepository
+import ru.solrudev.okkeipatcher.data.shizuku.ShizukuAvailabilityFlow
+import ru.solrudev.okkeipatcher.di.DefaultFileSystem
 import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.util.DEFAULT_PROGRESS_MAX
-import java.util.concurrent.Executor
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -63,7 +66,8 @@ fun interface BinaryPatcher {
 class BinaryPatcherImpl @Inject constructor(
 	@ApplicationContext private val applicationContext: Context,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-	private val fileSystem: FileSystem
+	@DefaultFileSystem private val fileSystem: FileSystem,
+	private val preferencesRepository: PreferencesRepository
 ) : BinaryPatcher {
 
 	private val executor = ioDispatcher.asExecutor()
@@ -94,20 +98,27 @@ class BinaryPatcherImpl @Inject constructor(
 		inputPath: Path,
 		outputPath: Path,
 		diffPath: Path
-	) = suspendCancellableCoroutine { continuation ->
-		val serviceConnection = BinaryPatchServiceConnection(
-			continuation,
-			applicationContext,
-			executor,
-			inputPath,
-			outputPath,
-			diffPath
-		)
-		applicationContext.bindService(
-			Intent(applicationContext, BinaryPatchService::class.java),
-			serviceConnection,
-			Context.BIND_AUTO_CREATE
-		)
+	): Int {
+		val useShizuku = ShizukuAvailabilityFlow(preferencesRepository.isShizukuEnabled.flow).first()
+		val serviceConnection = BinaryPatchServiceConnection
+			.create(useShizuku, applicationContext)
+			.bindService()
+		val service = serviceConnection.awaitService()
+			?: error("Unable to connect to BinaryPatchService, useShizuku=$useShizuku")
+		return suspendCancellableCoroutine { continuation ->
+			val callback = BinaryPatchServiceBinder.Callback(continuation::resume)
+			continuation.invokeOnCancellation {
+				try {
+					service.exit(-1)
+				} catch (_: RemoteException) { // no-op
+				}
+			}
+			try {
+				service.patchAsync(inputPath.toString(), outputPath.toString(), diffPath.toString(), callback)
+			} catch (e: RemoteException) {
+				continuation.resumeWithException(e)
+			}
+		}
 	}
 
 	private fun reportProgressIn(
@@ -127,41 +138,64 @@ class BinaryPatcherImpl @Inject constructor(
 		}
 	}
 
-	private class BinaryPatchServiceConnection(
-		private val continuation: CancellableContinuation<Int>,
-		private val context: Context,
-		private val executor: Executor,
-		private val inputPath: Path,
-		private val outputPath: Path,
-		private val diffPath: Path
-	) : ServiceConnection {
+	private sealed class BinaryPatchServiceConnection : BaseServiceConnection<IBinaryPatchService>() {
 
-		override fun onServiceConnected(name: ComponentName?, service: IBinder?) = executor.execute {
-			if (service == null || !service.pingBinder()) {
-				return@execute
-			}
-			val binaryPatchService = IBinaryPatchService.Stub.asInterface(service)
-			val callback = BinaryPatchServiceBinder.Callback(continuation::resume)
-			try {
-				continuation.invokeOnCancellation {
-					try {
-						binaryPatchService.exit(-1)
-					} catch (_: RemoteException) { // no-op
-					}
-				}
-				binaryPatchService.patchAsync(
-					inputPath.toString(),
-					outputPath.toString(),
-					diffPath.toString(),
-					callback
-				)
-			} catch (exception: RemoteException) {
-				continuation.resumeWithException(exception)
-			}
+		abstract fun bindService(): BinaryPatchServiceConnection
+
+		override fun getService(service: IBinder): IBinaryPatchService {
+			return IBinaryPatchService.Stub.asInterface(service)
 		}
 
-		override fun onServiceDisconnected(name: ComponentName?) = executor.execute {
+		companion object {
+
+			fun create(
+				useShizuku: Boolean,
+				context: Context
+			): BinaryPatchServiceConnection {
+				if (useShizuku) {
+					val shizukuArgs = UserServiceArgs(
+						ComponentName(context.packageName, BinaryPatchServiceBinder::class.java.name)
+					)
+						.daemon(false)
+						.processNameSuffix("binarypatch")
+						.tag("BinaryPatchService")
+						.version(1)
+					return ShizukuBinaryPatchServiceConnection(shizukuArgs)
+				}
+				return StandardBinaryPatchServiceConnection(context)
+			}
+		}
+	}
+
+	private class StandardBinaryPatchServiceConnection(
+		private val context: Context
+	) : BinaryPatchServiceConnection() {
+
+		override fun bindService() = apply {
+			context.bindService(
+				Intent(context, BinaryPatchService::class.java),
+				this,
+				Context.BIND_AUTO_CREATE
+			)
+		}
+
+		override fun onServiceDisconnected(name: ComponentName?) {
+			super.onServiceDisconnected(name)
 			context.unbindService(this)
+		}
+	}
+
+	private class ShizukuBinaryPatchServiceConnection(
+		private val shizukuArgs: UserServiceArgs
+	) : BinaryPatchServiceConnection() {
+
+		override fun bindService() = apply {
+			Shizuku.bindUserService(shizukuArgs, this)
+		}
+
+		override fun onServiceDisconnected(name: ComponentName?) {
+			super.onServiceDisconnected(name)
+			Shizuku.unbindUserService(shizukuArgs, this, true)
 		}
 	}
 }

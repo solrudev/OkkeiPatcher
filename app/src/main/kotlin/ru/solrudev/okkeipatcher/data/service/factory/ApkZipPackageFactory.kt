@@ -24,6 +24,7 @@ import okio.Path
 import ru.solrudev.okkeipatcher.data.service.ApkZipPackage
 import ru.solrudev.okkeipatcher.data.service.apksigner.ApkSigner
 import ru.solrudev.okkeipatcher.di.IoDispatcher
+import ru.solrudev.okkeipatcher.di.LocalFileSystem
 import ru.solrudev.okkeipatcher.domain.service.ZipPackage
 import javax.inject.Inject
 
@@ -34,7 +35,7 @@ interface ApkZipPackageFactory {
 class ApkZipPackageFactoryImpl @Inject constructor(
 	private val apkSigner: ApkSigner,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-	private val fileSystem: FileSystem
+	@LocalFileSystem private val fileSystem: FileSystem
 ) : ApkZipPackageFactory {
 
 	override fun create(tempPath: Path): ZipPackage {

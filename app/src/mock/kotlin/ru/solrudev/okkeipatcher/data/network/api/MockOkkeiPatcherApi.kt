@@ -27,6 +27,7 @@ import ru.solrudev.okkeipatcher.data.network.model.OkkeiPatcherVersionDto
 import ru.solrudev.okkeipatcher.data.service.OkkeiPatcherApkProvider
 import ru.solrudev.okkeipatcher.data.util.computeHash
 import ru.solrudev.okkeipatcher.di.IoDispatcher
+import ru.solrudev.okkeipatcher.di.LocalFileSystem
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.time.Duration.Companion.milliseconds
@@ -35,7 +36,7 @@ import kotlin.time.Duration.Companion.seconds
 @Singleton
 class MockOkkeiPatcherApi @Inject constructor(
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-	private val fileSystem: FileSystem,
+	@LocalFileSystem private val fileSystem: FileSystem,
 	private val okkeiPatcherApkProvider: OkkeiPatcherApkProvider
 ) : OkkeiPatcherApi {
 

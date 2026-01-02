@@ -25,17 +25,29 @@ import android.provider.DocumentsContract
 import androidx.annotation.RequiresApi
 import androidx.documentfile.provider.DocumentFile
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.stateIn
 import okio.FileSystem
 import okio.Path
 import okio.Sink
 import okio.Source
 import okio.sink
 import okio.source
+import ru.solrudev.okkeipatcher.app.repository.PreferencesRepository
 import ru.solrudev.okkeipatcher.data.PatcherEnvironment
+import ru.solrudev.okkeipatcher.data.shizuku.ShizukuAvailabilityFlow
 import ru.solrudev.okkeipatcher.data.util.ANDROID_DATA_TREE_URI
 import ru.solrudev.okkeipatcher.data.util.GAME_PACKAGE_NAME
+import ru.solrudev.okkeipatcher.di.DefaultFileSystem
+import ru.solrudev.okkeipatcher.di.IoDispatcher
+import ru.solrudev.okkeipatcher.domain.core.factory.SuspendFactory
 import ru.solrudev.okkeipatcher.domain.util.prepareRecreate
 import javax.inject.Inject
+import javax.inject.Singleton
 
 private const val FILES_DIR_NAME = "files"
 
@@ -51,7 +63,7 @@ interface SaveDataFile {
 
 class SaveDataRawFile @Inject constructor(
 	environment: PatcherEnvironment,
-	private val fileSystem: FileSystem
+	@DefaultFileSystem private val fileSystem: FileSystem
 ) : SaveDataFile {
 
 	private val path = environment.saveDataPath
@@ -113,5 +125,31 @@ class SaveDataDocumentFile @Inject constructor(
 					"/$GAME_PACKAGE_NAME/$FILES_DIR_NAME/$SAVE_DATA_NAME"
 		)
 		return DocumentFile.fromSingleUri(applicationContext, fileUri)
+	}
+}
+
+@Singleton
+class SaveDataFileFactory @Inject constructor(
+	private val environment: PatcherEnvironment,
+	@ApplicationContext private val applicationContext: Context,
+	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+	@DefaultFileSystem private val fileSystem: FileSystem,
+	preferencesRepository: PreferencesRepository
+) : SuspendFactory<SaveDataFile> {
+
+	private val coroutineScope = CoroutineScope(ioDispatcher)
+
+	private val isShizukuAvailable = ShizukuAvailabilityFlow(preferencesRepository.isShizukuEnabled.flow)
+		.stateIn(coroutineScope, SharingStarted.Lazily, initialValue = null)
+		.filterNotNull()
+
+	override suspend fun create(): SaveDataFile {
+		if (isShizukuAvailable.first()) {
+			return SaveDataRawFile(environment, fileSystem)
+		}
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+			return SaveDataDocumentFile(applicationContext)
+		}
+		return SaveDataRawFile(environment, fileSystem)
 	}
 }

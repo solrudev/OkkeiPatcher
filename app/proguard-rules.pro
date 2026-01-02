@@ -1,6 +1,9 @@
 -keepattributes LineNumberTable,SourceFile
 -renamesourcefileattribute Source
 
+#### AIDL
+-keep class * implements android.os.IInterface
+
 #### Retrofit
 -keepclasseswithmembers class * {
     @retrofit2.http.* <methods>;

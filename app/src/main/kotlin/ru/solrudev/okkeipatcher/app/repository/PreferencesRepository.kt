@@ -27,5 +27,6 @@ interface PreferencesRepository : PatchStateRepository {
 	val isPatchUpdatesCheckEnabled: ReactiveDao<Boolean>
 	val theme: ReactiveDao<Theme>
 	val apiUrl: ReactiveDao<String>
+	val isShizukuEnabled: ReactiveDao<Boolean>
 	suspend fun reset()
 }

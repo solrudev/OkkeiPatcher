@@ -29,7 +29,9 @@ import ru.solrudev.okkeipatcher.data.service.BinaryPatcher
 import ru.solrudev.okkeipatcher.data.util.GAME_PACKAGE_NAME
 import ru.solrudev.okkeipatcher.data.util.computeHash
 import ru.solrudev.okkeipatcher.data.util.copy
+import ru.solrudev.okkeipatcher.di.DefaultFileSystem
 import ru.solrudev.okkeipatcher.di.IoDispatcher
+import ru.solrudev.okkeipatcher.di.LocalFileSystem
 import ru.solrudev.okkeipatcher.domain.model.exception.ObbNotFoundException
 import ru.solrudev.okkeipatcher.domain.repository.HashRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbBackupRepository
@@ -45,7 +47,7 @@ val PatcherEnvironment.obbPath: Path
 @Singleton
 class ObbRepositoryImpl @Inject constructor(
 	environment: PatcherEnvironment,
-	private val fileSystem: FileSystem
+	@DefaultFileSystem private val fileSystem: FileSystem
 ) : ObbRepository {
 
 	override val obbPath = environment.obbPath
@@ -64,26 +66,27 @@ class ObbBackupRepositoryImpl @Inject constructor(
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	private val binaryPatcher: BinaryPatcher,
 	private val hashRepository: HashRepository,
-	private val fileSystem: FileSystem
+	@LocalFileSystem private val localFileSystem: FileSystem,
+	@DefaultFileSystem private val defaultFileSystem: FileSystem
 ) : ObbBackupRepository {
 
 	override val backupExists: Boolean
-		get() = fileSystem.exists(backup)
+		get() = localFileSystem.exists(backup)
 
 	private val obb = environment.obbPath
 	private val backup = environment.backupPath / OBB_FILE_NAME
 
 	override fun deleteBackup() {
-		fileSystem.delete(backup)
+		localFileSystem.delete(backup)
 	}
 
 	override suspend fun createBackup(onProgress: suspend (progressDelta: Int) -> Unit): String {
-		if (!fileSystem.exists(obb)) {
+		if (!defaultFileSystem.exists(obb)) {
 			throw ObbNotFoundException()
 		}
 		try {
 			val hash = withContext(ioDispatcher) {
-				fileSystem.copy(
+				defaultFileSystem.copy(
 					obb, backup, hashing = true,
 					onProgressChanged = {
 						ensureActive()
@@ -94,18 +97,18 @@ class ObbBackupRepositoryImpl @Inject constructor(
 			hashRepository.backupObbHash.persist(hash)
 			return hash
 		} catch (t: Throwable) {
-			fileSystem.delete(backup)
+			localFileSystem.delete(backup)
 			throw t
 		}
 	}
 
 	override suspend fun restoreBackup(onProgress: suspend (progressDelta: Int) -> Unit) {
-		if (!fileSystem.exists(backup)) {
+		if (!localFileSystem.exists(backup)) {
 			throw ObbNotFoundException()
 		}
 		try {
 			withContext(ioDispatcher) {
-				fileSystem.copy(
+				defaultFileSystem.copy(
 					backup, obb,
 					onProgressChanged = {
 						ensureActive()
@@ -114,18 +117,18 @@ class ObbBackupRepositoryImpl @Inject constructor(
 				)
 			}
 		} catch (t: Throwable) {
-			fileSystem.delete(obb)
+			defaultFileSystem.delete(obb)
 			throw t
 		}
 	}
 
 	override suspend fun verifyBackup(onProgress: suspend (progressDelta: Int) -> Unit): Boolean {
 		val savedHash = hashRepository.backupObbHash.retrieve()
-		if (savedHash.isEmpty() || !fileSystem.exists(backup)) {
+		if (savedHash.isEmpty() || !localFileSystem.exists(backup)) {
 			return false
 		}
 		val fileHash = withContext(ioDispatcher) {
-			fileSystem.computeHash(
+			localFileSystem.computeHash(
 				backup,
 				onProgressChanged = {
 					ensureActive()

@@ -31,6 +31,7 @@ import ru.solrudev.okkeipatcher.data.core.InMemoryCache
 import ru.solrudev.okkeipatcher.data.network.api.OkkeiPatcherApi
 import ru.solrudev.okkeipatcher.data.network.model.exception.NetworkNotAvailableException
 import ru.solrudev.okkeipatcher.data.service.PackageInstallerFacade
+import ru.solrudev.okkeipatcher.di.LocalFileSystem
 import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
@@ -50,7 +51,7 @@ class OkkeiPatcherRepositoryImpl @Inject constructor(
 	private val okkeiPatcherApi: Flow<OkkeiPatcherApi>,
 	private val fileDownloader: FileDownloader,
 	private val packageInstaller: PackageInstallerFacade,
-	private val fileSystem: FileSystem
+	@LocalFileSystem private val fileSystem: FileSystem
 ) : OkkeiPatcherRepository {
 
 	private val changelogCache = InMemoryCache {

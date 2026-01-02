@@ -41,12 +41,11 @@
 		android:name="android.permission.ENFORCE_UPDATE_OWNERSHIP"
 		tools:node="remove" />
 
-	<uses-sdk tools:overrideLibrary="androidx.navigation.common,
-		androidx.navigation,
-		androidx.navigation.fragment,
-		androidx.navigation.ui,
-		androidx.fragment.ktx,
-		androidx.fragment" />
+	<uses-sdk tools:overrideLibrary="androidx.navigation.*,
+		androidx.fragment.*,
+		ru.solrudev.ackpine.shizuku.*,
+		rikka.shizuku.*,
+		com.topjohnwu.superuser.nio" />
 
 	<application
 		android:name=".OkkeiApplication"
@@ -96,6 +95,14 @@
 				android:name="androidx.work.WorkManagerInitializer"
 				tools:node="remove" />
 		</provider>
+
+		<provider
+			android:name="rikka.shizuku.ShizukuProvider"
+			android:authorities="${applicationId}.shizuku"
+			android:enabled="true"
+			android:exported="true"
+			android:multiprocess="false"
+			android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
 
 		<receiver
 			android:name=".data.receiver.AppUpdateReceiver"

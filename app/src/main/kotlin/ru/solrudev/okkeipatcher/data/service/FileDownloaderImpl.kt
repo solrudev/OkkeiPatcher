@@ -32,6 +32,7 @@ import ru.solrudev.okkeipatcher.data.network.model.exception.NetworkNotAvailable
 import ru.solrudev.okkeipatcher.data.service.util.await
 import ru.solrudev.okkeipatcher.data.util.copyTo
 import ru.solrudev.okkeipatcher.di.IoDispatcher
+import ru.solrudev.okkeipatcher.di.LocalFileSystem
 import ru.solrudev.okkeipatcher.domain.model.exception.NoNetworkException
 import ru.solrudev.okkeipatcher.domain.service.FileDownloader
 import ru.solrudev.okkeipatcher.domain.util.DEFAULT_PROGRESS_MAX
@@ -42,7 +43,7 @@ import javax.inject.Inject
 class FileDownloaderImpl @Inject constructor(
 	private val okHttpClient: OkHttpClient,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-	private val fileSystem: FileSystem
+	@LocalFileSystem private val fileSystem: FileSystem
 ) : FileDownloader {
 
 	override val progressMax = DEFAULT_PROGRESS_MAX

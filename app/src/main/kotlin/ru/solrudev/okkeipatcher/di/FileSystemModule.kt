@@ -20,16 +20,54 @@
 
 package ru.solrudev.okkeipatcher.di
 
+import android.content.Context
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
 import okio.FileSystem
+import ru.solrudev.okkeipatcher.app.repository.PreferencesRepository
+import ru.solrudev.okkeipatcher.data.filesystem.ShizukuFileSystem
+import ru.solrudev.okkeipatcher.data.filesystem.ShizukuFileSystemManagerProvider
+import javax.inject.Qualifier
+import javax.inject.Singleton
+
+@Qualifier
+@Retention(AnnotationRetention.RUNTIME)
+annotation class LocalFileSystem
+
+@Qualifier
+@Retention(AnnotationRetention.RUNTIME)
+annotation class DefaultFileSystem
 
 @InstallIn(SingletonComponent::class)
 @Module
 object FileSystemModule {
 
+	@DefaultFileSystem
 	@Provides
-	fun provideFileSystem(): FileSystem = FileSystem.SYSTEM
+	@Singleton
+	fun provideDefaultFileSystem(shizukuFileSystem: ShizukuFileSystem): FileSystem {
+		return shizukuFileSystem
+	}
+
+	@LocalFileSystem
+	@Provides
+	fun provideLocalFileSystem(): FileSystem {
+		return FileSystem.SYSTEM
+	}
+
+	@Provides
+	@Singleton
+	fun provideShizukuFileSystemManagerProvider(
+		preferencesRepository: PreferencesRepository,
+		@IoDispatcher ioDispatcher: CoroutineDispatcher,
+		@ApplicationContext context: Context
+	) = ShizukuFileSystemManagerProvider(
+		preferencesRepository.isShizukuEnabled.flow,
+		ioDispatcher,
+		context.packageName
+	)
 }

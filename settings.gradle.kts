@@ -1,3 +1,5 @@
+import java.net.URI
+
 rootProject.name = "Okkei Patcher"
 include(":app")
 
@@ -21,6 +23,12 @@ dependencyResolutionManagement {
 	repositories {
 		google()
 		mavenCentral()
+		maven {
+			url = URI("https://jitpack.io")
+			content {
+				includeGroup("com.github.topjohnwu.libsu")
+			}
+		}
 	}
 
 	versionCatalogs {

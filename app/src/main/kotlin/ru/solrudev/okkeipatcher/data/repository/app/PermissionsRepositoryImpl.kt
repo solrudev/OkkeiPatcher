@@ -26,9 +26,11 @@ import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Build
 import androidx.core.content.ContextCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
+import rikka.shizuku.Shizuku
 import ru.solrudev.okkeipatcher.app.model.Permission
 import ru.solrudev.okkeipatcher.app.repository.PermissionsRepository
 import ru.solrudev.okkeipatcher.data.util.ANDROID_DATA_TREE_URI
+import ru.solrudev.okkeipatcher.domain.core.persistence.Retrievable
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -49,8 +51,11 @@ class PermissionsRepositoryImpl @Inject constructor(
 		}
 	}
 
-	override fun isSaveDataAccessGranted(): Boolean {
+	override suspend fun isSaveDataAccessGranted(isShizukuEnabled: Retrievable<Boolean>): Boolean {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+			return true
+		}
+		if (isShizukuEnabled.retrieve()) {
 			return true
 		}
 		return applicationContext
@@ -79,5 +84,16 @@ class PermissionsRepositoryImpl @Inject constructor(
 			return true
 		}
 		return ContextCompat.checkSelfPermission(applicationContext, POST_NOTIFICATIONS) == PERMISSION_GRANTED
+	}
+
+	override fun isShizukuPermissionGranted(): Boolean {
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+			return false
+		}
+		return try {
+			Shizuku.checkSelfPermission() == PERMISSION_GRANTED
+		} catch (_: Exception) {
+			false
+		}
 	}
 }

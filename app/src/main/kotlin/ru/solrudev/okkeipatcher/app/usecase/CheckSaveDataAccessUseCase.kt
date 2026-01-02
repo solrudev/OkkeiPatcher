@@ -28,7 +28,8 @@ class CheckSaveDataAccessUseCase @Inject constructor(
 ) {
 
 	suspend operator fun invoke() {
-		val isSaveDataAccessGranted = permissionsRepository.isSaveDataAccessGranted()
+		val isShizukuEnabled = preferencesRepository.isShizukuEnabled
+		val isSaveDataAccessGranted = permissionsRepository.isSaveDataAccessGranted(isShizukuEnabled)
 		val currentHandleSaveData = preferencesRepository.handleSaveData.retrieve()
 		preferencesRepository.handleSaveData.persist(currentHandleSaveData && isSaveDataAccessGranted)
 	}

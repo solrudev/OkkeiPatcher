@@ -21,6 +21,12 @@
 package ru.solrudev.okkeipatcher.data.service
 
 import androidx.core.net.toUri
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.stateIn
 import okio.Path
 import ru.solrudev.ackpine.installer.PackageInstaller
 import ru.solrudev.ackpine.installer.createSession
@@ -30,10 +36,13 @@ import ru.solrudev.ackpine.session.await
 import ru.solrudev.ackpine.session.parameters.Confirmation
 import ru.solrudev.ackpine.session.parameters.DrawableId
 import ru.solrudev.ackpine.session.parameters.notification
+import ru.solrudev.ackpine.shizuku.useShizuku
 import ru.solrudev.ackpine.uninstaller.PackageUninstaller
-import ru.solrudev.ackpine.uninstaller.UninstallFailure
 import ru.solrudev.ackpine.uninstaller.createSession
 import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.app.repository.PreferencesRepository
+import ru.solrudev.okkeipatcher.data.shizuku.ShizukuAvailabilityFlow
+import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.core.Result
 import javax.inject.Inject
 
@@ -44,8 +53,16 @@ interface PackageInstallerFacade {
 
 class PackageInstallerFacadeImpl @Inject constructor(
 	private val packageInstaller: PackageInstaller,
-	private val packageUninstaller: PackageUninstaller
+	private val packageUninstaller: PackageUninstaller,
+	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+	preferencesRepository: PreferencesRepository
 ) : PackageInstallerFacade {
+
+	private val coroutineScope = CoroutineScope(ioDispatcher)
+
+	private val isShizukuAvailable = ShizukuAvailabilityFlow(preferencesRepository.isShizukuEnabled.flow)
+		.stateIn(coroutineScope, SharingStarted.Lazily, initialValue = null)
+		.filterNotNull()
 
 	override suspend fun install(apkPath: Path, appName: String, immediate: Boolean): Result<Unit> {
 		val session = packageInstaller.createSession(apkPath.toFile().toUri()) {
@@ -56,6 +73,12 @@ class PackageInstallerFacadeImpl @Inject constructor(
 				icon = NotificationIcon
 				title = NotificationTitleInstall
 				contentText = NotificationMessageInstall(appName)
+			}
+			if (isShizukuAvailable.first()) {
+				useShizuku {
+					bypassLowTargetSdkBlock = true
+					replaceExisting = true
+				}
 			}
 		}
 		return when (val result = session.await()) {
@@ -71,16 +94,13 @@ class PackageInstallerFacadeImpl @Inject constructor(
 				title = NotificationTitleUninstall
 				contentText = NotificationMessageUninstall(appName)
 			}
+			if (isShizukuAvailable.first()) {
+				useShizuku()
+			}
 		}
 		return when (val result = session.await()) {
 			Session.State.Succeeded -> Result.success()
-			is Session.State.Failed -> {
-				val reason = when (val failure = result.failure) {
-					is UninstallFailure.Aborted -> failure.message.orEmpty()
-					else -> ""
-				}
-				Result.failure(reason)
-			}
+			is Session.State.Failed -> Result.failure(result.failure.message.orEmpty())
 		}
 	}
 }

@@ -26,13 +26,14 @@ import okio.FileSystem
 import okio.Path
 import ru.solrudev.okkeipatcher.data.service.apksigner.ApkSigner
 import ru.solrudev.okkeipatcher.data.util.computeHash
+import ru.solrudev.okkeipatcher.di.LocalFileSystem
 import ru.solrudev.okkeipatcher.domain.service.ZipPackage
 
 class ApkZipPackage(
 	private val apkPath: Path,
 	private val apkSigner: ApkSigner,
 	private val ioDispatcher: CoroutineDispatcher,
-	private val fileSystem: FileSystem
+	@LocalFileSystem private val fileSystem: FileSystem
 ) : ZipPackage {
 
 	private val zipFile = ZipFile(apkPath.toString())

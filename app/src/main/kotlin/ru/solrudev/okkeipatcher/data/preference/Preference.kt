@@ -27,8 +27,8 @@ import ru.solrudev.okkeipatcher.domain.core.persistence.ReactiveDao
 
 open class MappedPreference<DomainType, DataType>(
 	private val key: Preferences.Key<DataType>,
-	private val toDataType: (DomainType) -> DataType,
-	private val toDomainType: (DataType?) -> DomainType,
+	private val toDataType: suspend (DomainType) -> DataType,
+	private val toDomainType: suspend (DataType?) -> DomainType,
 	private val preferences: DataStore<Preferences>
 ) : ReactiveDao<DomainType> {
 
@@ -51,7 +51,7 @@ open class MappedPreference<DomainType, DataType>(
 
 class Preference<T>(
 	key: Preferences.Key<T>,
-	defaultValue: () -> T,
+	defaultValue: suspend () -> T,
 	preferences: DataStore<Preferences>
 ) : MappedPreference<T, T>(
 	key,

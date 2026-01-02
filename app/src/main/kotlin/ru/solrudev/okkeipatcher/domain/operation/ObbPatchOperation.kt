@@ -21,6 +21,7 @@ package ru.solrudev.okkeipatcher.domain.operation
 import okio.FileSystem
 import okio.Path
 import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.di.LocalFileSystem
 import ru.solrudev.okkeipatcher.domain.core.onFailure
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.OperationScope
@@ -45,7 +46,7 @@ class ObbPatchOperation(
 	private val obbPath: Path,
 	private val obbBackupRepository: ObbBackupRepository,
 	private val fileDownloader: FileDownloader,
-	private val fileSystem: FileSystem
+	@LocalFileSystem private val fileSystem: FileSystem
 ) : Operation<Unit> {
 
 	private val obbPatchPath = externalDir / "obbpatch"

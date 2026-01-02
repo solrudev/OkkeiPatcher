@@ -30,6 +30,7 @@ import ru.solrudev.okkeipatcher.data.util.GAME_NAME
 import ru.solrudev.okkeipatcher.data.util.computeHash
 import ru.solrudev.okkeipatcher.data.util.copy
 import ru.solrudev.okkeipatcher.di.IoDispatcher
+import ru.solrudev.okkeipatcher.di.LocalFileSystem
 import ru.solrudev.okkeipatcher.domain.repository.HashRepository
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ApkBackupRepository
 import javax.inject.Inject
@@ -42,7 +43,7 @@ class ApkBackupRepositoryImpl @Inject constructor(
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	private val packageInstaller: PackageInstallerFacade,
 	private val hashRepository: HashRepository,
-	private val fileSystem: FileSystem
+	@LocalFileSystem private val fileSystem: FileSystem
 ) : ApkBackupRepository {
 
 	override val backupExists: Boolean

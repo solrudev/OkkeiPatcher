@@ -20,10 +20,12 @@ package ru.solrudev.okkeipatcher.app.usecase
 
 import kotlinx.coroutines.flow.first
 import ru.solrudev.okkeipatcher.app.repository.PermissionsRepository
+import ru.solrudev.okkeipatcher.app.repository.PreferencesRepository
 import javax.inject.Inject
 
 class ToggleHandleSaveDataUseCase @Inject constructor(
 	private val permissionsRepository: PermissionsRepository,
+	private val preferencesRepository: PreferencesRepository,
 	private val getHandleSaveDataFlowUseCase: GetHandleSaveDataFlowUseCase,
 	private val persistHandleSaveDataUseCase: PersistHandleSaveDataUseCase
 ) {
@@ -32,8 +34,9 @@ class ToggleHandleSaveDataUseCase @Inject constructor(
 	 * Returns true if "handle save data" preference was toggled, false otherwise.
 	 */
 	suspend operator fun invoke(): Boolean {
+		val isShizukuEnabled = preferencesRepository.isShizukuEnabled
 		val handleSaveData = getHandleSaveDataFlowUseCase().first()
-		val isSaveDataAccessGranted = permissionsRepository.isSaveDataAccessGranted()
+		val isSaveDataAccessGranted = permissionsRepository.isSaveDataAccessGranted(isShizukuEnabled)
 		when {
 			handleSaveData -> persistHandleSaveDataUseCase(false)
 			isSaveDataAccessGranted -> persistHandleSaveDataUseCase(true)

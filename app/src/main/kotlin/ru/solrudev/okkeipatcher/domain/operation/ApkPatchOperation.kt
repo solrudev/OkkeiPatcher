@@ -26,6 +26,7 @@ import okio.Path.Companion.toPath
 import okio.buffer
 import okio.openZip
 import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.di.LocalFileSystem
 import ru.solrudev.okkeipatcher.domain.core.operation.Operation
 import ru.solrudev.okkeipatcher.domain.core.operation.aggregateOperation
 import ru.solrudev.okkeipatcher.domain.core.operation.operation
@@ -46,7 +47,7 @@ class ApkPatchOperation(
 	private val ioDispatcher: CoroutineDispatcher,
 	externalDir: Path,
 	private val fileDownloader: FileDownloader,
-	private val fileSystem: FileSystem
+	@LocalFileSystem private val fileSystem: FileSystem
 ) : Operation<Unit> {
 
 	private val operation = aggregateOperation(

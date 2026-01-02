@@ -20,6 +20,7 @@ package ru.solrudev.okkeipatcher.data.operation.factory
 
 import okio.FileSystem
 import ru.solrudev.okkeipatcher.data.PatcherEnvironment
+import ru.solrudev.okkeipatcher.di.LocalFileSystem
 import ru.solrudev.okkeipatcher.domain.operation.ObbPatchOperation
 import ru.solrudev.okkeipatcher.domain.operation.factory.ObbPatchOperationFactory
 import ru.solrudev.okkeipatcher.domain.repository.gamefile.ObbBackupRepository
@@ -33,7 +34,7 @@ class ObbPatchOperationFactoryImpl @Inject constructor(
 	private val obbBackupRepository: ObbBackupRepository,
 	private val environment: PatcherEnvironment,
 	private val fileDownloader: FileDownloader,
-	private val fileSystem: FileSystem
+	@LocalFileSystem private val fileSystem: FileSystem
 ) : ObbPatchOperationFactory {
 
 	override fun create(obbPatchFiles: PatchFiles, isUpdating: Boolean) = ObbPatchOperation(

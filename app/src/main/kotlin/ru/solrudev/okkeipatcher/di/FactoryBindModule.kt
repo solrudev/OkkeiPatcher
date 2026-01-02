@@ -24,16 +24,19 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import ru.solrudev.okkeipatcher.data.operation.factory.ObbPatchOperationFactoryImpl
 import ru.solrudev.okkeipatcher.data.operation.factory.ApkPatchOperationFactoryImpl
+import ru.solrudev.okkeipatcher.data.operation.factory.ObbPatchOperationFactoryImpl
 import ru.solrudev.okkeipatcher.data.preference.PreferencesDataStoreFactory
 import ru.solrudev.okkeipatcher.data.preference.PreferencesDataStoreFactoryImpl
+import ru.solrudev.okkeipatcher.data.repository.gamefile.SaveDataFile
+import ru.solrudev.okkeipatcher.data.repository.gamefile.SaveDataFileFactory
 import ru.solrudev.okkeipatcher.data.service.factory.ApkZipPackageFactory
 import ru.solrudev.okkeipatcher.data.service.factory.ApkZipPackageFactoryImpl
 import ru.solrudev.okkeipatcher.data.service.factory.NotificationServiceFactory
 import ru.solrudev.okkeipatcher.data.service.factory.NotificationServiceFactoryImpl
-import ru.solrudev.okkeipatcher.domain.operation.factory.ObbPatchOperationFactory
+import ru.solrudev.okkeipatcher.domain.core.factory.SuspendFactory
 import ru.solrudev.okkeipatcher.domain.operation.factory.ApkPatchOperationFactory
+import ru.solrudev.okkeipatcher.domain.operation.factory.ObbPatchOperationFactory
 
 @InstallIn(SingletonComponent::class)
 @Module
@@ -63,4 +66,9 @@ interface FactoryBindModule {
 	fun bindPreferencesDataStoreFactory(
 		preferencesDataStoreFactory: PreferencesDataStoreFactoryImpl
 	): PreferencesDataStoreFactory
+
+	@Binds
+	fun provideSaveDataFileFactory(
+		saveDataFileFactory: SaveDataFileFactory
+	): SuspendFactory<@JvmWildcard SaveDataFile>
 }

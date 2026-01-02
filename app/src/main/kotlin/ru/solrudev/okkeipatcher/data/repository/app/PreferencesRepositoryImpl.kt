@@ -41,6 +41,7 @@ private val THEME = intPreferencesKey("theme")
 private val CHECK_APP_UPDATES = booleanPreferencesKey("check_app_updates")
 private val CHECK_PATCH_UPDATES = booleanPreferencesKey("check_patch_updates")
 private val API_URL = stringPreferencesKey("api_url")
+private val IS_SHIZUKU_ENABLED = booleanPreferencesKey("is_shizuku_enabled")
 
 @Singleton
 class PreferencesRepositoryImpl @Inject constructor(
@@ -53,13 +54,13 @@ class PreferencesRepositoryImpl @Inject constructor(
 
 	override val handleSaveData = Preference(
 		key = HANDLE_SAVE_DATA,
-		defaultValue = permissionsRepository::isSaveDataAccessGranted,
+		defaultValue = { permissionsRepository.isSaveDataAccessGranted(isShizukuEnabled) },
 		preferences
 	)
 
 	override val patchLanguage = MappedPreference(
 		key = PATCH_LANGUAGE,
-		toDataType = Language::name,
+		toDataType = { it.name },
 		toDomainType = Language::fromString,
 		preferences
 	)
@@ -68,7 +69,7 @@ class PreferencesRepositoryImpl @Inject constructor(
 
 	override val theme = MappedPreference(
 		key = THEME,
-		toDataType = Theme::ordinal,
+		toDataType = { it.ordinal },
 		toDomainType = Theme::fromOrdinal,
 		preferences
 	)
@@ -87,7 +88,13 @@ class PreferencesRepositoryImpl @Inject constructor(
 
 	override val apiUrl = Preference(
 		key = API_URL,
-		defaultValue = ::BASE_URL,
+		defaultValue = { BASE_URL },
+		preferences
+	)
+
+	override val isShizukuEnabled = Preference(
+		key = IS_SHIZUKU_ENABLED,
+		defaultValue = { false },
 		preferences
 	)
 

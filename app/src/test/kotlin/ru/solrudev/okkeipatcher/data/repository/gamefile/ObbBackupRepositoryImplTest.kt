@@ -65,11 +65,11 @@ class ObbBackupRepositoryImplTest {
 	}
 
 	private val obbBackupRepository = ObbBackupRepositoryImpl(
-		environment, testDispatcher, binaryPatcher, hashRepository, fileSystem
+		environment, testDispatcher, binaryPatcher, hashRepository, fileSystem, fileSystem
 	)
 
 	private val failingObbBackupRepository = ObbBackupRepositoryImpl(
-		environment, testDispatcher, binaryPatcher, hashRepository, failingFileSystem
+		environment, testDispatcher, binaryPatcher, hashRepository, failingFileSystem, failingFileSystem
 	)
 
 	@BeforeTest

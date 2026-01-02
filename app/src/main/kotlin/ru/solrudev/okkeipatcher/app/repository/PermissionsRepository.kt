@@ -19,11 +19,13 @@
 package ru.solrudev.okkeipatcher.app.repository
 
 import ru.solrudev.okkeipatcher.app.model.Permission
+import ru.solrudev.okkeipatcher.domain.core.persistence.Retrievable
 
 interface PermissionsRepository {
 	fun getRequiredPermissions(): Map<Permission, Boolean>
-	fun isSaveDataAccessGranted(): Boolean
+	suspend fun isSaveDataAccessGranted(isShizukuEnabled: Retrievable<Boolean>): Boolean
 	fun isStoragePermissionGranted(): Boolean
 	fun isInstallPermissionGranted(): Boolean
 	fun isNotificationsPermissionGranted(): Boolean
+	fun isShizukuPermissionGranted(): Boolean
 }

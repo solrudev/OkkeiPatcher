@@ -30,6 +30,7 @@ import ru.solrudev.okkeipatcher.data.repository.gamefile.util.backupPath
 import ru.solrudev.okkeipatcher.data.util.read
 import ru.solrudev.okkeipatcher.data.util.write
 import ru.solrudev.okkeipatcher.domain.core.Result
+import ru.solrudev.okkeipatcher.domain.core.factory.SuspendFactory
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -50,16 +51,16 @@ class SaveDataRepositoryImplTest {
 	private val hashRepository = FakeHashRepository()
 	private val fileSystem = FakeFileSystem()
 	private val failingFileSystem = FailingFileSystem(fileSystem, allowedFunctions = listOf("metadataOrNull", "delete"))
-	private val saveDataFile = SaveDataRawFile(environment, fileSystem)
+	private val saveDataFileFactory = SuspendFactory { SaveDataRawFile(environment, fileSystem) }
 	private val testScope = TestScope()
 	private val testDispatcher = StandardTestDispatcher(testScope.testScheduler)
 
 	private val saveDataRepository = SaveDataRepositoryImpl(
-		environment, testDispatcher, saveDataFile, hashRepository, fileSystem
+		environment, testDispatcher, saveDataFileFactory, hashRepository, fileSystem
 	)
 
 	private val failingSaveDataRepository = SaveDataRepositoryImpl(
-		environment, testDispatcher, saveDataFile, hashRepository, failingFileSystem
+		environment, testDispatcher, saveDataFileFactory, hashRepository, failingFileSystem
 	)
 
 	@BeforeTest

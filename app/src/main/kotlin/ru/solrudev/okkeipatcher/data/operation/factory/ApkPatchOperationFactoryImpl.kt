@@ -22,6 +22,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import okio.FileSystem
 import ru.solrudev.okkeipatcher.data.PatcherEnvironment
 import ru.solrudev.okkeipatcher.di.IoDispatcher
+import ru.solrudev.okkeipatcher.di.LocalFileSystem
 import ru.solrudev.okkeipatcher.domain.operation.ApkPatchOperation
 import ru.solrudev.okkeipatcher.domain.operation.factory.ApkPatchOperationFactory
 import ru.solrudev.okkeipatcher.domain.repository.HashRepository
@@ -36,7 +37,7 @@ class ApkPatchOperationFactoryImpl @Inject constructor(
 	private val apkRepository: ApkRepository,
 	private val hashRepository: HashRepository,
 	private val fileDownloader: FileDownloader,
-	private val fileSystem: FileSystem
+	@LocalFileSystem private val fileSystem: FileSystem
 ) : ApkPatchOperationFactory {
 
 	override fun create(apkPatchFiles: PatchFiles) = ApkPatchOperation(
