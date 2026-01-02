@@ -22,13 +22,8 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.os.Handler
 import android.os.IBinder
-import android.os.Looper
-import android.os.Message
-import android.os.Messenger
 import android.os.RemoteException
-import androidx.core.os.bundleOf
 import dagger.Reusable
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CancellableContinuation
@@ -100,14 +95,10 @@ class BinaryPatcherImpl @Inject constructor(
 		outputPath: Path,
 		diffPath: Path
 	) = suspendCancellableCoroutine { continuation ->
-		val resultHandler = BinaryPatchResultHandler { result ->
-			executor.execute { continuation.resume(result) }
-		}
 		val serviceConnection = BinaryPatchServiceConnection(
 			continuation,
 			applicationContext,
 			executor,
-			resultHandler,
 			inputPath,
 			outputPath,
 			diffPath
@@ -136,42 +127,34 @@ class BinaryPatcherImpl @Inject constructor(
 		}
 	}
 
-	private class BinaryPatchResultHandler(
-		private val resultHandler: (Int) -> Unit
-	) : Handler(Looper.getMainLooper()) {
-		override fun handleMessage(msg: Message) {
-			if (msg.what == BinaryPatchService.MSG_RESULT) {
-				resultHandler(msg.arg1)
-			}
-		}
-	}
-
 	private class BinaryPatchServiceConnection(
 		private val continuation: CancellableContinuation<Int>,
 		private val context: Context,
 		private val executor: Executor,
-		private val resultHandler: Handler,
 		private val inputPath: Path,
 		private val outputPath: Path,
 		private val diffPath: Path
 	) : ServiceConnection {
 
 		override fun onServiceConnected(name: ComponentName?, service: IBinder?) = executor.execute {
-			val serviceMessenger = Messenger(service)
-			val resultMessenger = Messenger(resultHandler)
+			if (service == null || !service.pingBinder()) {
+				return@execute
+			}
+			val binaryPatchService = IBinaryPatchService.Stub.asInterface(service)
+			val callback = BinaryPatchServiceBinder.Callback(continuation::resume)
 			try {
 				continuation.invokeOnCancellation {
-					serviceMessenger.send(Message.obtain(null, BinaryPatchService.MSG_CANCEL))
+					try {
+						binaryPatchService.exit(-1)
+					} catch (_: RemoteException) { // no-op
+					}
 				}
-				val msg = Message.obtain(null, BinaryPatchService.MSG_START).apply {
-					data = bundleOf(
-						BinaryPatchService.DATA_INPUT_PATH to inputPath.toString(),
-						BinaryPatchService.DATA_OUTPUT_PATH to outputPath.toString(),
-						BinaryPatchService.DATA_DIFF_PATH to diffPath.toString()
-					)
-					replyTo = resultMessenger
-				}
-				serviceMessenger.send(msg)
+				binaryPatchService.patchAsync(
+					inputPath.toString(),
+					outputPath.toString(),
+					diffPath.toString(),
+					callback
+				)
 			} catch (exception: RemoteException) {
 				continuation.resumeWithException(exception)
 			}

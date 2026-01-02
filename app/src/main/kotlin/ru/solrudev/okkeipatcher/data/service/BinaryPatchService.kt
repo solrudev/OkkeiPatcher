@@ -21,47 +21,23 @@ package ru.solrudev.okkeipatcher.data.service
 import android.annotation.SuppressLint
 import android.app.Service
 import android.content.Intent
-import android.os.Bundle
-import android.os.Handler
 import android.os.IBinder
-import android.os.Looper
-import android.os.Message
-import android.os.Messenger
-import android.os.RemoteException
 import com.github.sisong.HPatch
 import java.io.File
 import java.io.FileDescriptor
 import kotlin.concurrent.thread
 import kotlin.system.exitProcess
 
-private const val TAG = "BinaryPatchService"
+class BinaryPatchServiceBinder : IBinaryPatchService.Stub() {
 
-class BinaryPatchService : Service() {
+	override fun destroy() = exitProcess(0)
 
-	private val clients = mutableListOf<Messenger>()
-	private val messenger = Messenger(BinaryPatchHandler())
-
-	override fun onBind(intent: Intent?): IBinder {
-		return messenger.binder
-	}
-
-	@SuppressLint("HandlerLeak")
-	private inner class BinaryPatchHandler : Handler(Looper.getMainLooper()) {
-		override fun handleMessage(msg: Message) = when (msg.what) {
-			MSG_START -> {
-				clients += msg.replyTo
-				startPatch(msg.data)
-			}
-
-			MSG_CANCEL -> exitProcess(EXIT_STATUS_CANCELLED)
-			else -> {}
-		}
-	}
-
-	private fun startPatch(data: Bundle) {
-		val inputPath = requireNotNull(data.getString(DATA_INPUT_PATH)) { "$TAG: no input path provided" }
-		val outputPath = requireNotNull(data.getString(DATA_OUTPUT_PATH)) { "$TAG: no output path provided" }
-		val diffPath = requireNotNull(data.getString(DATA_DIFF_PATH)) { "$TAG: no diff path provided" }
+	override fun patchAsync(
+		inputPath: String,
+		outputPath: String,
+		diffPath: String,
+		callback: IBinaryPatchCallback
+	) {
 		thread {
 			val outFile = File(outputPath)
 			outFile.parentFile?.mkdirs()
@@ -71,34 +47,34 @@ class BinaryPatchService : Service() {
 				val fdPath = "/proc/self/fd/$fd"
 				HPatch.patch(inputPath, diffPath, fdPath)
 			}
-			sendResult(result)
+			callback.onPatchResult(result)
 			exitProcess(result)
 		}
 	}
 
-	private fun sendResult(result: Int) {
-		for (client in clients.asReversed()) {
-			try {
-				client.send(Message.obtain(null, MSG_RESULT, result, 0))
-			} catch (_: RemoteException) {
-				clients -= client
-			}
+	override fun exit(status: Int) {
+		thread {
+			exitProcess(status)
 		}
 	}
 
-	companion object {
-
-		const val MSG_START = 1
-		const val MSG_CANCEL = 2
-		const val MSG_RESULT = 3
-		const val DATA_INPUT_PATH = "INPUT_PATH"
-		const val DATA_OUTPUT_PATH = "OUTPUT_PATH"
-		const val DATA_DIFF_PATH = "DIFF_PATH"
-		const val EXIT_STATUS_CANCELLED = -1
-
-		@SuppressLint("DiscouragedPrivateApi")
-		private val fdGetInt = FileDescriptor::class.java.getDeclaredMethod("getInt$")
-
-		private fun FileDescriptor.getInt() = fdGetInt.invoke(this) as Int
+	class Callback(private val callback: (Int) -> Unit) : IBinaryPatchCallback.Stub() {
+		override fun onPatchResult(code: Int) {
+			callback(code)
+		}
 	}
 }
+
+class BinaryPatchService : Service() {
+
+	private val binder = BinaryPatchServiceBinder()
+
+	override fun onBind(intent: Intent?): IBinder {
+		return binder
+	}
+}
+
+@SuppressLint("DiscouragedPrivateApi")
+private val fdGetInt = FileDescriptor::class.java.getDeclaredMethod("getInt$")
+
+private fun FileDescriptor.getInt() = fdGetInt.invoke(this) as Int
