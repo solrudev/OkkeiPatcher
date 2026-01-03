@@ -19,6 +19,7 @@
 package ru.solrudev.okkeipatcher.ui.main.screen.settings.controller
 
 import android.content.pm.PackageManager.PERMISSION_GRANTED
+import android.os.Build
 import androidx.core.view.HapticFeedbackConstantsCompat
 import androidx.navigation.NavController
 import androidx.preference.Preference
@@ -68,7 +69,9 @@ class PatcherSettingsController(
 			navigateToClearDataScreen()
 			true
 		}
-		Shizuku.addRequestPermissionResultListener(shizukuPermissionListener)
+		if (Build.VERSION.SDK_INT >= 24) {
+			Shizuku.addRequestPermissionResultListener(shizukuPermissionListener)
+		}
 	}
 
 	override val trackedState = listOf(
@@ -89,15 +92,16 @@ class PatcherSettingsController(
 		}
 	}
 
-	fun removeShizukuRequestPermissionResultListener() {
+	fun removeShizukuRequestPermissionResultListener() = try {
 		Shizuku.removeRequestPermissionResultListener(shizukuPermissionListener)
+	} catch (_: NoClassDefFoundError) { // ignore
 	}
 
 	private fun requestShizukuPermission() {
 		viewModel.dispatchEvent(ShizukuPermissionRequestHandled)
 		try {
 			Shizuku.requestPermission(SHIZUKU_PERMISSION_REQUEST_CODE)
-		} catch (_: Exception) { // no-op
+		} catch (_: Exception) { // ignore
 		}
 	}
 
