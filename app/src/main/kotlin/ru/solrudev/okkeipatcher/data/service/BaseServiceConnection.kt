@@ -24,6 +24,8 @@ import android.os.IBinder
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withTimeoutOrNull
+import kotlin.time.Duration.Companion.seconds
 
 private val INITIAL_VALUE = Any()
 
@@ -46,9 +48,9 @@ abstract class BaseServiceConnection<T> : ServiceConnection {
 		serviceFlow.value = null
 	}
 
-	suspend fun awaitService(): T? {
+	suspend fun awaitService() = withTimeoutOrNull(30.seconds) {
 		@Suppress("UNCHECKED_CAST")
-		return serviceFlow
+		serviceFlow
 			.filter { it !== INITIAL_VALUE }
 			.first() as T?
 	}
