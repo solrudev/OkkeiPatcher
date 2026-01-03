@@ -41,12 +41,10 @@ class ShizukuMiddleware @Inject constructor(
 ) : JetMiddleware<SettingsEvent> {
 
 	override fun MiddlewareScope<SettingsEvent>.apply() {
-		launch {
-			getIsShizukuEnabledFlowUseCase()
-				.map { isShizukuEnabled -> ShizukuChanged(isShizukuEnabled) }
-				.onEach(::send)
-				.launchIn(this)
-		}
+		getIsShizukuEnabledFlowUseCase()
+			.map { isShizukuEnabled -> ShizukuChanged(isShizukuEnabled) }
+			.onEach(::send)
+			.launchIn(this)
 		onEvent<ShizukuToggled> {
 			if (!toggleShizukuUseCase()) {
 				send(ShizukuPermissionRequested)
