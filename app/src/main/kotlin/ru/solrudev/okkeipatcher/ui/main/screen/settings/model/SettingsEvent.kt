@@ -26,9 +26,14 @@ sealed interface SettingsEvent : JetEvent {
 	data object HandleSaveDataToggled : SettingsEvent, SettingsEffect
 	data object SaveDataAccessRequested : SettingsEvent
 	data object SaveDataAccessRequestHandled : SettingsEvent
+	data object ShizukuToggled : SettingsEvent, SettingsEffect
+	data object ShizukuPermissionRequested : SettingsEvent
+	data object ShizukuPermissionRequestHandled : SettingsEvent
+	data object ShizukuPermissionGranted : SettingsEvent, SettingsEffect
 	data object IsAppUpdatesCheckEnabledToggled : SettingsEvent, SettingsEffect
 	data object IsPatchUpdatesCheckEnabledToggled : SettingsEvent, SettingsEffect
 	data class HandleSaveDataChanged(val handleSaveData: Boolean) : SettingsEvent
+	data class ShizukuChanged(val isShizukuEnabled: Boolean) : SettingsEvent
 	data class IsAppUpdatesCheckEnabledChanged(val isAppUpdatesCheckEnabled: Boolean) : SettingsEvent
 	data class IsPatchUpdatesCheckEnabledChanged(val isPatchUpdatesCheckEnabled: Boolean) : SettingsEvent
 	data class ThemeChanged(val theme: Theme) : SettingsEvent

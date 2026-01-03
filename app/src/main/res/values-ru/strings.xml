@@ -119,6 +119,7 @@
 	<string name="preference_save_data_title">Игровые сохранения</string>
 	<string name="preference_licenses_title">Лицензии</string>
 	<string name="preference_patch_api_url_title">URL серверного API</string>
+	<string name="preference_shizuku_title">Использовать Shizuku</string>
 	<string name="preference_theme_title">Тема приложения</string>
 	<string name="preference_updates_app_title">Приложение</string>
 	<string name="preference_updates_patch_title">Патч</string>
@@ -126,6 +127,8 @@
 	<string name="preference_patch_api_url_summary">Корневой URL серверного API для метаданных о патче</string>
 	<string name="preference_save_data_summary_off">Резервная копия сохранений игры не создаётся и не восстанавливается</string>
 	<string name="preference_save_data_summary_on">Резервная копия сохранений игры создаётся и восстанавливается</string>
+	<string name="preference_shizuku_summary_off">Используются стандартные API Android для установки/деинсталляции пакетов и файловых операций</string>
+	<string name="preference_shizuku_summary_on">Используется Shizuku для установки/деинсталляции пакетов и файловых операций</string>
 	<string name="preference_updates_app_summary_off">Обновления приложения не проверяются автоматически</string>
 	<string name="preference_updates_app_summary_on">Обновления приложения проверяются автоматически</string>
 	<string name="preference_updates_patch_summary_off">Обновления патча не проверяются автоматически</string>

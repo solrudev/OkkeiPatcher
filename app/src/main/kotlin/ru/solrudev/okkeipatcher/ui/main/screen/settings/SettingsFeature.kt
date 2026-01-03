@@ -24,6 +24,7 @@ import ru.solrudev.okkeipatcher.ui.main.screen.settings.middleware.ObserveHandle
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.middleware.ObserveThemeMiddleware
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.middleware.PatchApiUrlMiddleware
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.middleware.PersistThemeMiddleware
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.middleware.ShizukuMiddleware
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.middleware.ToggleHandleSaveDataMiddleware
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.middleware.UpdateChecksMiddleware
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent
@@ -39,6 +40,7 @@ class SettingsFeature @Inject constructor(
 	persistThemeMiddleware: PersistThemeMiddleware,
 	updateChecksMiddleware: UpdateChecksMiddleware,
 	patchApiUrlMiddleware: PatchApiUrlMiddleware,
+	shizukuMiddleware: ShizukuMiddleware,
 	settingsReducer: SettingsReducer
 ) : JetFeature<SettingsEvent, SettingsUiState>(
 	middlewares = listOf(
@@ -47,7 +49,8 @@ class SettingsFeature @Inject constructor(
 		observeThemeMiddleware,
 		persistThemeMiddleware,
 		updateChecksMiddleware,
-		patchApiUrlMiddleware
+		patchApiUrlMiddleware,
+		shizukuMiddleware
 	),
 	reducer = settingsReducer,
 	initialUiState = SettingsUiState()

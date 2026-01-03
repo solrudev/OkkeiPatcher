@@ -27,6 +27,9 @@ import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.IsPa
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.PatchApiUrlChanged
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.SaveDataAccessRequestHandled
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.SaveDataAccessRequested
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.ShizukuChanged
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.ShizukuPermissionRequestHandled
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.ShizukuPermissionRequested
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.ThemeChanged
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsUiState
 import javax.inject.Inject
@@ -38,6 +41,9 @@ class SettingsReducer @Inject constructor() : Reducer<SettingsEvent, SettingsUiS
 		is HandleSaveDataChanged -> state.copy(handleSaveData = event.handleSaveData)
 		is SaveDataAccessRequested -> state.copy(requestSaveDataAccess = true)
 		is SaveDataAccessRequestHandled -> state.copy(requestSaveDataAccess = false)
+		is ShizukuChanged -> state.copy(isShizukuEnabled = event.isShizukuEnabled)
+		is ShizukuPermissionRequested -> state.copy(requestShizukuPermission = true)
+		is ShizukuPermissionRequestHandled -> state.copy(requestShizukuPermission = false)
 		is ThemeChanged -> state.copy(theme = event.theme)
 		is PatchApiUrlChanged -> state.copy(patchApiUrl = event.patchApiUrl)
 		is IsAppUpdatesCheckEnabledChanged -> state.copy(isAppUpdatesCheckEnabled = event.isAppUpdatesCheckEnabled)

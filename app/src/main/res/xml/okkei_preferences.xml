@@ -29,6 +29,15 @@
 			app:summaryOn="@string/preference_save_data_summary_on"
 			app:title="@string/preference_save_data_title" />
 
+		<SwitchPreferenceCompat
+			app:icon="@drawable/ic_shizuku_preference"
+			app:key="@string/preference_key_shizuku"
+			app:persistent="false"
+			app:widgetLayout="@layout/preference_material_switch"
+			app:summaryOff="@string/preference_shizuku_summary_off"
+			app:summaryOn="@string/preference_shizuku_summary_on"
+			app:title="@string/preference_shizuku_title" />
+
 		<Preference
 			app:icon="@drawable/ic_clear_data_preference"
 			app:key="@string/preference_key_clear_data"

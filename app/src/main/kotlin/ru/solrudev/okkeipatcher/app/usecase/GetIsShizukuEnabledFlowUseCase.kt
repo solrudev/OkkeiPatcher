@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2026 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,18 +16,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ru.solrudev.okkeipatcher.ui.main.screen.settings.model
+package ru.solrudev.okkeipatcher.app.usecase
 
-import io.github.solrudev.jetmvi.JetState
-import ru.solrudev.okkeipatcher.app.model.Theme
+import ru.solrudev.okkeipatcher.app.repository.PreferencesRepository
+import javax.inject.Inject
 
-data class SettingsUiState(
-	val handleSaveData: Boolean = true,
-	val isShizukuEnabled: Boolean = false,
-	val isAppUpdatesCheckEnabled: Boolean = true,
-	val isPatchUpdatesCheckEnabled: Boolean = true,
-	val requestSaveDataAccess: Boolean = false,
-	val requestShizukuPermission: Boolean = false,
-	val theme: Theme = Theme.FollowSystem,
-	val patchApiUrl: String = ""
-) : JetState
+class GetIsShizukuEnabledFlowUseCase @Inject constructor(
+	private val preferencesRepository: PreferencesRepository
+) {
+	operator fun invoke() = preferencesRepository.isShizukuEnabled.flow
+}

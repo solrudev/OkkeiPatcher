@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2026 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,20 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ru.solrudev.okkeipatcher.ui.navhost.middleware
+package ru.solrudev.okkeipatcher.app.usecase
 
-import io.github.solrudev.jetmvi.Middleware
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import ru.solrudev.okkeipatcher.app.usecase.CheckSaveDataAccessUseCase
-import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostEvent
+import ru.solrudev.okkeipatcher.app.repository.PreferencesRepository
 import javax.inject.Inject
 
-class CheckSaveDataAccessMiddleware @Inject constructor(
-	private val checkSaveDataAccessUseCase: CheckSaveDataAccessUseCase
-) : Middleware<NavHostEvent> {
-
-	override fun apply(events: Flow<NavHostEvent>) = flow<Nothing> {
-		checkSaveDataAccessUseCase()
-	}
+class PersistIsShizukuEnabledUseCase @Inject constructor(private val preferencesRepository: PreferencesRepository) {
+	suspend operator fun invoke(value: Boolean) = preferencesRepository.isShizukuEnabled.persist(value)
 }

@@ -46,6 +46,9 @@ class SettingsFragment : PreferenceFragmentCompat(), HostJetView<SettingsUiState
 	private val handleSaveData: SwitchPreferenceCompat?
 		get() = findPreference(getString(R.string.preference_key_handle_save_data))
 
+	private val shizuku: SwitchPreferenceCompat?
+		get() = findPreference(getString(R.string.preference_key_shizuku))
+
 	private val clearData: Preference?
 		get() = findPreference(getString(R.string.preference_key_clear_data))
 
@@ -70,6 +73,7 @@ class SettingsFragment : PreferenceFragmentCompat(), HostJetView<SettingsUiState
 	private val patcherSettingsController by derivedView {
 		PatcherSettingsController(
 			handleSaveData,
+			shizuku,
 			clearData,
 			findNavController(),
 			viewModel,
@@ -109,6 +113,11 @@ class SettingsFragment : PreferenceFragmentCompat(), HostJetView<SettingsUiState
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		view.isHapticFeedbackEnabled = true
+	}
+
+	override fun onDestroyView() {
+		patcherSettingsController.removeShizukuRequestPermissionResultListener()
+		super.onDestroyView()
 	}
 
 	override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
