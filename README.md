@@ -37,6 +37,29 @@ shut down.
   <img src="images/settings_dark.jpg" width="23%"/>
 </div>
 
+# Settings
+Here is information on some possibly confusing settings in the app.
+- Use Shizuku: when enabled, Okkei Patcher will use [Shizuku](https://github.com/RikkaApps/Shizuku)
+  to install/uninstall packages and access game files. This allows to skip install/uninstall
+  confirmations from user, install CHAOS;CHILD on Android 14+ (bypassing its low target SDK), and
+  access game save data located in Android/data directory on all Android versions supporting
+  Shizuku.
+  
+  [Download Shizuku](https://shizuku.rikka.app/download/) and follow the
+  [setup guide](https://shizuku.rikka.app/guide/setup/) to benefit from it.
+  
+  For full capabilities, Shizuku version should be 11+. If some features are unsupported by the
+  running Shizuku version, Okkei Patcher will fall back to standard Android features. Shizuku works
+  on Android 7+.
+
+- Patch API URL: base URL for patch metadata server. If you or someone else hosts a backend server
+  which provides patch and app updates metadata, you can change it from the default one which is
+  hosted by the author of this app. [Here's](https://github.com/solrudev/okkei-patcher-backend)
+  source code for the Okkei Patcher backend.
+  
+  Don't touch this setting if you don't understand what's
+  written here.
+
 # Architecture
 **Okkei Patcher** follows Clean Architecture principles and best practices of modern Android app
 development, such as edge-to-edge UI, adapting to different screen sizes, MVI pattern for
@@ -84,6 +107,8 @@ Reliable task execution and status tracking is ensured by using
   button
 - [ViewBindingPropertyDelegate](https://github.com/androidbroadcast/ViewBindingPropertyDelegate) for
   simple access to view binding
+- [Shizuku-API](https://github.com/RikkaApps/Shizuku-API) for operating under adb/root user
+- [libsu](https://github.com/topjohnwu/libsu) for accessing file system under adb/root user
 
 # Building
 **Okkei Patcher** has two flavors: **prod** and **mock**.
