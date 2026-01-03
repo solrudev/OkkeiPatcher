@@ -152,17 +152,17 @@ class BinaryPatcherImpl @Inject constructor(
 				useShizuku: Boolean,
 				context: Context
 			): BinaryPatchServiceConnection {
-				if (useShizuku) {
-					val shizukuArgs = UserServiceArgs(
-						ComponentName(context.packageName, BinaryPatchServiceBinder::class.java.name)
-					)
-						.daemon(false)
-						.processNameSuffix("binarypatch")
-						.tag("BinaryPatchService")
-						.version(1)
-					return ShizukuBinaryPatchServiceConnection(shizukuArgs)
+				if (!useShizuku) {
+					return StandardBinaryPatchServiceConnection(context)
 				}
-				return StandardBinaryPatchServiceConnection(context)
+				val shizukuArgs = UserServiceArgs(
+					ComponentName(context.packageName, BinaryPatchServiceBinder::class.java.name)
+				)
+					.daemon(false)
+					.processNameSuffix("binarypatch")
+					.tag("BinaryPatchService")
+					.version(1)
+				return ShizukuBinaryPatchServiceConnection(shizukuArgs)
 			}
 		}
 	}
