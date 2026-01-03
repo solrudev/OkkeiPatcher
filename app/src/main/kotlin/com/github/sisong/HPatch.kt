@@ -24,17 +24,26 @@ object HPatch {
 		System.loadLibrary("hpatchz")
 	}
 
+	@Suppress("LocalVariableName")
 	@JvmStatic
 	external fun patch(
 		oldFileName: String,
 		diffFileName: String,
 		outNewFileName: String,
-		cacheMemory: Long
+		cacheMemory: Long,
+		_threadNum: Int
 	): Int
 
 	fun patch(
 		oldFileName: String,
 		diffFileName: String,
+		outNewFileName: String,
+		cacheMemory: Long
+	) = patch(oldFileName, diffFileName, outNewFileName, cacheMemory, 1)
+
+	fun patch(
+		oldFileName: String,
+		diffFileName: String,
 		outNewFileName: String
-	) = patch(oldFileName, diffFileName, outNewFileName, cacheMemory = -1)
+	) = patch(oldFileName, diffFileName, outNewFileName, 256 * 1024, 1)
 }
