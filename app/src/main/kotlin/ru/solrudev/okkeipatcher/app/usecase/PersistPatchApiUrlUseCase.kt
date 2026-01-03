@@ -32,7 +32,16 @@ class PersistPatchApiUrlUseCase @Inject constructor(
 		if (value.isBlank()) {
 			return currentUrl
 		}
-		val newUrl = if (value.endsWith('/')) value else "$value/"
+		var newUrl = value
+		if (!value.endsWith('/')) {
+			newUrl += '/'
+		}
+		if (value.startsWith("http://")) {
+			newUrl = newUrl.replaceFirst("http://", "https://")
+		}
+		if (!value.startsWith("https://")) {
+			newUrl = "https://$newUrl"
+		}
 		if (newUrl == currentUrl) {
 			return currentUrl
 		}
