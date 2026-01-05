@@ -109,12 +109,10 @@ class Apk(
 			status(R.string.status_comparing_apk)
 			if (apkRepository.verifyTemp()) {
 				apkPatchOperation.skip()
-				installPatchedOperation()
-				apkPatchFiles.updateInstalledVersion()
-				return@operation
+			} else {
+				apkRepository.deleteTemp()
+				apkPatchOperation()
 			}
-			apkRepository.deleteTemp()
-			apkPatchOperation()
 			installPatchedOperation()
 			apkPatchFiles.updateInstalledVersion()
 		}
