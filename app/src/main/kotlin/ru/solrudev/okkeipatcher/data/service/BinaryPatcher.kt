@@ -27,7 +27,6 @@ import dagger.Reusable
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.asExecutor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.isActive
@@ -69,8 +68,6 @@ class BinaryPatcherImpl @Inject constructor(
 	@DefaultFileSystem private val fileSystem: FileSystem,
 	private val preferencesRepository: PreferencesRepository
 ) : BinaryPatcher {
-
-	private val executor = ioDispatcher.asExecutor()
 
 	override suspend fun patch(
 		inputPath: Path,
@@ -147,11 +144,7 @@ class BinaryPatcherImpl @Inject constructor(
 		}
 
 		companion object {
-
-			fun create(
-				useShizuku: Boolean,
-				context: Context
-			): BinaryPatchServiceConnection {
+			fun create(useShizuku: Boolean, context: Context): BinaryPatchServiceConnection {
 				if (!useShizuku) {
 					return StandardBinaryPatchServiceConnection(context)
 				}

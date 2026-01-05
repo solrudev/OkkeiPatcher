@@ -59,19 +59,13 @@ class BinaryPatchServiceBinder : IBinaryPatchService.Stub() {
 	}
 
 	class Callback(private val callback: (Int) -> Unit) : IBinaryPatchCallback.Stub() {
-		override fun onPatchResult(code: Int) {
-			callback(code)
-		}
+		override fun onPatchResult(code: Int) = callback(code)
 	}
 }
 
 class BinaryPatchService : Service() {
-
 	private val binder = BinaryPatchServiceBinder()
-
-	override fun onBind(intent: Intent?): IBinder {
-		return binder
-	}
+	override fun onBind(intent: Intent?) = binder
 }
 
 @SuppressLint("DiscouragedPrivateApi")
