@@ -42,7 +42,7 @@ class ShizukuMiddleware @Inject constructor(
 
 	override fun MiddlewareScope<SettingsEvent>.apply() {
 		getIsShizukuEnabledFlowUseCase()
-			.map { isShizukuEnabled -> ShizukuChanged(isShizukuEnabled) }
+			.map(::ShizukuChanged)
 			.onEach(::send)
 			.launchIn(this)
 		onEvent<ShizukuToggled> {
