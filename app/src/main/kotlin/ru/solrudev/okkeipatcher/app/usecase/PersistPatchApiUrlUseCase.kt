@@ -36,10 +36,10 @@ class PersistPatchApiUrlUseCase @Inject constructor(
 		if (!value.endsWith('/')) {
 			newUrl += '/'
 		}
-		if (value.startsWith("http://")) {
+		if (newUrl.startsWith("http://")) {
 			newUrl = newUrl.replaceFirst("http://", "https://")
 		}
-		if (!value.startsWith("https://")) {
+		if (!newUrl.startsWith("https://")) {
 			newUrl = "https://$newUrl"
 		}
 		if (newUrl == currentUrl) {
