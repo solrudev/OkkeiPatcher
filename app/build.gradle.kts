@@ -39,7 +39,7 @@ kotlin {
 }
 
 base {
-	archivesName.set(packageName)
+	archivesName = packageName
 }
 
 android {
@@ -59,7 +59,7 @@ android {
 
 	val releaseSigningConfig by signingConfigs.registering {
 		initWith(signingConfigs["debug"])
-		val keystorePropertiesFile = rootProject.file("keystore.properties")
+		val keystorePropertiesFile = layout.settingsDirectory.file("keystore.properties").asFile
 		if (keystorePropertiesFile.exists()) {
 			val keystoreProperties = Properties().apply {
 				keystorePropertiesFile.inputStream().use(::load)
