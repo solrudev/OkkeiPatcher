@@ -36,7 +36,7 @@ import ru.solrudev.ackpine.session.await
 import ru.solrudev.ackpine.session.parameters.Confirmation
 import ru.solrudev.ackpine.session.parameters.DrawableId
 import ru.solrudev.ackpine.session.parameters.notification
-import ru.solrudev.ackpine.shizuku.useShizuku
+import ru.solrudev.ackpine.shizuku.shizuku
 import ru.solrudev.ackpine.uninstaller.PackageUninstaller
 import ru.solrudev.ackpine.uninstaller.createSession
 import ru.solrudev.okkeipatcher.R
@@ -75,7 +75,7 @@ class PackageInstallerFacadeImpl @Inject constructor(
 				contentText = NotificationMessageInstall(appName)
 			}
 			if (isShizukuAvailable.first()) {
-				useShizuku {
+				shizuku {
 					bypassLowTargetSdkBlock = true
 					replaceExisting = true
 				}
@@ -95,7 +95,7 @@ class PackageInstallerFacadeImpl @Inject constructor(
 				contentText = NotificationMessageUninstall(appName)
 			}
 			if (isShizukuAvailable.first()) {
-				useShizuku()
+				shizuku()
 			}
 		}
 		return when (val result = session.await()) {
