@@ -32,6 +32,7 @@ import io.github.solrudev.jetmvi.derivedView
 import io.github.solrudev.jetmvi.jetViewModels
 import ru.solrudev.okkeipatcher.R
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.controller.AppearanceSettingsController
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.controller.AvailableOperationModesController
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.controller.MiscellaneousSettingsController
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.controller.PatchApiUrlController
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.controller.PatcherSettingsController
@@ -46,8 +47,8 @@ class SettingsFragment : PreferenceFragmentCompat(), HostJetView<SettingsUiState
 	private val handleSaveData: SwitchPreferenceCompat?
 		get() = findPreference(getString(R.string.preference_key_handle_save_data))
 
-	private val shizuku: SwitchPreferenceCompat?
-		get() = findPreference(getString(R.string.preference_key_shizuku))
+	private val operationMode: ListPreference?
+		get() = findPreference(getString(R.string.preference_key_operation_mode))
 
 	private val clearData: Preference?
 		get() = findPreference(getString(R.string.preference_key_clear_data))
@@ -72,13 +73,18 @@ class SettingsFragment : PreferenceFragmentCompat(), HostJetView<SettingsUiState
 
 	private val patcherSettingsController by derivedView {
 		PatcherSettingsController(
+			requireContext(),
 			handleSaveData,
-			shizuku,
+			operationMode,
 			clearData,
 			findNavController(),
 			viewModel,
 			requireView()::performHapticFeedback
 		)
+	}
+
+	private val availableOperationModesController by derivedView {
+		AvailableOperationModesController(operationMode)
 	}
 
 	private val patchApiUrlController by derivedView {
@@ -104,6 +110,7 @@ class SettingsFragment : PreferenceFragmentCompat(), HostJetView<SettingsUiState
 
 	private val viewModel: SettingsViewModel by jetViewModels(
 		SettingsFragment::patcherSettingsController,
+		SettingsFragment::availableOperationModesController,
 		SettingsFragment::patchApiUrlController,
 		SettingsFragment::updatesSettingsController,
 		SettingsFragment::appearanceSettingsController,

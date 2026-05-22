@@ -18,21 +18,32 @@
 
 package ru.solrudev.okkeipatcher.ui.main.screen.settings.controller
 
+import android.content.Context
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Build
+import android.widget.Toast
 import androidx.core.view.HapticFeedbackConstantsCompat
 import androidx.navigation.NavController
+import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.SwitchPreferenceCompat
 import io.github.solrudev.jetmvi.JetView
 import rikka.shizuku.Shizuku
+import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.app.model.OperationMode
+import ru.solrudev.okkeipatcher.data.core.resolve
+import ru.solrudev.okkeipatcher.domain.core.LocalizedString
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.SettingsFragmentDirections
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.SettingsViewModel
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.HandleSaveDataToggled
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.OperationModeSelected
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.SaveDataAccessRequestHandled
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.ShizukuPermissionDenied
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.ShizukuPermissionDeniedToastShown
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.ShizukuPermissionGranted
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.ShizukuPermissionRequestHandled
-import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.ShizukuToggled
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.ShizukuServiceNotRunningReported
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.ShizukuServiceNotRunningToastShown
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsUiState
 import ru.solrudev.okkeipatcher.ui.main.util.HapticFeedbackCallback
 import ru.solrudev.okkeipatcher.ui.util.navigateSafely
@@ -40,8 +51,9 @@ import ru.solrudev.okkeipatcher.ui.util.navigateSafely
 private const val SHIZUKU_PERMISSION_REQUEST_CODE = 0
 
 class PatcherSettingsController(
+	private val context: Context,
 	private val handleSaveData: SwitchPreferenceCompat?,
-	private val shizuku: SwitchPreferenceCompat?,
+	private val operationMode: ListPreference?,
 	clearData: Preference?,
 	private val navController: NavController,
 	private val viewModel: SettingsViewModel,
@@ -49,8 +61,13 @@ class PatcherSettingsController(
 ) : JetView<SettingsUiState> {
 
 	private val shizukuPermissionListener = Shizuku.OnRequestPermissionResultListener { requestCode, result ->
-		if (requestCode == SHIZUKU_PERMISSION_REQUEST_CODE && result == PERMISSION_GRANTED) {
+		if (requestCode != SHIZUKU_PERMISSION_REQUEST_CODE) {
+			return@OnRequestPermissionResultListener
+		}
+		if (result == PERMISSION_GRANTED) {
 			viewModel.dispatchEvent(ShizukuPermissionGranted)
+		} else {
+			viewModel.dispatchEvent(ShizukuPermissionDenied)
 		}
 	}
 
@@ -60,8 +77,12 @@ class PatcherSettingsController(
 			hapticFeedbackCallback.performHapticFeedback(HapticFeedbackConstantsCompat.CONTEXT_CLICK)
 			false
 		}
-		shizuku?.setOnPreferenceClickListener {
-			viewModel.dispatchEvent(ShizukuToggled)
+		operationMode?.setOnPreferenceChangeListener { _, newValue ->
+			viewModel.dispatchEvent(OperationModeSelected(OperationMode.fromValue(newValue as? String)))
+			hapticFeedbackCallback.performHapticFeedback(HapticFeedbackConstantsCompat.CONTEXT_CLICK)
+			false
+		}
+		operationMode?.setOnPreferenceClickListener {
 			hapticFeedbackCallback.performHapticFeedback(HapticFeedbackConstantsCompat.CONTEXT_CLICK)
 			false
 		}
@@ -76,19 +97,31 @@ class PatcherSettingsController(
 
 	override val trackedState = listOf(
 		SettingsUiState::handleSaveData,
-		SettingsUiState::isShizukuEnabled,
+		SettingsUiState::operationMode,
 		SettingsUiState::requestSaveDataAccess,
-		SettingsUiState::requestShizukuPermission
+		SettingsUiState::requestShizukuPermission,
+		SettingsUiState::showShizukuPermissionDeniedToast,
+		SettingsUiState::showShizukuServiceNotRunningToast
 	)
 
 	override fun render(uiState: SettingsUiState) {
 		handleSaveData?.isChecked = uiState.handleSaveData
-		shizuku?.isChecked = uiState.isShizukuEnabled
+		operationMode?.value = uiState.operationMode.value
+		operationMode?.summary = LocalizedString.resource(
+			R.string.preference_operation_mode_summary,
+			uiState.operationMode.title
+		).resolve(context)
 		if (uiState.requestSaveDataAccess) {
 			navigateToSaveDataAccessScreen()
 		}
 		if (uiState.requestShizukuPermission) {
 			requestShizukuPermission()
+		}
+		if (uiState.showShizukuPermissionDeniedToast) {
+			showShizukuPermissionDeniedToast()
+		}
+		if (uiState.showShizukuServiceNotRunningToast) {
+			showShizukuServiceNotRunningToast()
 		}
 	}
 
@@ -101,8 +134,27 @@ class PatcherSettingsController(
 		viewModel.dispatchEvent(ShizukuPermissionRequestHandled)
 		try {
 			Shizuku.requestPermission(SHIZUKU_PERMISSION_REQUEST_CODE)
-		} catch (_: Exception) { // ignore
+		} catch (_: Exception) {
+			viewModel.dispatchEvent(ShizukuServiceNotRunningReported)
 		}
+	}
+
+	private fun showShizukuPermissionDeniedToast() {
+		viewModel.dispatchEvent(ShizukuPermissionDeniedToastShown)
+		Toast.makeText(
+			context,
+			R.string.toast_shizuku_permission_denied,
+			Toast.LENGTH_SHORT
+		).show()
+	}
+
+	private fun showShizukuServiceNotRunningToast() {
+		viewModel.dispatchEvent(ShizukuServiceNotRunningToastShown)
+		Toast.makeText(
+			context,
+			R.string.toast_shizuku_service_not_running,
+			Toast.LENGTH_SHORT
+		).show()
 	}
 
 	private fun navigateToSaveDataAccessScreen() {

@@ -19,6 +19,7 @@
 package ru.solrudev.okkeipatcher.app.repository
 
 import ru.solrudev.okkeipatcher.app.model.Theme
+import ru.solrudev.okkeipatcher.app.model.OperationMode
 import ru.solrudev.okkeipatcher.domain.core.persistence.ReactiveDao
 import ru.solrudev.okkeipatcher.domain.repository.PatchStateRepository
 
@@ -27,6 +28,6 @@ interface PreferencesRepository : PatchStateRepository {
 	val isPatchUpdatesCheckEnabled: ReactiveDao<Boolean>
 	val theme: ReactiveDao<Theme>
 	val apiUrl: ReactiveDao<String>
-	val isShizukuEnabled: ReactiveDao<Boolean>
+	val operationMode: ReactiveDao<OperationMode>
 	suspend fun reset()
 }

@@ -118,8 +118,12 @@
 	<string name="preference_clear_data_title">Очистить все данные</string>
 	<string name="preference_save_data_title">Игровые сохранения</string>
 	<string name="preference_licenses_title">Лицензии</string>
+	<string name="preference_operation_mode_title">Режим работы</string>
+	<string name="preference_operation_mode_non_root">Без root</string>
+	<string name="preference_operation_mode_root">Root</string>
+	<string name="preference_operation_mode_shizuku">Shizuku</string>
+	<string name="preference_operation_mode_summary">Режим %s используется для установки/удаления пакетов и файловых операций</string>
 	<string name="preference_patch_api_url_title">URL серверного API</string>
-	<string name="preference_shizuku_title">Использовать Shizuku</string>
 	<string name="preference_theme_title">Тема приложения</string>
 	<string name="preference_updates_app_title">Приложение</string>
 	<string name="preference_updates_patch_title">Патч</string>
@@ -127,8 +131,6 @@
 	<string name="preference_patch_api_url_summary">Корневой URL серверного API для метаданных о патче</string>
 	<string name="preference_save_data_summary_off">Резервная копия сохранений игры не создаётся и не восстанавливается</string>
 	<string name="preference_save_data_summary_on">Резервная копия сохранений игры создаётся и восстанавливается</string>
-	<string name="preference_shizuku_summary_off">Используются стандартные API Android для установки/деинсталляции пакетов и файловых операций</string>
-	<string name="preference_shizuku_summary_on">Используется Shizuku для установки/деинсталляции пакетов и файловых операций</string>
 	<string name="preference_updates_app_summary_off">Обновления приложения не проверяются автоматически</string>
 	<string name="preference_updates_app_summary_on">Обновления приложения проверяются автоматически</string>
 	<string name="preference_updates_patch_summary_off">Обновления патча не проверяются автоматически</string>
@@ -170,6 +172,8 @@
 
 	<!--Toasts-->
 	<string name="toast_copied_to_clipboard">Скопировано в буфер обмена</string>
+	<string name="toast_shizuku_permission_denied">Разрешение Shizuku отклонено</string>
+	<string name="toast_shizuku_service_not_running">Служба Shizuku не запущена</string>
 
 	<!--Update statuses-->
 	<string name="update_status_awaiting_installation">Обновление готово к установке</string>

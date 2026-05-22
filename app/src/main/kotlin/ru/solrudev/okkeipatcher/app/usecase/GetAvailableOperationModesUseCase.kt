@@ -18,9 +18,11 @@
 
 package ru.solrudev.okkeipatcher.app.usecase
 
-import ru.solrudev.okkeipatcher.app.repository.PreferencesRepository
+import ru.solrudev.okkeipatcher.app.repository.OperationModeRepository
 import javax.inject.Inject
 
-class PersistIsShizukuEnabledUseCase @Inject constructor(private val preferencesRepository: PreferencesRepository) {
-	suspend operator fun invoke(value: Boolean) = preferencesRepository.isShizukuEnabled.persist(value)
+class GetAvailableOperationModesUseCase @Inject constructor(
+	private val operationModeRepository: OperationModeRepository
+) {
+	operator fun invoke() = operationModeRepository.getAvailableOperationModes()
 }

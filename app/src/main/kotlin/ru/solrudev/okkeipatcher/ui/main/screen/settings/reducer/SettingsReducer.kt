@@ -21,15 +21,20 @@ package ru.solrudev.okkeipatcher.ui.main.screen.settings.reducer
 import io.github.solrudev.jetmvi.Reducer
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEffect
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.AvailableOperationModesLoaded
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.HandleSaveDataChanged
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.IsAppUpdatesCheckEnabledChanged
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.IsPatchUpdatesCheckEnabledChanged
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.OperationModeChanged
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.PatchApiUrlChanged
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.SaveDataAccessRequestHandled
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.SaveDataAccessRequested
-import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.ShizukuChanged
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.ShizukuPermissionDenied
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.ShizukuPermissionDeniedToastShown
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.ShizukuPermissionRequestHandled
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.ShizukuPermissionRequested
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.ShizukuServiceNotRunningReported
+import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.ShizukuServiceNotRunningToastShown
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsEvent.ThemeChanged
 import ru.solrudev.okkeipatcher.ui.main.screen.settings.model.SettingsUiState
 import javax.inject.Inject
@@ -41,9 +46,14 @@ class SettingsReducer @Inject constructor() : Reducer<SettingsEvent, SettingsUiS
 		is HandleSaveDataChanged -> state.copy(handleSaveData = event.handleSaveData)
 		is SaveDataAccessRequested -> state.copy(requestSaveDataAccess = true)
 		is SaveDataAccessRequestHandled -> state.copy(requestSaveDataAccess = false)
-		is ShizukuChanged -> state.copy(isShizukuEnabled = event.isShizukuEnabled)
+		is AvailableOperationModesLoaded -> state.copy(availableOperationModes = event.operationsModes)
+		is OperationModeChanged -> state.copy(operationMode = event.operationMode)
 		is ShizukuPermissionRequested -> state.copy(requestShizukuPermission = true)
 		is ShizukuPermissionRequestHandled -> state.copy(requestShizukuPermission = false)
+		is ShizukuPermissionDenied -> state.copy(showShizukuPermissionDeniedToast = true)
+		is ShizukuPermissionDeniedToastShown -> state.copy(showShizukuPermissionDeniedToast = false)
+		is ShizukuServiceNotRunningReported -> state.copy(showShizukuServiceNotRunningToast = true)
+		is ShizukuServiceNotRunningToastShown -> state.copy(showShizukuServiceNotRunningToast = false)
 		is ThemeChanged -> state.copy(theme = event.theme)
 		is PatchApiUrlChanged -> state.copy(patchApiUrl = event.patchApiUrl)
 		is IsAppUpdatesCheckEnabledChanged -> state.copy(isAppUpdatesCheckEnabled = event.isAppUpdatesCheckEnabled)

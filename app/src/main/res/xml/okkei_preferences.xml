@@ -29,14 +29,14 @@
 			app:summaryOn="@string/preference_save_data_summary_on"
 			app:title="@string/preference_save_data_title" />
 
-		<SwitchPreferenceCompat
-			app:icon="@drawable/ic_shizuku_preference"
-			app:key="@string/preference_key_shizuku"
+		<ListPreference
+			app:dialogIcon="@drawable/ic_operation_mode_wrapper"
+			app:icon="@drawable/ic_operation_mode_preference"
+			app:key="@string/preference_key_operation_mode"
+			app:negativeButtonText="@string/button_text_cancel"
 			app:persistent="false"
-			app:widgetLayout="@layout/preference_material_switch"
-			app:summaryOff="@string/preference_shizuku_summary_off"
-			app:summaryOn="@string/preference_shizuku_summary_on"
-			app:title="@string/preference_shizuku_title" />
+			app:summary="@string/preference_operation_mode_summary"
+			app:title="@string/preference_operation_mode_title" />
 
 		<Preference
 			app:icon="@drawable/ic_clear_data_preference"

@@ -8,6 +8,7 @@ kotlinx-coroutines = "1.11.0"
 okio = "3.17.0"
 ackpine = "0.23.0"
 shizuku = "13.1.5"
+libsu = "6.0.0"
 
 [libraries]
 materialcomponents = { module = "com.google.android.material:material", version = "1.12.0" }
@@ -24,6 +25,7 @@ zip4j = { module = "net.lingala.zip4j:zip4j", version = "2.11.5" }
 ackpine-core = { module = "ru.solrudev.ackpine:ackpine-core", version.ref = "ackpine" }
 ackpine-ktx = { module = "ru.solrudev.ackpine:ackpine-ktx", version.ref = "ackpine" }
 ackpine-shizuku-ktx = { module = "ru.solrudev.ackpine:ackpine-shizuku-ktx", version.ref = "ackpine" }
+ackpine-libsu-ktx = { module = "ru.solrudev.ackpine:ackpine-libsu-ktx", version.ref = "ackpine" }
 jetmvi = { module = "io.github.solrudev:jetmvi", version = "0.1.5" }
 viewbindingpropertydelegate = { module = "com.github.kirich1409:viewbindingpropertydelegate-noreflection", version = "1.5.9" }
 progressbutton = { module = "com.github.razir.progressbutton:progressbutton", version = "2.1.0" }
@@ -32,7 +34,8 @@ lottie = { module = "com.airbnb.android:lottie", version = "6.5.2" }
 kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
 shizuku-api = { module = "dev.rikka.shizuku:api", version.ref = "shizuku" }
 shizuku-provider = { module = "dev.rikka.shizuku:provider", version.ref = "shizuku" }
-libsu-nio = "com.github.topjohnwu.libsu:nio:6.0.0"
+libsu-service = { module = "com.github.topjohnwu.libsu:service", version.ref = "libsu" }
+libsu-nio = { module = "com.github.topjohnwu.libsu:nio", version.ref = "libsu" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 okio-fakefilesystem = { module = "com.squareup.okio:okio-fakefilesystem", version.ref = "okio" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -43,8 +46,9 @@ junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version = "5.13.4"
 retrofit = ["retrofit", "retrofit-converter-moshi"]
 okhttp = ["okhttp", "okhttp-tls"]
 junit = ["junit-platform-commons", "junit-jupiter"]
-ackpine = ["ackpine-core", "ackpine-ktx", "ackpine-shizuku-ktx"]
+ackpine = ["ackpine-core", "ackpine-ktx", "ackpine-shizuku-ktx", "ackpine-libsu-ktx"]
 shizuku = ["shizuku-api", "shizuku-provider"]
+libsu = ["libsu-nio", "libsu-service"]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradleplugin" }

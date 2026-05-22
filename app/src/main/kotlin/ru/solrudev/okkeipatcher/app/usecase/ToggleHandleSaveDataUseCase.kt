@@ -34,9 +34,9 @@ class ToggleHandleSaveDataUseCase @Inject constructor(
 	 * Returns true if "handle save data" preference was toggled, false otherwise.
 	 */
 	suspend operator fun invoke(): Boolean {
-		val isShizukuEnabled = preferencesRepository.isShizukuEnabled
+		val operationMode = preferencesRepository.operationMode
 		val handleSaveData = getHandleSaveDataFlowUseCase().first()
-		val isSaveDataAccessGranted = permissionsRepository.isSaveDataAccessGranted(isShizukuEnabled)
+		val isSaveDataAccessGranted = permissionsRepository.isSaveDataAccessGranted(operationMode)
 		when {
 			handleSaveData -> persistHandleSaveDataUseCase(false)
 			isSaveDataAccessGranted -> persistHandleSaveDataUseCase(true)

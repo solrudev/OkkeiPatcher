@@ -21,8 +21,8 @@ package ru.solrudev.okkeipatcher.data.service
 import android.annotation.SuppressLint
 import android.app.Service
 import android.content.Intent
-import android.os.IBinder
 import com.github.sisong.HPatch
+import com.topjohnwu.superuser.ipc.RootService
 import java.io.File
 import java.io.FileDescriptor
 import kotlin.concurrent.thread
@@ -66,6 +66,11 @@ class BinaryPatchServiceBinder : IBinaryPatchService.Stub() {
 class BinaryPatchService : Service() {
 	private val binder = BinaryPatchServiceBinder()
 	override fun onBind(intent: Intent?) = binder
+}
+
+class RootBinaryPatchService : RootService() {
+	private val binder = BinaryPatchServiceBinder()
+	override fun onBind(intent: Intent) = binder
 }
 
 @SuppressLint("DiscouragedPrivateApi")

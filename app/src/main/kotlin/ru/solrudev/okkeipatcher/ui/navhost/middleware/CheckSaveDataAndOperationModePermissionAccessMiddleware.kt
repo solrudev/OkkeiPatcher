@@ -21,18 +21,18 @@ package ru.solrudev.okkeipatcher.ui.navhost.middleware
 import io.github.solrudev.jetmvi.Middleware
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import ru.solrudev.okkeipatcher.app.usecase.CheckOperationModePermissionUseCase
 import ru.solrudev.okkeipatcher.app.usecase.CheckSaveDataAccessUseCase
-import ru.solrudev.okkeipatcher.app.usecase.CheckShizukuPermissionUseCase
 import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostEvent
 import javax.inject.Inject
 
-class CheckSaveDataAndShizukuPermissionAccessMiddleware @Inject constructor(
-	private val checkShizukuPermissionUseCase: CheckShizukuPermissionUseCase,
+class CheckSaveDataAndOperationModePermissionAccessMiddleware @Inject constructor(
+	private val checkOperationModePermissionUseCase: CheckOperationModePermissionUseCase,
 	private val checkSaveDataAccessUseCase: CheckSaveDataAccessUseCase
 ) : Middleware<NavHostEvent> {
 
 	override fun apply(events: Flow<NavHostEvent>) = flow<Nothing> {
-		checkShizukuPermissionUseCase()
+		checkOperationModePermissionUseCase()
 		checkSaveDataAccessUseCase()
 	}
 }

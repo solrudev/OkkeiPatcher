@@ -26,8 +26,9 @@ import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Build
 import androidx.core.content.ContextCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
-import rikka.shizuku.Shizuku
+import ru.solrudev.okkeipatcher.app.model.OperationMode
 import ru.solrudev.okkeipatcher.app.model.Permission
+import ru.solrudev.okkeipatcher.app.repository.OperationModeRepository
 import ru.solrudev.okkeipatcher.app.repository.PermissionsRepository
 import ru.solrudev.okkeipatcher.data.util.ANDROID_DATA_TREE_URI
 import ru.solrudev.okkeipatcher.domain.core.persistence.Retrievable
@@ -36,11 +37,12 @@ import javax.inject.Singleton
 
 @Singleton
 class PermissionsRepositoryImpl @Inject constructor(
-	@ApplicationContext private val applicationContext: Context
+	@ApplicationContext private val applicationContext: Context,
+	private val operationModeRepository: OperationModeRepository
 ) : PermissionsRepository {
 
 	override fun getRequiredPermissions() = buildMap {
-		if (Build.VERSION.SDK_INT in Build.VERSION_CODES.M..< Build.VERSION_CODES.TIRAMISU) {
+		if (Build.VERSION.SDK_INT in Build.VERSION_CODES.M..<Build.VERSION_CODES.TIRAMISU) {
 			put(Permission.Storage, isStoragePermissionGranted())
 		}
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -51,11 +53,12 @@ class PermissionsRepositoryImpl @Inject constructor(
 		}
 	}
 
-	override suspend fun isSaveDataAccessGranted(isShizukuEnabled: Retrievable<Boolean>): Boolean {
+	override suspend fun isSaveDataAccessGranted(operationMode: Retrievable<OperationMode>): Boolean {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
 			return true
 		}
-		if (isShizukuEnabled.retrieve()) {
+		val mode = operationMode.retrieve()
+		if (mode.isElevated && operationModeRepository.isOperationModePermissionGranted(mode)) {
 			return true
 		}
 		return applicationContext
@@ -84,16 +87,5 @@ class PermissionsRepositoryImpl @Inject constructor(
 			return true
 		}
 		return ContextCompat.checkSelfPermission(applicationContext, POST_NOTIFICATIONS) == PERMISSION_GRANTED
-	}
-
-	override fun isShizukuPermissionGranted(): Boolean {
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-			return false
-		}
-		return try {
-			Shizuku.checkSelfPermission() == PERMISSION_GRANTED
-		} catch (_: Exception) {
-			false
-		}
 	}
 }

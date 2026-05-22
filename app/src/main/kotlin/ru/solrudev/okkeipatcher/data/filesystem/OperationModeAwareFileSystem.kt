@@ -38,9 +38,9 @@ import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
 import javax.inject.Inject
 
-class ShizukuFileSystem @Inject constructor(
+class OperationModeAwareFileSystem @Inject constructor(
 	@LocalFileSystem private val localFileSystem: FileSystem,
-	private val fileSystemManagerProvider: ShizukuFileSystemManagerProvider
+	private val fileSystemManagerProvider: FileSystemManagerProvider
 ) : FileSystem() {
 
 	override fun canonicalize(path: Path): Path {

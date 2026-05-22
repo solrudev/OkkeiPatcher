@@ -43,6 +43,8 @@
 
 	<uses-sdk tools:overrideLibrary="androidx.navigation.*,
 		androidx.fragment.*,
+		ru.solrudev.ackpine.libsu.*,
+		ru.solrudev.ackpine.privileged.*,
 		ru.solrudev.ackpine.shizuku.*,
 		rikka.shizuku.*,
 		com.topjohnwu.superuser.nio" />

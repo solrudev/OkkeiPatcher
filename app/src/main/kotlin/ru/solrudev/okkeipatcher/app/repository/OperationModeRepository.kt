@@ -16,13 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ru.solrudev.okkeipatcher.app.usecase
+package ru.solrudev.okkeipatcher.app.repository
 
-import ru.solrudev.okkeipatcher.app.repository.PreferencesRepository
-import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
+import ru.solrudev.okkeipatcher.app.model.OperationMode
 
-class GetIsShizukuEnabledFlowUseCase @Inject constructor(
-	private val preferencesRepository: PreferencesRepository
-) {
-	operator fun invoke() = preferencesRepository.isShizukuEnabled.flow
+interface OperationModeRepository {
+	fun getAvailableOperationModes(): Set<OperationMode>
+	fun isOperationModeSupported(operationMode: OperationMode): Boolean
+	suspend fun isOperationModePermissionGranted(operationMode: OperationMode): Boolean
+	fun isShizukuServiceRunning(): Boolean
+	fun getEffectiveOperationModeFlow(operationMode: Flow<OperationMode>): Flow<OperationMode>
 }

@@ -21,7 +21,7 @@ package ru.solrudev.okkeipatcher.ui.navhost
 import dagger.hilt.android.scopes.ViewModelScoped
 import io.github.solrudev.jetmvi.JetFeature
 import ru.solrudev.okkeipatcher.ui.navhost.middleware.CheckPermissionsMiddleware
-import ru.solrudev.okkeipatcher.ui.navhost.middleware.CheckSaveDataAndShizukuPermissionAccessMiddleware
+import ru.solrudev.okkeipatcher.ui.navhost.middleware.CheckSaveDataAndOperationModePermissionAccessMiddleware
 import ru.solrudev.okkeipatcher.ui.navhost.middleware.ObservePendingWorkMiddleware
 import ru.solrudev.okkeipatcher.ui.navhost.middleware.ObserveThemeMiddleware
 import ru.solrudev.okkeipatcher.ui.navhost.model.NavHostEvent
@@ -33,14 +33,14 @@ import javax.inject.Inject
 class NavHostFeature @Inject constructor(
 	checkPermissionsMiddleware: CheckPermissionsMiddleware,
 	observePendingWorkMiddleware: ObservePendingWorkMiddleware,
-	checkSaveDataAndShizukuPermissionAccessMiddleware: CheckSaveDataAndShizukuPermissionAccessMiddleware,
+	checkSaveDataAndOperationModePermissionAccessMiddleware: CheckSaveDataAndOperationModePermissionAccessMiddleware,
 	observeThemeMiddleware: ObserveThemeMiddleware,
 	navHostReducer: NavHostReducer
 ) : JetFeature<NavHostEvent, NavHostUiState>(
 	middlewares = listOf(
 		checkPermissionsMiddleware,
 		observePendingWorkMiddleware,
-		checkSaveDataAndShizukuPermissionAccessMiddleware,
+		checkSaveDataAndOperationModePermissionAccessMiddleware,
 		observeThemeMiddleware
 	),
 	reducer = navHostReducer,

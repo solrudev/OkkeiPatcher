@@ -30,6 +30,7 @@ import kotlinx.coroutines.flow.stateIn
 import okio.Path
 import ru.solrudev.ackpine.installer.PackageInstaller
 import ru.solrudev.ackpine.installer.createSession
+import ru.solrudev.ackpine.libsu.libsu
 import ru.solrudev.ackpine.resources.ResolvableString
 import ru.solrudev.ackpine.session.Session
 import ru.solrudev.ackpine.session.await
@@ -40,8 +41,9 @@ import ru.solrudev.ackpine.shizuku.shizuku
 import ru.solrudev.ackpine.uninstaller.PackageUninstaller
 import ru.solrudev.ackpine.uninstaller.createSession
 import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.app.model.OperationMode
+import ru.solrudev.okkeipatcher.app.repository.OperationModeRepository
 import ru.solrudev.okkeipatcher.app.repository.PreferencesRepository
-import ru.solrudev.okkeipatcher.data.shizuku.ShizukuAvailabilityFlow
 import ru.solrudev.okkeipatcher.di.IoDispatcher
 import ru.solrudev.okkeipatcher.domain.core.Result
 import javax.inject.Inject
@@ -55,12 +57,15 @@ class PackageInstallerFacadeImpl @Inject constructor(
 	private val packageInstaller: PackageInstaller,
 	private val packageUninstaller: PackageUninstaller,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+	operationModeRepository: OperationModeRepository,
 	preferencesRepository: PreferencesRepository
 ) : PackageInstallerFacade {
 
 	private val coroutineScope = CoroutineScope(ioDispatcher)
 
-	private val isShizukuAvailable = ShizukuAvailabilityFlow(preferencesRepository.isShizukuEnabled.flow)
+	private val effectiveOperationMode = operationModeRepository.getEffectiveOperationModeFlow(
+		preferencesRepository.operationMode.flow
+	)
 		.stateIn(coroutineScope, SharingStarted.Lazily, initialValue = null)
 		.filterNotNull()
 
@@ -74,10 +79,18 @@ class PackageInstallerFacadeImpl @Inject constructor(
 				title = NotificationTitleInstall
 				contentText = NotificationMessageInstall(appName)
 			}
-			if (isShizukuAvailable.first()) {
-				shizuku {
+			when (effectiveOperationMode.first()) {
+				OperationMode.Root -> libsu {
 					bypassLowTargetSdkBlock = true
 					replaceExisting = true
+				}
+
+				OperationMode.Shizuku -> shizuku {
+					bypassLowTargetSdkBlock = true
+					replaceExisting = true
+				}
+
+				OperationMode.NonRoot -> { // no-op
 				}
 			}
 		}
@@ -94,8 +107,10 @@ class PackageInstallerFacadeImpl @Inject constructor(
 				title = NotificationTitleUninstall
 				contentText = NotificationMessageUninstall(appName)
 			}
-			if (isShizukuAvailable.first()) {
-				shizuku()
+			when (effectiveOperationMode.first()) {
+				OperationMode.Root -> libsu()
+				OperationMode.Shizuku -> shizuku()
+				OperationMode.NonRoot -> Unit
 			}
 		}
 		return when (val result = session.await()) {

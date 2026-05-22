@@ -18,28 +18,15 @@
 
 package ru.solrudev.okkeipatcher.app.usecase
 
-import ru.solrudev.okkeipatcher.app.repository.PermissionsRepository
+import ru.solrudev.okkeipatcher.app.repository.OperationModeRepository
 import ru.solrudev.okkeipatcher.app.repository.PreferencesRepository
 import javax.inject.Inject
 
-class ToggleShizukuUseCase @Inject constructor(
-	private val permissionsRepository: PermissionsRepository,
+class GetOperationModeFlowUseCase @Inject constructor(
 	private val preferencesRepository: PreferencesRepository,
-	private val persistIsShizukuEnabledUseCase: PersistIsShizukuEnabledUseCase,
-	private val checkSaveDataAccessUseCase: CheckSaveDataAccessUseCase
+	private val operationModeRepository: OperationModeRepository
 ) {
-
-	/**
-	 * Returns true if "shizuku" preference was toggled, false otherwise.
-	 */
-	suspend operator fun invoke(): Boolean {
-		val isShizukuEnabled = preferencesRepository.isShizukuEnabled.retrieve()
-		val isShizukuPermissionGranted = permissionsRepository.isShizukuPermissionGranted()
-		when {
-			isShizukuEnabled -> persistIsShizukuEnabledUseCase(false)
-			isShizukuPermissionGranted -> persistIsShizukuEnabledUseCase(true)
-		}
-		checkSaveDataAccessUseCase()
-		return isShizukuEnabled || isShizukuPermissionGranted
-	}
+	operator fun invoke() = operationModeRepository.getEffectiveOperationModeFlow(
+		preferencesRepository.operationMode.flow
+	)
 }

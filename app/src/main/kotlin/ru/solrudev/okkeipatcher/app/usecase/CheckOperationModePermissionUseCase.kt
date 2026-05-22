@@ -18,18 +18,26 @@
 
 package ru.solrudev.okkeipatcher.app.usecase
 
-import ru.solrudev.okkeipatcher.app.repository.PermissionsRepository
+import ru.solrudev.okkeipatcher.app.model.OperationMode
+import ru.solrudev.okkeipatcher.app.repository.OperationModeRepository
 import ru.solrudev.okkeipatcher.app.repository.PreferencesRepository
 import javax.inject.Inject
 
-class CheckShizukuPermissionUseCase @Inject constructor(
-	private val permissionsRepository: PermissionsRepository,
+class CheckOperationModePermissionUseCase @Inject constructor(
+	private val operationModeRepository: OperationModeRepository,
 	private val preferencesRepository: PreferencesRepository
 ) {
 	suspend operator fun invoke() {
-		val isShizukuEnabled = preferencesRepository.isShizukuEnabled
-		val isShizukuPermissionGranted = permissionsRepository.isShizukuPermissionGranted()
-		val currentIsShizukuEnabled = isShizukuEnabled.retrieve()
-		isShizukuEnabled.persist(currentIsShizukuEnabled && isShizukuPermissionGranted)
+		val currentMode = preferencesRepository.operationMode.retrieve()
+		if (
+			currentMode == OperationMode.Shizuku
+			&& operationModeRepository.isOperationModeSupported(currentMode)
+			&& !operationModeRepository.isShizukuServiceRunning()
+		) {
+			return
+		}
+		if (!operationModeRepository.isOperationModePermissionGranted(currentMode)) {
+			preferencesRepository.operationMode.persist(OperationMode.NonRoot)
+		}
 	}
 }

@@ -28,9 +28,10 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import okio.FileSystem
+import ru.solrudev.okkeipatcher.app.repository.OperationModeRepository
 import ru.solrudev.okkeipatcher.app.repository.PreferencesRepository
-import ru.solrudev.okkeipatcher.data.filesystem.ShizukuFileSystem
-import ru.solrudev.okkeipatcher.data.filesystem.ShizukuFileSystemManagerProvider
+import ru.solrudev.okkeipatcher.data.filesystem.FileSystemManagerProvider
+import ru.solrudev.okkeipatcher.data.filesystem.OperationModeAwareFileSystem
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
@@ -49,8 +50,8 @@ object FileSystemModule {
 	@DefaultFileSystem
 	@Provides
 	@Singleton
-	fun provideDefaultFileSystem(shizukuFileSystem: ShizukuFileSystem): FileSystem {
-		return shizukuFileSystem
+	fun provideDefaultFileSystem(operationModeAwareFileSystem: OperationModeAwareFileSystem): FileSystem {
+		return operationModeAwareFileSystem
 	}
 
 	@LocalFileSystem
@@ -61,13 +62,17 @@ object FileSystemModule {
 
 	@Provides
 	@Singleton
-	fun provideShizukuFileSystemManagerProvider(
+	fun provideFileSystemManagerProvider(
 		preferencesRepository: PreferencesRepository,
+		operationModeRepository: OperationModeRepository,
 		@IoDispatcher ioDispatcher: CoroutineDispatcher,
+		@MainDispatcher mainDispatcher: CoroutineDispatcher,
 		@ApplicationContext context: Context
-	) = ShizukuFileSystemManagerProvider(
-		preferencesRepository.isShizukuEnabled.flow,
+	) = FileSystemManagerProvider(
+		preferencesRepository.operationMode.flow,
+		operationModeRepository,
 		ioDispatcher,
+		mainDispatcher,
 		context.packageName
 	)
 }

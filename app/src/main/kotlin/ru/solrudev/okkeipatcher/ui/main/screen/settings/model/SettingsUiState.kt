@@ -19,15 +19,19 @@
 package ru.solrudev.okkeipatcher.ui.main.screen.settings.model
 
 import io.github.solrudev.jetmvi.JetState
+import ru.solrudev.okkeipatcher.app.model.OperationMode
 import ru.solrudev.okkeipatcher.app.model.Theme
 
 data class SettingsUiState(
 	val handleSaveData: Boolean = true,
-	val isShizukuEnabled: Boolean = false,
+	val operationMode: OperationMode = OperationMode.NonRoot,
+	val availableOperationModes: Set<OperationMode> = emptySet(),
 	val isAppUpdatesCheckEnabled: Boolean = true,
 	val isPatchUpdatesCheckEnabled: Boolean = true,
 	val requestSaveDataAccess: Boolean = false,
 	val requestShizukuPermission: Boolean = false,
+	val showShizukuPermissionDeniedToast: Boolean = false,
+	val showShizukuServiceNotRunningToast: Boolean = false,
 	val theme: Theme = Theme.FollowSystem,
 	val patchApiUrl: String = ""
 ) : JetState

@@ -37,9 +37,10 @@ import okio.Sink
 import okio.Source
 import okio.sink
 import okio.source
+import ru.solrudev.okkeipatcher.app.model.OperationMode
+import ru.solrudev.okkeipatcher.app.repository.OperationModeRepository
 import ru.solrudev.okkeipatcher.app.repository.PreferencesRepository
 import ru.solrudev.okkeipatcher.data.PatcherEnvironment
-import ru.solrudev.okkeipatcher.data.shizuku.ShizukuAvailabilityFlow
 import ru.solrudev.okkeipatcher.data.util.ANDROID_DATA_TREE_URI
 import ru.solrudev.okkeipatcher.data.util.GAME_PACKAGE_NAME
 import ru.solrudev.okkeipatcher.di.DefaultFileSystem
@@ -134,22 +135,23 @@ class SaveDataFileFactory @Inject constructor(
 	@ApplicationContext private val applicationContext: Context,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 	@DefaultFileSystem private val fileSystem: FileSystem,
+	operationModeRepository: OperationModeRepository,
 	preferencesRepository: PreferencesRepository
 ) : SuspendFactory<SaveDataFile> {
 
 	private val coroutineScope = CoroutineScope(ioDispatcher)
 
-	private val isShizukuAvailable = ShizukuAvailabilityFlow(preferencesRepository.isShizukuEnabled.flow)
+	private val effectiveOperationMode = operationModeRepository.getEffectiveOperationModeFlow(
+		preferencesRepository.operationMode.flow
+	)
 		.stateIn(coroutineScope, SharingStarted.Lazily, initialValue = null)
 		.filterNotNull()
 
 	override suspend fun create(): SaveDataFile {
-		if (isShizukuAvailable.first()) {
-			return SaveDataRawFile(environment, fileSystem)
+		return when {
+			effectiveOperationMode.first() != OperationMode.NonRoot -> SaveDataRawFile(environment, fileSystem)
+			Build.VERSION.SDK_INT >= Build.VERSION_CODES.R -> SaveDataDocumentFile(applicationContext)
+			else -> SaveDataRawFile(environment, fileSystem)
 		}
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-			return SaveDataDocumentFile(applicationContext)
-		}
-		return SaveDataRawFile(environment, fileSystem)
 	}
 }

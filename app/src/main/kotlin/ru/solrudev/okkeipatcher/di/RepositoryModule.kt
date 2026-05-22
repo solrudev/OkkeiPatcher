@@ -27,6 +27,7 @@ import dagger.hilt.components.SingletonComponent
 import ru.solrudev.okkeipatcher.app.repository.ConnectivityRepository
 import ru.solrudev.okkeipatcher.app.repository.LicensesRepository
 import ru.solrudev.okkeipatcher.app.repository.OkkeiPatcherRepository
+import ru.solrudev.okkeipatcher.app.repository.OperationModeRepository
 import ru.solrudev.okkeipatcher.app.repository.PermissionsRepository
 import ru.solrudev.okkeipatcher.app.repository.PreferencesRepository
 import ru.solrudev.okkeipatcher.app.repository.work.DownloadUpdateWorkRepository
@@ -35,6 +36,7 @@ import ru.solrudev.okkeipatcher.data.repository.HashRepositoryImpl
 import ru.solrudev.okkeipatcher.data.repository.app.ConnectivityRepositoryImpl
 import ru.solrudev.okkeipatcher.data.repository.app.LicensesRepositoryImpl
 import ru.solrudev.okkeipatcher.data.repository.app.OkkeiPatcherRepositoryImpl
+import ru.solrudev.okkeipatcher.data.repository.app.OperationModeRepositoryImpl
 import ru.solrudev.okkeipatcher.data.repository.app.PermissionsRepositoryImpl
 import ru.solrudev.okkeipatcher.data.repository.app.PreferencesRepositoryImpl
 import ru.solrudev.okkeipatcher.data.repository.app.work.DownloadUpdateWorkRepositoryImpl
@@ -99,4 +101,7 @@ interface RepositoryModule {
 	fun bindDownloadUpdateWorkRepository(
 		downloadUpdateWorkRepository: DownloadUpdateWorkRepositoryImpl
 	): DownloadUpdateWorkRepository
+
+	@Binds
+	fun bindOperationModeRepository(operationModeRepository: OperationModeRepositoryImpl): OperationModeRepository
 }

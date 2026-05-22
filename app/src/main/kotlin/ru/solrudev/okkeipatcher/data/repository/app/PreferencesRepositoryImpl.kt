@@ -22,6 +22,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import ru.solrudev.okkeipatcher.app.model.OperationMode
 import ru.solrudev.okkeipatcher.app.model.Theme
 import ru.solrudev.okkeipatcher.app.repository.PermissionsRepository
 import ru.solrudev.okkeipatcher.app.repository.PreferencesRepository
@@ -41,7 +42,7 @@ private val THEME = intPreferencesKey("theme")
 private val CHECK_APP_UPDATES = booleanPreferencesKey("check_app_updates")
 private val CHECK_PATCH_UPDATES = booleanPreferencesKey("check_patch_updates")
 private val API_URL = stringPreferencesKey("api_url")
-private val IS_SHIZUKU_ENABLED = booleanPreferencesKey("is_shizuku_enabled")
+private val OPERATION_MODE = stringPreferencesKey("operation_mode")
 
 @Singleton
 class PreferencesRepositoryImpl @Inject constructor(
@@ -49,12 +50,16 @@ class PreferencesRepositoryImpl @Inject constructor(
 	permissionsRepository: PermissionsRepository
 ) : PreferencesRepository {
 
-	private val preferences = preferencesDataStoreFactory.create("okkei_preferences")
+	private val preferences = preferencesDataStoreFactory.create(
+		name = "okkei_preferences",
+		migrations = listOf(Migration_Preferences_0_1)
+	)
+
 	override val patchStatus = Preference(key = IS_PATCHED, defaultValue = { false }, preferences)
 
 	override val handleSaveData = Preference(
 		key = HANDLE_SAVE_DATA,
-		defaultValue = { permissionsRepository.isSaveDataAccessGranted(isShizukuEnabled) },
+		defaultValue = { permissionsRepository.isSaveDataAccessGranted(operationMode) },
 		preferences
 	)
 
@@ -92,9 +97,10 @@ class PreferencesRepositoryImpl @Inject constructor(
 		preferences
 	)
 
-	override val isShizukuEnabled = Preference(
-		key = IS_SHIZUKU_ENABLED,
-		defaultValue = { false },
+	override val operationMode = MappedPreference(
+		key = OPERATION_MODE,
+		toDataType = { it.value },
+		toDomainType = OperationMode::fromValue,
 		preferences
 	)
 

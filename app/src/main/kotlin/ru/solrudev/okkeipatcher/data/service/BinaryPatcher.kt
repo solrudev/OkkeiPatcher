@@ -23,10 +23,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import android.os.RemoteException
+import com.topjohnwu.superuser.ipc.RootService
 import dagger.Reusable
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.asExecutor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.isActive
@@ -38,12 +40,15 @@ import okio.Path
 import rikka.shizuku.Shizuku
 import rikka.shizuku.Shizuku.UserServiceArgs
 import ru.solrudev.okkeipatcher.R
+import ru.solrudev.okkeipatcher.app.model.OperationMode
+import ru.solrudev.okkeipatcher.app.repository.OperationModeRepository
 import ru.solrudev.okkeipatcher.app.repository.PreferencesRepository
-import ru.solrudev.okkeipatcher.data.shizuku.ShizukuAvailabilityFlow
 import ru.solrudev.okkeipatcher.di.DefaultFileSystem
 import ru.solrudev.okkeipatcher.di.IoDispatcher
+import ru.solrudev.okkeipatcher.di.MainDispatcher
 import ru.solrudev.okkeipatcher.domain.core.Result
 import ru.solrudev.okkeipatcher.domain.util.DEFAULT_PROGRESS_MAX
+import java.util.concurrent.Executor
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -65,9 +70,13 @@ fun interface BinaryPatcher {
 class BinaryPatcherImpl @Inject constructor(
 	@ApplicationContext private val applicationContext: Context,
 	@IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+	@MainDispatcher mainDispatcher: CoroutineDispatcher,
 	@DefaultFileSystem private val fileSystem: FileSystem,
+	private val operationModeRepository: OperationModeRepository,
 	private val preferencesRepository: PreferencesRepository
 ) : BinaryPatcher {
+
+	private val mainExecutor = mainDispatcher.asExecutor()
 
 	override suspend fun patch(
 		inputPath: Path,
@@ -96,12 +105,14 @@ class BinaryPatcherImpl @Inject constructor(
 		outputPath: Path,
 		diffPath: Path
 	): Int {
-		val useShizuku = ShizukuAvailabilityFlow(preferencesRepository.isShizukuEnabled.flow).first()
+		val operationMode = operationModeRepository.getEffectiveOperationModeFlow(
+			preferencesRepository.operationMode.flow
+		).first()
 		val serviceConnection = BinaryPatchServiceConnection
-			.create(useShizuku, applicationContext)
+			.create(operationMode, applicationContext, mainExecutor)
 			.bindService()
 		val service = serviceConnection.awaitService()
-			?: error("Unable to connect to BinaryPatchService, useShizuku=$useShizuku")
+			?: error("Unable to connect to BinaryPatchService, operationMode=$operationMode")
 		return suspendCancellableCoroutine { continuation ->
 			val callback = BinaryPatchServiceBinder.Callback(continuation::resume)
 			continuation.invokeOnCancellation {
@@ -144,18 +155,25 @@ class BinaryPatcherImpl @Inject constructor(
 		}
 
 		companion object {
-			fun create(useShizuku: Boolean, context: Context): BinaryPatchServiceConnection {
-				if (!useShizuku) {
-					return StandardBinaryPatchServiceConnection(context)
+			fun create(
+				mode: OperationMode,
+				context: Context,
+				mainExecutor: Executor
+			): BinaryPatchServiceConnection {
+				return when (mode) {
+					OperationMode.NonRoot -> StandardBinaryPatchServiceConnection(context)
+					OperationMode.Root -> RootBinaryPatchServiceConnection(context, mainExecutor)
+					OperationMode.Shizuku -> {
+						val shizukuArgs = UserServiceArgs(
+							ComponentName(context.packageName, BinaryPatchServiceBinder::class.java.name)
+						)
+							.daemon(false)
+							.processNameSuffix("binarypatch")
+							.tag("BinaryPatchService")
+							.version(1)
+						ShizukuBinaryPatchServiceConnection(shizukuArgs)
+					}
 				}
-				val shizukuArgs = UserServiceArgs(
-					ComponentName(context.packageName, BinaryPatchServiceBinder::class.java.name)
-				)
-					.daemon(false)
-					.processNameSuffix("binarypatch")
-					.tag("BinaryPatchService")
-					.version(1)
-				return ShizukuBinaryPatchServiceConnection(shizukuArgs)
 			}
 		}
 	}
@@ -189,6 +207,25 @@ class BinaryPatcherImpl @Inject constructor(
 		override fun onServiceDisconnected(name: ComponentName?) {
 			super.onServiceDisconnected(name)
 			Shizuku.unbindUserService(shizukuArgs, this, true)
+		}
+	}
+
+	private class RootBinaryPatchServiceConnection(
+		private val context: Context,
+		private val mainExecutor: Executor
+	) : BinaryPatchServiceConnection() {
+
+		override fun bindService() = apply {
+			mainExecutor.execute {
+				RootService.bind(Intent(context, RootBinaryPatchService::class.java), this)
+			}
+		}
+
+		override fun onServiceDisconnected(name: ComponentName?) {
+			super.onServiceDisconnected(name)
+			mainExecutor.execute {
+				RootService.unbind(this)
+			}
 		}
 	}
 }

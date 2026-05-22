@@ -1,6 +1,6 @@
 /*
  * Okkei Patcher
- * Copyright (C) 2023 Ilya Fomichev
+ * Copyright (C) 2026 Ilya Fomichev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,19 +18,10 @@
 
 package ru.solrudev.okkeipatcher.app.usecase
 
-import ru.solrudev.okkeipatcher.app.repository.PermissionsRepository
+import ru.solrudev.okkeipatcher.app.model.OperationMode
 import ru.solrudev.okkeipatcher.app.repository.PreferencesRepository
 import javax.inject.Inject
 
-class CheckSaveDataAccessUseCase @Inject constructor(
-	private val permissionsRepository: PermissionsRepository,
-	private val preferencesRepository: PreferencesRepository
-) {
-
-	suspend operator fun invoke() {
-		val operationMode = preferencesRepository.operationMode
-		val isSaveDataAccessGranted = permissionsRepository.isSaveDataAccessGranted(operationMode)
-		val currentHandleSaveData = preferencesRepository.handleSaveData.retrieve()
-		preferencesRepository.handleSaveData.persist(currentHandleSaveData && isSaveDataAccessGranted)
-	}
+class PersistOperationModeUseCase @Inject constructor(private val preferencesRepository: PreferencesRepository) {
+	suspend operator fun invoke(value: OperationMode) = preferencesRepository.operationMode.persist(value)
 }

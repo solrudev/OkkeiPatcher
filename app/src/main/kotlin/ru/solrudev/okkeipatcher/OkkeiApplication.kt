@@ -34,6 +34,7 @@ import kotlinx.coroutines.runBlocking
 import ru.solrudev.okkeipatcher.app.model.Theme
 import ru.solrudev.okkeipatcher.app.usecase.GetThemeFlowUseCase
 import ru.solrudev.okkeipatcher.app.usecase.StartNetworkMonitoringUseCase
+import ru.solrudev.okkeipatcher.data.initializeRootShellBuilder
 import javax.inject.Inject
 
 @HiltAndroidApp
@@ -56,6 +57,7 @@ class OkkeiApplication : Application(), Configuration.Provider {
 	override fun onCreate() {
 		super.onCreate()
 		AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
+		initializeRootShellBuilder()
 		initTheme()
 		startNetworkMonitoringUseCase()
 		createNotificationChannels()

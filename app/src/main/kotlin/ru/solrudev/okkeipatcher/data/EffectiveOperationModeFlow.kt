@@ -16,10 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ru.solrudev.okkeipatcher.data.shizuku
+package ru.solrudev.okkeipatcher.data
 
+import android.content.Context
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Build
+import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -27,18 +29,31 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import rikka.shizuku.Shizuku
+import ru.solrudev.okkeipatcher.app.model.OperationMode
+import java.util.Collections
+import java.util.concurrent.ConcurrentHashMap
 
 @Suppress("FunctionName")
-fun ShizukuAvailabilityFlow(isShizukuEnabled: Flow<Boolean>) = combine(
-	isShizukuEnabled.distinctUntilChanged(),
-	isShizukuBinderAvailable()
-) { useShizuku, isBinderAvailable ->
-	useShizuku
-			&& isBinderAvailable
+fun EffectiveOperationModeFlow(operationMode: Flow<OperationMode>) = combine(
+	operationMode.distinctUntilChanged(),
+	isShizukuBinderAvailable(),
+	isRootAvailable()
+) { mode, isShizukuBinderAvailable, isRootAvailable ->
+	when (mode) {
+		OperationMode.NonRoot -> OperationMode.NonRoot
+		OperationMode.Root -> if (isRootAvailable) OperationMode.Root else OperationMode.NonRoot
+		OperationMode.Shizuku -> if (
+			isShizukuBinderAvailable
 			&& Shizuku.getVersion() >= 10
 			&& Shizuku.checkSelfPermission() == PERMISSION_GRANTED
+		) {
+			OperationMode.Shizuku
+		} else {
+			OperationMode.NonRoot
+		}
+	}
 }
-	.catch { _ -> emit(false) }
+	.catch { _ -> emit(OperationMode.NonRoot) }
 	.distinctUntilChanged()
 
 private fun isShizukuBinderAvailable() = callbackFlow {
@@ -58,5 +73,44 @@ private fun isShizukuBinderAvailable() = callbackFlow {
 	awaitClose {
 		Shizuku.removeBinderReceivedListener(receivedListener)
 		Shizuku.removeBinderDeadListener(deadListener)
+	}
+}
+
+private fun isRootAvailable() = callbackFlow {
+	if (Build.VERSION.SDK_INT < 21) {
+		send(false)
+		return@callbackFlow
+	}
+	val callback: (Shell) -> Unit = { shell ->
+		trySend(shell.isRoot)
+	}
+	ShellInitializer.initCallbacks += callback
+	val cachedShell = Shell.getCachedShell()
+	if (cachedShell != null) {
+		send(cachedShell.isRoot)
+	} else {
+		send(false)
+	}
+	awaitClose {
+		ShellInitializer.initCallbacks -= callback
+	}
+}
+
+fun initializeRootShellBuilder() {
+	val builder = Shell.Builder.create().setInitializers(ShellInitializer::class.java)
+	Shell.setDefaultBuilder(builder)
+}
+
+private class ShellInitializer : Shell.Initializer() {
+
+	override fun onInit(context: Context, shell: Shell): Boolean {
+		for (callback in initCallbacks) {
+			callback(shell)
+		}
+		return true
+	}
+
+	companion object {
+		val initCallbacks: MutableSet<((Shell) -> Unit)> = Collections.newSetFromMap(ConcurrentHashMap())
 	}
 }
