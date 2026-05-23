@@ -46,7 +46,7 @@ class SettingsReducer @Inject constructor() : Reducer<SettingsEvent, SettingsUiS
 		is HandleSaveDataChanged -> state.copy(handleSaveData = event.handleSaveData)
 		is SaveDataAccessRequested -> state.copy(requestSaveDataAccess = true)
 		is SaveDataAccessRequestHandled -> state.copy(requestSaveDataAccess = false)
-		is AvailableOperationModesLoaded -> state.copy(availableOperationModes = event.operationsModes)
+		is AvailableOperationModesLoaded -> state.copy(availableOperationModes = event.operationModes)
 		is OperationModeChanged -> state.copy(operationMode = event.operationMode)
 		is ShizukuPermissionRequested -> state.copy(requestShizukuPermission = true)
 		is ShizukuPermissionRequestHandled -> state.copy(requestShizukuPermission = false)

@@ -37,7 +37,7 @@ sealed interface SettingsEvent : JetEvent {
 	data object IsAppUpdatesCheckEnabledToggled : SettingsEvent, SettingsEffect
 	data object IsPatchUpdatesCheckEnabledToggled : SettingsEvent, SettingsEffect
 	data class HandleSaveDataChanged(val handleSaveData: Boolean) : SettingsEvent
-	data class AvailableOperationModesLoaded(val operationsModes: Set<OperationMode>) : SettingsEvent
+	data class AvailableOperationModesLoaded(val operationModes: Set<OperationMode>) : SettingsEvent
 	data class OperationModeSelected(val operationMode: OperationMode) : SettingsEvent, SettingsEffect
 	data class OperationModeChanged(val operationMode: OperationMode) : SettingsEvent
 	data class IsAppUpdatesCheckEnabledChanged(val isAppUpdatesCheckEnabled: Boolean) : SettingsEvent

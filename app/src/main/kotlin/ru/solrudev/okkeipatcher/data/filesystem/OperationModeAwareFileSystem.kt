@@ -112,7 +112,7 @@ class OperationModeAwareFileSystem @Inject constructor(
 	}
 
 	override fun openReadWrite(file: Path, mustCreate: Boolean, mustExist: Boolean): FileHandle {
-		val fs = fileSystemManagerProvider.get() ?: return localFileSystem.openReadOnly(file)
+		val fs = fileSystemManagerProvider.get() ?: return localFileSystem.openReadWrite(file)
 		require(!mustCreate || !mustExist) {
 			"Cannot require mustCreate and mustExist at the same time."
 		}
