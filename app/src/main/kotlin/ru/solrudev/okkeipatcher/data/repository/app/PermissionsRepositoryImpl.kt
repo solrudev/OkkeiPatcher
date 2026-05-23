@@ -67,7 +67,13 @@ class PermissionsRepositoryImpl @Inject constructor(
 			.any { it.uri == ANDROID_DATA_TREE_URI && it.isReadPermission && it.isWritePermission }
 	}
 
-	override fun isStoragePermissionGranted(): Boolean {
+	override fun isPermissionGranted(permission: Permission) = when (permission) {
+		Permission.Install -> isInstallPermissionGranted()
+		Permission.Notifications -> isNotificationsPermissionGranted()
+		Permission.Storage -> isStoragePermissionGranted()
+	}
+
+	private fun isStoragePermissionGranted(): Boolean {
 		val isReadStorageGranted =
 			ContextCompat.checkSelfPermission(applicationContext, READ_EXTERNAL_STORAGE) == PERMISSION_GRANTED
 		val isWriteStorageGranted =
@@ -75,14 +81,14 @@ class PermissionsRepositoryImpl @Inject constructor(
 		return isReadStorageGranted && isWriteStorageGranted
 	}
 
-	override fun isInstallPermissionGranted(): Boolean {
+	private fun isInstallPermissionGranted(): Boolean {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
 			return true
 		}
 		return applicationContext.packageManager.canRequestPackageInstalls()
 	}
 
-	override fun isNotificationsPermissionGranted(): Boolean {
+	private fun isNotificationsPermissionGranted(): Boolean {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
 			return true
 		}
