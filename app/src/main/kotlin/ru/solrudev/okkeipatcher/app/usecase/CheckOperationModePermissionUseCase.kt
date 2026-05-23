@@ -29,13 +29,6 @@ class CheckOperationModePermissionUseCase @Inject constructor(
 ) {
 	suspend operator fun invoke() {
 		val currentMode = preferencesRepository.operationMode.retrieve()
-		if (
-			currentMode == OperationMode.Shizuku
-			&& operationModeRepository.isOperationModeSupported(currentMode)
-			&& !operationModeRepository.isShizukuServiceRunning()
-		) {
-			return
-		}
 		if (!operationModeRepository.isOperationModePermissionGranted(currentMode)) {
 			preferencesRepository.operationMode.persist(OperationMode.NonRoot)
 		}
