@@ -51,12 +51,9 @@ class RestoreOperation(
 			!isPatched -> R.string.error_not_patched
 			!game.isBackupAvailable() -> R.string.error_backup_not_found
 			!storageChecker.isEnoughSpace() -> R.string.error_no_free_space
-			else -> null
+			else -> return Result.success()
 		}
-		if (failureReason != null) {
-			return Result.failure(failureReason)
-		}
-		return Result.success()
+		return Result.failure(failureReason)
 	}
 
 	override suspend fun skip() = operation.skip()
